@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -ux
+
+exit 0
+
+source sway-util.sh
+
+notify_msg() {
+  notify-send.sh --expire-time=1500 "launch-sway-programs" "$@"
+}
+
+start_time=$(date +%s)
+
+notify_msg "mounting network drives"
+sudo umount -lf /mnt/huge || true
+sleep 0.5
+(mount /mnt/huge && notify_msg "network drives ready") ||
+  notify_msg "failed to mount network drives"
+
+notify_msg "starting emacs server"
+systemctl --user restart emacs.service
+sleep 1
+
+move_ws "1:1"
+ws_primary
+
+four_terms "4:4"
+four_terms "5:5"
+swap_ws_output
+
+four_terms "7:7" "~/Torrents" "~/Movies" "~/'TV Shows'" "~/'TV Shows'"
+
+move_ws "10:10"
+ws_primary
+spotify >/dev/null &
+sleep 1.5
+
+move_ws "4:4"
+move_ws "5:5"
+move_ws "4:4"
+
+(emacsclient -e '(--ensure-server-initialized)' && notify_msg "emacs server is ready") ||
+  notify_msg "failed to initialize emacs"
+sleep 0.5
+
+move_ws "3:3"
+emacs.sh &
+sleep 1
+
+end_time=$(date +%s)
+elapsed=$((end_time - start_time))
+
+notify_msg "finished in ${elapsed}s"

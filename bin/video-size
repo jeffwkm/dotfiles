@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+for x in "$@" ; do
+  mediainfo --Output="Video;%Width% %Height%: $x" "$x"
+done

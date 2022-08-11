@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+for a in * ; do ls "$a/" >/dev/null 2>/dev/null && printf "%d\t%s\n" $(ls "$a/" 2>/dev/null | wc -l) "$a" ; done

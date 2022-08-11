@@ -1,0 +1,24 @@
+{ config, lib, pkgs, ... }:
+with lib;
+with lib.my;
+let
+  inherit (config) user host modules;
+  inherit (modules) dev;
+  inherit (host) darwin;
+  cfg = config.modules.dev.extra;
+in {
+  options.modules.dev.extra = { enable = mkBoolOpt dev.enable-all; };
+  config = mkIf cfg.enable {
+    home-manager.users.${user.name} = {
+      home.packages = with pkgs; [
+        gnuplot
+        go
+        html-tidy
+        lessc
+        mono
+        pandoc
+        sbcl
+      ];
+    };
+  };
+}

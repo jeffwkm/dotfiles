@@ -1,0 +1,259 @@
+#
+# A two-line theme using Powerline symbols with some extra features.
+#
+# Authors:
+#   Jeff Workman <jeff.workman@gmail.com>
+#   Some features adapted from themes: giddie, paradox
+#
+# Features:
+#   - Full use of Powerline symbols in prompt
+#   - 24-bit color or 256-color when supported
+#   - Username/hostname in prompt
+#   - Full working directory in prompt
+#   - Git status: branch, staged, unstaged, untracked, commits ahead/behind
+#   - Current time in prompt (right side)
+#   - Last command exit status is displayed when non-zero (one time only)
+#   - Prints elapsed time for long-running commands (one time only)
+#   - Shows direnv/nix-shell environment
+#
+
+_prompt_jeffw_arrow_left=$'\ue0b2'
+_prompt_jeffw_arrow_right=$'\ue0b0'
+_prompt_jeffw_rounded_left=$'\ue0b6'
+_prompt_jeffw_rounded_right=$'\ue0b4'
+
+_prompt_jeffw_cmd_start=0
+_prompt_jeffw_start_time=$SECONDS
+
+# function fg_rgb() { print $'%{\e[38;2;'"${1}"$'m%}' }
+# function fg_reset() { print $'\e[0m%f' }
+# function bg_rgb() { print $'%{\e[48;2;'"${1}"$'m%}' }
+# function bg_reset() { print $'\e[0m%k' }
+
+function +vi-set_novcs_prompt_symbol {
+  _prompt_jeffw_symbol=''
+}
+
+function +vi-set_vcs_prompt_symbol {
+  _prompt_jeffw_symbol='±'
+}
+
+function prompt_jeffw_print_elapsed_time {
+  local end_time=$(( SECONDS - _prompt_jeffw_start_time ))
+  local hours minutes seconds remainder
+
+  if (( end_time >= 5 )); then
+    hours=$(( end_time / 3600 ))
+    remainder=$(( end_time % 3600 ))
+    minutes=$(( remainder / 60 ))
+    seconds=$(( remainder % 60 ))
+
+    # print -Pn "%B%F{green}>>> elapsed time "
+    print -Pn '%b%F{green}%K{235}%B Elapsed Time %b%F{235}%K{240}${_prompt_jeffw_arrow_right}%f%K{240}%B%F{green} '
+    if (( hours >= 1 )); then
+      print -Pn "${hours}h"
+    fi
+    if (( minutes >= 1 )) || (( hours >= 1 )) ; then
+      print -Pn "${minutes}m"
+    fi
+    print -Pn "${seconds}s"
+    print -P "%K{240} %k%F{240}${_prompt_jeffw_arrow_right}%f"
+  fi
+}
+
+function prompt_jeffw_preexec {
+  # echo "$1 $2 $3"
+  _prompt_jeffw_start_time="$SECONDS"
+  _prompt_jeffw_cmd_start=1
+}
+
+function _prompt_jeffw_expand {
+  local str="$1"
+  local arg="$2"
+  if [[ -n "$arg" ]] ; then
+    echo -n "$str"
+  else
+    print -Pn "$str"
+  fi
+}
+
+function _prompt_jeffw_open_round {
+  local arg="$1"
+  local str="%F{238}%k"${_prompt_jeffw_rounded_left}"%k%f%K{238}"
+  _prompt_jeffw_expand "$str" "$arg"
+}
+
+function _prompt_jeffw_close_round {
+  local arg="$1"
+  local str="%k%f%F{238}%k"${_prompt_jeffw_rounded_right}"%k%f"
+  _prompt_jeffw_expand "$str" "$arg"
+}
+
+function _prompt_jeffw_rounded_block {
+  local content="$1"
+  local arg="$2"
+  str="$(_prompt_jeffw_open_round $arg)${content}$(_prompt_jeffw_close_round $arg)"
+  _prompt_jeffw_expand "$str" "$arg"
+}
+
+function _prompt_jeffw_nix_shell {
+  if [[ ! -z "$IN_NIX_SHELL" ]] ; then
+    _prompt_jeffw_rounded_block '%F{208}nix-shell%f' 1
+    print -n ' '
+  fi
+}
+
+function _prompt_jeffw_ssh {
+  if [[ ! -z "$SSH_CLIENT" ]] ; then
+    print -n "${_prompt_jeffw_colors[1]}ssh://%f"
+  fi
+}
+
+function _prompt_jeffw_branch_format {
+  local content="$1"
+  _prompt_jeffw_rounded_block "$content" 1
+}
+
+function _prompt_jeffw_time_block() {
+  _prompt_jeffw_rounded_block '%F{green}%D{%L:%M %p}' 1
+}
+
+function prompt_jeffw_precmd {
+  exit="$?"
+
+  local ahead_behind remote_status vcsh
+  vcsh="$VCSH_REPO_NAME"
+
+  ahead_behind=$(git status --porcelain=v2 --branch 2> /dev/null |
+                   grep -e '^# branch.ab' |
+                   sed -Ee 's/# branch.ab //g' |
+                   grep -v '+0 -0')
+
+  if [[ "$ahead_behind" == "" ]] ; then
+    remote_status=""
+  else
+    ahead_behind=$(echo "$ahead_behind" | sed -Ee 's/\+0 //g' | sed -Ee 's/ \-0//g')
+    # remote_status=" %F{7}(%f %F{13}$ahead_behind%f %F{7})%f"
+    remote_status=" %F{13}${ahead_behind}%f"
+  fi
+
+  local vcs_branch git_ls_opts content
+  if [[ ! -z "$vcsh" ]] ; then
+    vcs_branch="${_prompt_jeffw_colors[1]}[$vcsh] %b%f"
+  else
+    vcs_branch="${_prompt_jeffw_colors[1]}%b%f"
+  fi
+  if [[ ! -n $(git status --porcelain 2> /dev/null) ]]; then
+    content="${vcs_branch}${remote_status}"
+  else
+    content="${vcs_branch} %u%c${remote_status}"
+  fi
+  if [[ -z "$vcsh" ]] ; then
+    if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
+      content="${vcs_branch} %u%c${_prompt_jeffw_colors[4]}●%f${remote_status}"
+    fi
+  fi
+
+  branch_format=$(_prompt_jeffw_branch_format "$content" 1)
+
+  zstyle ':vcs_info:*:prompt:*' formats $branch_format
+
+  # Replace '/home/<user>' with '~'.
+  _prompt_jeffw_pwd="${PWD/#$HOME/~}"
+  vcs_info 'prompt'
+
+  if [[ $_prompt_jeffw_cmd_start == 1 ]] ; then
+    prompt_jeffw_print_elapsed_time
+
+    if [[ $exit != 0 ]] ; then
+      local exit_open='%b%F{196}%K{235} %BStatus%b %F{235}%K{240}'${_prompt_jeffw_arrow_right}'%f%K{240}'
+      local exit_status="%F{196}%K{240} %B${exit}%b%f"
+      local exit_close="%K{240} %k%F{240}${_prompt_jeffw_arrow_right}%f"
+      print -P ${exit_open}${exit_status}${exit_close}
+    fi
+  fi
+
+  _prompt_jeffw_time_block_value="$(_prompt_jeffw_time_block)"
+
+  _prompt_jeffw_cmd_start=0
+}
+
+function prompt_jeffw_post_prompt {
+}
+
+function prompt_jeffw_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent subst sp)
+
+  # Load required functions.
+  autoload -Uz vcs_info
+  autoload -Uz add-zsh-hook
+
+  # Add hook to set up prompt parameters before each command.
+  add-zsh-hook preexec prompt_jeffw_preexec
+  add-zsh-hook precmd prompt_jeffw_precmd
+
+  if [[ $TERM = *256color* || $TERM = *rxvt* ]]; then
+    _prompt_jeffw_colors=(
+      "%F{4}"  # Turquoise
+      "%F{3}" # Orange
+      "%F{135}" # Purple
+      "%F{5}" # Hotpink
+      "%F{10}" # Limegreen
+    )
+  else
+    _prompt_jeffw_colors=(
+      "%F{cyan}"
+      "%F{yellow}"
+      "%F{magenta}"
+      "%F{red}"
+      "%F{green}"
+    )
+  fi
+
+  # Set editor-info parameters.
+  zstyle ':prezto:module:editor:info:completing' format '%F{green}...%f'
+  zstyle ':prezto:module:editor:info:keymap:alternate' format '%F{yellow}--- COMMAND ---%f'
+
+  # Formats:
+  #   %b - branchname
+  #   %u - unstagedstr (see below)
+  #   %c - stagedstr (see below)
+  #   %a - action (e.g. rebase-i)
+  #   %R - repository path
+  #   %S - path in the repository
+  # local branch_format="(${_prompt_jeffw_colors[1]} %b%f %u%c)"
+  local action_format="%F{7}( ${_prompt_jeffw_colors[5]}%a %F{7})%f"
+  local unstaged_format="${_prompt_jeffw_colors[2]}●%f"
+  local staged_format="${_prompt_jeffw_colors[5]}●%f"
+
+  # Set editor-info parameters.
+  zstyle ':prezto:module:editor:info:keymap:primary' format '$'
+
+  # Set vcs_info parameters.
+  zstyle ':vcs_info:*' enable bzr git hg svn
+  zstyle ':vcs_info:*:prompt:*' check-for-changes true
+  zstyle ':vcs_info:*:prompt:*' unstagedstr "${unstaged_format}"
+  zstyle ':vcs_info:*:prompt:*' stagedstr "${staged_format}"
+  zstyle ':vcs_info:*:prompt:*' actionformats "${branch_format} ${action_format}"
+  zstyle ':vcs_info:*:prompt:*' formats "${branch_format}"
+  zstyle ':vcs_info:*:prompt:*' nvcsformats ""
+  zstyle ':vcs_info:*+start-up:*' hooks set_novcs_prompt_symbol
+  zstyle ':vcs_info:*+set-message:*' hooks set_vcs_prompt_symbol
+
+  local prompt_symbol="%F{235}%K{235} %F{235}%K{237}"${_prompt_jeffw_arrow_right}" %F{237}"'%K{25}'${_prompt_jeffw_arrow_right}'%F{25}%k'${_prompt_jeffw_arrow_right}'%k%f'
+  local main_open='%F{235}%K{235} %K{237}%F{235}'${_prompt_jeffw_arrow_right}'%f%K{237} '
+  local prompt_main='$(_prompt_jeffw_ssh)%F{5}%n%f@%F{yellow}%m%f'
+  local main_to_pwd=' %F{237}%K{238}'${_prompt_jeffw_arrow_right}'%f '
+  local prompt_pwd='%F{green}${_prompt_jeffw_pwd}%f'
+  local main_close='%k%f%F{238}%k'${_prompt_jeffw_rounded_right}'%k%f'
+  local prompt_slice=""
+  [[ ! -z "$SLICE" ]] && prompt_slice=' %F{3}['${SLICE}']%f'
+  PROMPT="${main_open}${prompt_main}${main_to_pwd}${prompt_pwd}${main_close}${prompt_slice}"' $(_prompt_jeffw_nix_shell)${vcs_info_msg_0_}
+'"${prompt_symbol} "'$(prompt_jeffw_post_prompt)'
+  RPROMPT='${editor_info[keymap]}  '$(_prompt_jeffw_time_block)
+  SPROMPT='zsh: correct %F{magenta}%R%f to %F{green}%r%f [nyae]? '
+}
+
+prompt_jeffw_setup "$@"

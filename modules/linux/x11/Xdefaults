@@ -1,0 +1,35 @@
+!!! rxvt-unicode (not used, backup for alacritty) !!!
+URxvt.iso14755: false
+URxvt*scrollBar: false
+URxvt.internalBorder: 6
+URxvt.saveLines: 30000
+URxvt.perl-ext:
+URxvt.perl-ext-common: resize-font
+URxvt.keysym.C-plus:  resize-font:bigger
+URxvt.keysym.C-equal: resize-font:bigger
+URxvt.keysym.C-0: resize-font:reset
+URxvt.keysym.C-): resize-font:show
+URxvt.resize-font.step: 1
+URxvt*scrollTtyOutput: false
+URxvt*scrollWithBuffer: true
+URxvt*scrollTtyKeypress: true
+URxvt.secondaryScreen: 1
+URxvt.secondaryScroll: 0
+!! needs aur/rxvt-unicode-better-wheel-scrolling-unicode3
+URxvt.secondaryWheel: 1
+URxvt.print-pipe: "cat > /dev/null"
+URxvt*font: xft:JetBrains Mono Nerd Font 11
+
+!!! emacs !!!
+Emacs*verticalScrollBars: off
+Emacs*toolBar: off
+Emacs*menuBar: off
+
+!!! rofi !!!
+rofi.color-window: #bb222222,#bbdddddd,#bbdddddd
+rofi.color-normal: #00222222,#dddddd,#00222222,#ddeeeeee,#222222
+rofi.theme: jeff_fancy1
+rofi.font: inputmono nerd font 22
+rofi.lines: 10
+rofi.line-margin: 6
+rofi.width: 22
