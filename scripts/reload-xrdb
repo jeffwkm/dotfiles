@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eux
+
+xrdb -load ~/.Xresources
+xrdb -merge ~/.Xdefaults
+~/.xinitrc.d/00-user.sh

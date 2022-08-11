@@ -1,0 +1,88 @@
+#!/usr/bin/env bb
+(ns disp
+  (:require [clojure.string :as str]
+            [clojure.java.shell :as sh]
+            [clojure.tools.cli :as cli]))
+
+(def option-specs
+  [["-g" "--get" "Get display input"
+    :id :get]
+   ["-s" "--set INPUT" "Set display input"
+    :id :set
+    :parse-fn str
+    :validate-fn #(contains? #{:mac :windows :linux} (keyword %))
+    :validate-msg "INPUT must be one of: mac, windows, linux"]
+   ["-t" "--toggle INPUT" "Toggle between two inputs (with --set)"
+    :id :toggle
+    :parse-fn str
+    :validate-fn #(contains? #{:mac :windows :linux} (keyword %))
+    :validate-msg "INPUT must be one of: mac, windows, linux"]
+   ["-n" "--numeric" "Print values as numeric code"
+    :id :numeric]])
+
+(def parsed (cli/parse-opts *command-line-args* option-specs))
+
+(defn print-msg [summary & [msg]]
+  (println "Usage:")
+  (println summary)
+  (println "Valid inputs: mac, windows, linux")
+  (when msg (println msg)))
+
+(def input->vcp
+  {:mac "x13", :windows "x0f", :linux "x14"})
+
+(def vcp->input (->> (keys input->vcp)
+                     (map (fn [i] {(input->vcp i) i}))
+                     (apply merge)))
+
+(defn local-hostname []
+  (-> (sh/sh "hostname") :out str/trim))
+
+(defn run-on-host [cmd hostname]
+  (if (= hostname (local-hostname))
+    (apply sh/sh (str/split cmd #" "))
+    (sh/sh "ssh" hostname cmd)))
+
+(defn get-display-vcp []
+  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d getvcp %d -t" 3 60)
+      (run-on-host "jeff-nixos")
+      :out str/trim (str/split #" ") last))
+
+(defn set-display-vcp [vcp]
+  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d setvcp %d %s" 3 60 vcp)
+      (run-on-host "jeff-nixos")))
+
+(defn lookup-vcp [name-or-vcp]
+  (or (input->vcp (keyword (name name-or-vcp)))
+      name-or-vcp))
+
+(defn run-for-options [{:keys [options]}]
+  (cond (:toggle options)
+        (run-for-options {:options {:set (if (= (get-display-vcp) (lookup-vcp (:set options)))
+                                           (:toggle options)
+                                           (:set options))}})
+        (:get options)
+        (let [vcp (get-display-vcp)]
+          (if (:numeric options)
+            (println vcp)
+            (println (or (some-> vcp vcp->input name) "unknown"))))
+        (:set options)
+        (do (print "setting... ")
+            (flush)
+            (set-display-vcp (lookup-vcp (:set options)))
+            (println "done"))))
+
+(let [{:keys [errors options summary]} parsed]
+  (cond (empty? *command-line-args*)
+        (print-msg summary)
+        errors
+        (do (print-msg summary)
+            (doseq [x errors] (println x)))
+        (and (nil? (:get options)) (nil? (:set options)))
+        (print-msg summary "Missing required --get or --set option")
+        (and (:get options) (:set options))
+        (print-msg summary "Must have only one of --get or --set")
+        (and (:toggle options) (nil? (:set options)))
+        (print-msg summary "Missing required --set option with --toggle")
+        :else
+        (run-for-options parsed)))

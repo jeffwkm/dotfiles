@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+ps -o user=,pid=,command= -C $1

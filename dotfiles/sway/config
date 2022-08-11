@@ -1,0 +1,485 @@
+######################################################################
+### device configuration
+######################################################################
+set $keyboard       2131:256:Topre_Corporation_HHKB_Professional
+#set $mouse          6940:6917:Corsair_Corsair_M65_Gaming_Mouse
+set $mouse          4152:6216:SteelSeries_SteelSeries_Prime_Mini_Wireless
+set $seat           seat0
+
+set $out1           HDMI-A-1
+set $out2           DP-2
+
+#set $TV             HDMI-A-1
+##
+input   *           repeat_delay 200
+input   *           repeat_rate 50
+##
+input   *           accel_profile flat
+input   *           pointer_accel 1
+##
+seat    *           xcursor_theme capitaine-cursors-white 24
+##
+output  $out1       position 0 0
+output  $out2       position 2560 0
+output  *           subpixel rgb
+
+output  *           max_render_time 4
+
+# output  $out1       color profile ""
+output  $out2       color profile "/home/jeff/.local/share/icc/p2715q.icc"
+
+# output  $out1       adaptive_sync on
+# output  $TV         disable
+
+## focus primary monitor on launch
+exec swaymsg focus output $out1
+
+output  *           scale 1.5
+output  $out2       scale 1.6
+######################################################################
+
+######################################################################
+### wm parameters
+######################################################################
+font pango:JetBrainsMonoMedium Nerd Font 11
+
+# set $bg snow-tree-branch-01.jpg
+# set $bg eve-online-backgrounds_112515969_224.jpg
+set $bg pexels-johannes-plenio-1632780.jpg
+# set $bg pexels-johannes-plenio-2259232.jpg
+# set $bg pexels-john-cahil-rom-2170473.jpg
+# set $bg pexels-magda-ehlers-1279813.jpg
+# set $bg pexels-matthis-2174717.jpg
+# set $bg pexels-miguel-á-padriñán-194096.jpg
+# set $bg pexels-pixabay-68510.jpg
+# set $bg pexels-pixabay-258109.jpg
+# set $bg pexels-sameera-madusanka-1666529.jpg
+# set $bg pexels-sebastian-voortman-189349.jpg
+# set $bg pexels-sevenstorm-juhaszimrus-891030.jpg
+# set $bg pexels-stephan-seeber-1668246.jpg
+# set $bg pexels-steve-johnson-1269968.jpg
+# set $bg pexels-steve-johnson-1416367.jpg
+# set $bg pexels-travis-blessing-1363876.jpg
+# set $bg pexels-uzunov-rostislav-5011647.jpg
+set $bg pexels-eberhard-grossgasteiger-1421898.jpg
+# set $bg pexels-felix-mittermeier-1269777.jpg
+# output  *                 background #1d1f20 solid_color
+# output  *                 background #080808 solid_color
+output *                  background ~/wallpapers/$bg fill
+
+## window colors
+# darkgrey/lightgrey
+# client.focused            #888888 #666666 #f8f8f8 #aaaaaa
+# client.focused_inactive   #707070 #444444 #cccccc #aaaaaa
+# client.unfocused          #707070 #444444 #cccccc #aaaaaa
+# grey/blue
+# client.focused            #888888 #7098ff #f8f8f8 #aaaaaa
+client.focused            #888888 #5098f8 #f8f8f8 #aaaaaa
+client.focused_inactive   #707070 #555555 #cccccc #aaaaaa
+client.unfocused          #707070 #555555 #cccccc #aaaaaa
+
+default_border pixel 3
+default_floating_border pixel 3
+titlebar_border_thickness 2
+titlebar_padding 6
+
+set $default_gaps_inner 4
+set $default_gaps_outer 0
+gaps inner $default_gaps_inner
+gaps outer $default_gaps_outer
+
+# focus_on_window_activation none
+######################################################################
+
+######################################################################
+### modifier key aliases
+######################################################################
+set $M      Mod1
+set $Su     Mod4
+set $C      Control
+set $S      Shift
+set $MS     Mod1+Shift
+set $MC     Control+Mod1
+set $CM     Control+Mod1
+set $CS     Control+Shift
+set $CMS    Control+Mod1+Shift
+set $CSu    Control+Mod4
+set $SSu    Shift+Mod4
+## Use Mouse+Mod1 to drag floating windows to their wanted position
+floating_modifier Mod1
+######################################################################
+
+######################################################################
+### general key bindings
+######################################################################
+## reload the configuration file
+set $sdu                       systemctl --user
+bindsym $MS+c                  reload
+bindsym $CMS+c                 reload, exec bash -c "sleep 0.5 && $sdu restart mako waybar svp swayidle"
+## audio volume
+#bindsym $CM+Up                 exec ~/bin/volume-up.sh
+#bindsym $CM+Down               exec ~/bin/volume-down.sh
+#bindsym $CM+m                  exec ~/bin/toggle-mute.sh
+bindsym XF86AudioRaiseVolume   exec volume-up.sh
+bindsym XF86AudioLowerVolume   exec volume-down.sh
+bindsym XF86AudioMute          exec toggle-mute.sh
+## audio player control
+#set $playerctl playerctl -i chromium,mpv,spotify
+set $playerctl playerctl -p spotify
+#set $playerctl playerctl -p mpv
+#set $playerctl playerctl -p chromium
+#set $playerctl playerctl -i chromium,mpv,org.gnome.Podcasts
+bindsym $Su+$C+Up              exec bash -c "$playerctl play-pause"
+bindsym $Su+$C+Left            exec bash -c "$playerctl previous"
+bindsym $Su+$C+Right           exec bash -c "$playerctl next"
+bindsym $Su+$C+Down            exec bash -c "$playerctl stop"
+bindsym XF86AudioPlay          exec bash -c "$playerctl play-pause"
+bindsym XF86AudioPrev          exec bash -c "$playerctl previous"
+bindsym XF86AudioNext          exec bash -c "$playerctl next"
+bindsym XF86AudioStop          exec bash -c "$playerctl stop"
+## screen lock
+#bindsym $CM+l                  ???
+#bindsym $CMS+l                 ???
+## qemu
+#bindsym $CMS+q                 exec toggle-qemu win10
+#bindsym $CMS+s                 exec toggle-user-service synergys
+## exit sway (swaynag)
+bindsym $CMS+e                 exec "swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway?' -b 'Yes, exit sway' 'swaymsg exit'"
+######################################################################
+
+######################################################################
+### program launch bindings
+######################################################################
+#set $ftp                     FREETYPE_PROPERTIES=
+#set $inf                     FREETYPE_PROPERTIES=truetype:interpreter-version=38
+
+bindsym $M+Return            exec alacritty
+bindsym $MC+Return           exec alacritty --config-file ~/.config/alacritty/alacritty.large.yml
+bindsym $MS+Return           exec alacritty --config-file ~/.config/alacritty/alacritty.huge.yml
+bindsym $CMS+Return          exec urxvtc
+bindsym $CM+e                exec emacs.sh
+bindsym $CM+p                exec (killall pavucontrol || true) && pavucontrol
+## show/hide notification center
+#bindsym $Su+Return           exec kill -s USR1 $(pidof deadd-notification-center)
+## rofi run (program launcher)
+bindsym $M+p                 exec wofi --show run
+## rofi-pass (password lookup)
+#bindsym $CMS+p               exec rofi-pass
+#bindsym $CMS+p               exec wofipassmenu-ydotool.sh
+bindsym $CMS+p               exec caerbannog
+######################################################################
+
+######################################################################
+### window management bindings
+######################################################################
+## focus window
+bindsym $M+Left       focus left
+bindsym $M+Down       focus down
+bindsym $M+Up         focus up
+bindsym $M+Right      focus right
+## move window
+bindsym $MS+Left      move left
+bindsym $MS+Down      move down
+bindsym $MS+Up        move up
+bindsym $MS+Right     move right
+## split horizontal/vertical
+bindsym $M+h          split h
+bindsym $M+v          split v
+## enter fullscreen mode for the focused container
+bindsym $M+f          fullscreen toggle
+## change container layout (stacked, tabbed, toggle split)
+bindsym $MS+s         layout stacking
+bindsym $MS+w         layout tabbed
+bindsym $MS+e         layout toggle split
+## toggle tiling / floating
+bindsym $MS+space     floating toggle
+## change focus between tiling / floating windows
+bindsym $M+space      focus mode_toggle
+## focus the parent container
+bindsym $M+a          focus parent
+## focus the child container
+bindsym $M+d          focus child
+## kill focused window
+bindsym $CM+q         kill
+## move the currently focused window to the scratchpad
+bindsym $MS+minus     move scratchpad
+## Show the next scratchpad window or hide the focused scratchpad window.
+## If there are multiple scratchpad windows, this command cycles through them.
+bindsym $M+minus      scratchpad show
+######################################################################
+
+######################################################################
+### i3proj bindings
+######################################################################
+workspace_auto_back_and_forth no
+## define aliases
+set $move_ws         exec swaymsg move container to workspace
+set $go_ws           exec swaymsg workspace
+## define workspace names
+#set $WSP_Tasks  "0:x"
+#
+set $WSPA_1     "1:1"
+set $WSPA_2     "2:2"
+set $WSPA_3     "3:3"
+set $WSPA_4     "4:4"
+set $WSPA_5     "5:5"
+set $WSPA_6     "6:6"
+set $WSPA_7     "7:7"
+set $WSPA_8     "8:8"
+set $WSPA_9     "9:9"
+set $WSPA_10    "10:10"
+#
+set $WSPB_1     "11:^1"
+set $WSPB_2     "12:^2"
+set $WSPB_3     "13:^3"
+set $WSPB_4     "14:^4"
+set $WSPB_5     "15:^5"
+set $WSPB_6     "16:^6"
+set $WSPB_7     "17:^7"
+set $WSPB_8     "18:^8"
+set $WSPB_9     "19:^9"
+set $WSPB_10    "20:^10"
+## switch to workspace
+#bindsym $M+grave       workspace $WSP_Tasks
+#
+bindsym $M+1           workspace $WSPA_1
+bindsym $M+2           workspace $WSPA_2
+bindsym $M+3           workspace $WSPA_3
+bindsym $M+4           workspace $WSPA_4
+bindsym $M+5           workspace $WSPA_5
+bindsym $M+6           workspace $WSPA_6
+bindsym $M+7           workspace $WSPA_7
+bindsym $M+8           workspace $WSPA_8
+bindsym $M+9           workspace $WSPA_9
+bindsym $M+0           workspace $WSPA_10
+#
+bindsym $Su+1          workspace $WSPB_1
+bindsym $Su+2          workspace $WSPB_2
+bindsym $Su+3          workspace $WSPB_3
+bindsym $Su+4          workspace $WSPB_4
+bindsym $Su+5          workspace $WSPB_5
+bindsym $Su+6          workspace $WSPB_6
+bindsym $Su+7          workspace $WSPB_7
+bindsym $Su+8          workspace $WSPB_8
+bindsym $Su+9          workspace $WSPB_9
+bindsym $Su+0          workspace $WSPB_10
+#
+bindsym $Su+Left       workspace prev_on_output
+bindsym $Su+Right      workspace next_on_output
+bindsym $Su+$S+Left    focus output left
+bindsym $Su+$S+Right   focus output right
+## move focused container to workspace
+bindsym $MS+1          move container to workspace $WSPA_1
+bindsym $MS+2          move container to workspace $WSPA_2
+bindsym $MS+3          move container to workspace $WSPA_3
+bindsym $MS+4          move container to workspace $WSPA_4
+bindsym $MS+5          move container to workspace $WSPA_5
+bindsym $MS+6          move container to workspace $WSPA_6
+bindsym $MS+7          move container to workspace $WSPA_7
+bindsym $MS+8          move container to workspace $WSPA_8
+bindsym $MS+9          move container to workspace $WSPA_9
+bindsym $MS+0          move container to workspace $WSPA_10
+#
+bindsym $Su+$S+1       move container to workspace $WSPB_1
+bindsym $Su+$S+2       move container to workspace $WSPB_2
+bindsym $Su+$S+3       move container to workspace $WSPB_3
+bindsym $Su+$S+4       move container to workspace $WSPB_4
+bindsym $Su+$S+5       move container to workspace $WSPB_5
+bindsym $Su+$S+6       move container to workspace $WSPB_6
+bindsym $Su+$S+7       move container to workspace $WSPB_7
+bindsym $Su+$S+8       move container to workspace $WSPB_8
+bindsym $Su+$S+9       move container to workspace $WSPB_9
+bindsym $Su+$S+0       move container to workspace $WSPB_10
+## switch workspace output
+bindsym $Su+Return     focus output right
+bindsym $Su+Space      move workspace to output right
+######################################################################
+
+######################################################################
+### resize mode
+######################################################################
+set $resize "resize: +Width[Right] -Width[Left] +Height[Up] -Height[Down]"
+## mode definition
+mode $resize {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 5 ppt
+        bindsym k resize grow height 10 px or 5 ppt
+        bindsym l resize shrink height 10 px or 5 ppt
+        bindsym semicolon resize grow width 10 px or 5 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 5 ppt
+        bindsym Down resize grow height 10 px or 5 ppt
+        bindsym Up resize shrink height 10 px or 5 ppt
+        bindsym Right resize grow width 10 px or 5 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+## key binding to enter resize mode
+bindsym $M+r mode $resize
+######################################################################
+
+######################################################################
+### DDC - display control (brightness, etc)
+######################################################################
+## define aliases
+set $ddc_bright           10
+set $ddc_input            60
+set $ddc                  sudo ddcutil --nousb --noverify --sleep-multiplier=0.1
+#set $dp1                 'PA32U'
+#set $dp2                 'DELL P2715Q'
+#set $dp1_set             -l 'PA32U' setvcp
+#set $dp2_set             -l 'DELL P2715Q' setvcp
+set $dp1                  3
+set $dp2                  5
+set $dp1_set              -b 3 setvcp
+set $dp2_set              -b 5 setvcp
+## brightness
+bindsym $Su+equal         exec change-brightness $dp1 + 2
+bindsym $Su+minus         exec change-brightness $dp1 - 2
+# 'grave' is `
+bindsym $Su+grave         exec change-brightness $dp1 96
+bindsym $Su+backslash     exec change-brightness $dp1 80
+###bindsym $Su+backslash     exec change-brightness $dp1 start=80 30 50 64 80 92 100
+## brightness (second display)
+bindsym $CSu+equal        exec change-brightness $dp2 + 2
+bindsym $CSu+minus        exec change-brightness $dp2 - 2
+bindsym $CSu+grave        exec change-brightness $dp2 96
+bindsym $CSu+backslash    exec change-brightness $dp2 88
+# monitor inputs
+#bindsym $CSu+1            exec $ddc $dp1_set $ddc_input 0x0f
+#bindsym $CSu+2            exec $ddc $dp1_set $ddc_input 0x14
+bindsym $CSu+1            exec ~/bin/disp -s linux
+bindsym $CSu+2            exec ~/bin/disp -s windows
+bindsym $CSu+3            exec ~/bin/disp -s mac
+## monitor inputs (second display)
+#bindsym $CSu+3            exec $ddc $dp2_set $ddc_input 0x10
+#bindsym $CSu+4            exec $ddc $dp2_set $ddc_input 0x11
+######################################################################
+
+######################################################################
+### Emacs shortcuts
+######################################################################
+bindsym $Su+x       exec sway-run-emacs.sh       # jump to emacs, run command prefix
+######################################################################
+
+
+######################################################################
+### gaps edit modes
+######################################################################
+set $mode_gaps gaps (default[d] | zero[0] | inner[i] | outer[o] | quit[esc])
+set $mode_gaps_outer gaps outer (default[d] | zero[0] | increase[+] | decrease[-] | quit[esc])
+set $mode_gaps_inner gaps inner (default[d] | zero[0] | increase[+] | decrease[-] | quit[esc])
+bindsym $CM+g mode "$mode_gaps"
+mode "$mode_gaps" {
+    bindsym o      mode "$mode_gaps_outer"
+    bindsym i      mode "$mode_gaps_inner"
+
+    bindsym 0      mode "default", exec swaymsg "gaps inner current set 0" && swaymsg "gaps outer current set 0"
+    bindsym d      mode "default", exec swaymsg "gaps inner current set $default_gaps_inner" && swaymsg "gaps outer current set $default_gaps_outer"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+mode "$mode_gaps_inner" {
+    bindsym plus  gaps inner current plus 5
+    bindsym minus gaps inner current minus 5
+    bindsym 0     mode "default", gaps inner current set 0
+    bindsym d     mode "default", gaps inner current set $default_gaps_inner
+
+    bindsym $S+plus  gaps inner all plus 5
+    bindsym $S+minus gaps inner all minus 5
+    bindsym $S+0     mode "default", gaps inner all set 0
+    bindsym $S+d     mode "default", gaps inner all set $default_gaps_inner
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+mode "$mode_gaps_outer" {
+    bindsym plus  gaps outer current plus 5
+    bindsym minus gaps outer current minus 5
+    bindsym 0     mode "default", gaps outer current set 0
+    bindsym d     mode "default", gaps outer current set $default_gaps_outer
+
+    bindsym $S+plus  gaps outer all plus 5
+    bindsym $S+minus gaps outer all minus 5
+    bindsym $S+0     mode "default", gaps outer all set 0
+    bindsym $S+d     mode "default", gaps outer all set $default_gaps_outer
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+######################################################################
+
+######################################################################
+### window configurations
+######################################################################
+for_window  [class="[Mm]pv.*"]                    floating enable
+for_window  [instance="[Mm]pv.*"]                 floating enable
+for_window  [app_id="[Mm]pv.*"]                   floating enable
+for_window  [class="[Ee]og.*"]                    floating enable
+for_window  [app_id="[Ee]og.*"]                   floating enable
+for_window  [class="[Nn]vidia-settings"]          floating enable
+for_window  [class="[Gg]nome-control-center"]     floating enable
+for_window  [class="[Gg]nome-tweak-tool"]         floating enable
+for_window  [class="[Pp]avucontrol.*"]            floating enable
+for_window  [app_id="[Pp]avucontrol.*"]           floating enable
+for_window  [app_id="SVPManager.*"]               floating enable
+for_window  [app_id="qt5ct"]                      floating enable
+for_window  [app_id="[Kk][Vv]antum.*"]            floating enable
+for_window  [app_id="[Ww]eb.*[Cc]amoid.*"]        floating enable
+for_window  [app_id="[Nn]autilus.*"]              floating enable
+for_window  [class="[Nn]autilus.*"]               floating enable
+for_window  [app_id="looking-glass-client.*"]     inhibit_idle visible, move window to workspace $WSPA_10
+for_window  [app_id="[Dd]conf.*"]                 floating enable
+for_window  [class="[Ll]xappearance.*"]           floating enable
+for_window  [app_id="[Ll]xappearance.*"]          floating enable
+for_window  [class="[Gg]tk[Pp]erf.*"]             floating enable
+for_window  [app_id="[Cc]aerbannog.*"]            floating enable, resize set width 800 height 650
+for_window  [class="[Cc]aerbannog.*"]             floating enable
+
+######################################################################
+
+######################################################################
+### X11 HiDPI scaling
+######################################################################
+# output "XWAYLAND0"      scale 1.6875
+# output "XWAYLAND1"      scale 1.6875
+# output "X11-0"          scale 1.6875
+# output "X11-1"          scale 1.6875
+######################################################################
+
+######################################################################
+### window locations
+######################################################################
+for_window [class="[Ss]lack.*"] \
+  mark --add slack, \
+  move window to workspace $WSPB_1
+for_window [class="[Ss]potify.*"] \
+  mark --add spotify, \
+  move window to workspace $WSPA_10
+for_window [class="[Ss]team.*"] \
+  mark --add steam, \
+  floating enable, \
+  move window to workspace $WSPA_10
+######################################################################
+
+######################################################################
+### launch standard programs
+######################################################################
+######################################################################
+# xwayland force
+
+exec "sleep 0.1 ; \
+      reload-xrdb ; sleep 0.1 ; \
+      systemctl --user import-environment ; \
+      systemctl --user start sway.target ; \
+      launch-sway-programs"
+######################################################################

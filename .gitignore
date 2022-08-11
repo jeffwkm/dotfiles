@@ -1,0 +1,7 @@
+.DS_Store
+.idea
+*.log
+tmp/
+
+/scripts/do-ssh*
+/dotfiles/chromium_dev_keys.sh

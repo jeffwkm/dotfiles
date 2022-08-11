@@ -1,0 +1,123 @@
+#!/usr/bin/env bb
+#_{:clj-kondo/ignore
+   ;; [:unused-import :unused-namespace :unused-referred-var :use :refer-all]
+   true}
+(ns sup
+  (:require [clojure.string :as str]
+            [clojure.java.shell :as sh]
+            [clojure.tools.cli :as cli]
+            [babashka.fs :as fs]))
+
+(def all-commands [:switch :pull])
+
+(defn println-err [& args]
+  (binding [*out* *err*]
+    (apply println args)))
+
+(defn option-specs [& [command]]
+  (case command
+    :switch
+    []
+    :pull
+    []
+    [["-u" "--user"     "Run for user (home-manager)"
+      :id :user]
+     ["-s" "--system"   "Run for system (nixos)"
+      :id :system]
+     ["-a" "--all"      "Run for all environments"
+      :id :all]
+     ["-v" nil          "Verbose output"
+      :id :verbosity
+      :default 0
+      :update-fn inc]
+     ["-q" nil          "Quiet output"
+      :id :quiet]
+     ["-h" "--help"     "Print usage information"
+      :id :help]]))
+
+(defn command-args [command]
+  (case command
+    :switch  {:hooks {:desc "[a]ll [w]m [d]oom [e]macs"
+                      :required false}}
+    nil))
+
+(defn print-usage [{:keys [summary arguments] :as parsed-top}]
+  (println "Simple CLI tool for managing nix systems\n")
+  (println (format "Commands:\n%s\nOptions:\n%s"
+                   ;; "sup COMMAND [ARGS] [OPTIONS]"
+                   (with-out-str
+                     (doseq [command all-commands]
+                       (let [args (command-args command)
+                             spec (option-specs command)]
+                         (println (str "  sup " (name command)
+                                       (some->> (seq (keys args))
+                                                (map (fn [arg]
+                                                       (let [{:keys [required]} (get args arg)]
+                                                         (-> (str/upper-case (name arg))
+                                                             (cond->> (not required)
+                                                               (format "[%s]"))))))
+                                                (str/join " ")
+                                                (str " "))
+                                       " [OPTIONS]:"))
+                         (doseq [arg (keys args)]
+                           (println (str "    "
+                                         ((comp str/lower-case name) arg)
+                                         (apply str (repeat (- 12 (count (name arg))) \space))
+                                         (:desc (get args arg)))))
+                         (when (seq spec)
+                           (let [parsed-cmd (cli/parse-opts arguments spec)]
+                             (some-> (:summary parsed-cmd)
+                                     not-empty
+                                     println))))))
+                   #_(->> (map name all-commands) (str/join ", "))
+                   summary)))
+
+(defn match-command [input values]
+  (when ((every-pred string? not-empty) input)
+    (->> values
+         (sort-by name)
+         (filter #(str/starts-with? (name %) input))
+         first)))
+
+(defn parse-command [arguments]
+  (when-let [command (match-command (first arguments) all-commands)]
+    (merge {:command command}
+           (case command
+             {}))))
+
+(defn run-command [{:keys [_options] :as _parsed}
+                   {:keys [command] :as cmd}]
+  (case command
+    :switch
+    (println "Running: sudo nixos-rebuild switch")
+    :pull
+    (println "Running: sudo nix-channel --update")))
+
+(let [;;; parse command line
+      parsed                          (cli/parse-opts *command-line-args* (option-specs))
+      default?                        (empty? *command-line-args*)
+      {:keys [options arguments]}     parsed
+      {:keys [help quiet verbosity]}  options
+      cmd                             (parse-command arguments)
+      usage?                          (or help default?)
+      ;;; validate and run
+      errors    (or (seq (:errors parsed))
+                    ;; no parse errors - run additional validation
+                    (remove nil? [(when (and quiet (pos? verbosity))
+                                    "Error: Only one of -q or -v is allowed")
+                                  (when (not (or cmd usage?))
+                                    (if (first arguments)
+                                      (format "Error: Invalid command '%s'" (first arguments))
+                                      "Error: No command provided"))]))
+      mode      (cond (seq errors)        :error
+                      usage?              :usage
+                      :else               :command)
+      success   ((comp not false?)
+                 (case mode
+                   :error (do (print-usage parsed)
+                              (println-err)
+                              (mapv println-err errors)
+                              false)
+                   :usage (print-usage parsed)
+                   (run-command parsed cmd)))]
+  (System/exit (if success 0 1)))

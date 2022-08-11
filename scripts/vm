@@ -1,0 +1,149 @@
+#!/usr/bin/env bb
+(ns vm
+  (:require [clojure.string :as str]
+            [clojure.java.shell :as sh]
+            [clojure.tools.cli :as cli]
+            [babashka.fs :as fs]))
+
+(defn random-tempfile [& [prefix suffix]]
+  (format "%s/.%s.%d.%s"
+          (fs/temp-dir)
+          (or prefix "tmpfile")
+          (+ 100000 (rand-int 899999))
+          (or suffix "tmp")))
+
+(defn domains-running []
+  (->> (apply sh/sh (str/split "sudo virsh list --state-running --name" #" "))
+       :out str/split-lines (map str/trim) (remove empty?)))
+
+(defn domains-default []
+  (let [domains (domains-running)]
+    (when (= 1 (count domains))
+      (first domains))))
+
+(defn println-err [& args]
+  (binding [*out* *err*]
+    (apply println args)))
+
+(def all-devices
+  ;; device id = "VENDOR_ID:PRODUCT_ID"
+  {:mouse        {:id ["1038" "1848"]}
+   :keyboard     {:id ["0853" "0100"]}
+   :steam        {:id ["28de" "1142"]}
+   :bluetooth    {:id ["8087" "0029"]}
+   :btusb        {:id ["1395" "002d"]}})
+
+(defn get-device-xml [device]
+  (let [[vendor-id product-id] (:id (get all-devices device))]
+    (format "
+<hostdev mode='subsystem' type='usb'>
+  <source>
+    <vendor id='0x%s'/>
+    <product id='0x%s'/>
+  </source>
+</hostdev>"
+            vendor-id product-id)))
+
+(def all-devices-format (str/join " " (map name (keys all-devices))))
+
+(def option-specs
+  [["-l" "--list" "List allowed devices"
+    :id :list]
+   ["-a" "--attach DEVICE" "Attach device"
+    :id :attach
+    :parse-fn keyword
+    :validate-fn #(contains? (set (keys all-devices)) %)
+    :validate-msg (str "DEVICE must be one of: " all-devices-format)]
+   ["-d" "--detach DEVICE" "Detach device"
+    :id :detach
+    :parse-fn keyword
+    :validate [#(contains? (set (keys all-devices)) %)
+               (format "DEVICE must be one of: %s" all-devices-format)]]
+   ["-m" "--machine DOMAIN" "libvirt domain name"
+    :id :domain
+    :parse-fn str
+    :validate [#(or (nil? %) (contains? (set (domains-running)) %))
+               "Invalid domain (no running machine found)"]]
+   ["-v" nil "Verbose output"
+    :id :verbosity
+    :default 0
+    :update-fn inc]
+   ["-q" nil "Quiet output"
+    :id :quiet]
+   ["-h" "--help" "Print usage information"
+    :id :help]])
+
+(defn attach-device [device attach? {:keys [domain verbosity quiet]}]
+  (let [path (random-tempfile "vm-device" "xml")]
+    (when (>= verbosity 1) (println-err (format "Writing device XML to %s" path)))
+    (spit path (get-device-xml device))
+    (when (>= verbosity 2) (println-err (slurp path)))
+    (print (format "[%s {device '%s'}] => " (name domain) (name device)))
+    (flush)
+    (let [{:keys [exit out err]} (sh/sh "sudo" "virsh"
+                                        (if attach? "attach-device" "detach-device")
+                                        "--domain" domain
+                                        "--file" path
+                                        "--live")
+          err-lines (str/split-lines err)
+          result (if (zero? exit) :success
+                     (if (and (= (count err-lines) 2)
+                              (-> (if attach?
+                                    (format ".*is in use by driver .* domain %s$" domain)
+                                    ".*host usb device.* vendor.* product.* not found$")
+                                  (re-pattern)
+                                  (re-matches (last err-lines))))
+                       :skipped
+                       :failed))
+          failed? (= result :failed)]
+      (println (format "{%s, '%s'}"
+                       (name result)
+                       (case result
+                         :success   (if attach? "attached" "detached")
+                         :skipped   (if attach?
+                                      "already attached"
+                                      "device not attached")
+                         :failed    "error")))
+      (when (and failed? (not quiet))
+        (-> out str/trim not-empty (some-> println))
+        (-> err str/trim not-empty (some-> println-err)))
+      (not= result :failed))))
+
+(let [;;; parse command line
+      parsed                          (cli/parse-opts *command-line-args* option-specs)
+      default?                        (empty? *command-line-args*)
+      {:keys [options summary]}       parsed
+      {:keys [help quiet verbosity]}  options
+      usage?                          (or help default?)
+      is-command?                     #{:list :attach :detach}
+      [command & extra]               (->> (keys options) (filter is-command?))
+      arg                             (get options command)
+      need-domain?                    (contains? #{:attach :detach} command)
+      ;;; validate and run
+      {:keys [domain] :as options}
+      (-> options
+          (cond-> (and need-domain? (nil? (:domain options)))
+            (assoc :domain (domains-default))))
+      errors    (or (seq (:errors parsed))
+                    ;; no parse errors - run additional validation
+                    (remove nil? [(when (and quiet (pos? verbosity))
+                                    "Error: Only one of -q or -v is allowed")
+                                  (when (seq extra)
+                                    "Error: More than one operation provided")
+                                  (when (not (or command usage?))
+                                    "Error: No operation provided")
+                                  (when (and need-domain? (nil? domain))
+                                    "Error: No domain found")]))
+      _         (doseq [x errors] (println-err x))
+      action    (cond (seq errors)        :error
+                      usage?              :usage
+                      :else               :command)
+      success   ((comp not false?)
+                 (case action
+                   :error false
+                   :usage (println (format "libvirt management script\n\nUsage:\n%s" summary))
+                   (case command
+                     :list    (println all-devices-format)
+                     :attach  (attach-device arg true options)
+                     :detach  (attach-device arg false options))))]
+  (System/exit (if success 0 1)))

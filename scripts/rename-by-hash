@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -eu
+
+for f in "$@" ; do
+    filename=$(basename "$f")
+    ext="${filename##*.}"
+    hash=$(cat "$f" | sha256sum -b | head -c10)
+    # echo "renaming $f to $hash.$ext"
+    hash_filename="$hash.$ext"
+    exists=1
+    ls "$hash_filename" > /dev/null 2> /dev/null || exists=0
+    if [ "$filename" == "$hash_filename" ] ; then
+        echo "renaming $f to $hash_filename (unchanged)"
+    elif [ "$exists" == "1" ] ; then
+        echo "renaming $f to $hash_filename (duplicate)"
+        mv -f "$f" "$hash_filename"
+    else
+        echo "renaming $f to $hash_filename"
+        mv "$f" "$hash_filename"
+    fi
+done

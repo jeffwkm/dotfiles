@@ -1,0 +1,12 @@
+show=run
+width=20%
+# height=40%
+term=alacritty
+matching=contains
+#matching=fuzzy
+insensitive=true
+lines=10
+gtk_dark=true
+location=center
+# filter_rate=250
+filter_rate=50

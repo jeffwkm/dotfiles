@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -eu
+
+model="$1"
+ddc_param=10
+model_id=$(echo "$model" | sed s/' '/'_'/)
+value_path="$HOME/.brightness-value-${model_id}"
+
+function ddc_wait () {
+  for x in {1..40} ; do
+    pids="$(pidof ddcutil || echo -n '')"
+    if [ ! -z "$pids" ] ; then
+      sleep 0.025
+    else
+      sleep 0.025
+      return 0
+    fi
+  done
+  return 1
+}
+
+function run_get () {
+  set -eu
+  # ddc_wait && ddc_wait
+  # ddc_wait
+  value=$(sudo ddcutil --less-sleep --maxtries 3,3,3 --noudf --nousb \
+               --sleep-multiplier=0.166 -b "$model" -t \
+               getvcp $ddc_param |
+            sed s/'.*C '// | sed s/' .*'//)
+  echo "$value" > "$value_path" &
+  echo "$value"
+}
+
+run_get || (ddc_wait && run_get)
+
+#   sed s/'VCP.*current value = *'// |
+#   sed s/',.*'//

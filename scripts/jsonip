@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+
+from urllib.request import urlopen
+import json
+import time
+from os.path import expanduser
+
+r = urlopen('http://jsonip.com')
+j = json.loads(r.read().decode(encoding='UTF-8'))
+print(j['ip'])

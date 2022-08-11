@@ -1,0 +1,233 @@
+#!/usr/bin/env sh
+
+source "$HOME/.config/sketchybar/colors.sh" # Loads all defined colors
+source "$HOME/.config/sketchybar/icons.sh" # Loads all defined icons
+
+ITEM_DIR="$HOME/.config/sketchybar/items" # Directory where the items are configured
+PLUGIN_DIR="$HOME/.config/sketchybar/plugins" # Directory where all the plugin scripts are stored
+
+FONT="SF Pro" # Needs to have Regular, Bold, Semibold, Heavy and Black variants
+SPACE_CLICK_SCRIPT="yabai -m space --focus \$SID 2>/dev/null" # The script that is run for clicking on space components
+
+PADDINGS=3 # All paddings use this value (icon, label, background and bar paddings)
+
+POPUP_BORDER_WIDTH=3
+POPUP_CORNER_RADIUS=11
+
+SHADOW=off
+
+# Setting up the general bar appearance and default values
+sketchybar --bar height=40                                           \
+                 corner_radius=11                                    \
+                 border_width=0                                      \
+                 border_color=0xff909090                             \
+                 margin=6                                            \
+                 blur_radius=20                                      \
+                 position=top                                        \
+                 padding_left=4                                      \
+                 padding_right=4                                     \
+                 color=$BAR_COLOR                                    \
+                 topmost=off                                         \
+                 font_smoothing=on                                   \
+                 y_offset=4                                          \
+                 shadow=$SHADOW                                      \
+                 notch_width=200                                     \
+                 --default drawing=on                                \
+                 updates=when_shown                                  \
+                 label.font="SF Pro:Regular:14.0"          \
+                 icon.font="FiraCode Nerd Font:Regular:16.0"            \
+                 icon.color=$ICON_COLOR                              \
+                 label.color=$LABEL_COLOR                            \
+                 icon.padding_left=$PADDINGS                         \
+                 icon.padding_right=$PADDINGS                        \
+                 label.padding_left=$PADDINGS                        \
+                 label.padding_right=$PADDINGS                       \
+                 background.padding_right=$PADDINGS                  \
+                 background.padding_left=$PADDINGS                   \
+                 popup.background.border_width=$POPUP_BORDER_WIDTH   \
+                 popup.background.corner_radius=$POPUP_CORNER_RADIUS \
+                 popup.background.border_color=$POPUP_BORDER_COLOR   \
+                 popup.background.color=$POPUP_BACKGROUND_COLOR      \
+                 popup.background.shadow.drawing=$SHADOW
+
+# APPLE_POPUP_OFF="sketchybar --set apple.logo popup.drawing=off"
+# APPLE_POPUP_CLICK_SCRIPT="sketchybar --set \$NAME popup.drawing=toggle"
+
+# sketchybar --add item           apple.logo left                             \
+#                                                                             \
+#            --set apple.logo     icon=$APPLE                                 \
+#                                 icon.font="$FONT:Black:16.0"                \
+#                                 icon.color=$GREEN                           \
+#                                 label.drawing=off                           \
+#                                 click_script="$APPLE_POPUP_CLICK_SCRIPT"    \
+#                                 background.color=$BRACKET_BG \
+#                                 background.height=$BRACKET_HEIGHT \
+#                                 background.corner_radius=11 \
+#                                 icon.padding_right=12 \
+#                                 icon.padding_left=12
+#                                                                             \
+#            --add item           apple.prefs popup.apple.logo                \
+#            --set apple.prefs    icon=$PREFERENCES                           \
+#                                 label="Preferences"                         \
+#                                 click_script="open -a 'System Preferences';
+#                                               $APPLE_POPUP_OFF"             \
+#                                                                             \
+#            --add item           apple.activity popup.apple.logo             \
+#            --set apple.activity icon=$ACTIVITY                              \
+#                                 label="Activity"                            \
+#                                 click_script="open -a 'Activity Monitor';
+#                                               $APPLE_POPUP_OFF"             \
+#                                                                             \
+#            --add item           apple.lock popup.apple.logo                 \
+#            --set apple.lock     icon=$LOCK                                  \
+#                                 label="Lock Screen"                         \
+#                                 click_script="pmset displaysleepnow;
+#                                               $APPLE_POPUP_OFF"
+
+###
+### Left
+###
+
+# ""
+SPACE_ICONS=("" "" "" "" "" "" "" "" "" "")
+SPACE_NAMES=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
+
+for i in "${!SPACE_NAMES[@]}"
+do
+  sid=$(($i+1))
+  # echo "adding space: 'space.$sid' '${SPACE_ICONS[i]}'"
+  sketchybar --add space      space.$sid left                    \
+             --set space.$sid associated_space=$sid              \
+                              icon=${SPACE_ICONS[i]}             \
+                              icon.padding_left=10               \
+                              icon.padding_right=10              \
+                              icon.highlight_color=$RED          \
+                              icon.font="FiraCode Nerd Font:Regular:16.0"    \
+                              background.height=$BRACKET_HEIGHT  \
+                              background.color=$BRACKET_BG       \
+                              background.padding_left=0          \
+                              background.padding_right=0         \
+                              background.drawing=off             \
+                              label.drawing=off                  \
+                              click_script="$SPACE_CLICK_SCRIPT"
+done
+
+sketchybar   --add item       separator left                          \
+             --set separator  icon=                                  \
+                              icon.font="Hack Nerd Font:Regular:16.0" \
+                              background.padding_left=24              \
+                              background.padding_right=10             \
+                              label.drawing=off                       \
+                              icon.color=$WHITE
+
+sketchybar --add       event        window_focus                      \
+           --add       item         system.yabai left                 \
+           --set       system.yabai script="$PLUGIN_DIR/yabai.sh"     \
+                                    icon.font="$FONT:Bold:16.0"       \
+                                    label.drawing=off                 \
+                                    icon.width=30                     \
+                                    icon=$YABAI_GRID                  \
+                                    icon.color=$GREEN                 \
+                                    updates=on                        \
+           --subscribe system.yabai window_focus mouse.clicked        \
+                                                                      \
+           --add       item         front_app left                    \
+           --set       front_app    script="$PLUGIN_DIR/front_app.sh" \
+                                    icon.drawing=off                  \
+                                    background.padding_left=0         \
+                                    label.color=$WHITE                \
+                                    label.font="$FONT:Black:12.0"     \
+           --subscribe front_app    front_app_switched
+
+
+
+###
+### Right
+###
+
+sketchybar --add item time right \
+           --set time update_freq=1 \
+                      icon= \
+                      script="$PLUGIN_DIR/time.sh" \
+                      label=                       \
+                      icon.padding_left=10 \
+                      label.padding_right=10 \
+                      background.color=$BRACKET_BG \
+                      background.height=$BRACKET_HEIGHT \
+                      background.corner_radius=11 \
+                      background.padding_left=2 \
+                      background.padding_right=2
+
+sketchybar --add item     calendar right               \
+           --set calendar update_freq=15               \
+                          icon=                       \
+                          icon.padding_left=10         \
+                          icon.padding_right=4         \
+                          label.padding_right=10       \
+                          script="$PLUGIN_DIR/date.sh" \
+                          background.color=$BRACKET_BG \
+                          background.height=$BRACKET_HEIGHT \
+                          background.corner_radius=11 \
+                          background.padding_left=2 \
+                          background.padding_right=2 \
+
+sketchybar --add item     battery right                        \
+                          --set battery   update_freq=3                     \
+                          script="$PLUGIN_DIR/power.sh"     \
+                          background.color=$BRACKET_BG \
+                          background.height=$BRACKET_HEIGHT \
+                          background.corner_radius=11 \
+                          label.padding_right=10 \
+                          icon.padding_left=10 \
+                          icon.padding_right=10 \
+                          background.padding_left=2 \
+                          background.padding_right=2 \
+                          icon=
+
+sketchybar --add item volume right \
+           --set volume script="$PLUGIN_DIR/volume.sh" \
+                        background.color=$BRACKET_BG \
+                        background.height=$BRACKET_HEIGHT \
+                        background.corner_radius=11 \
+                        label.padding_right=10 \
+                        icon.padding_left=10 \
+                        icon.padding_right=6 \
+                        background.padding_left=2 \
+                        background.padding_right=2 \
+                        update_freq=1 \
+                        icon=
+
+sketchybar --add item          cpu.percent right                  \
+           --set cpu.percent   label=                             \
+                               icon=                           \
+                               update_freq=2                      \
+                               background.color=$BRACKET_BG \
+                               background.height=$BRACKET_HEIGHT \
+                               background.corner_radius=11 \
+                               label.padding_right=10 \
+                               icon.padding_left=10 \
+                               icon.padding_right=6 \
+                               background.padding_left=2 \
+                               background.padding_right=2 \
+                               script="$PLUGIN_DIR/cpu.sh"
+
+sketchybar --add bracket primary_spaces \
+                     space.1 \
+                     space.2 \
+                     space.3 \
+                     space.4 \
+                     space.5 \
+                     space.6 \
+                     space.7 \
+                     space.8 \
+                     space.9 \
+                     space.10 \
+               --set primary_spaces \
+                     background.color=$BRACKET_BG \
+                     background.height=$BRACKET_HEIGHT \
+                     background.corner_radius=11
+
+############## FINALIZING THE SETUP ##############
+sketchybar --update
+
+echo "sketchybar configuation loaded.."
