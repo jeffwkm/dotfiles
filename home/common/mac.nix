@@ -57,6 +57,8 @@ in
         ripgrep
         ripgrep-all
         rsync
+        rustup
+        rustracer
         shfmt
         todoist
         watch

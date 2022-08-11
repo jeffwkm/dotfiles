@@ -17,7 +17,7 @@ in {
 
   homebrew.taps = [
     "FelixKratz/formulae"
-    "d12frosted/emacs-plus"
+    # "d12frosted/emacs-plus"
     "homebrew/bundle"
     "homebrew/cask"
     "homebrew/cask-drivers"
@@ -104,7 +104,7 @@ in {
 
   homebrew.extraConfig = ''
       brew "railwaycat/emacsmacport/emacs-mac", args: ["with-native-comp", "with-emacs-big-sur-icon", "with-mac-metal"]
-      brew "d12frosted/emacs-plus/emacs-plus@28", args: ["build-from-source", "with-native-comp", "with-modern-paper-icon", "with-no-frame-refocus"]
+      # brew "d12frosted/emacs-plus/emacs-plus@28", args: ["build-from-source", "with-native-comp", "with-modern-paper-icon", "with-no-frame-refocus"]
       brew "koekeishiya/formulae/yabai", args: ["HEAD"]
       brew "FelixKratz/formulae/fyabai", args: ["HEAD"]
       brew "nginx", restart_service: true
