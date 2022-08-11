@@ -2,6 +2,7 @@
 .idea
 *.log
 tmp/
+/result
 
 /scripts/do-ssh*
 /dotfiles/chromium_dev_keys.sh
