@@ -44,16 +44,16 @@ with apps; {
     ${focus} - right                : ${yabai} -m space --focus next
     ${focus} - ${first}             : ${yabai} -m space --focus first
     ${focus} - ${last}              : ${yabai} -m space --focus last
-    ${focus} - 1                    : ${yabai} -m space --focus 1
-    ${focus} - 2                    : ${yabai} -m space --focus 2
-    ${focus} - 3                    : ${yabai} -m space --focus 3
-    ${focus} - 4                    : ${yabai} -m space --focus 4
-    ${focus} - 5                    : ${yabai} -m space --focus 5
-    ${focus} - 6                    : ${yabai} -m space --focus 6
-    ${focus} - 7                    : ${yabai} -m space --focus 7
-    ${focus} - 8                    : ${yabai} -m space --focus 8
-    ${focus} - 9                    : ${yabai} -m space --focus 9
-    ${focus} - 0                    : ${yabai} -m space --focus 10
+    cmd - 1                    : ${yabai} -m space --focus 1
+    cmd - 2                    : ${yabai} -m space --focus 2
+    cmd - 3                    : ${yabai} -m space --focus 3
+    cmd - 4                    : ${yabai} -m space --focus 4
+    cmd - 5                    : ${yabai} -m space --focus 5
+    cmd - 6                    : ${yabai} -m space --focus 6
+    cmd - 7                    : ${yabai} -m space --focus 7
+    cmd - 8                    : ${yabai} -m space --focus 8
+    cmd - 9                    : ${yabai} -m space --focus 9
+    cmd - 0                    : ${yabai} -m space --focus 10
     # focus display
     ${focus} - z                    : ${yabai} -m display --focus prev
     ${focus} - c                    : ${yabai} -m display --focus next
@@ -69,8 +69,9 @@ with apps; {
     ${move} - 9                     : ${yabai} -m window --space  9; ${yabai} -m space --focus 9
     ${move} - 0                     : ${yabai} -m window --space 10; ${yabai} -m space --focus 10
     # move space to display
-    # ${display} - ${prev}            : ${yabai} -m space --display prev
-    # ${display} - ${next}            : ${yabai} -m space --display next
+    ${display} - ${recent}          : ${yabai} -m space --display recent
+    ${display} - ${prev}            : ${yabai} -m space --display prev
+    ${display} - ${next}            : ${yabai} -m space --display next
     # move window to display
     # ${display} - ${recent}        : ${yabai} -m window --display recent; ${yabai} -m display --focus recent
     ${display} - ${prevAlt}         : ${yabai} -m window --display prev; ${yabai} -m display --focus prev
