@@ -200,15 +200,16 @@
           system = "x86_64-linux";
           inherit (nixpkgsConfig) config overlays;
         };
-        modules = attrValues self.homeManagerModules ++ singleton ({ config, ...}: {
-          home.username = config.home.user-info.username;
-          home.homeDirectory = "/home/${config.home.username}";
-          home.stateVersion = homeManagerStateVersion;
-          home.user-info = primaryUserInfo // {
-            nixConfigDirectory =
-              "${config.home.homeDirectory}/${nixConfigRelativePath}";
-          };
-        });
+        modules = (attrValues self.homeManagerModules) ++
+                  (attrValues self.homeManagerModulesLinux) ++
+                  singleton ({ config, ...}: {
+                    home.username = config.home.user-info.username;
+                    home.homeDirectory = "/home/${config.home.username}";
+                    home.stateVersion = homeManagerStateVersion;
+                    home.user-info = primaryUserInfo // {
+                      nixConfigDirectory =
+                        "${config.home.homeDirectory}/${nixConfigRelativePath}";};
+                  });
       };
 
       # `overlays` output (`self.overlays`)
