@@ -5,12 +5,9 @@
     enable = true;
     output = null; # :: show on focused display
     layer = "overlay";
-    # layer = "top";
-    defaultTimeout = 4000;
+    defaultTimeout = 2000;
     maxVisible = 5;
     anchor = "top-right";
-    # anchor = "bottom-center";
-    # anchor = "bottom-right";
     icons = true;
     width = 550;
     height = 425;
@@ -23,9 +20,8 @@
     backgroundColor = "#DA730BB8";
     textColor = "#FFFFFFF0";
     borderColor = "#FFFFFFA8";
+    ignoreTimeout = true;
     # progressColor="over #00000033";
-    # progressColor = "source #6FBB33D0";
-    ### progressColor = "source #5FC610D0";
     progressColor = "source #5FC610B8";
   };
 
