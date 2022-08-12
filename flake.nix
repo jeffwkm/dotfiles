@@ -209,6 +209,7 @@
                     home.user-info = primaryUserInfo // {
                       nixConfigDirectory =
                         "${config.home.homeDirectory}/${nixConfigRelativePath}";};
+                    home.emacs.install = true;
                   });
       };
 

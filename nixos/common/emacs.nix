@@ -7,17 +7,9 @@ let
 in {
   environment.systemPackages = [ emacsFinal ];
 
-  services.emacs = {
-    enable = true;
-    package = emacsFinal;
-    defaultEditor = true;
-  };
-
-  systemd.user.services.emacs = {
-    environment = {
-      "DOOMDIR" = "%h/.config/doom-config";
-      "DOOMLOCALDIR" = "%h/.config/doom-local";
-      "LD_LIBRARY_PATH" = "${pkgs.freetype_subpixel}/lib";
-    };
-  };
+  # services.emacs = {
+  #   enable = true;
+  #   package = emacsFinal;
+  #   defaultEditor = true;
+  # };
 }

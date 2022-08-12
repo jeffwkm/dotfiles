@@ -69,8 +69,8 @@
 (defun --configure-fonts ()
   (setq doom-font (cond
                    ((equal (system-name) "jeff-nixos")
-                    ;; "JetBrainsMono Nerd Font:size=15:weight=medium"
-                    "JetBrainsMonoMedium Nerd Font:size=15"
+                    "JetBrainsMono Nerd Font:size=15:weight=medium"
+                    ;; "JetBrainsMonoMedium Nerd Font:size=15"
                     ;; "FiraCode Nerd Font:size=15"
                     ;; "FiraCode Nerd Font:size=15:weight=medium"
                     )
@@ -590,7 +590,8 @@ interactively for spacing value."
                )))
     ;; (ligature-set-ligatures 't all)
     (ligature-set-ligatures 'prog-mode all))
-  (global-ligature-mode t))
+  ;; (global-ligature-mode t)
+  )
 
 (use-package! hl-todo
   :config
