@@ -79,6 +79,7 @@ in {
     } // (extra.shellGlobalAliases or {});
 
     initExtraFirst = ''
+      [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
       unset ZDOTDIR
       export ZSHCONFIG="$HOME/.config/nixpkgs/dotfiles/zsh"
       export FPATH="$ZSHCONFIG/prompts:$FPATH"
