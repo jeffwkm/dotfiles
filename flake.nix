@@ -45,6 +45,12 @@
         config = {
           allowUnfree = true;
           allowBroken = true;
+          packageOverrides = pkgs: rec {
+            clang = pkgs.clang.overrideAttrs (attrs: {
+              # Lower priority than gcc
+              meta.priority = pkgs.gcc.meta.priority + 1;
+            });
+          };
         };
         overlays = attrValues self.overlays ++ [
           # Sub in x86 version of packages that don't build on Apple Silicon yet
@@ -210,6 +216,7 @@
                       nixConfigDirectory =
                         "${config.home.homeDirectory}/${nixConfigRelativePath}";};
                     home.emacs.install = true;
+                    programs.zsh.prezto.prompt.theme = "steeef";
                   });
       };
 

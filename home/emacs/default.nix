@@ -1,9 +1,6 @@
 { pkgs, config, lib, ... }:
 let
-  emacsBase = pkgs.emacsPgtkNativeComp;
-  emacsCustom = (pkgs.emacsPackagesFor emacsBase).emacsWithPackages
-    (epkgs: [ epkgs.vterm ]);
-  emacsFinal = config.util.optimizeC emacsCustom [ "-march=native" "-O3" ];
+  emacs = pkgs.emacsNativeComp;
 in
 {
   options = {
@@ -28,7 +25,7 @@ in
       sqlite
       editorconfig-core-c
       emacs-all-the-icons-fonts
-    ] ++ lib.optional (config.home.emacs.install) [ emacsFinal ];
+    ] ++ lib.optional (config.home.emacs.install) emacs;
 
     systemd.user.services.emacs = {
       Unit = {
@@ -38,13 +35,13 @@ in
       Install = { WantedBy = [ "default.target" ]; };
       Service = {
         Type = "simple";
-        ExecStart = "${emacsFinal}/bin/emacs --fg-daemon";
+        ExecStart = "${emacs}/bin/emacs --fg-daemon";
         Restart = "no";
         Environment = [
           "DOOMDIR=%h/.config/doom-config"
           "DOOMLOCALDIR=%h/.config/doom-local"
-          "LD_LIBRARY_PATH=${pkgs.freetype_subpixel}/lib"
-        ];
+        ] ++ lib.optional (! config.home.emacs.install)
+          "LD_LIBRARY_PATH=${pkgs.freetype_subpixel}/lib";
       };
     };
 

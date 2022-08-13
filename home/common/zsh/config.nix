@@ -91,7 +91,7 @@ in {
       export VISUAL="$EDITOR"
 
       function _zsh_nix_profiles() {
-        echo "$(realpath /run/current-system/sw) $(realpath ~/.nix-profile)"
+        echo "$(realpath ~/.nix-profile)"
       }
 
       export _ZSH_NIX_PROFILES="$(_zsh_nix_profiles)"

@@ -25,9 +25,8 @@
         "command-not-found"
         "prompt"
       ];
-      # pmoduleDirs = [ "${config.programs.home-manager.path}/dotfiles/zsh/prompts" ];
       pmoduleDirs = [ ../../../dotfiles/zsh/prompts ];
-      prompt.theme = "jeffw";
+      prompt.theme = lib.mkDefault "jeffw";
       ssh.identities = [ "id_rsa" ];
       terminal.autoTitle = true;
       utility.safeOps = false;
