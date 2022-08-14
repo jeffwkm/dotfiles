@@ -9,29 +9,21 @@
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Environment/system management
-    darwin = {
-      url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.utils.follows = "flake-utils";
-    };
+    darwin.url = "github:LnL7/nix-darwin";
+    darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.utils.follows = "flake-utils";
 
     # Nix helpers
     flake-compat = { url = "github:edolstra/flake-compat"; flake = false; };
     flake-utils.url = "github:numtide/flake-utils";
 
     # Additional sources
-    emacs-overlay = {
-      url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-      inputs.flake-utils.follows = "flake-utils";
-    };
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
+    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    emacs-overlay.inputs.flake-utils.follows = "flake-utils";
+    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
   outputs = { self, darwin, home-manager, flake-utils, hyprland, ... }@inputs:
@@ -46,8 +38,8 @@
           allowUnfree = true;
           allowBroken = true;
           packageOverrides = pkgs: rec {
+            # Set clang lower priority than gcc
             clang = pkgs.clang.overrideAttrs (attrs: {
-              # Lower priority than gcc
               meta.priority = pkgs.gcc.meta.priority + 1;
             });
           };
@@ -254,7 +246,7 @@
 
       nixosModules = {
         # Config files
-        jeff-util = import ./modules/util.nix;
+        jeff-util = import ./util;
         jeff-bootstrap = import ./nixos/bootstrap.nix;
         jeff-common = import ./nixos/common;
 
@@ -264,6 +256,7 @@
 
       darwinModules = {
         # Config files
+        jeff-util = import ./util;
         jeff-bootstrap = import ./darwin/bootstrap.nix;
         jeff-homebrew = import ./darwin/homebrew.nix;
         jeff-dev = import ./darwin/dev.nix;
@@ -277,7 +270,7 @@
 
       homeManagerModules = {
         # Config files
-        jeff-util = import ./modules/util.nix;
+        jeff-util = import ./util;
         jeff-common = import ./home/common;
         jeff-emacs = import ./home/emacs;
 

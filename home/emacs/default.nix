@@ -1,12 +1,20 @@
 { pkgs, config, lib, ... }:
+with lib;
+with config.util;
 let
+  cfg = config.home.emacs;
   emacs = pkgs.emacsNativeComp;
 in
 {
   options = {
-    home.emacs.install = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
+    home.emacs = {
+      enable = mkBoolOpt true;
+      install = mkBoolOpt false;
+      doom = rec {
+        enable = mkBoolOpt true;
+        forgeUrl = mkOpt types.str "https://github.com";
+        repoUrl = mkOpt types.str "${cfg.doom.forgeUrl}/doomemacs/doomemacs";
+      };
     };
   };
   config = {
@@ -25,7 +33,7 @@ in
       sqlite
       editorconfig-core-c
       emacs-all-the-icons-fonts
-    ] ++ lib.optional (config.home.emacs.install) emacs;
+    ] ++ optional (cfg.install) emacs;
 
     systemd.user.services.emacs = {
       Unit = {
@@ -68,6 +76,14 @@ in
         #   ''}";
         # };
       };
+    };
+
+    home.activation = mkIf (cfg.doom.enable) {
+      installDoomEmacs = ''
+        if [ ! -d "~/.config/emacs" ]; then
+           git clone --depth=1 --single-branch "${config.home.emacs.doom.repoUrl}" "~/.config/emacs"
+        fi
+      '';
     };
   };
 }

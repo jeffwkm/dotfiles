@@ -1,4 +1,4 @@
-{config, lib, pkgs, ...}:
+{ config, lib, pkgs, ... }:
 let
   addFlagC = pkg: flag:
     pkg.overrideAttrs (attrs: {
@@ -15,18 +15,9 @@ let
     pkgs.lib.foldl' (pkg: flag: addFlagRust pkg flag) pkg flags;
   addFlags = pkg: flagsC: flagsRust:
     addFlagsRust (addFlagsC pkg flagsC) flagsRust;
-  util = {
-    optimizeC = addFlagsC;
-    optimizeDefault = pkg: addFlags pkg
-      ["-O3" "-march=native"]
-      ["-C" "opt-level=3" "-C" "target-cpu=native"];
-  };
 in {
-  options = {
-    util = lib.mkOption {
-      type = lib.types.attrs;
-      default = util;
-      description = "Shared functionality for local config";
-    };
-  };
+  util.optimizeC = addFlagsC;
+  util.optimizeDefault = pkg: addFlags pkg
+    ["-O3" "-march=native"]
+    ["-C" "opt-level=3" "-C" "target-cpu=native"];
 }
