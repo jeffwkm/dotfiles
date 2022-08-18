@@ -14,7 +14,7 @@ sleep 0.25
   notify_msg "failed to mount network drives"
 
 notify_msg "starting emacs server"
-systemctl --user restart emacs.service &
+systemctl --user restart emacs.service
 sleep 1
 
 (emacsclient -e '(--ensure-server-initialized)' && notify_msg "emacs server is ready") ||
@@ -29,7 +29,7 @@ move_ws "1:1" ;ws_primary
 four_terms "4:4"
 four_terms "5:5" ; swap_ws_output
 four_terms "7:7" "~/Torrents" "~/Movies" "~/'TV Shows'" "~/'TV Shows'"
-move_ws "10:10" ;ws_primary ; spotify.sh > /dev/null & sleep 1.5
+move_ws "10:10" ; ws_primary ; spotify.sh > /dev/null & sleep 1.5
 
 move_ws "4:4" ; move_ws "5:5" ; move_ws "4:4"
 

@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  emacsBase = pkgs.emacsPgtkNativeComp;
+  emacsBase = pkgs.emacsNativeComp;
   emacsCustom = (pkgs.emacsPackagesFor emacsBase).emacsWithPackages
     (epkgs: [ epkgs.vterm ]);
   emacsFinal = config.util.optimizeC emacsCustom [ "-march=native" "-O3" ];

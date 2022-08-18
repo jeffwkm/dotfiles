@@ -1,9 +1,6 @@
 { config, lib, pkgs, ... }: {
 
   home.packages = with pkgs; [
-    # cargo
-    clang
-    clang-tools
     cmake
     editorconfig-core-c
     editorconfig-checker
@@ -15,7 +12,6 @@
     nodejs
     jdk
     pandoc
-    # rustc
     rustracer
     rustup
     shellcheck
