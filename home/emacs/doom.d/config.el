@@ -537,7 +537,7 @@ interactively for spacing value."
 
 (use-package! aggressive-indent
   :config
-  (setq aggressive-indent-sit-for-time 0.05)
+  (setq aggressive-indent-sit-for-time 0)
   (dolist (mode '(cider-repl-mode c-mode c++-mode objc-mode java-mode))
     (add-to-list 'aggressive-indent-excluded-modes mode))
   (aggressive-indent-global-mode 1))
