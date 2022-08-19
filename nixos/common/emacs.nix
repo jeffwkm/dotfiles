@@ -7,6 +7,12 @@ let
 in {
   environment.systemPackages = [ emacsFinal ];
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      final.emacs = emacsFinal;
+    })
+  ];
+
   # services.emacs = {
   #   enable = true;
   #   package = emacsFinal;

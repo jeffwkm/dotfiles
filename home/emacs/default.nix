@@ -3,7 +3,7 @@ with lib;
 with config.util;
 let
   cfg = config.home.emacs;
-  emacs = pkgs.emacsNativeComp;
+  emacsPkg = pkgs.emacsNativeComp;
 in
 {
   options = {
@@ -34,30 +34,35 @@ in
       editorconfig-core-c
       emacs-all-the-icons-fonts
     ] ++ optional (cfg.install) emacs;
+    nixpkgs.overlays = mkIf cfg.install [
+      (final: prev: {
+        final.emacs = emacsPkg;
+      })
+    ];
 
-    xdg = {
-      enable = true;
-      configFile = {
-        "doom-config/config.el".source = ./doom.d/config.el;
-        "doom-config/init.el".source = ./doom.d/init.el;
-        "doom-config/packages.el".source = ./doom.d/packages.el;
-        "doom-config/auto-margin.el".source = ./doom.d/auto-margin.el;
-        "doom-config/ligature.el/ligature.el".source = ./doom.d/ligature.el/ligature.el;
-        "doom-config/org-notify/org-notify.el".source = ./doom.d/org-notify/org-notify.el;
+  xdg = {
+    enable = true;
+    configFile = {
+      "doom-config/config.el".source = ./doom.d/config.el;
+      "doom-config/init.el".source = ./doom.d/init.el;
+      "doom-config/packages.el".source = ./doom.d/packages.el;
+      "doom-config/auto-margin.el".source = ./doom.d/auto-margin.el;
+      "doom-config/ligature.el/ligature.el".source = ./doom.d/ligature.el/ligature.el;
+      "doom-config/org-notify/org-notify.el".source = ./doom.d/org-notify/org-notify.el;
 
-        # "emacs" = {
-        #   source = builtins.fetchGit "https://github.com/hlissner/doom-emacs";
-        #   onChange = "${pkgs.writeShellScript "doom-change" ''
-        #     export DOOMDIR="${config.home.sessionVariables.DOOMDIR}"
-        #     export DOOMLOCALDIR="${config.home.sessionVariables.DOOMLOCALDIR}"
-        #     if [ ! -d "$DOOMLOCALDIR" ]; then
-        #       doom -y install
-        #         else
-        #       doom -y sync -u
-        #     fi
-        #   ''}";
-        # };
-      };
+      # "emacs" = {
+      #   source = builtins.fetchGit "https://github.com/hlissner/doom-emacs";
+      #   onChange = "${pkgs.writeShellScript "doom-change" ''
+      #     export DOOMDIR="${config.home.sessionVariables.DOOMDIR}"
+      #     export DOOMLOCALDIR="${config.home.sessionVariables.DOOMLOCALDIR}"
+      #     if [ ! -d "$DOOMLOCALDIR" ]; then
+      #       doom -y install
+      #         else
+      #       doom -y sync -u
+      #     fi
+      #   ''}";
+      # };
+    };
     };
 
     home.activation = mkIf (cfg.doom.enable) {

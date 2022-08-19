@@ -46,7 +46,7 @@ in {
     Install = { WantedBy = [ "default.target" ]; };
     Service = {
       Type = "simple";
-      ExecStart = "${emacs}/bin/emacs --fg-daemon";
+      ExecStart = "${pkgs.emacs}/bin/emacs --fg-daemon";
       Restart = "no";
       Environment = [
         "DOOMDIR=%h/.config/doom-config"
@@ -55,7 +55,6 @@ in {
         "LD_LIBRARY_PATH=${pkgs.freetype_subpixel}/lib";
     };
   };
-
 
   programs.git.package = (optimize pkgs.git);
 
