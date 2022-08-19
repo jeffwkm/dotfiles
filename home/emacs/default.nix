@@ -35,24 +35,6 @@ in
       emacs-all-the-icons-fonts
     ] ++ optional (cfg.install) emacs;
 
-    systemd.user.services.emacs = {
-      Unit = {
-        Description = "Emacs daemon";
-        After = [ "default.target" ];
-      };
-      Install = { WantedBy = [ "default.target" ]; };
-      Service = {
-        Type = "simple";
-        ExecStart = "${emacs}/bin/emacs --fg-daemon";
-        Restart = "no";
-        Environment = [
-          "DOOMDIR=%h/.config/doom-config"
-          "DOOMLOCALDIR=%h/.config/doom-local"
-        ] ++ lib.optional (! config.home.emacs.install)
-          "LD_LIBRARY_PATH=${pkgs.freetype_subpixel}/lib";
-      };
-    };
-
     xdg = {
       enable = true;
       configFile = {

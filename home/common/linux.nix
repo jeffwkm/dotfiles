@@ -38,6 +38,25 @@ in {
     xdg-user-dirs
   ];
 
+  systemd.user.services.emacs = {
+    Unit = {
+      Description = "Emacs daemon";
+      After = [ "default.target" ];
+    };
+    Install = { WantedBy = [ "default.target" ]; };
+    Service = {
+      Type = "simple";
+      ExecStart = "${emacs}/bin/emacs --fg-daemon";
+      Restart = "no";
+      Environment = [
+        "DOOMDIR=%h/.config/doom-config"
+        "DOOMLOCALDIR=%h/.config/doom-local"
+      ] ++ lib.optional (! config.home.emacs.install)
+        "LD_LIBRARY_PATH=${pkgs.freetype_subpixel}/lib";
+    };
+  };
+
+
   programs.git.package = (optimize pkgs.git);
 
   # xdg.configFile."dconf/user".source = ../../dotfiles/dconf/user;
