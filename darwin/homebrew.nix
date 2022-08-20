@@ -27,7 +27,8 @@ in {
     "homebrew/services"
     "koekeishiya/formulae"
     "railwaycat/emacsmacport"
-   "cmacrae/formulae"
+    "cmacrae/formulae"
+    "insilica/srvc"
   ];
 
   homebrew.brews = [
@@ -53,6 +54,7 @@ in {
     "glib"
     "gtk+3"
     "ifstat"
+    "insilica/srvc/srvc"
     "imagemagick"
     "ispell"
     "jpeg"
@@ -69,6 +71,7 @@ in {
     "pango"
     "pass"
     "pkg-config"
+    "python3"
     "rbenv"
     "subversion"
     "tmux"

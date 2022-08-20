@@ -51,7 +51,7 @@ in
         openssh
         pandoc
         pass
-        python3-custom
+        # python3-custom
         ranger
         rbenv
         ripgrep
