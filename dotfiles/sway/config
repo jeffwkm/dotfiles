@@ -56,12 +56,12 @@ client.focused_inactive   #707070 #555555 #cccccc #aaaaaa
 client.unfocused          #707070 #555555 #cccccc #aaaaaa
 ##
 
-default_border pixel 3
-default_floating_border pixel 3
+default_border pixel 2
+default_floating_border pixel 2
 titlebar_border_thickness 2
-titlebar_padding 6
+titlebar_padding 5
 
-set $default_gaps_inner 4
+set $default_gaps_inner 6
 set $default_gaps_outer 0
 gaps inner $default_gaps_inner
 gaps outer $default_gaps_outer
@@ -100,8 +100,8 @@ bindsym XF86AudioLowerVolume   exec volume-down.sh
 bindsym XF86AudioMute          exec toggle-mute.sh
 ## media player controls
 # set $playerctl playerctl -i chromium,mpv,spotify
-set $playerctl playerctl -p spotify
-# set $playerctl playerctl -p mpv
+# set $playerctl playerctl -p spotify
+set $playerctl playerctl -p mpv
 # set $playerctl playerctl -p chromium
 # set $playerctl playerctl -i chromium,mpv,org.gnome.Podcasts
 bindsym $Su+$C+Up              exec bash -c "$playerctl play-pause"

@@ -3,7 +3,7 @@ with lib;
 with config.util;
 let
   cfg = config.home.emacs;
-  emacsPkg = pkgs.emacsNativeComp;
+  emacsPkg = pkgs.emacsPgtkNativeComp;
 in
 {
   options = {
