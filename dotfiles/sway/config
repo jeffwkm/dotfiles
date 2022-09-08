@@ -99,10 +99,12 @@ bindsym XF86AudioRaiseVolume   exec volume-up.sh
 bindsym XF86AudioLowerVolume   exec volume-down.sh
 bindsym XF86AudioMute          exec toggle-mute.sh
 ## media player controls
+set $playerctl playerctl --follow
 # set $playerctl playerctl -i chromium,mpv,spotify
 # set $playerctl playerctl -p spotify
-set $playerctl playerctl -p mpv
+# set $playerctl playerctl -p mpv
 # set $playerctl playerctl -p chromium
+# set $playerctl playerctl -i spotify
 # set $playerctl playerctl -i chromium,mpv,org.gnome.Podcasts
 bindsym $Su+$C+Up              exec bash -c "$playerctl play-pause"
 bindsym $Su+$C+Left            exec bash -c "$playerctl previous"

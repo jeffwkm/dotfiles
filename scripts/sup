@@ -5,8 +5,7 @@
 (ns sup
   (:require [clojure.string :as str]
             [clojure.java.shell :as sh]
-            [clojure.tools.cli :as cli]
-            [babashka.fs :as fs]))
+            [clojure.tools.cli :as cli]))
 
 (def all-commands [:switch :pull])
 

@@ -2,7 +2,7 @@
   options = {
     alacritty.fontFamily = lib.mkOption {
       type = lib.types.str;
-      default = "JetBrainsMonoMedium Nerd Font";
+      default = "JetBrains Mono Nerd Font";
     };
     alacritty.fontStyle = lib.mkOption {
       type = lib.types.str;
