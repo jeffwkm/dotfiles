@@ -15,6 +15,10 @@ let python3-packages = (python-packages:
         aioharmony
         todoist
         # swaytools
+        pyflakes
+        nose
+        setuptools
+        black
       ]);
     python3-custom = pkgs.python3.withPackages python3-packages;
 in {

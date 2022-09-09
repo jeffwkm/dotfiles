@@ -3,7 +3,7 @@ with lib;
 with config.util;
 let
   cfg = config.home.emacs;
-  emacsPkg = pkgs.emacsPgtkNativeComp;
+  emacsPkg = pkgs.emacsFinal;
 in
 {
   options = {
@@ -32,7 +32,6 @@ in
       nodePackages.javascript-typescript-langserver
       sqlite
       editorconfig-core-c
-      emacs-all-the-icons-fonts
     ] ++ optional (cfg.install) emacs;
     nixpkgs.overlays = mkIf cfg.install [
       (final: prev: {

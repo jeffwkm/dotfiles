@@ -15,5 +15,9 @@
     rustracer
     rustup
     shellcheck
+    shfmt
+    clang-tools
+    black
+    html-tidy
   ];
 }

@@ -9,9 +9,13 @@ let
             pip
             isort
             pytest
-            jsbeautifier
             mpv
             python-mpv-jsonipc
+            pyflakes
+            nose
+            setuptools
+            black
+            jsbeautifier
         ]);
     python3-custom = python3.withPackages python3-packages;
 in

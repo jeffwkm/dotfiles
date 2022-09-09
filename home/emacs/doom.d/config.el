@@ -67,18 +67,9 @@
 
 (defvar --large-font nil)
 (defun --configure-fonts ()
-  (setq doom-font (cond
-                   ((equal (system-name) "jeff-nixos")
-                    "JetBrainsMono Nerd Font:size=15:weight=medium"
-                    ;; "JetBrainsMonoMedium Nerd Font:size=15"
-                    ;; "FiraCode Nerd Font:size=15"
-                    ;; "FiraCode Nerd Font:size=15:weight=medium"
-                    )
-                   (t (font-spec
-                       ;; :family "JetBrains Mono Nerd Font"
-                       :family "JetBrainsMonoMedium Nerd Font"
-                       ;; :family "JetBrainsMono Nerd Font"
-                       :size (if --large-font 16 14))))
+  (setq doom-font (font-spec
+                   :family "JetBrainsMono Nerd Font"
+                   :size (if --large-font 16 15))
         doom-big-font nil
         doom-big-font-increment 2
         doom-font-increment 1
@@ -178,8 +169,6 @@
         evil-snipe-tab-increment t)
   (map! :mode (evil-snipe-override-mode evil-snipe-override-local-mode)
         :m "F" nil))
-
-
 
 ;; Swap () and [] keys
 (define-key! key-translation-map
@@ -590,7 +579,7 @@ interactively for spacing value."
                )))
     ;; (ligature-set-ligatures 't all)
     (ligature-set-ligatures 'prog-mode all))
-  ;; (global-ligature-mode t)
+  (global-ligature-mode t)
   )
 
 (use-package! hl-todo

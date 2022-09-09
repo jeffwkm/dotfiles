@@ -207,7 +207,7 @@
                     home.user-info = primaryUserInfo // {
                       nixConfigDirectory =
                         "${config.home.homeDirectory}/${nixConfigRelativePath}";};
-                    home.emacs.install = true;
+                    home.emacs.install = false;
                     programs.zsh.prezto.prompt.theme = "steeef";
                   });
       };
