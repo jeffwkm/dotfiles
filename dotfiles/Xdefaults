@@ -1,12 +1,8 @@
-!!
-!! rxvt-unicode
-!!
-
+!!! rxvt-unicode (not used, backup for alacritty) !!!
 URxvt.iso14755: false
 URxvt*scrollBar: false
 URxvt.internalBorder: 6
 URxvt.saveLines: 30000
-
 URxvt.perl-ext:
 URxvt.perl-ext-common: resize-font
 URxvt.keysym.C-plus:  resize-font:bigger
@@ -14,85 +10,26 @@ URxvt.keysym.C-equal: resize-font:bigger
 URxvt.keysym.C-0: resize-font:reset
 URxvt.keysym.C-): resize-font:show
 URxvt.resize-font.step: 1
-
-! URxvt.letterSpace: 1
-
-!! do not scroll with output
 URxvt*scrollTtyOutput: false
-!! scroll in relation to buffer [with mouse scroll or Shift+Page Up]
 URxvt*scrollWithBuffer: true
-!! scroll back to the bottom on keypress
 URxvt*scrollTtyKeypress: true
-
-!! fix scrolling in program screens (such as emacs)
 URxvt.secondaryScreen: 1
 URxvt.secondaryScroll: 0
 !! needs aur/rxvt-unicode-better-wheel-scrolling-unicode3
 URxvt.secondaryWheel: 1
-
-!! Disable printing the terminal contents when pressing PrintScreen.
 URxvt.print-pipe: "cat > /dev/null"
+URxvt*font: xft:JetBrains Mono Nerd Font 11
 
-!! background transparency
-! URxvt*depth: 32
-! URxvt*foreground: white
-! URxvt*background: rgba:1212/1212/1212/aaaa
-! URxvt*background: rgba:1212/1212/1212/8888
-
-! URxvt*font: xft:Inconsolata for Powerline:pixelsize=30
-! URxvt*font: xft:Sauce Code Pro:pixelsize=29
-! URxvt*font: xft:Courier Prime Code:pixelsize=36
-! URxvt*font: xft:Ubuntu Mono:pixelsize=36
-! URxvt*font: xft:Monaco:pixelsize=32
-! URxvt*font: xft:Sauce Code Pro Medium-11
-! URxvt*font: xft:InconsolataGo Nerd Font:pixelsize=30
-! URxvt*font: xft:Inconsolata Nerd Font:pixelsize=30
-! URxvt*font: xft:AnkaCoder Nerd Font:pixelsize=26
-! URxvt*font: xft:Inconsolata Nerd Font:pixelsize=32
-! URxvt*font: xft:Input Mono:pixelsize=23
-! URxvt*font: xft:Input Mono Medium:pixelsize=27
-! URxvt*font: xft:InputMono Nerd Font:pixelsize=23
-!URxvt*font: xft:InputMono Nerd Font:pixelsize=26
-!URxvt*font: xft:InputMono Nerd Font:medium:pixelsize=26
-URxvt*font: xft:InputMono Nerd Font:medium:pixelsize=25
-! URxvt*font: xft:InputMono Narrow:pixelsize=25
-
-
-!!
-!! emacs
-!!
-
+!!! emacs !!!
 Emacs*verticalScrollBars: off
 Emacs*toolBar: off
 Emacs*menuBar: off
-Emacs*internalBorder: 7
-! Emacs*borderWidth: 5
-! Emacs*font: Sauce Code Pro:pixelsize=29
-! Emacs*font: Inconsolata for Powerline:pixelsize=30
-! Emacs*font: InconsolataGo Nerd Font Mono:pixelsize=30
-! Emacs*font: InconsolataGo Nerd Font Mono 15
-! Emacs*font: InconsolataGo Nerd Font Mono:pixelsize=29
-! Emacs*font: Anka/Coder Condensed:pixelsize=28
-! Emacs*font: AnkaCoder Nerd Font Mono:pixelsize=26
-! Emacs*font: Input Mono:pixelsize=25
-! Emacs*font: InputMono Nerd Font:pixelsize=23
-Emacs*font: InputMono Nerd Font:pixelsize=27
 
-!!
-!! rofi
-!!
-
+!!! rofi !!!
 rofi.color-window: #bb222222,#bbdddddd,#bbdddddd
 rofi.color-normal: #00222222,#dddddd,#00222222,#ddeeeeee,#222222
-
 rofi.theme: jeff_fancy1
-! rofi.bw: 0
-! rofi.font: sauce code pro 21
-! rofi.font: inconsolata nerd font mono 24
 rofi.font: inputmono nerd font 22
 rofi.lines: 10
 rofi.line-margin: 6
 rofi.width: 22
-! rofi.padding: 64
-! rofi.separator-style: none
-! rofi.hide-scrollbar: true
