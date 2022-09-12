@@ -91,6 +91,7 @@
     exfat
     file
     glib
+    inetutils
     kernelshark
     kmon
     libtool

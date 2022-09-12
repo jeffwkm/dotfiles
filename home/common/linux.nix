@@ -32,7 +32,6 @@ in {
     screenfetch # :: Fetches system/theme information in terminal for Linux desktop screenshots
     spotdl # :: Download your Spotify playlists and songs along with album art and metadata
     spotify-cli-linux # :: A command line interface to Spotify on Linux
-    traceroute
     usbutils
     vapoursynth
     xdg-user-dirs

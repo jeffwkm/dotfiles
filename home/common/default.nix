@@ -23,6 +23,7 @@ in {
     expect
     gnupg
     greg # :: A command-line podcast aggregator
+    inetutils
     jq
     mediainfo
     mr # :: Multiple Repository management tool
