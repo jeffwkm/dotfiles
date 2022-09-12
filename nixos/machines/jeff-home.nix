@@ -61,4 +61,48 @@
   services.dbus.enable = true;
 
   system.stateVersion = "22.11";
+
+  networking.firewall.allowedTCPPorts = [ 445 139 43227 ];
+  networking.firewall.allowedUDPPorts = [ 137 138 43227 ];
+
+  services.samba = {
+    enable = true;
+    securityType = "user";
+    extraConfig = ''
+    disable netbios = yes
+    workgroup = WORKGROUP
+    server string = JEFF-HOME
+    netbios name = JEFF-HOME
+    security = user
+    # use sendfile = yes
+    max protocol = smb2
+    # note: localhost is the ipv6 localhost ::1
+    # hosts allow = 127.0.0.1 localhost 192.168.86.46
+    hosts allow = 192.168. 127.0.0.1 localhost 192.168.86. 192.168.1. 192.168.86.46
+    # hosts deny = 0.0.0.0/0
+    guest account = nobody
+    map to guest = bad user
+    '';
+    shares = {
+      huge = {
+        path = "/mnt/huge";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "no";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+        # "force user" = "jeff";
+        # "force group" = "users";
+        "valid users" = "jeff";
+        # "public" = "no";
+        "writable" = "yes";
+      };
+    };
+  };
+
+  services.openvpn.servers = {
+    torguard = { config = "config /root/vpn/torguard.conf"; };
+  };
+
+  environment.systemPackages = with pkgs; [ rtorrent ];
 }
