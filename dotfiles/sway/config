@@ -40,8 +40,8 @@ font pango:JetBrainsMonoMedium Nerd Font 11
 
 set $bg pexels-johannes-plenio-1632780.jpg
 set $bg pexels-eberhard-grossgasteiger-1421898.jpg
-# output  *                 background #080808 solid_color
-output *                  background ~/wallpapers/$bg fill
+output  *                 background #080808 solid_color
+# output *                  background ~/wallpapers/$bg fill
 
 ## window colors
 ##
