@@ -10,10 +10,11 @@ in {
 
   homebrew.enable = true;
   homebrew.autoUpdate = true;
+  homebrew.onActivation.upgrade = true;
   homebrew.brewPrefix = "/opt/homebrew/bin";
   homebrew.cleanup = "zap"; # "none" "uninstall" "zap"
   homebrew.global.brewfile = true;
-  homebrew.global.noLock = true;
+  homebrew.global.lockfiles = false;
 
   homebrew.taps = [
     "FelixKratz/formulae"

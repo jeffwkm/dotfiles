@@ -29,6 +29,7 @@ in
     alacritty.fontSizeLarge = "17";
     alacritty.fontSizeHuge = "19";
     alacritty.decorations = "buttonless";
+    alacritty.fontFamily = "JetBrainsMono Nerd Font";
 
     xdg.configFile."mpv/mpv.conf".text = (builtins.readFile ../../dotfiles/mpv/mpv.conf) + ''
       icc-profile-auto=yes
