@@ -180,7 +180,7 @@
           modules = nixDarwinCommonModules ++ [
             {
               users.primaryUser = primaryUserInfo;
-              networking.computerName = "JeffM1X";
+              networking.computerName = "Jeff-M1X";
               networking.hostName = "jeff-m1x";
               networking.knownNetworkServices = [
                 "Wi-Fi"

@@ -69,7 +69,9 @@
 (defun --configure-fonts ()
   (setq doom-font (font-spec
                    :family "JetBrainsMono Nerd Font"
-                   :size (if --large-font 16 15))
+                   :size (if (mac?)
+                             (if --large-font 15 14)
+                           (if --large-font 16 15)) )
         doom-big-font nil
         doom-big-font-increment 2
         doom-font-increment 1

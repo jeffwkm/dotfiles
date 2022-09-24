@@ -9,10 +9,10 @@ in {
   '';
 
   homebrew.enable = true;
-  homebrew.autoUpdate = true;
+  homebrew.onActivation.autoUpdate = true;
+  homebrew.onActivation.cleanup = "zap"; # "none" "uninstall" "zap"
   homebrew.onActivation.upgrade = true;
   homebrew.brewPrefix = "/opt/homebrew/bin";
-  homebrew.cleanup = "zap"; # "none" "uninstall" "zap"
   homebrew.global.brewfile = true;
   homebrew.global.lockfiles = false;
 
