@@ -11,21 +11,25 @@
   <memoryBacking>
     <hugepages/>
   </memoryBacking>
-  <vcpu placement='static'>12</vcpu>
+  <vcpu placement='static'>16</vcpu>
   <iothreads>3</iothreads>
   <cputune>
-    <vcpupin vcpu='0' cpuset='12'/>
-    <vcpupin vcpu='1' cpuset='13'/>
-    <vcpupin vcpu='2' cpuset='14'/>
-    <vcpupin vcpu='3' cpuset='15'/>
-    <vcpupin vcpu='4' cpuset='16'/>
-    <vcpupin vcpu='5' cpuset='17'/>
-    <vcpupin vcpu='6' cpuset='18'/>
-    <vcpupin vcpu='7' cpuset='19'/>
-    <vcpupin vcpu='8' cpuset='20'/>
-    <vcpupin vcpu='9' cpuset='21'/>
-    <vcpupin vcpu='10' cpuset='22'/>
-    <vcpupin vcpu='11' cpuset='23'/>
+    <vcpupin vcpu='0' cpuset='16'/>
+    <vcpupin vcpu='1' cpuset='17'/>
+    <vcpupin vcpu='2' cpuset='18'/>
+    <vcpupin vcpu='3' cpuset='19'/>
+    <vcpupin vcpu='4' cpuset='20'/>
+    <vcpupin vcpu='5' cpuset='21'/>
+    <vcpupin vcpu='6' cpuset='22'/>
+    <vcpupin vcpu='7' cpuset='23'/>
+    <vcpupin vcpu='8' cpuset='24'/>
+    <vcpupin vcpu='9' cpuset='25'/>
+    <vcpupin vcpu='10' cpuset='26'/>
+    <vcpupin vcpu='11' cpuset='27'/>
+    <vcpupin vcpu='12' cpuset='28'/>
+    <vcpupin vcpu='13' cpuset='29'/>
+    <vcpupin vcpu='14' cpuset='30'/>
+    <vcpupin vcpu='15' cpuset='31'/>
     <emulatorpin cpuset='0-3'/>
     <iothreadpin iothread='1' cpuset='4'/>
     <iothreadpin iothread='2' cpuset='5'/>
@@ -56,7 +60,7 @@
     <ioapic driver='kvm'/>
   </features>
   <cpu mode='host-passthrough' check='none' migratable='on'>
-    <topology sockets='1' dies='1' cores='12' threads='1'/>
+    <topology sockets='1' dies='1' cores='16' threads='1'/>
   </cpu>
   <clock offset='localtime'>
     <timer name='rtc' tickpolicy='catchup'/>
