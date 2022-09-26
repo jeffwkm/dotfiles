@@ -26,10 +26,10 @@
       ExecCondition = ''${pkgs.bash}/bin/sh -c '[ -n "$WAYLAND_DISPLAY" ]' '';
       ExecStart = ''
         ${pkgs.swayidle}/bin/swayidle -w \
-              timeout 1200   'swaylock -f -c 000000' \
+              timeout 1200   'swaylock-fancy --daemonize' \
               timeout 3600   'swaymsg "output * dpms off"' \
               resume         'swaymsg "output * dpms on"' \
-              before-sleep   'swaylock -f -c 000000' \
+              before-sleep   'swaylock-fancy --daemonize' \
             '';
       Restart = "always";
       RestartSec = 5;
@@ -59,7 +59,9 @@
     swaybg
     swayidle
     swaylock
+    swaylock-fancy # :: This is an swaylock bash script that takes a screenshot of the desktop, blurs the background and adds a lock icon and text
     swaytools
+    swayr # :: A window switcher (and more) for sway
     swaywsr # :: Automatically change sway workspace names based on their contents
   ];
 }

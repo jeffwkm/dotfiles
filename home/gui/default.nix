@@ -56,16 +56,21 @@
         qt5.full
         qt5.qtwayland
         shotwell
+        sov # :: An overlay that shows schemas for all workspaces to make navigation in sway easier
         spotify # :: Play music from the Spotify music service
         spotifywm # :: Wrapper around Spotify that correctly sets class name before opening the window
         swappy # :: A Wayland native snapshot editing tool, inspired by Snappy on macOS
+        sway-contrib.grimshot # :: A helper for screenshots within sway
+        # swayest-workstyle # :: Map sway workspace names to icons defined depending on the windows inside of the workspace
         looking-glass-client
         scream
         virt-manager
         wayland
         wayland-protocols
         wayland-utils
+        wayshot # :: A native, blazing-fast screenshot tool for wlroots based compositors such as sway and river
         wev
+        wf-recorder
         wl-clipboard
         wlr-randr
         wtype

@@ -25,7 +25,7 @@ output  $out1       position 0 0
 output  $out2       position 2560 0
 output  *           subpixel rgb
 output  *           max_render_time 4
-output  $out2       color profile "/home/jeff/.local/share/icc/p2715q.icc"
+# output  $out2       color profile "/home/jeff/.local/share/icc/p2715q.icc"
 output  *           scale 1.5
 output  $out2       scale 1.6
 
@@ -92,7 +92,8 @@ floating_modifier Mod1
 ######################################################################
 bindsym $MS+c                  reload
 bindsym $CMS+c                 reload, exec bash -c "sleep 0.5 && systemctl --user restart mako waybar svp swayidle"
-bindsym $CM+l                  exec swaylock -f -c 000000   # lock screen
+# bindsym $CM+l                  exec swaylock -f -c 000000   # lock screen
+bindsym $CM+l                  exec swaylock-fancy --daemonize # lock screen
 bindsym $CMS+e                 exec "swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway?' -b 'Yes, exit sway' 'swaymsg exit'"
 ## volume controls
 bindsym XF86AudioRaiseVolume   exec volume-up.sh
