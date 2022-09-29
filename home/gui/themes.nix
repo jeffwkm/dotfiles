@@ -40,7 +40,7 @@
     numix-solarized-gtk-theme
     numix-sx-gtk-theme
     openzone-cursors
-    orchis
+    orchis-theme
     pantheon.elementary-icon-theme
     paper-gtk-theme
     paper-icon-theme

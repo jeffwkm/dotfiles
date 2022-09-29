@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }: {
   home.packages = with pkgs; [
     mpv
-    gnome-mpv
+    celluloid
     mpvc
     play-with-mpv
   ];

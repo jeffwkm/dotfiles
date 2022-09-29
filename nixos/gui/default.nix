@@ -33,7 +33,7 @@
       xclip = self.wl-clipboard-x11;
     })
     (final: prev: {
-      mpv = prev.mpv-with-scripts.override {
+      mpv = prev.mpv.override {
         scripts = with final.mpvScripts; [
           autoload
           convert
