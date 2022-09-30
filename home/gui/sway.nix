@@ -24,12 +24,13 @@
     Service = {
       Type = "simple";
       ExecCondition = ''${pkgs.bash}/bin/sh -c '[ -n "$WAYLAND_DISPLAY" ]' '';
+      # 'swaylock-fancy --daemonize'
       ExecStart = ''
         ${pkgs.swayidle}/bin/swayidle -w \
-              timeout 1200   'swaylock-fancy --daemonize' \
+              timeout 1200   'swaylock -f -c 000000'
               timeout 3600   'swaymsg "output * dpms off"' \
               resume         'swaymsg "output * dpms on"' \
-              before-sleep   'swaylock-fancy --daemonize' \
+              before-sleep   'swaylock -f -c 000000' \
             '';
       Restart = "always";
       RestartSec = 5;

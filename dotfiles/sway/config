@@ -92,8 +92,8 @@ floating_modifier Mod1
 ######################################################################
 bindsym $MS+c                  reload
 bindsym $CMS+c                 reload, exec bash -c "sleep 0.5 && systemctl --user restart mako waybar svp swayidle"
-# bindsym $CM+l                  exec swaylock -f -c 000000   # lock screen
-bindsym $CM+l                  exec swaylock-fancy --daemonize # lock screen
+bindsym $CM+l                  exec swaylock -f -c 000000   # lock screen
+# bindsym $CM+l                  exec swaylock-fancy --daemonize # lock screen
 bindsym $CMS+e                 exec "swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway?' -b 'Yes, exit sway' 'swaymsg exit'"
 ## volume controls
 bindsym XF86AudioRaiseVolume   exec volume-up.sh
