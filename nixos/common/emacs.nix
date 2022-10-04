@@ -1,16 +1,24 @@
 { config, lib, pkgs, ... }:
 let
-  emacsBase = pkgs.emacsNativeComp;
-  # emacsBase = pkgs.emacsPgtkNativeComp;
+  # emacsBase = pkgs.emacsNativeComp;
+  emacsBase = pkgs.emacsPgtkNativeComp;
   emacsCustom = (pkgs.emacsPackagesFor emacsBase).emacsWithPackages
     (epkgs: [ epkgs.vterm epkgs.all-the-icons ]);
-  emacsFinal = config.util.optimizeC emacsCustom [ "-march=native" "-O3" ];
+  emacsFinal = config.util.optimizeC emacsCustom
+    [ "-march=native" "-O3"
+      # "-Ofast" "-fno-finite-math-only"
+      # "-g0"
+      # "-flto=16"
+      # "-fgraphite-identity"
+      # "-ftree-loop-distribution"
+      # "-floop-nest-optimize"
+    ];
 in {
-  environment.systemPackages = [ emacsFinal ];
-
   nixpkgs.overlays = [
     (final: prev: {
       final.emacs = emacsFinal;
     })
   ];
+
+  environment.systemPackages = [ emacsFinal ];
 }

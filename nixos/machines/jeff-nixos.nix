@@ -146,6 +146,7 @@
     SDL_VIDEODRIVER = "wayland";
     ### visual config
     FREETYPE_PROPERTIES = "truetype:interpreter-version=40";
+    # FREETYPE_PROPERTIES = "truetype:interpreter-version=38";
     INFINALITY_FT = "osx";
     XCURSOR_THEME = "capitaine-cursors-white";
     XCURSOR_SIZE = "24";

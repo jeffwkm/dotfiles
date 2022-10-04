@@ -31,10 +31,10 @@
       org-generic-id-locations-file (convert-standard-filename
                                      (concat doom-local-dir ".org-generic-id-locations"))
       confirm-kill-processes nil
-      frame-title-format '((:eval
-                            (if (buffer-file-name)
-                                (abbreviate-file-name (buffer-file-name))
-                              "%b")))
+      frame-title-format '((:eval (concat (if (buffer-file-name)
+                                              (abbreviate-file-name (buffer-file-name))
+                                            "%b")
+                                          " | <Emacs>")))
       require-final-newline t)
 
 (setq-default tab-width 2
@@ -67,16 +67,20 @@
 
 (defvar --large-font nil)
 (defun --configure-fonts ()
-  (setq doom-font (font-spec
-                   :family "JetBrainsMono Nerd Font"
-                   :size (if (mac?)
-                             (if --large-font 15 14)
-                           (if --large-font 16 15)) )
+  (setq doom-font "JetBrainsMono Nerd Font 11"
+        ;; (font-spec :family "JetBrainsMono Nerd Font"
+        ;;            :size (if (mac?)
+        ;;                      (if --large-font 15 14)
+        ;;                    (if --large-font 16 15)) )
         doom-big-font nil
         doom-big-font-increment 2
         doom-font-increment 1
         doom-variable-pitch-font (font-spec :size (if --large-font 16 14))))
 (--configure-fonts)
+
+(require 'hl-line)
+
+(load! "fringe.el")
 
 (use-package! ruby-mode
   :mode (("\\.lic\\'" . ruby-mode)
@@ -550,11 +554,9 @@ interactively for spacing value."
   (global-company-mode 1))
 
 (after! projectile
-  (setq
-   ;; projectile-indexing-method 'hybrid
-   projectile-indexing-method 'alien
-   projectile-enable-caching nil
-   projectile-completion-system 'ivy)
+  (setq projectile-indexing-method 'hybrid
+        projectile-enable-caching nil
+        projectile-completion-system 'ivy)
   (map! "C-M-s" '+ivy/project-search))
 
 (after! swiper
@@ -564,9 +566,8 @@ interactively for spacing value."
         "C-S-S" 'swiper-all
         :m "/" 'counsel-grep-or-swiper))
 
-(use-package! ligature
-  :load-path "./ligature.el/"
-  :config
+(load! "ligature.el")
+(after! ligature  
   (let ((all '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
                ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
                "-<" "-<<"  "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
@@ -581,8 +582,7 @@ interactively for spacing value."
                )))
     ;; (ligature-set-ligatures 't all)
     (ligature-set-ligatures 'prog-mode all))
-  (global-ligature-mode t)
-  )
+  (global-ligature-mode t))
 
 (use-package! hl-todo
   :config
@@ -982,8 +982,6 @@ interactively for spacing value."
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
 
-(global-hl-line-mode +1)
-
 (use-package! recentf
   :disabled t
   :config
@@ -1303,8 +1301,6 @@ interactively for spacing value."
          (when-let ((b (--cider-next-repl (current-buffer))))
            (switch-to-buffer-other-window b)))))
 
-
-
 (setq doom-modeline-buffer-file-name-style 'truncate-upto-project
       doom-modeline-persp-name t
       doom-modeline-persp-icon t
@@ -1314,7 +1310,7 @@ interactively for spacing value."
 
 (defvar --auto-margin nil)
 
-(load (concat doom-private-dir "auto-margin.el"))
+(load! "auto-margin.el")
 
 (when --auto-margin
   (dolist (hook '(window-setup-hook
@@ -1329,20 +1325,50 @@ interactively for spacing value."
         minimap-width-fraction 0.05
         minimap-always-recenter nil))
 
-(after! treemacs
-  (setq treemacs-display-in-side-window t
+(use-package! treemacs
+  :defer t
+  :init
+  (setq +treemacs-git-mode 'simple  ;; 'deferred
+        treemacs-display-in-side-window t
         treemacs-file-event-delay 500
         treemacs-silent-filewatch t
         treemacs-file-follow-delay 0.1
         treemacs-recenter-after-file-follow 'on-distance
-        treemacs-recenter-distance 0.2
-        treemacs-is-never-other-window t)
+        treemacs-recenter-distance 0.1
+        treemacs-is-never-other-window t
+        treemacs-show-cursor nil)
+  :config
   ;; (treemacs)
-  ;; (treemacs-follow-mode 1)
+  (treemacs-follow-mode 1)
   ;; (treemacs-project-follow-mode 1)
   (treemacs-filewatch-mode 1)
+  (treemacs-git-mode 1)
   (treemacs-hide-gitignored-files-mode 1)
-  (treemacs-fringe-indicator-mode 'always))
+  (treemacs-fringe-indicator-mode 'always)
+  (defun --ensure-treemacs-hl-line-mode (&optional state)
+    ;; (message "running for %s" state)
+    (when (treemacs-is-treemacs-window-selected?)
+      (let ((dbg nil)
+            (active (buffer-local-value 'hl-line-mode (window-buffer))))
+        (unless active (hl-line-mode 1))
+        (when dbg (message (if active
+                               "hl-line-mode already active"
+                             "activated hl-line-mode!"))))))
+  (add-hook! 'treemacs-select-functions '--ensure-treemacs-hl-line-mode))
+
+(after! persp-mode
+  (after! treemacs
+    (defun --ensure-treemacs-open (arg)
+      (when (eq arg 'frame)
+        (unless (eql 'visible (treemacs-current-visibility))
+          (if (doom-project-p)
+              (treemacs-add-and-display-current-project)
+            (treemacs)))))
+    ;; (add-to-list 'persp-activated-functions #'--ensure-treemacs-open t)
+    ))
+;; persp-activated-functions
+;; (setf persp-activated-functions (delete 'treemacs persp-activated-functions))
+;; (setf persp-activated-functions (delete '+treemacs/toggle persp-activated-functions))
 
 (defun --darwin-rebuild-switch ()
   (interactive)

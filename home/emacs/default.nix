@@ -3,7 +3,7 @@ with lib;
 with config.util;
 let
   cfg = config.home.emacs;
-  emacsPkg = pkgs.emacsFinal;
+  emacsPkg = pkgs.emacs;
 in
 {
   options = {
@@ -46,8 +46,9 @@ in
       "doom-config/init.el".source = ./doom.d/init.el;
       "doom-config/packages.el".source = ./doom.d/packages.el;
       "doom-config/auto-margin.el".source = ./doom.d/auto-margin.el;
-      "doom-config/ligature.el/ligature.el".source = ./doom.d/ligature.el/ligature.el;
-      "doom-config/org-notify/org-notify.el".source = ./doom.d/org-notify/org-notify.el;
+      "doom-config/fringe.el".source = ./doom.d/fringe.el;
+      "doom-config/ligature.el".source = ./doom.d/ligature.el;
+      "doom-config/org-notify.el".source = ./doom.d/org-notify.el;
 
       # "emacs" = {
       #   source = builtins.fetchGit "https://github.com/hlissner/doom-emacs";

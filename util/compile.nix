@@ -2,7 +2,7 @@
 let
   addFlagC = pkg: flag:
     pkg.overrideAttrs (attrs: {
-      # NIX_CFLAGS_COMPILE = (attrs.NIX_CFLAGS_COMPILE or "") + " ${flag}";
+      NIX_CFLAGS_COMPILE = (attrs.NIX_CFLAGS_COMPILE or "") + " ${flag}";
       CFLAGS = (attrs.CFLAGS or "") + " ${flag}";
     });
   addFlagsC = pkg: flags:
