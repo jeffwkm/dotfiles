@@ -18,11 +18,11 @@
     };
     alacritty.offset.x = lib.mkOption {
       type = lib.types.str;
-      default = "-1";
+      default = "0";
     };
     alacritty.offset.y = lib.mkOption {
       type = lib.types.str;
-      default = "-1";
+      default = "0";
     };
     alacritty.fontSize = lib.mkOption {
       type = lib.types.str;

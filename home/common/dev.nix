@@ -1,23 +1,35 @@
 { config, lib, pkgs, ... }: {
-
   home.packages = with pkgs; [
+    black
+    clang-tools
     cmake
-    editorconfig-core-c
     editorconfig-checker
+    editorconfig-core-c
     gcc
     gnumake
     gnuplot
     go
+    html-tidy
+    jdk
+    lessc
+    maven
     mono
     nodejs
-    jdk
     pandoc
+    sbcl
+  ] ++ [
     rustracer
     rustup
+  ] ++ [
     shellcheck
     shfmt
-    clang-tools
-    black
-    html-tidy
+  ] ++ [
+    cabal-install
+    ghc
+    haskell-language-server
+    hlint
+    ormolu
+    stack
+    stylish-haskell
   ];
 }

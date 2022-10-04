@@ -12,13 +12,16 @@ in {
     package = (optimize pkgs.htop);
   };
 
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.node_modules/bin"
+  ];
+
   home.packages = with pkgs; [
     # pinentry-gnome
     # rofi-pass
     # sshuttle
     awscli2
     # cachix
-    clj-kondo
     cmatrix # :: Simulates the falling characters theme from The Matrix movie
     expect
     gnupg

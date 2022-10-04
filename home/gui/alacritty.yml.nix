@@ -48,7 +48,7 @@ window:
   # Window class (Linux only):
   class: Alacritty
 
-  gtk_theme_variant: Dark
+  decorations_theme_variant: Dark
 
 scrolling:
   # Maximum number of lines in the scrollback buffer.
@@ -88,9 +88,6 @@ font:
   offset:
     x: ${offset.x}
     y: ${offset.y}
-
-  # Thin stroke font rendering (macOS only)
-  use_thin_strokes: true
 
 draw_bold_text_with_bright_colors: true
 
