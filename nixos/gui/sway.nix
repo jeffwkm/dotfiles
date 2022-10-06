@@ -32,6 +32,6 @@ let optimize = config.util.optimizeDefault;
     });
 in {
   nixpkgs.overlays = [
-    # iccOverlay
+    iccOverlay
   ];
 }
