@@ -1,9 +1,17 @@
 { config, lib, pkgs, ... }: {
 
   ### Services with WantedBy "sway.target" are started after loading the Sway
-  ### config file, which manually activates "sway.target" at the end.
+  ### config file, which manually activates "sway.target" on startup.
 
-  xdg.configFile."sway/config".source = ../../dotfiles/sway/config;
+  xdg.configFile."sway/config" = {
+    # source = config.lib.file.mkOutOfStoreSymlink "${config.home.user-info.nixConfigDirectory}/dotfiles/sway/config";
+    source = ../../dotfiles/sway/config;
+    onChange = "${pkgs.writeShellScript "sway-change" ''
+      set +e
+      socket=$(ls /run/user/1000/sway*)
+      swaymsg -s "$socket" -- reload || true
+    ''}";
+  };
 
   systemd.user.targets.sway = {
     Unit = {
@@ -27,34 +35,32 @@
       # 'swaylock-fancy --daemonize'
       ExecStart = ''
         ${pkgs.swayidle}/bin/swayidle -w \
-              timeout 1200   'swaylock -f -c 000000'
+              timeout 1200   'swaylock -f -c 000000' \
               timeout 3600   'swaymsg "output * dpms off"' \
               resume         'swaymsg "output * dpms on"' \
               before-sleep   'swaylock -f -c 000000' \
-            '';
+      '';
       Restart = "always";
       RestartSec = 5;
     };
   };
 
-  # systemd.user.services.ydotool = {
-  #   Unit = {
-  #     Description = "Starts ydotoold service";
-  #     PartOf = [ "graphical-session.target" ];
-  #     After = [ "sway.target" ];
-  #   };
-  #   Install = {
-  #     WantedBy = [ "sway.target" ];
-  #   };
-  #   Service = {
-  #     Type = "simple";
-  #     Restart = "always";
-  #     ExecStart = "${pkgs.ydotool}/bin/ydotoold";
-  #     ExecReload = "${pkgs.util-linux}/bin/kill -HUP $MAINPID";
-  #     KillMode = "process";
-  #     TimeoutSec = 180;
-  #   };
-  # };
+  systemd.user.services.ydotool = {
+    Unit = {
+      Description = "Starts ydotoold service";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "sway.target" ];
+    };
+    Install = { WantedBy = [ "sway.target" ]; };
+    Service = {
+      Type = "simple";
+      Restart = "always";
+      ExecStart = "${pkgs.ydotool}/bin/ydotoold";
+      ExecReload = "${pkgs.util-linux}/bin/kill -HUP $MAINPID";
+      KillMode = "process";
+      TimeoutSec = 180;
+    };
+  };
 
   home.packages = with pkgs; [
     swaybg

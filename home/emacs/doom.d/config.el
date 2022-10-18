@@ -485,10 +485,9 @@ interactively for spacing value."
   (--init-copy-paste)
   (when (or (graphical?) server-process)
     (--load-default-session))
-  (when (graphical?)
-    (let ((w (if (mac?) 6 4)))
-      (add-to-list 'default-frame-alist `(internal-border-width . ,w))
-      (set-frame-parameter nil 'internal-border-width w)))
+  (let ((w (if (mac?) 6 4)))
+    (add-to-list 'default-frame-alist `(internal-border-width . ,w))
+    (set-frame-parameter nil 'internal-border-width w))
   ;; (when (gui-mac?) (set-frame-fullscreen nil t))
   ;; (when (gui-mac?) (run-with-timer 0.5 nil (lambda () (toggle-frame-maximized))))
   )
@@ -582,7 +581,8 @@ interactively for spacing value."
                )))
     ;; (ligature-set-ligatures 't all)
     (ligature-set-ligatures 'prog-mode all))
-  (global-ligature-mode t))
+  ;; (global-ligature-mode t)
+  )
 
 (use-package! hl-todo
   :config
@@ -1003,6 +1003,9 @@ interactively for spacing value."
     :if (not (mac?))
     :config
     (add-to-list 'company-backends 'company-nixos-options))
+  (defun --nix-mode-hook ()
+    (setq-local tab-width 2))
+  (add-hook! nix-mode '--nix-mode-hook)
   ;; (use-package! nixpkgs-fmt)
   )
 

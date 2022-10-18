@@ -1,9 +1,7 @@
 { config, lib, pkgs, ... }:
 let optimize = config.util.optimizeDefault;
 in {
-  imports = [
-    ./zsh
-  ];
+  imports = [ ./zsh ];
 
   programs.gpg.enable = true;
   programs.jq.enable = true;
@@ -11,10 +9,6 @@ in {
     enable = true;
     package = (optimize pkgs.htop);
   };
-
-  home.sessionPath = [
-    "${config.home.homeDirectory}/.node_modules/bin"
-  ];
 
   home.packages = with pkgs; [
     # pinentry-gnome
@@ -27,6 +21,7 @@ in {
     gnupg
     greg # :: A command-line podcast aggregator
     inetutils
+    jc
     jq
     mediainfo
     mr # :: Multiple Repository management tool
@@ -56,11 +51,11 @@ in {
     epr
   ];
 
-  # xdg.configFile."htop/htoprc".source = ../../dotfiles/htop/htoprc;
-  xdg.configFile."mpv/input.conf".source = ../../dotfiles/mpv/input.conf;
+  # xdg.configFile."htop/htoprc".source = ../dotfiles/htop/htoprc;
+  xdg.configFile."mpv/input.conf".source = ../dotfiles/mpv/input.conf;
 
-  home.file.".tmux.conf".source = ../../dotfiles/tmux.conf;
-  home.file.".lein/profiles.clj".source = ../../dotfiles/lein/profiles.clj;
+  home.file.".tmux.conf".source = ../dotfiles/tmux.conf;
+  home.file.".lein/profiles.clj".source = ../dotfiles/lein/profiles.clj;
 
   programs.git = {
     enable = true;

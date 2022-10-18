@@ -4,6 +4,12 @@ set -ux
 export XCURSOR_SIZE=24
 export XCURSOR_THEME="capitaine-cursors-white"
 
+sshid=$(ssh-add -l | grep $USER | wc -l)
+
+if [ "$sshid" == "0" ]; then
+    ssh-add
+fi
+
 # load env vars
 systemctl --user import-environment
 

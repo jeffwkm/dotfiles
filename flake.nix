@@ -15,7 +15,10 @@
     home-manager.inputs.utils.follows = "flake-utils";
 
     # Nix helpers
-    flake-compat = { url = "github:edolstra/flake-compat"; flake = false; };
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
     flake-utils.url = "github:numtide/flake-utils";
 
     # Additional sources
@@ -24,13 +27,22 @@
     emacs-overlay.inputs.flake-utils.follows = "flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    doom-emacs = {
+      url = "github:doomemacs/doomemacs";
+      flake = false;
+    };
   };
 
   outputs = { self, darwin, home-manager, flake-utils, hyprland, ... }@inputs:
     let
       inherit (inputs.nixos-unstable.lib) nixosSystem;
       inherit (darwin.lib) darwinSystem;
-      inherit (inputs.nixpkgs-unstable.lib) attrValues makeOverridable optionalAttrs singleton;
+      inherit (inputs.nixpkgs-unstable.lib)
+        attrValues makeOverridable optionalAttrs singleton;
+
+      importModule = path:
+        { lib, config, pkgs, ... }:
+        import path { inherit lib config pkgs inputs; };
 
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
@@ -39,16 +51,16 @@
           allowBroken = true;
           packageOverrides = pkgs: rec {
             # Set clang lower priority than gcc
-            clang = pkgs.clang.overrideAttrs (attrs: {
-              meta.priority = pkgs.gcc.meta.priority + 1;
-            });
+            clang = pkgs.clang.overrideAttrs
+              (attrs: { meta.priority = pkgs.gcc.meta.priority + 1; });
           };
         };
         overlays = attrValues self.overlays ++ [
           # Sub in x86 version of packages that don't build on Apple Silicon yet
-          (final: prev: (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-            # inherit (final.pkgs-x86) idris2;
-          }))
+          (final: prev:
+            (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+              # inherit (final.pkgs-x86) idris2;
+            }))
           (final: prev: {
             final.stdenv = prev.fastStdenv.mkDerivation { name = "env"; };
           })
@@ -74,24 +86,24 @@
         email = "jeff.workman@gmail.com";
       };
 
-      nixosCommonModules = attrValues self.nixosModules ++ [
-        home-manager.nixosModules.home-manager
-        (
-          { config, ... }:
-          let
-            inherit (config.users) primaryUser;
-            homeDir = "/home/${primaryUser.username}";
-            configDir = "${homeDir}/${nixConfigRelativePath}";
-          in
-            {
+      nixosCommonModules = { extraHomeModules ? [ ] }:
+        attrValues self.nixosModules ++ [
+          home-manager.nixosModules.home-manager
+          ({ config, ... }:
+            let
+              inherit (config.users) primaryUser;
+              homeDir = "/home/${primaryUser.username}";
+              configDir = "${homeDir}/${nixConfigRelativePath}";
+            in {
               nixpkgs = nixpkgsConfig;
               # `home-manager` config
               users.users.${primaryUser.username}.home = homeDir;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.${primaryUser.username} = {
-                imports = (attrValues self.homeManagerModules) ++
-                          (attrValues self.homeManagerModulesLinux);
+                imports = (attrValues self.homeManagerModules)
+                          ++ (attrValues self.homeManagerModulesLinux)
+                          ++ extraHomeModules;
                 home.stateVersion = homeManagerStateVersion;
                 home.user-info = primaryUserInfo // {
                   nixConfigDirectory = configDir;
@@ -99,44 +111,40 @@
               };
               # Add a registry entry for this flake
               nix.registry.my.flake = self;
-            }
-        )
-      ];
+            })
+        ];
 
       # Modules shared by `nix-darwin` configurations
       # (includes config for `home-manager`)
       nixDarwinCommonModules = attrValues self.darwinModules ++ [
         # `home-manager` module
         home-manager.darwinModules.home-manager
-        (
-          { config, ... }:
+        ({ config, ... }:
           let
             inherit (config.users) primaryUser;
             homeDir = "/Users/${primaryUser.username}";
             configDir = "${homeDir}/${nixConfigRelativePath}";
-          in
-            {
-              nixpkgs = nixpkgsConfig;
-              nix.nixPath = {
-                "darwin-config" = "${configDir}";
-                nixpkgs = "${inputs.nixpkgs-unstable}";
+          in {
+            nixpkgs = nixpkgsConfig;
+            nix.nixPath = {
+              "darwin-config" = "${configDir}";
+              nixpkgs = "${inputs.nixpkgs-unstable}";
+            };
+            # `home-manager` config
+            users.users.${primaryUser.username}.home = homeDir;
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${primaryUser.username} = {
+              imports = (attrValues self.homeManagerModules)
+                        ++ (attrValues self.homeManagerModulesMac);
+              home.stateVersion = homeManagerStateVersion;
+              home.user-info = primaryUserInfo // {
+                nixConfigDirectory = configDir;
               };
-              # `home-manager` config
-              users.users.${primaryUser.username}.home = homeDir;
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${primaryUser.username} = {
-                imports = (attrValues self.homeManagerModules) ++
-                          (attrValues self.homeManagerModulesMac);
-                home.stateVersion = homeManagerStateVersion;
-                home.user-info = primaryUserInfo // {
-                  nixConfigDirectory = configDir;
-                };
-              };
-              # Add a registry entry for this flake
-              nix.registry.my.flake = self;
-            }
-        )
+            };
+            # Add a registry entry for this flake
+            nix.registry.my.flake = self;
+          })
       ];
     in {
       nixosConfigurations = rec {
@@ -149,17 +157,21 @@
         # Personal desktop config
         jeff-nixos = nixosSystem {
           system = "x86_64-linux";
-          modules = nixosCommonModules ++ [
+          modules = (nixosCommonModules {
+            extraHomeModules = [ (importModule ./home/gui) ];
+          }) ++ [
             { users.primaryUser = primaryUserInfo; }
-            ./nixos/machines/jeff-nixos.nix
             hyprland.nixosModules.default
+            ./nixos/machines/jeff-nixos.nix
           ];
         };
 
         # Personal fileserver config
         jeff-home = nixosSystem {
           system = "x86_64-linux";
-          modules = nixosCommonModules ++ [
+          modules = (nixosCommonModules {
+            extraHomeModules = [ (importModule ./home/gui) ];
+          }) ++ [
             { users.primaryUser = primaryUserInfo; }
             ./nixos/machines/jeff-home.nix
           ];
@@ -177,17 +189,12 @@
         # Personal laptop config (arm64, macOS)
         jeff-m1x = darwinSystem {
           system = "aarch64-darwin";
-          modules = nixDarwinCommonModules ++ [
-            {
-              users.primaryUser = primaryUserInfo;
-              networking.computerName = "Jeff-M1X";
-              networking.hostName = "jeff-m1x";
-              networking.knownNetworkServices = [
-                "Wi-Fi"
-                "USB 10/100/1000 LAN"
-              ];
-            }
-          ];
+          modules = nixDarwinCommonModules ++ [{
+            users.primaryUser = primaryUserInfo;
+            networking.computerName = "Jeff-M1X";
+            networking.hostName = "jeff-m1x";
+            networking.knownNetworkServices = [ "Wi-Fi" "USB 10/100/1000 LAN" ];
+          }];
         };
       };
 
@@ -198,18 +205,19 @@
           system = "x86_64-linux";
           inherit (nixpkgsConfig) config overlays;
         };
-        modules = (attrValues self.homeManagerModules) ++
-                  (attrValues self.homeManagerModulesLinux) ++
-                  singleton ({ config, ...}: {
-                    home.username = config.home.user-info.username;
-                    home.homeDirectory = "/home/${config.home.username}";
-                    home.stateVersion = homeManagerStateVersion;
-                    home.user-info = primaryUserInfo // {
-                      nixConfigDirectory =
-                        "${config.home.homeDirectory}/${nixConfigRelativePath}";};
-                    home.emacs.install = false;
-                    programs.zsh.prezto.prompt.theme = "steeef";
-                  });
+        modules = (attrValues self.homeManagerModules)
+                  ++ (attrValues self.homeManagerModulesLinux) ++ singleton
+                    ({ config, ... }: {
+                      home.username = config.home.user-info.username;
+                      home.homeDirectory = "/home/${config.home.username}";
+                      home.stateVersion = homeManagerStateVersion;
+                      home.user-info = primaryUserInfo // {
+                        nixConfigDirectory =
+                          "${config.home.homeDirectory}/${nixConfigRelativePath}";
+                      };
+                      home.emacs.install = false;
+                      programs.zsh.prezto.prompt.theme = "steeef";
+                    });
       };
 
       # `overlays` output (`self.overlays`)
@@ -229,26 +237,28 @@
         };
 
         # Overlay useful on Macs with Apple Silicon
-        apple-silicon = _: prev: optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-          # Add access to x86 packages system is running Apple Silicon
-          pkgs-x86 = import inputs.nixpkgs-unstable {
-            system = "x86_64-darwin";
-            inherit (nixpkgsConfig) config;
+        apple-silicon = _: prev:
+          optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+            # Add access to x86 packages system is running Apple Silicon
+            pkgs-x86 = import inputs.nixpkgs-unstable {
+              system = "x86_64-darwin";
+              inherit (nixpkgsConfig) config;
+            };
           };
-        };
 
         # Overlay to include node packages listed in `./pkgs/node-packages/package.json`
         # Run `nix run my#nodePackages.node2nix -- -14` to update packages.
         nodePackages = _: prev: {
-          nodePackages = prev.nodePackages // import ./pkgs/node-packages { pkgs = prev; };
+          nodePackages = prev.nodePackages
+                         // import ./pkgs/node-packages { pkgs = prev; };
         };
       };
 
       nixosModules = {
         # Config files
-        jeff-util = import ./util;
-        jeff-bootstrap = import ./nixos/bootstrap.nix;
-        jeff-common = import ./nixos/common;
+        jeff-util = importModule ./util;
+        jeff-bootstrap = importModule ./nixos/bootstrap.nix;
+        jeff-common = importModule ./nixos/common;
 
         # Local modules
         users-primaryUser = import ./modules/users.nix;
@@ -256,51 +266,50 @@
 
       darwinModules = {
         # Config files
-        jeff-util = import ./util;
-        jeff-bootstrap = import ./darwin/bootstrap.nix;
-        jeff-homebrew = import ./darwin/homebrew.nix;
-        jeff-dev = import ./darwin/dev.nix;
-        jeff-postgres = import ./darwin/postgres.nix;
-        jeff-system = import ./darwin/system;
-        jeff-ui = import ./darwin/ui;
+        jeff-util = importModule ./util;
+        jeff-bootstrap = importModule ./darwin/bootstrap.nix;
+        jeff-homebrew = importModule ./darwin/homebrew.nix;
+        jeff-dev = importModule ./darwin/dev.nix;
+        jeff-postgres = importModule ./darwin/postgres.nix;
+        jeff-system = importModule ./darwin/system;
+        jeff-ui = importModule ./darwin/ui;
 
         # Local modules
         users-primaryUser = import ./modules/users.nix;
       };
 
-      homeManagerModules = {
+      homeManagerModules = rec {
         # Config files
-        jeff-util = import ./util;
-        jeff-common = import ./home/common;
-        jeff-emacs = import ./home/emacs;
+        jeff-util = importModule ./util;
+        jeff-common = importModule ./home;
+        jeff-emacs = importModule ./home/emacs;
+
+        users-primaryUser = import ./modules/users.nix;
 
         home-user-info = { lib, ... }: {
           options.home.user-info =
-            (self.darwinModules.users-primaryUser { inherit lib; }).options.users.primaryUser;
+            (users-primaryUser { inherit lib; }).options.users.primaryUser;
         };
       };
 
-      homeManagerModulesMac = {
-        jeff-common-mac = import ./home/common/mac.nix;
-      };
+      homeManagerModulesMac = { jeff-common-mac = importModule ./home/mac; };
 
       homeManagerModulesLinux = {
-        jeff-common-linux = import ./home/common/linux.nix;
-        jeff-clojure = import ./home/clojure.nix;
-        jeff-gui = import ./home/gui;
+        jeff-common-linux = importModule ./home/linux;
+        jeff-clojure = importModule ./home/clojure.nix;
       };
 
       # Add re-export `nixpkgs` packages with overlays.
       # This is handy in combination with `nix registry add my /Users/malo/.config/nixpkgs`
     } // flake-utils.lib.eachDefaultSystem (system: {
-        legacyPackages = import inputs.nixpkgs-unstable {
-          inherit system;
-          inherit (nixpkgsConfig) config;
-          overlays = with self.overlays; [
-            pkgs-stable
-            apple-silicon
-            nodePackages
-          ];
-        };
-      });
+      legacyPackages = import inputs.nixpkgs-unstable {
+        inherit system;
+        inherit (nixpkgsConfig) config;
+        overlays = with self.overlays; [
+          pkgs-stable
+          apple-silicon
+          nodePackages
+        ];
+      };
+    });
 }

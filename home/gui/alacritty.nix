@@ -44,16 +44,15 @@
       default = "full";
     };
   };
-  config =
-    let tmpl = ./alacritty.yml.nix;
-        options = config.alacritty;
-        customize = c: lib.recursiveUpdate options c;
-    in {
-      xdg.configFile."alacritty/alacritty.yml" =
-        import tmpl options;
-      xdg.configFile."alacritty/alacritty.large.yml" =
-        import tmpl (customize { fontSize = options.fontSizeLarge; });
-      xdg.configFile."alacritty/alacritty.huge.yml" =
-        import tmpl (customize { fontSize = options.fontSizeHuge; });
-    };
+  config = let
+    tmpl = ./alacritty.yml.nix;
+    options = config.alacritty;
+    customize = c: lib.recursiveUpdate options c;
+  in {
+    xdg.configFile."alacritty/alacritty.yml" = import tmpl options;
+    xdg.configFile."alacritty/alacritty.large.yml" =
+      import tmpl (customize { fontSize = options.fontSizeLarge; });
+    xdg.configFile."alacritty/alacritty.huge.yml" =
+      import tmpl (customize { fontSize = options.fontSizeHuge; });
+  };
 }

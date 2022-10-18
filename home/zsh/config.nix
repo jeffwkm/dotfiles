@@ -58,7 +58,7 @@ in {
       '';
       greg = "greg -cf ~/.greg.conf";
       H = "history -50000 | grep -i";
-    } // (extra.shellAliases or {});
+    } // (extra.shellAliases or { });
 
     shellGlobalAliases = {
       _g = "| grep";
@@ -76,7 +76,7 @@ in {
       FS0 = "--fs --fs-screen=0";
       FS1 = "--fs --fs-screen=1";
       FS2 = "--fs --fs-screen=2";
-    } // (extra.shellGlobalAliases or {});
+    } // (extra.shellGlobalAliases or { });
 
     initExtraFirst = ''
       [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return

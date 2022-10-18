@@ -1,22 +1,18 @@
 { config, lib, pkgs, ... }:
 let optimize = config.util.optimizeDefault;
 in {
-  imports = [
-    ./zsh/linux.nix
-    ./ssh-agent.nix
-    ./gpg-agent.nix
-    ./dev.nix
-  ];
+  imports = [ ../zsh/linux.nix ./ssh-agent.nix ./gpg-agent.nix ./dev.nix ];
 
-  xdg.configFile."mpv/mpv.conf".text = (builtins.readFile ../../dotfiles/mpv/mpv.conf) + ''
-    profile=gpu-hq
-    gpu-context=waylandvk
-'';
+  xdg.configFile."mpv/mpv.conf".text =
+    (builtins.readFile ../../dotfiles/mpv/mpv.conf) + ''
+      profile=gpu-hq
+      gpu-context=waylandvk
+    '';
 
   home.packages = with pkgs; [
     (optimize fd)
     (optimize lsd)
-    caerbannog # :: Mobile-friendly Gtk frontend for password-store
+    # caerbannog # :: Mobile-friendly Gtk frontend for password-store
     ddcutil # :: shell utility for controlling displays (DDC)
     ffmpegthumbnailer
     inxi
@@ -50,7 +46,7 @@ in {
       Environment = [
         "DOOMDIR=%h/.config/doom-config"
         "DOOMLOCALDIR=%h/.config/doom-local"
-      ] ++ lib.optional (! config.home.emacs.install)
+      ] ++ lib.optional (!config.home.emacs.install)
         "LD_LIBRARY_PATH=${pkgs.freetype_subpixel}/lib";
     };
   };
