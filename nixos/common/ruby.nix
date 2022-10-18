@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
-let ruby-packages = (ps: with ps; [
+let
+  ruby-packages = (ps:
+    with ps; [
       ffi
       gio2
       glib2
@@ -10,9 +12,5 @@ let ruby-packages = (ps: with ps; [
       pango
       curses
     ]);
-    ruby-custom = pkgs.ruby_2_7.withPackages ruby-packages;
-in {
-  environment.systemPackages = with pkgs; [
-    ruby-custom
-  ];
-}
+  ruby-custom = pkgs.ruby_2_7.withPackages ruby-packages;
+in { environment.systemPackages = with pkgs; [ ruby-custom ]; }

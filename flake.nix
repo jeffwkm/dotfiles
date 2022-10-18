@@ -102,8 +102,8 @@
               home-manager.useUserPackages = true;
               home-manager.users.${primaryUser.username} = {
                 imports = (attrValues self.homeManagerModules)
-                          ++ (attrValues self.homeManagerModulesLinux)
-                          ++ extraHomeModules;
+                  ++ (attrValues self.homeManagerModulesLinux)
+                  ++ extraHomeModules;
                 home.stateVersion = homeManagerStateVersion;
                 home.user-info = primaryUserInfo // {
                   nixConfigDirectory = configDir;
@@ -136,7 +136,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.${primaryUser.username} = {
               imports = (attrValues self.homeManagerModules)
-                        ++ (attrValues self.homeManagerModulesMac);
+                ++ (attrValues self.homeManagerModulesMac);
               home.stateVersion = homeManagerStateVersion;
               home.user-info = primaryUserInfo // {
                 nixConfigDirectory = configDir;
@@ -206,18 +206,18 @@
           inherit (nixpkgsConfig) config overlays;
         };
         modules = (attrValues self.homeManagerModules)
-                  ++ (attrValues self.homeManagerModulesLinux) ++ singleton
-                    ({ config, ... }: {
-                      home.username = config.home.user-info.username;
-                      home.homeDirectory = "/home/${config.home.username}";
-                      home.stateVersion = homeManagerStateVersion;
-                      home.user-info = primaryUserInfo // {
-                        nixConfigDirectory =
-                          "${config.home.homeDirectory}/${nixConfigRelativePath}";
-                      };
-                      home.emacs.install = false;
-                      programs.zsh.prezto.prompt.theme = "steeef";
-                    });
+          ++ (attrValues self.homeManagerModulesLinux) ++ singleton
+          ({ config, ... }: {
+            home.username = config.home.user-info.username;
+            home.homeDirectory = "/home/${config.home.username}";
+            home.stateVersion = homeManagerStateVersion;
+            home.user-info = primaryUserInfo // {
+              nixConfigDirectory =
+                "${config.home.homeDirectory}/${nixConfigRelativePath}";
+            };
+            home.emacs.install = false;
+            programs.zsh.prezto.prompt.theme = "steeef";
+          });
       };
 
       # `overlays` output (`self.overlays`)
@@ -250,7 +250,7 @@
         # Run `nix run my#nodePackages.node2nix -- -14` to update packages.
         nodePackages = _: prev: {
           nodePackages = prev.nodePackages
-                         // import ./pkgs/node-packages { pkgs = prev; };
+            // import ./pkgs/node-packages { pkgs = prev; };
         };
       };
 

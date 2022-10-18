@@ -1,7 +1,5 @@
 { config, lib, pkgs, modulesPath, ... }: {
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-  ];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   networking.hostName = "jeff-home";
   networking.useDHCP = lib.mkDefault true;
@@ -12,17 +10,18 @@
   # networking.dhcpcd.allowInterfaces = [ "br0" ];
   # systemd.services.br0-netdev.wantedBy = [ "multi-user.target" ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/47e5286f-f005-4c20-bc46-35f68059137b";
-      fsType = "ext4";
-    };
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/47e5286f-f005-4c20-bc46-35f68059137b";
+    fsType = "ext4";
+  };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/08BB-C318";
-      fsType = "vfat";
-    };
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/08BB-C318";
+    fsType = "vfat";
+  };
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules =
+    [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   # boot.blacklistedKernelModules = [];
   boot.kernelModules = [ "kvm-intel" ];
@@ -69,19 +68,19 @@
     enable = true;
     securityType = "user";
     extraConfig = ''
-    disable netbios = yes
-    workgroup = WORKGROUP
-    server string = JEFF-HOME
-    netbios name = JEFF-HOME
-    security = user
-    # use sendfile = yes
-    max protocol = smb2
-    # note: localhost is the ipv6 localhost ::1
-    # hosts allow = 127.0.0.1 localhost 192.168.86.46
-    hosts allow = 192.168. 127.0.0.1 localhost 192.168.86. 192.168.1. 192.168.86.46
-    # hosts deny = 0.0.0.0/0
-    guest account = nobody
-    map to guest = bad user
+      disable netbios = yes
+      workgroup = WORKGROUP
+      server string = JEFF-HOME
+      netbios name = JEFF-HOME
+      security = user
+      # use sendfile = yes
+      max protocol = smb2
+      # note: localhost is the ipv6 localhost ::1
+      # hosts allow = 127.0.0.1 localhost 192.168.86.46
+      hosts allow = 192.168. 127.0.0.1 localhost 192.168.86. 192.168.1. 192.168.86.46
+      # hosts deny = 0.0.0.0/0
+      guest account = nobody
+      map to guest = bad user
     '';
     shares = {
       huge = {

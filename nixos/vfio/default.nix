@@ -1,10 +1,5 @@
 { config, lib, pkgs, ... }: {
-  environment.systemPackages = with pkgs; [
-    OVMF
-    libvirt
-    qemu
-    qemu-utils
-  ];
+  environment.systemPackages = with pkgs; [ OVMF libvirt qemu qemu-utils ];
 
   systemd.tmpfiles.rules = [
     "f /dev/shm/looking-glass   0660 jeff qemu-libvirtd -"
@@ -12,9 +7,7 @@
   ];
 
   # create machine definitions in /etc/machines
-  environment.etc = {
-    "machines/win10.xml".source = ./machines/win10.xml;
-  };
+  environment.etc = { "machines/win10.xml".source = ./machines/win10.xml; };
 
   # (on libvirtd startup) set machine definitions from nix config
   systemd.services.vm-define = {
@@ -25,7 +18,8 @@
     wantedBy = [ "default.target" ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.libvirt}/bin/virsh define /etc/machines/win10.xml --validate";
+      ExecStart =
+        "${pkgs.libvirt}/bin/virsh define /etc/machines/win10.xml --validate";
     };
   };
 
@@ -36,9 +30,12 @@
     enable = true;
     devices = {
       persist-keyboard0 = "usb-Topre_Corporation_HHKB_Professional-event-kbd";
-      persist-mouse0 = "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-mouse";
-      persist-mouse1 = "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-if02";
-      persist-mouse2 = "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-if01-event-kbd";
+      persist-mouse0 =
+        "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-mouse";
+      persist-mouse1 =
+        "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-if02";
+      persist-mouse2 =
+        "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-if01-event-kbd";
       persist-steam0 = "usb-Valve_Software_Steam_Controller-event-mouse";
     };
   };

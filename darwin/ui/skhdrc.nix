@@ -2,7 +2,7 @@
 with keys;
 with modifiers;
 with apps; {
-    cfg = ''
+  cfg = ''
     # launch apps
     ${launch} - ${appKeys.terminal} : ${commands.launchTerminal}
     # focus apps

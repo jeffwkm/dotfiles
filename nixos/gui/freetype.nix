@@ -1,11 +1,12 @@
 { config, lib, pkgs, ... }: {
   ## Build freetype with Cleartype support and infinality patches
   nixpkgs.config.packageOverrides = pkgs:
-    let base0 = pkgs.freetype;
-        base = (base0.override { useEncumberedCode = true; });
+    let
+      base0 = pkgs.freetype;
+      base = (base0.override { useEncumberedCode = true; });
     in rec {
-      freetype_subpixel = config.util.optimizeDefault (
-        base.overrideAttrs ( attrs: {
+      freetype_subpixel = config.util.optimizeDefault (base.overrideAttrs
+        (attrs: {
           patches = attrs.patches ++ [
             ./patches/0002-infinality-2.11.1-2021.12.10-nix-custom.txt
             ./patches/0004-Enable-long-PCF-family-names.txt

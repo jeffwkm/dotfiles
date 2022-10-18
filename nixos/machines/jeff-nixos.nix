@@ -1,9 +1,6 @@
 { config, lib, pkgs, modulesPath, ... }: {
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-    ../vfio
-    ../gui
-  ];
+  imports =
+    [ (modulesPath + "/installer/scan/not-detected.nix") ../vfio ../gui ];
 
   networking.hostName = "jeff-nixos";
 
@@ -48,25 +45,11 @@
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.kernelModules = [
-    "kvm-amd"
-    "i2c_dev"
-  ];
-  boot.initrd.availableKernelModules = [
-    "nvme"
-    "xhci_pci"
-    "ahci"
-    "usbhid"
-    "usb_storage"
-    "sd_mod"
-  ];
-  boot.initrd.kernelModules = [
-    "vfio"
-    "vfio_iommu_type1"
-    "vfio_pci"
-    "vfio_virqfd"
-    "amdgpu"
-  ];
+  boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
+  boot.initrd.availableKernelModules =
+    [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.kernelModules =
+    [ "vfio" "vfio_iommu_type1" "vfio_pci" "vfio_virqfd" "amdgpu" ];
   boot.blacklistedKernelModules = [ "nouveau" "nvidia" ];
   boot.kernelParams = [
     "radeon.si_support=0"
@@ -127,7 +110,7 @@
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
-    extraPackages = with pkgs; [];
+    extraPackages = with pkgs; [ ];
   };
 
   programs.steam.enable = true;

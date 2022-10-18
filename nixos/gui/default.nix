@@ -1,15 +1,7 @@
-{ config, lib, pkgs, ... }:
-{
-  imports = [
-    ./freetype.nix
-    ./fonts.nix
-    ./hyprland.nix
-    ./redshift.nix
-    ./sway.nix
-  ];
-  environment.systemPackages = with pkgs; [
-    pinentry-gtk2
-  ];
+{ config, lib, pkgs, ... }: {
+  imports =
+    [ ./freetype.nix ./fonts.nix ./hyprland.nix ./redshift.nix ./sway.nix ];
+  environment.systemPackages = with pkgs; [ pinentry-gtk2 ];
   nixpkgs.overlays = [
     (self: super: {
       wl-clipboard-x11 = super.stdenv.mkDerivation rec {
@@ -50,9 +42,7 @@
   nixpkgs.config.packageOverrides = pkgs: rec {
     wofi = (config.util.optimizeDefault pkgs.wofi);
     alacritty = (config.util.optimizeDefault pkgs.alacritty);
-    waybar = (config.util.optimizeDefault
-      (pkgs.waybar.overrideAttrs (prev: {
-        mesonFlags = prev.mesonFlags ++ [ "-Dexperimental=true" ];
-      })));
+    waybar = (config.util.optimizeDefault (pkgs.waybar.overrideAttrs
+      (prev: { mesonFlags = prev.mesonFlags ++ [ "-Dexperimental=true" ]; })));
   };
 }
