@@ -11,10 +11,6 @@
     ".Xresources".source = ../../dotfiles/Xresources.d/.Xresources.gruvbox-dark;
     ".looking-glass-client.ini".source =
       ../../dotfiles/looking-glass-client.ini;
-
-    ## create symlink to git repo (instead of nix store) for quicker editing
-    "bin/".source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.user-info.nixConfigDirectory}/scripts";
   };
 
   imports = [

@@ -7,7 +7,14 @@ in {
   programs.jq.enable = true;
   programs.htop = {
     enable = true;
-    package = (optimize pkgs.htop);
+    package = (if !pkgs.stdenv.isDarwin then
+      (optimize pkgs.htop) else pkgs.htop);
+  };
+
+  home.file = {
+    ## create symlink to git repo (instead of nix store) for quicker editing
+    "bin/".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.user-info.nixConfigDirectory}/scripts";
   };
 
   home.packages = with pkgs; [

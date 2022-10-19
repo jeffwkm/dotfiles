@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }: {
   nixpkgs.config.packageOverrides = pkgs: rec {
-    oraclejdk = pkgs.zulu;
-    jdk = pkgs.zulu;
+    oraclejdk = pkgs.openjdk8;
+    jdk = pkgs.openjdk8;
   };
 
   environment.systemPackages = with pkgs; [
