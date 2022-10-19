@@ -1,4 +1,4 @@
-{ extra }:
+{ config, extra }:
 let lsd_completion = builtins.toFile "_lsd" (builtins.readFile ./_lsd);
 in {
   cfg = {
@@ -58,6 +58,7 @@ in {
       '';
       greg = "greg -cf ~/.greg.conf";
       H = "history -50000 | grep -i";
+      n = "cd ${config.home.user-info.nixConfigDirectory}";
     } // (extra.shellAliases or { });
 
     shellGlobalAliases = {
@@ -71,11 +72,19 @@ in {
       _t = "| tail -n";
       _l = "| less";
       # mpv options
+      V = "--volume";
       V50 = "--volume=50";
       SHF = "--shuffle";
       FS0 = "--fs --fs-screen=0";
       FS1 = "--fs --fs-screen=1";
       FS2 = "--fs --fs-screen=2";
+      F24 = "--display-fps=24";
+      HLG =
+        "--target-trc=hlg --target-prim=bt.2020 --hdr-compute-peak=yes --tone-mapping=hable";
+      SVP = "--input-ipc-server=/tmp/mpvsocket";
+      NOSVP = "--input-ipc-server=";
+      ICC = "--icc-profile-auto=yes";
+      NOICC = "--icc-profile-auto=no";
     } // (extra.shellGlobalAliases or { });
 
     initExtraFirst = ''
@@ -99,6 +108,11 @@ in {
       # add $HOME/bin to PATH
       if [[ ! $PATH =~ ".*$HOME/bin.*" ]] ; then
         export PATH="$HOME/bin:$PATH"
+      fi
+
+      # add $HOME/bin.local to PATH
+      if [[ ! $PATH =~ ".*$HOME/bin\.local.*" ]] ; then
+        export PATH="$HOME/bin.local:$PATH"
       fi
 
       source ${lsd_completion} 2> /dev/null

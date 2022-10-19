@@ -65,5 +65,6 @@ let
         }
       '';
     };
+    inherit config;
   }).cfg;
 in { programs.zsh = cfg; }

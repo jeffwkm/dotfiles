@@ -54,6 +54,7 @@ in {
     w3m
     wget
     youtube-dl # :: download web videos by URL from many websites
+    yt-dlp
     zip
     epr
   ];

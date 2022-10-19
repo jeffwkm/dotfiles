@@ -17,5 +17,6 @@ let
         if [ -z $DISPLAY ]; then export DISPLAY=:0.0; fi
       '';
     };
+    inherit config;
   }).cfg;
 in { programs.zsh = cfg; }
