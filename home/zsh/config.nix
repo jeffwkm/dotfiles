@@ -58,7 +58,7 @@ in {
       '';
       greg = "greg -cf ~/.greg.conf";
       H = "history -50000 | grep -i";
-      n = "cd ${config.home.user-info.nixConfigDirectory}";
+      n = "cd ${config.home.local.nix-repo-path}";
     } // (extra.shellAliases or { });
 
     shellGlobalAliases = {
@@ -90,7 +90,7 @@ in {
     initExtraFirst = ''
       [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
       unset ZDOTDIR
-      export ZSHCONFIG="$HOME/.config/nixpkgs/dotfiles/zsh"
+      export ZSHCONFIG="${config.home.local.nix-repo-path}/dotfiles/zsh"
       export FPATH="$ZSHCONFIG/prompts:$FPATH"
       ${extra.initExtraFirst or ""}
     '';

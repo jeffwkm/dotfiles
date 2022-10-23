@@ -22,7 +22,7 @@ opts=(
   # "--log-level=INFO"
   # "--no-sandbox"
   # "--chrome-labs"
-);
+)
 
 source "$HOME/.config/nixpkgs/dotfiles/chromium_dev_keys.sh"
 exec chromium "${opts[@]}" "$@" 2>&1
