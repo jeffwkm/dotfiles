@@ -106,6 +106,8 @@
 
   sound.enable = true;
   hardware.pulseaudio.enable = true;
+  hardware.pulseaudio.extraConfig =
+    "load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1";
 
   programs.sway = {
     enable = true;
@@ -115,7 +117,7 @@
 
   programs.steam.enable = true;
 
-  environment.systemPackages = with pkgs; [ libguestfs ];
+  environment.systemPackages = with pkgs; [ libguestfs mpd-mpris ];
 
   environment.sessionVariables = {
     ### use emacsclient as default editor
@@ -145,6 +147,20 @@
     enable = false;
     alsa.enable = true;
     pulse.enable = true;
+  };
+
+  services.mpd = {
+    enable = true;
+    musicDirectory = "/mnt/huge/Music";
+    extraConfig = ''
+      audio_output {
+        type "pulse"
+        name "Pulseaudio"
+        server "127.0.0.1" # add this line - MPD must connect to the local sound server
+      }
+    '';
+    network.listenAddress = "any";
+    startWhenNeeded = true;
   };
 
   # xdg-desktop-portal works by exposing a series of D-Bus interfaces
