@@ -97,7 +97,7 @@ bindsym XF86AudioRaiseVolume   exec volume-up.sh
 bindsym XF86AudioLowerVolume   exec volume-down.sh
 bindsym XF86AudioMute          exec toggle-mute.sh
 ## media player controls
-set $playerctl ~/bin/playerctl.sh
+set $playerctl ~/bin.local/playerctl.sh
 bindsym $Su+$C+Up              exec bash -c "$playerctl play-pause"
 bindsym $Su+$C+Left            exec bash -c "$playerctl previous"
 bindsym $Su+$C+Right           exec bash -c "$playerctl next"
