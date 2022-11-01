@@ -46,18 +46,18 @@ in {
         "doom-config/ligature.el".source = ./doom.d/ligature.el;
         "doom-config/org-notify.el".source = ./doom.d/org-notify.el;
 
-        "emacs" = {
-          source = inputs.doom-emacs;
-          onChange = "${pkgs.writeShellScript "doom-change" ''
-            export DOOMDIR="${config.home.sessionVariables.DOOMDIR}"
-            export DOOMLOCALDIR="${config.home.sessionVariables.DOOMLOCALDIR}"
-            if [ ! -d "$DOOMLOCALDIR" ]; then
-              ~/.config/emacs/bin/doom -y install
-                else
-              ~/.config/emacs/bin/doom -y sync -u
-            fi
-          ''}";
-        };
+        # "emacs" = {
+        #   source = inputs.doom-emacs;
+        #   onChange = "${pkgs.writeShellScript "doom-change" ''
+        #     export DOOMDIR="${config.home.sessionVariables.DOOMDIR}"
+        #     export DOOMLOCALDIR="${config.home.sessionVariables.DOOMLOCALDIR}"
+        #     if [ ! -d "$DOOMLOCALDIR" ]; then
+        #       ~/.config/emacs/bin/doom -y install
+        #         else
+        #       ~/.config/emacs/bin/doom -y sync -u
+        #     fi
+        #   ''}";
+        # };
       };
     };
   };
