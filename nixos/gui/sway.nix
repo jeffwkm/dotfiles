@@ -31,4 +31,8 @@ let
       };
     }));
   });
-in { nixpkgs.overlays = [ iccOverlay ]; }
+in {
+  nixpkgs.overlays = [
+    # iccOverlay
+  ];
+}

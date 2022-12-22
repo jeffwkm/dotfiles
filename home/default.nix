@@ -21,7 +21,7 @@ in {
     # pinentry-gnome
     # rofi-pass
     # sshuttle
-    awscli2
+    # awscli2
     # cachix
     cmatrix # :: Simulates the falling characters theme from The Matrix movie
     expect

@@ -6,7 +6,7 @@ let
       requests
       pulsectl
       pip
-      pyatv
+      # pyatv
       editorconfig
       isort
       pytest

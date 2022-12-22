@@ -27,5 +27,5 @@
     })
   ];
   nixpkgs.config.permittedInsecurePackages =
-    [ "nodejs-10.24.1" "nodejs-12.22.12" ];
+    [ "nodejs-10.24.1" "nodejs-12.22.12" "qtwebkit-5.212.0-alpha4" ];
 }

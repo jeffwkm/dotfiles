@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   # emacsBase = pkgs.emacsNativeComp;
-  emacsBase = pkgs.emacsPgtkNativeComp;
+  emacsBase = pkgs.emacsPgtk;
   emacsCustom1 = config.util.optimizeC emacsBase [
     "-march=native"
     "-O3"

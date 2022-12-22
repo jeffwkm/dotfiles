@@ -79,7 +79,7 @@
           })
           (final: prev: {
             # Use packages from nixpkgs-stable
-            inherit (final.pkgs-stable) rustracer;
+            inherit (final.pkgs-stable) rustracer trace-cmd;
           })
           (final: prev: {
             # Use packages from nixpkgs-unstable

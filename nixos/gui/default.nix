@@ -27,7 +27,7 @@
     (final: prev: {
       mpv = prev.mpv.override {
         scripts = with final.mpvScripts; [
-          autoload
+          # autoload
           convert
           mpris
           mpvacious
