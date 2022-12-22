@@ -32,7 +32,7 @@ in {
     jq
     mediainfo
     mr # :: Multiple Repository management tool
-    ncdu
+    # ncdu
     ncspot # :: Cross-platform ncurses Spotify client written in Rust
     neofetch
     nethack

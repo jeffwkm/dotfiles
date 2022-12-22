@@ -2,15 +2,15 @@
 with lib;
 with config.util;
 let
-  cfg = config.home.emacs;
+  cfg = config.home.local.emacs;
   emacsPkg = pkgs.emacs;
 in {
-  options = {
-    home.emacs = {
-      enable = mkBoolOpt true;
-      install = mkBoolOpt false;
-    };
-  };
+  # options = {
+  #   home.emacs = {
+  #     enable = mkBoolOpt true;
+  #     install = mkBoolOpt false;
+  #   };
+  # };
 
   config = {
     home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];

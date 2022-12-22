@@ -1,4 +1,5 @@
-{ lib, ... }:
+{ config, lib, ... }:
+with config.util;
 let inherit (lib) mkOption types;
 in {
   options = {
@@ -20,6 +21,10 @@ in {
           type = with types; nullOr string;
           default = null;
         };
+      };
+      emacs = {
+        enable = mkBoolOpt true;
+        install = mkBoolOpt false;
       };
     };
   };

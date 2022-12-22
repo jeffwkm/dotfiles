@@ -128,10 +128,12 @@
               useUserPackages = true;
               users.${username} = {
                 # inherit (config) user;
-                imports = (attrValues (if darwin then
-                  self.homeManagerModulesMac
+                imports = (attrValues self.homeManagerModulesShared) ++
+                          (attrValues (if darwin then
+                            self.homeManagerModulesMac
                                        else
-                                         self.homeManagerModulesLinux)) ++ extraModules;
+                                         self.homeManagerModulesLinux))
+                          ++ extraModules;
                 home.stateVersion = homeManagerStateVersion;
                 home.local.primary-user = primaryUserInfo;
                 home.local.nix-repo-path = configDir;
@@ -150,8 +152,8 @@
 
         jeff-nixos = nixosSystem {
           system = "x86_64-linux";
-          modules = (attrValues (self.nixosModules
-                                 // (systemHomeManagerModules {
+          modules = (attrValues (self.sharedModules //
+                                 self.nixosModules // (systemHomeManagerModules {
                                    darwin = false;
                                    extraModules = [ (importModule ./home/gui) ];
                                  }))) ++ [
@@ -163,7 +165,7 @@
 
         jeff-home = nixosSystem {
           system = "x86_64-linux";
-          modules = (attrValues self.nixosModules) ++ (attrValues
+          modules = (attrValues self.sharedModules // self.nixosModules) ++ (attrValues
             (systemHomeManagerModules {
               darwin = false;
               extraModules = [ (importModule ./home/gui) ];
@@ -184,14 +186,15 @@
 
         jeff-m1x = darwinSystem {
           system = "aarch64-darwin";
-          modules = (attrValues self.darwinModules)
-                    ++ (attrValues (systemHomeManagerModules { darwin = true; })) ++ [{
-                                                                 local.primary-user = primaryUserInfo;
-                                                                 networking.computerName = "Jeff-M1X";
-                                                                 networking.hostName = "jeff-m1x";
-                                                                 networking.knownNetworkServices =
-                                                                   [ "Wi-Fi" "USB 10/100/1000 LAN" ];
-                                                               }];
+          modules = (attrValues (self.sharedModules //
+                                 self.darwinModules //
+          (systemHomeManagerModules { darwin = true; }))) ++ [{
+                                        local.primary-user = primaryUserInfo;
+                                        networking.computerName = "Jeff-M1X";
+                                        networking.hostName = "jeff-m1x";
+                                        networking.knownNetworkServices =
+                                          [ "Wi-Fi" "USB 10/100/1000 LAN" ];
+                                                                                   }];
         };
       };
 
@@ -210,7 +213,7 @@
             home.local.primary-user = primaryUserInfo;
             home.local.nix-repo-path =
               "${config.home.homeDirectory}/${nixConfigRelativePath}";
-            home.emacs.install = false;
+            home.local.emacs.install = false;
             programs.zsh.prezto.prompt.theme = "steeef";
           });
       };
@@ -250,13 +253,14 @@
 
       sharedModules = {
         local-util = importModule ./util;
+        local-util-options = importModule ./util/options.nix;
         local-options = importModule ./options;
       };
 
       nixosModules = {
         local-bootstrap = importModule ./nixos/bootstrap.nix;
         local-common = importModule ./nixos/common;
-      } // self.sharedModules // (systemHomeManagerModules { darwin = false; });
+      };
 
       darwinModules = {
         local-bootstrap = importModule ./darwin/bootstrap.nix;
@@ -265,9 +269,9 @@
         local-postgres = importModule ./darwin/postgres.nix;
         local-system = importModule ./darwin/system;
         local-ui = importModule ./darwin/ui;
-      } // self.sharedModules // (systemHomeManagerModules { darwin = true; });
+      };
 
-      sharedModulesHome = rec {
+      homeManagerModulesShared = rec {
         local-util = importModule ./util;
         local-common = importModule ./home;
         local-emacs = importModule ./home/emacs;
@@ -277,15 +281,21 @@
             pkgs = nixpkgs;
           }).options.local;
         };
+        # home-local-util = { lib, config, ... }: {
+        #   options.home.util = (self.sharedModules.local-util-options {
+        #     inherit lib config;
+        #     pkgs = nixpkgs;
+        #   }).options.util;
+        # };
       };
 
       homeManagerModulesMac = {
         jeff-common-mac = importModule ./home/mac;
-      } // self.sharedModulesHome;
+      };
 
       homeManagerModulesLinux = {
         jeff-common-linux = importModule ./home/linux;
         jeff-clojure = importModule ./home/clojure.nix;
-      } // self.sharedModulesHome;
+      };
     };
 }
