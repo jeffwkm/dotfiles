@@ -49,8 +49,8 @@
 (defun gui-emacs-mac? () (eql window-system 'mac))
 (defun gui-mac? () (or (gui-mac-std?) (gui-emacs-mac?)))
 
-;; (setq doom-theme 'doom-tomorrow-night)
-(setq doom-theme 'doom-one
+;; (setq doom-theme 'doom-one)
+(setq doom-theme 'doom-tomorrow-night
       doom-one-brighter-comments t)
 ;; (load-theme doom-theme t)
 ;; 'doom-one 'doom-gruvbox 'doom-tomorrow-night 'doom-spacegrey 'doom-material-dark 'doom-zenburn
