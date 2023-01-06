@@ -23,9 +23,9 @@ in {
 
   home.sessionPath = [ "${config.home.homeDirectory}/.node_modules/bin" ];
 
-  alacritty.fontSize = "14";
-  alacritty.fontSizeLarge = "16";
-  alacritty.fontSizeHuge = "18";
+  alacritty.fontSize = "15";
+  alacritty.fontSizeLarge = "17";
+  alacritty.fontSizeHuge = "19";
   alacritty.decorations = "buttonless";
   alacritty.fontFamily = "JetBrainsMono Nerd Font";
 
