@@ -39,7 +39,7 @@ in {
     nixfmt # :: An opinionated formatter for Nix
     nodePackages.prettier
     p7zip
-    passExtensions.pass-checkup
+    # passExtensions.pass-checkup
     passh # :: An sshpass alternative for non-interactive ssh auth
     rbenv
     ripgrep # :: replacement for /bin/grep
