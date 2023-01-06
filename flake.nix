@@ -253,7 +253,7 @@
 
       sharedModules = {
         local-util = importModule ./util;
-        local-util-options = importModule ./util/options.nix;
+        # local-util-options = importModule ./util/options.nix;
         local-options = importModule ./options;
       };
 
@@ -289,9 +289,7 @@
         # };
       };
 
-      homeManagerModulesMac = {
-        jeff-common-mac = importModule ./home/mac;
-      };
+      homeManagerModulesMac = { jeff-common-mac = importModule ./home/mac; };
 
       homeManagerModulesLinux = {
         jeff-common-linux = importModule ./home/linux;

@@ -46,7 +46,7 @@ in {
       Environment = [
         "DOOMDIR=%h/.config/doom-config"
         "DOOMLOCALDIR=%h/.config/doom-local"
-      ] ++ lib.optional (!config.home.emacs.install)
+      ] ++ lib.optional (!config.home.local.emacs.install)
         "LD_LIBRARY_PATH=${pkgs.freetype_subpixel}/lib";
     };
   };
