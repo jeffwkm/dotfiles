@@ -193,16 +193,13 @@
 
 (use-package! elisp-mode
   :config
-  (add-hook! (emacs-lisp-mode ielm-mode) 'elisp-slime-nav-mode)
-  (map! "M-," 'pop-tag-mark
-        "M-." 'elisp-slime-nav-find-elisp-thing-at-point
-        :mode elisp-slime-nav-mode
-        "M-." 'elisp-slime-nav-find-elisp-thing-at-point))
+  (add-hook! (emacs-lisp-mode ielm-mode) 'elisp-slime-nav-mode))
 
 (after! magit
   (map! :mode magit-mode
         ;; "0" nil
         ))
+
 (map! :leader
       :desc "Kill sexp"
       "k" 'sp-kill-sexp
@@ -268,6 +265,8 @@
       :n "M-." nil
       :g "M-<left>" nil
       :g "M-<right>" nil
+      "M-," 'pop-tag-mark
+      "M-." '+lookup/definition
       "C-o" 'ace-window
       "C-1" 'delete-other-windows
       "C-x 1" 'delete-other-windows
