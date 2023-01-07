@@ -539,7 +539,16 @@ interactively for spacing value."
         company-dabbrev-other-buffers t
         company-minimum-prefix-length 3
         company-idle-delay 0.15)
-  (add-to-list 'company-transformers 'company-sort-by-occurrence)
+  (set-company-backend! 'text-mode
+    nil)
+  (set-company-backend! 'prog-mode
+    'company-capf
+    'company-files)
+  (set-company-backend! 'conf-mode
+    'company-capf
+    'company-dabbrev-code
+    'company-files)
+  ;; (add-to-list 'company-transformers 'company-sort-by-occurrence)
   (use-package! company-quickhelp
     :config
     (setq company-quickhelp-delay 0.5)
@@ -994,17 +1003,9 @@ interactively for spacing value."
   (use-package! nix-sandbox)
   (use-package! nix-buffer)
   (use-package! nix-update)
-  (use-package! nixos-options)
-  (use-package! company-nixos-options
-    :disabled t
-    :if (not (mac?))
-    :config
-    (add-to-list 'company-backends 'company-nixos-options))
   (defun --nix-mode-hook ()
     (setq-local tab-width 2))
-  (add-hook! nix-mode '--nix-mode-hook)
-  ;; (use-package! nixpkgs-fmt)
-  )
+  (add-hook! nix-mode '--nix-mode-hook))
 
 (defun --kill-auto-workspace ()
   "Delete empty auto-created workspace named #1, #2, ..."

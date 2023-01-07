@@ -3,7 +3,7 @@
 
 (package! aggressive-indent :pin "cb416faf61c46977c06cf9d99525b04dc109a33c")
 (package! alert :built-in 'prefer)
-(package! company-nixos-options :built-in 'prefer)
+;; (package! company-nixos-options :built-in 'prefer)
 (package! company-quickhelp :built-in 'prefer)
 (package! company-statistics :built-in 'prefer)
 (package! elisp-slime-nav :built-in 'prefer)
@@ -20,7 +20,7 @@
 (package! nix-buffer :built-in 'prefer)
 (package! nix-sandbox :built-in 'prefer)
 (package! nix-update :built-in 'prefer)
-(package! nixos-options :built-in 'prefer)
+;; (package! nixos-options :built-in 'prefer)
 (package! org-bullets :built-in 'prefer)
 (package! org-fancy-priorities :built-in 'prefer)
 (package! org-pomodoro)
