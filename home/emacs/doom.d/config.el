@@ -67,19 +67,13 @@
 
 (defvar --large-font nil)
 (defun --configure-fonts ()
-  (setq doom-font (if (mac?)
-                      "JetBrainsMono Nerd Font 15"
-                    "JetBrainsMono Nerd Font 11"
-                    ;; "JetBrainsMono Nerd Font Medium 11"
-                    )
-        ;; (font-spec :family "JetBrainsMono Nerd Font"
-        ;;            :size (if (mac?)
-        ;;                      (if --large-font 15 14)
-        ;;                    (if --large-font 16 15)) )
+  (setq doom-font (font-spec :family "JetBrainsMono Nerd Font"
+                             :size (if (mac?) 15 15))
         doom-big-font nil
         doom-big-font-increment 2
         doom-font-increment 1
-        doom-variable-pitch-font (font-spec :size (if --large-font 16 14))))
+        doom-variable-pitch-font (font-spec :family "Noto Sans"
+                                            :size (if --large-font 17 15))))
 (--configure-fonts)
 
 (require 'hl-line)
