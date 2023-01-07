@@ -63,6 +63,7 @@ in {
     rsync
     rustup
     rustracer
+    rust-analyzer
     shfmt
     todoist
     watch
