@@ -61,6 +61,15 @@
     };
   };
 
+  services.gammastep = {
+    enable = true;
+    provider = "manual";
+    latitude = 39.02588;
+    longitude = -77.15228;
+    temperature.day = 6000; # 5800 6000 6200
+    temperature.night = 5200; # 4800 5000 5200
+  };
+
   home.packages = with pkgs; [
     swaybg
     swayidle
