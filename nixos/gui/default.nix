@@ -24,18 +24,25 @@
       xclip = self.wl-clipboard-x11;
     })
     (final: prev: {
-      mpv = prev.mpv.override {
-        scripts = with final.mpvScripts; [
-          # autoload
-          convert
-          mpris
-          mpvacious
-          mpv-playlistmanager
-          # sponsorblock
-          # thumbnail
-          # unstable.mpvScripts.youtube-quality
-        ];
-      };
+      mpv = (prev.wrapMpv
+        (prev.mpv-unwrapped.override { vapoursynthSupport = true; }) {
+          scripts = with final.mpvScripts; [
+            # autoload
+            convert
+            mpris
+            mpvacious
+            mpv-playlistmanager
+            # sponsorblock
+            # thumbnail
+            # unstable.mpvScripts.youtube-quality
+          ];
+          extraMakeWrapperArgs = [
+            "--prefix"
+            "LD_LIBRARY_PATH"
+            ":"
+            "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+          ];
+        });
     })
   ];
   nixpkgs.config.packageOverrides = pkgs: rec {

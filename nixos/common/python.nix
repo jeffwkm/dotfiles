@@ -24,6 +24,7 @@ let
       black
       ### local packages
       amdgpu-fan
+      vapoursynth
     ]);
   python3-custom = pkgs.python3.withPackages python3-packages;
 in {

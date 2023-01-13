@@ -29,7 +29,6 @@ in {
     spotdl # :: Download your Spotify playlists and songs along with album art and metadata
     spotify-cli-linux # :: A command line interface to Spotify on Linux
     usbutils
-    vapoursynth
     xdg-user-dirs
   ];
 
