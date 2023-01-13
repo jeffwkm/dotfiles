@@ -26,6 +26,10 @@
       final.stdenv = prev.fastStdenv.mkDerivation { name = "env"; };
     })
   ];
-  nixpkgs.config.permittedInsecurePackages =
-    [ "nodejs-10.24.1" "nodejs-12.22.12" "qtwebkit-5.212.0-alpha4" ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "nodejs-10.24.1"
+    "nodejs-12.22.12"
+    "qtwebkit-5.212.0-alpha4"
+    "python-2.7.18.6"
+  ];
 }
