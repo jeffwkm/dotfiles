@@ -60,7 +60,6 @@ in {
   ];
 
   # xdg.configFile."htop/htoprc".source = ../dotfiles/htop/htoprc;
-  xdg.configFile."mpv/input.conf".source = ../dotfiles/mpv/input.conf;
   xdg.configFile."mpv/motioninterpolation.vpy".source =
     ../dotfiles/mpv/motioninterpolation.vpy;
 

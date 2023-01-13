@@ -7,6 +7,12 @@ in {
     (builtins.readFile ../../dotfiles/mpv/mpv.conf) + ''
       profile=gpu-hq
       gpu-context=waylandvk
+      vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:4:4
+    '';
+
+  xdg.configFile."mpv/input.conf".text =
+    (builtins.readFile ../../dotfiles/mpv/input.conf) + ''
+      I vf toggle format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:4:4
     '';
 
   home.packages = with pkgs; [

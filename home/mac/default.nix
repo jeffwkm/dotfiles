@@ -36,6 +36,9 @@ in {
       input-ipc-server=/tmp/mpvsocket
     '';
 
+  xdg.configFile."mpv/input.conf".text =
+    (builtins.readFile ../../dotfiles/mpv/input.conf) + "";
+
   home.packages = with pkgs; [
     (lowPrio coreutils-full)
     cmake
