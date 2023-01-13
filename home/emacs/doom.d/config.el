@@ -541,7 +541,11 @@ interactively for spacing value."
         company-dabbrev-ignore-case nil
         company-dabbrev-other-buffers t
         company-minimum-prefix-length 3
-        company-idle-delay 0.15)
+        company-idle-delay 0.15
+        company-tooltip-maximum-width 70
+        company-tooltip-offset-display 'lines
+        company-box-doc-delay 0.5
+        company-box-tooltip-maximum-width 90)
   (set-company-backend! 'text-mode
     nil)
   (set-company-backend! 'prog-mode
@@ -552,11 +556,6 @@ interactively for spacing value."
     'company-dabbrev-code
     'company-files)
   ;; (add-to-list 'company-transformers 'company-sort-by-occurrence)
-  (use-package! company-quickhelp
-    :disabled (mac?)
-    :config
-    (setq company-quickhelp-delay 0.5)
-    (company-quickhelp-mode 1))
   (use-package! company-statistics
     :config
     (company-statistics-mode 1))
