@@ -260,7 +260,5 @@
     <qemu:arg value='input-linux,id=mouse2,evdev=/dev/input/by-id/uinput-persist-mouse1'/>
     <qemu:arg value='-object'/>
     <qemu:arg value='input-linux,id=mouse3,evdev=/dev/input/by-id/uinput-persist-mouse2'/>
-    <qemu:arg value='-cpu'/>
-    <qemu:arg value='host,kvmclock=on,hv-time,hv-relaxed,hv-vapic,hv-spinlocks=0x1fff,hv-vendor-id=blahblah,kvm=off,-amd-stibp'/>
   </qemu:commandline>
 </domain>
