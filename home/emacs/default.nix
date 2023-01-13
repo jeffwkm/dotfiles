@@ -38,13 +38,8 @@ in {
     xdg = {
       enable = true;
       configFile = {
-        "doom-config/config.el".source = ./doom.d/config.el;
-        "doom-config/init.el".source = ./doom.d/init.el;
-        "doom-config/packages.el".source = ./doom.d/packages.el;
-        "doom-config/auto-margin.el".source = ./doom.d/auto-margin.el;
-        "doom-config/fringe.el".source = ./doom.d/fringe.el;
-        "doom-config/ligature.el".source = ./doom.d/ligature.el;
-        "doom-config/org-notify.el".source = ./doom.d/org-notify.el;
+        "doom-config/".source = config.lib.file.mkOutOfStoreSymlink
+          "${config.home.local.nix-repo-path}/home/emacs/doom.d";
 
         # "emacs" = {
         #   source = inputs.doom-emacs;
