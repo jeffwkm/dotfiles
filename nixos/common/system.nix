@@ -87,6 +87,7 @@
     kmon
     libtool
     linuxPackages.cpupower
+    lm_sensors
     lsof
     nix-index # :: A files database for nixpkgs
     nix-prefetch-scripts

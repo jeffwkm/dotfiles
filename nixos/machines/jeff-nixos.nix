@@ -43,7 +43,7 @@
     };
   };
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
   boot.initrd.availableKernelModules =
@@ -52,10 +52,10 @@
     [ "vfio" "vfio_iommu_type1" "vfio_pci" "vfio_virqfd" "amdgpu" ];
   boot.blacklistedKernelModules = [ "nouveau" "nvidia" ];
   boot.kernelParams = [
-    "radeon.si_support=0"
-    "amdgpu.si_support=1"
-    "radeon.cik_support=0"
-    "amdgpu.cik_support=1"
+    # "radeon.si_support=0"
+    # "amdgpu.si_support=1"
+    # "radeon.cik_support=0"
+    # "amdgpu.cik_support=1"
     "amd_iommu=on"
     "iommu=pt"
     "rd.driver.pre=vfio-pci"
