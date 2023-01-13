@@ -16,6 +16,7 @@ let
       setuptools
       black
       jsbeautifier
+      vapoursynth
     ]);
   python3-custom = python3.withPackages python3-packages;
 in {

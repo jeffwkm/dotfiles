@@ -63,7 +63,7 @@
   (setq mac-command-modifier 'meta
         mac-option-modifier 'super
         find-function-C-source-directory
-        "/Users/jeff/Library/Caches/Homebrew/emacs-plus@28--git/src/"))
+        "/Users/jeff/Library/Caches/Homebrew/emacs-plus@30--git/src/"))
 
 (defvar --large-font nil)
 (defun --configure-fonts ()
@@ -79,7 +79,7 @@
                                               :size (if --large-font 17 15)))))
 (--configure-fonts)
 
-(require 'hl-line)
+(use-package! hl-line)
 
 (load! "fringe.el")
 

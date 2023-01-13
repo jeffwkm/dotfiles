@@ -8,3 +8,4 @@ tmp/
 /dotfiles/chromium_dev_keys.sh
 /nixos/result
 /home/emacs/doom.d/flycheck_config.el
+flycheck_init.el
