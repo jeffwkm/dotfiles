@@ -553,6 +553,7 @@ interactively for spacing value."
     'company-files)
   ;; (add-to-list 'company-transformers 'company-sort-by-occurrence)
   (use-package! company-quickhelp
+    :disabled (mac?)
     :config
     (setq company-quickhelp-delay 0.5)
     (company-quickhelp-mode 1))
