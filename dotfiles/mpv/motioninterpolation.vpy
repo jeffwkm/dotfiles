@@ -8,7 +8,6 @@
 import vapoursynth
 
 core = vapoursynth.core
-# core.std.LoadAllPlugins('/nix/store/5lv68vg7fh7xb4gy7vadv4f53zq2lrry-home-manager-path/lib/vapoursynth')
 core.std.LoadAllPlugins(
     "/nix/var/nix/profiles/per-user/jeff/home-manager/home-path/lib/vapoursynth"
 )
@@ -36,11 +35,17 @@ else:
     clip = core.ffms2.Source(source=in_filename)
     dst_fps = float(dst_fps)
 
+clip_fps = int(clip.fps_num / clip.fps_den)
+
 # resolution in megapixels. 1080p ≈ 2MP, 720p ≈ 1MP
 mpix = clip.width * clip.height / 1000000
 
-# Skip interpolation for >1080p or 60 Hz content due to performance
-if not (mpix > 2.5 or clip.fps_num / clip.fps_den > 59):
+# Don't interpolate if too resource intensive
+ignore = mpix > 10 or clip_fps > 50
+# Use faster parameters for large videos
+fast_mode = mpix > 2.5 or clip_fps >= 50
+
+if not ignore:
     analParams = {
         "overlap": 0,
         "search": 3,
@@ -52,31 +57,27 @@ if not (mpix > 2.5 or clip.fps_num / clip.fps_den > 59):
     blockParams = {
         "thscd1": ignore_threshold,
         "thscd2": int(scene_change_percentage * 255 / 100),
-        "mode": 3,
+        # "mode": 3,
     }
 
-    if mpix > 2.5:
-        # can't handle these on Full HD with Intel i5-2500k
-        # see the description of these parameters in http://avisynth.org.ru/mvtools/mvtools2.html#functions
+    if fast_mode:
         analParams["search"] = 0
         blockParams["mode"] = 0
-        quality = "low"
-    else:
-        quality = "high"
+        analParams["blksize"] = 16
 
     dst_fps_num = int(dst_fps * 1e4)
     dst_fps_den = int(1e4)
     print(
-        "Reflowing from {} fps to {} fps (quality={})".format(
-            clip.fps_num / clip.fps_den, dst_fps_num / dst_fps_den, quality
+        "Reflowing from {} fps to {} fps (quality = {})".format(
+            clip_fps, dst_fps, {True: "low", False: "high"}[fast_mode]
         )
     )
 
     sup = core.mv.Super(clip, pel=2)
     bvec = core.mv.Analyse(sup, isb=True, **analParams)
     fvec = core.mv.Analyse(sup, isb=False, **analParams)
-    clip = core.mv.BlockFPS(
-        clip, sup, bvec, fvec, num=dst_fps_num, den=dst_fps_den, **blockParams
-    )
 
-    clip.set_output()
+    f = {True: core.mv.BlockFPS, False: core.mv.FlowFPS}[fast_mode]
+    clip = f(clip, sup, bvec, fvec, num=dst_fps_num, den=dst_fps_den, **blockParams)
+
+clip.set_output()

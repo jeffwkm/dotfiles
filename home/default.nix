@@ -59,12 +59,17 @@ in {
     epr
   ];
 
-  # xdg.configFile."htop/htoprc".source = ../dotfiles/htop/htoprc;
-  xdg.configFile."mpv/motioninterpolation.vpy".source =
-    ../dotfiles/mpv/motioninterpolation.vpy;
+  xdg.configFile = {
+    "htop/htoprc".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.local.nix-repo-path}/dotfiles/htop/htoprc";
+    "mpv/motioninterpolation.vpy".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.local.nix-repo-path}/dotfiles/mpv/motioninterpolation.vpy";
+  };
 
-  home.file.".tmux.conf".source = ../dotfiles/tmux.conf;
-  home.file.".lein/profiles.clj".source = ../dotfiles/lein/profiles.clj;
+  home.file = {
+    ".tmux.conf".source = ../dotfiles/tmux.conf;
+    ".lein/profiles.clj".source = ../dotfiles/lein/profiles.clj;
+  };
 
   programs.git = {
     enable = true;
