@@ -812,9 +812,11 @@ interactively for spacing value."
   (add-hook! '(clojure-mode-hook clojurescript-mode-hook cider-repl-mode-hook)
              'lispy-mode)
   (define-key! 'cider-mode-map
-    "M-." 'cider-find-var
+    "M-." nil ;; 'cider-find-var
     "C-c C-k" 'cider-load-buffer
     "C-c n" 'cider-repl-set-ns)
+  (define-key! 'cider-repl-mode-map
+    "M-." nil)
   (use-package! flycheck-clojure
     :config (flycheck-clojure-setup))
   (use-package! flycheck-clj-kondo)
@@ -1373,6 +1375,9 @@ interactively for spacing value."
 ;; persp-activated-functions
 ;; (setf persp-activated-functions (delete 'treemacs persp-activated-functions))
 ;; (setf persp-activated-functions (delete '+treemacs/toggle persp-activated-functions))
+
+(after! emojify
+  (global-emojify-mode -1))
 
 (defun --darwin-rebuild-switch ()
   (interactive)

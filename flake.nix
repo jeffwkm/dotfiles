@@ -107,8 +107,8 @@
       systemHomeManagerModules = ({ extraModules ? [ ], darwin, ... }: {
         home-manager = (if darwin then
           home-manager.darwinModules.home-manager
-                        else
-                          home-manager.nixosModules.home-manager);
+        else
+          home-manager.nixosModules.home-manager);
         hm-config = ({ config, ... }:
           let
             username = primaryUserInfo.username;
@@ -128,12 +128,11 @@
               useUserPackages = true;
               users.${username} = {
                 # inherit (config) user;
-                imports = (attrValues self.homeManagerModulesShared) ++
-                          (attrValues (if darwin then
-                            self.homeManagerModulesMac
-                                       else
-                                         self.homeManagerModulesLinux))
-                          ++ extraModules;
+                imports = (attrValues self.homeManagerModulesShared)
+                  ++ (attrValues (if darwin then
+                    self.homeManagerModulesMac
+                  else
+                    self.homeManagerModulesLinux)) ++ extraModules;
                 home.stateVersion = homeManagerStateVersion;
                 home.local.primary-user = primaryUserInfo;
                 home.local.nix-repo-path = configDir;
@@ -152,27 +151,27 @@
 
         jeff-nixos = nixosSystem {
           system = "x86_64-linux";
-          modules = (attrValues (self.sharedModules //
-                                 self.nixosModules // (systemHomeManagerModules {
-                                   darwin = false;
-                                   extraModules = [ (importModule ./home/gui) ];
-                                 }))) ++ [
-                                   { local.primary-user = primaryUserInfo; }
-                                   hyprland.nixosModules.default
-                                   ./nixos/machines/jeff-nixos.nix
-                                 ];
+          modules = (attrValues (self.sharedModules // self.nixosModules
+            // (systemHomeManagerModules {
+              darwin = false;
+              extraModules = [ (importModule ./home/gui) ];
+            }))) ++ [
+              { local.primary-user = primaryUserInfo; }
+              hyprland.nixosModules.default
+              ./nixos/machines/jeff-nixos.nix
+            ];
         };
 
         jeff-home = nixosSystem {
           system = "x86_64-linux";
-          modules = (attrValues (self.sharedModules //
-                                 self.nixosModules // (systemHomeManagerModules {
-                                   darwin = false;
-                                   extraModules = [ (importModule ./home/gui) ];
-                                 }))) ++ [
-                                   { local.primary-user = primaryUserInfo; }
-                                   ./nixos/machines/jeff-home.nix
-                                 ];
+          modules = (attrValues (self.sharedModules // self.nixosModules
+            // (systemHomeManagerModules {
+              darwin = false;
+              extraModules = [ (importModule ./home/gui) ];
+            }))) ++ [
+              { local.primary-user = primaryUserInfo; }
+              ./nixos/machines/jeff-home.nix
+            ];
         };
       };
 
@@ -186,15 +185,14 @@
 
         jeff-m1x = darwinSystem {
           system = "aarch64-darwin";
-          modules = (attrValues (self.sharedModules //
-                                 self.darwinModules //
-          (systemHomeManagerModules { darwin = true; }))) ++ [{
-                                        local.primary-user = primaryUserInfo;
-                                        networking.computerName = "Jeff-M1X";
-                                        networking.hostName = "jeff-m1x";
-                                        networking.knownNetworkServices =
-                                          [ "Wi-Fi" "USB 10/100/1000 LAN" ];
-                                                                                   }];
+          modules = (attrValues (self.sharedModules // self.darwinModules
+            // (systemHomeManagerModules { darwin = true; }))) ++ [{
+              local.primary-user = primaryUserInfo;
+              networking.computerName = "Jeff-M1X";
+              networking.hostName = "jeff-m1x";
+              networking.knownNetworkServices =
+                [ "Wi-Fi" "USB 10/100/1000 LAN" ];
+            }];
         };
       };
 
@@ -247,7 +245,7 @@
         # Run `nix run my#nodePackages.node2nix -- -14` to update packages.
         nodePackages = _: prev: {
           nodePackages = prev.nodePackages
-                         // import ./pkgs/node-packages { pkgs = prev; };
+            // import ./pkgs/node-packages { pkgs = prev; };
         };
       };
 
