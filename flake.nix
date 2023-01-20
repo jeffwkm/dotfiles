@@ -165,14 +165,14 @@
 
         jeff-home = nixosSystem {
           system = "x86_64-linux";
-          modules = (attrValues self.sharedModules // self.nixosModules) ++ (attrValues
-            (systemHomeManagerModules {
-              darwin = false;
-              extraModules = [ (importModule ./home/gui) ];
-            })) ++ [
-              { local.primary-user = primaryUserInfo; }
-              ./nixos/machines/jeff-home.nix
-            ];
+          modules = (attrValues (self.sharedModules //
+                                 self.nixosModules // (systemHomeManagerModules {
+                                   darwin = false;
+                                   extraModules = [ (importModule ./home/gui) ];
+                                 }))) ++ [
+                                   { local.primary-user = primaryUserInfo; }
+                                   ./nixos/machines/jeff-home.nix
+                                 ];
         };
       };
 

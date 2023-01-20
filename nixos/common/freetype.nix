@@ -17,11 +17,11 @@
   environment.systemPackages = with pkgs; [
     fontconfig
     freetype_subpixel
-    font-manager # :: Simple font management for GTK desktop environments
-    fontforge
-    fontforge-gtk
-    fontpreview # :: Highly customizable and minimal font previewer written in bash
-    gnome.gnome-font-viewer
+    # font-manager # :: Simple font management for GTK desktop environments
+    # fontforge
+    # fontforge-gtk
+    # fontpreview # :: Highly customizable and minimal font previewer written in bash
+    # gnome.gnome-font-viewer
   ];
 
   ## Use LD_LIBRARY_PATH to make programs use custom freetype package,
