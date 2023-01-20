@@ -13,7 +13,7 @@ core.std.LoadAllPlugins(
 )
 # ref: http://avisynth.org.ru/mvtools/mvtools2.html#functions
 # default is 400, less means interpolation will only happen when it will work well
-ignore_threshold = 140
+ignore_threshold = 200  # 140
 # if n% of blocks change more than threshold then don't interpolate at all (default is 51%)
 scene_change_percentage = 15
 
@@ -45,25 +45,30 @@ ignore = mpix > 10 or clip_fps > 50
 # Use faster parameters for large videos
 fast_mode = mpix > 2.5 or clip_fps >= 50
 
+flow_fps = not fast_mode
+# flow_fps = False
+
 if not ignore:
     analParams = {
         "overlap": 0,
         "search": 3,
         "truemotion": True,
         #'chrome': True,
-        #'blksize':16,
+        "blksize": 8,
         #'searchparam':1
     }
     blockParams = {
         "thscd1": ignore_threshold,
         "thscd2": int(scene_change_percentage * 255 / 100),
-        # "mode": 3,
     }
 
     if fast_mode:
         analParams["search"] = 0
-        blockParams["mode"] = 0
         analParams["blksize"] = 16
+        blockParams["mode"] = 0
+
+    if (not fast_mode) and (not flow_fps):
+        blockParams["mode"] = 3
 
     dst_fps_num = int(dst_fps * 1e4)
     dst_fps_den = int(1e4)
@@ -77,7 +82,7 @@ if not ignore:
     bvec = core.mv.Analyse(sup, isb=True, **analParams)
     fvec = core.mv.Analyse(sup, isb=False, **analParams)
 
-    f = {True: core.mv.BlockFPS, False: core.mv.FlowFPS}[fast_mode]
+    f = {True: core.mv.FlowFPS, False: core.mv.BlockFPS}[flow_fps]
     clip = f(clip, sup, bvec, fvec, num=dst_fps_num, den=dst_fps_den, **blockParams)
 
 clip.set_output()
