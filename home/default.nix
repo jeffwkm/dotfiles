@@ -71,6 +71,12 @@ in {
     ".lein/profiles.clj".source = ../dotfiles/lein/profiles.clj;
   };
 
+  home.sessionPath = [
+    "${config.home.homeDirectory}/bin"
+    "${config.home.homeDirectory}/bin.local"
+    "${config.home.homeDirectory}/.node_modules/bin"
+  ];
+
   programs.git = {
     enable = true;
     userName = "Jeff Workman";

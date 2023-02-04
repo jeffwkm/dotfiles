@@ -96,24 +96,11 @@ in {
     '';
 
     initExtra = ''
-      export EDITOR="emacsclient -t -a emacs"
-      export VISUAL="$EDITOR"
-
       function _zsh_nix_profiles() {
         echo "$(realpath ~/.nix-profile)"
       }
 
       export _ZSH_NIX_PROFILES="$(_zsh_nix_profiles)"
-
-      # add $HOME/bin to PATH
-      if [[ ! $PATH =~ ".*$HOME/bin.*" ]] ; then
-        export PATH="$HOME/bin:$PATH"
-      fi
-
-      # add $HOME/bin.local to PATH
-      if [[ ! $PATH =~ ".*$HOME/bin\.local.*" ]] ; then
-        export PATH="$HOME/bin.local:$PATH"
-      fi
 
       source ${lsd_completion} 2> /dev/null
 

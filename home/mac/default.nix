@@ -22,13 +22,16 @@ let
 in {
   imports = [ ../zsh/mac.nix ../gui/alacritty.nix ];
 
-  home.sessionPath = [ "${config.home.homeDirectory}/.node_modules/bin" ];
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.rustup/toolchains/stable-aarch64-apple-darwin/bin"
+  ];
 
   alacritty.fontSize = "15";
   alacritty.fontSizeLarge = "17";
   alacritty.fontSizeHuge = "19";
   alacritty.decorations = "buttonless";
   alacritty.fontFamily = "JetBrainsMono Nerd Font";
+  alacritty.fontStyle = "SemiBold";
 
   xdg.configFile."mpv/mpv.conf".text =
     (builtins.readFile ../../dotfiles/mpv/mpv.conf) + ''
@@ -67,7 +70,6 @@ in {
     rsync
     rustup
     rustracer
-    rust-analyzer
     shfmt
     todoist
     watch

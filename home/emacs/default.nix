@@ -18,6 +18,8 @@ in {
     home.sessionVariables = {
       DOOMDIR = "${config.xdg.configHome}/doom-config";
       DOOMLOCALDIR = "${config.xdg.configHome}/doom-local";
+      EDITOR = "emacsclient -t -a emacs";
+      VISUAL = "emacsclient -t -a emacs";
     };
 
     home.packages = with pkgs;

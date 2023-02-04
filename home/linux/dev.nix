@@ -18,7 +18,7 @@
       nodejs
       pandoc
       sbcl
-    ] ++ [ rustracer rustup rust-analyzer ] ++ [ shellcheck shfmt ] ++ [
+    ] ++ [ rustracer rustup ] ++ [ shellcheck shfmt ] ++ [
       cabal-install
       ghc
       haskell-language-server

@@ -9,11 +9,6 @@ let
       };
       initExtraFirst = "";
       initExtra = ''
-        # add homebrew bin to PATH
-        if [[ ! $PATH =~ ".*homebrew/bin.*" ]] ; then
-          export PATH="/opt/homebrew/bin:$PATH"
-        fi
-
         if [ -z $DISPLAY ]; then export DISPLAY=:0.0; fi
       '';
     };
