@@ -91,9 +91,17 @@
         doom-variable-pitch-font (if (mac?) nil
                                    (font-spec :family "Noto Sans"
                                               :size (if --large-font 17 15)))))
+(defun --sync-fonts ()
+  (when (graphical?)
+    (set-frame-font doom-font)))
 (--configure-fonts)
+(add-hook! 'doom-after-reload-hook  :append '--configure-fonts '--sync-fonts)
 
 (use-package! hl-line)
+
+;; fixes for warnings/errors on doom init and reload
+(use-package! hydra)
+(use-package! ivy :config (require 'ivy-hydra))
 
 (load! "fringe.el")
 
@@ -288,7 +296,7 @@
       :g "C-s-j"            '+default/newline-below
       "M-," 'pop-tag-mark
       "M-." '+lookup/definition
-      "C-o" 'ace-window
+      "C-o" 'ace-select-window
       "C-1" 'delete-other-windows
       "C-x 1" 'delete-other-windows
       "C-2" 'delete-other-windows-vertically
@@ -1344,15 +1352,17 @@ interactively for spacing value."
     (add-hook hook 'autoset-frame-margins)))
 
 (after! minimap
-  (setq minimap-update-delay 0.05
-        minimap-minimum-width 18
+  (setq minimap-update-delay 0.2
+        minimap-minimum-width 22
         minimap-width-fraction 0.05
-        minimap-always-recenter nil))
+        minimap-always-recenter nil)
+  (after! ace-window
+    (add-to-list 'aw-ignored-buffers "*MINIMAP*")))
 
 (use-package! treemacs
   :defer t
   :init
-  (setq +treemacs-git-mode 'simple  ;; 'deferred
+  (setq +treemacs-git-mode 'deferred
         treemacs-display-in-side-window t
         treemacs-file-event-delay 500
         treemacs-silent-filewatch t
