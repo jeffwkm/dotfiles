@@ -78,6 +78,7 @@ in {
     "tmux"
     "vapoursynth"
     "yt-dlp"
+    "zlib"
     "zsh"
     "zsh-completions"
   ];

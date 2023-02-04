@@ -19,6 +19,8 @@
 
 (use-package! dash)
 
+(menu-bar-mode -1)
+
 (setq user-full-name "Jeff Workman"
       user-mail-address "jeff.workman@gmail.com"
       doom-leader-key "SPC"
@@ -52,6 +54,15 @@
 ;; (setq doom-theme 'doom-one)
 (setq doom-theme 'doom-tomorrow-night
       doom-one-brighter-comments t)
+
+;;; Customize some theme colors
+;; (defun --customize-doom-theme-defs ()
+;;   (apply
+;;    custom-theme-set-faces
+;;    'doom-tomorrow-night))
+;; (add-hook! '(doom-after-init-hook doom-after-reload-hook) :append
+;;            '--customize-doom-theme-defs)
+
 ;; (load-theme doom-theme t)
 ;; 'doom-one 'doom-gruvbox 'doom-tomorrow-night 'doom-spacegrey 'doom-material-dark 'doom-zenburn
 (setq doom-themes-padded-modeline nil)
@@ -68,7 +79,9 @@
 (defvar --large-font nil)
 (defun --configure-fonts ()
   (setq doom-font (if (mac?)
-                      "JetBrainsMono Nerd Font 15"
+                      (font-spec :family "JetBrainsMono Nerd Font"
+                                 :size 15
+                                 :weight 'semibold)
                     (font-spec :family "JetBrainsMono Nerd Font"
                                :size 15))
         doom-big-font nil
@@ -268,6 +281,10 @@
       :n "M-." nil
       :g "M-<left>" nil
       :g "M-<right>" nil
+      :g "C-s-<backspace>"  '+default/newline-above
+      :g "C-s-k"            '+default/newline-above
+      :g "C-s-<return>"     '+default/newline-below
+      :g "C-s-j"            '+default/newline-below
       "M-," 'pop-tag-mark
       "M-." '+lookup/definition
       "C-o" 'ace-window
