@@ -36,7 +36,8 @@
       frame-title-format '((:eval (concat (if (buffer-file-name)
                                               (abbreviate-file-name (buffer-file-name))
                                             "%b")
-                                          " | <Emacs>")))
+                                          ;; " | <Emacs>"
+                                          )))
       require-final-newline t)
 
 (setq-default tab-width 2
@@ -80,10 +81,10 @@
 (defun --configure-fonts ()
   (setq doom-font (if (mac?)
                       (font-spec :family "JetBrainsMono Nerd Font"
-                                 :size 15
+                                 :size 17
                                  :weight 'semibold)
                     (font-spec :family "JetBrainsMono Nerd Font"
-                               :size 15))
+                               :size 17))
         doom-big-font nil
         doom-big-font-increment 2
         doom-font-increment 1

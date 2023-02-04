@@ -5,15 +5,15 @@
   /* font-family: Roboto, Helvetica, Arial, sans-serif; */
   /* font-family: 'InputMono Nerd Font', Inconsolata, monospace; */
   /* font-family: "InputC4Mono Nerd Font", Inconsolata, monospace; */
-  font-family: 'JetBrains Mono Nerd Font', Inconsolata, monospace;
-  font-size: 14px;
+  font-family: "JetBrains Mono Nerd Font", Inconsolata, monospace;
+  font-size: 15px;
   font-weight: 500;
 }
 
 window#waybar {
   background: rgba(0, 0, 0, 0.7);
   /*  border-bottom: 1.5px solid rgba(100, 114, 125, 0.5); */
-  border-bottom: 1.5px solid rgba( 105, 105, 105, 0.6 );
+  border-bottom: 1.5px solid rgba(105, 105, 105, 0.6);
   color: #ffffff;
   transition-property: background-color;
   transition-duration: 0.33s;
@@ -70,8 +70,8 @@ window#waybar.chromium {
 }
 
 #mode {
-  background-color: rgba( 90, 105, 115, 0.6 );
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.8);
+background-color: rgba(90, 105, 115, 0.6);
+border-bottom: 1.5px solid rgba(255, 255, 255, 0.8);
 }
 
 #clock,

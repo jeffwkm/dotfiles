@@ -4,7 +4,8 @@
   ### config file, which manually activates "sway.target" on startup.
 
   xdg.configFile."sway/config" = {
-    source = ../../dotfiles/sway/config;
+    source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.local.nix-repo-path}/dotfiles/sway/config";
     onChange = "${pkgs.writeShellScript "sway-change" ''
       set +e
       socket=$(ls /run/user/1000/sway*)

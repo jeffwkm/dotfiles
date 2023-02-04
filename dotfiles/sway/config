@@ -22,8 +22,8 @@ set $out1           HDMI-A-1
 set $out2           DP-2
 
 output  *           subpixel rgb max_render_time 6
-output  $out1       position 0 0 scale 1.5
-output  $out2       position 2560 0 scale 1.6
+output  $out1       position 0 0 scale 1.75
+output  $out2       position 2560 0 scale 1.75
 # output  $out2       color profile "/home/jeff/.local/share/icc/p2715q.icc"
 
 ## focus primary monitor on launch

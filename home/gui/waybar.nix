@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }: {
-  xdg.configFile."waybar/config".source = ../../dotfiles/waybar/config;
-  xdg.configFile."waybar/style.css".source = ../../dotfiles/waybar/style.css;
+  xdg.configFile."waybar/".source = config.lib.file.mkOutOfStoreSymlink
+    "${config.home.local.nix-repo-path}/dotfiles/waybar";
 
   systemd.user.services.waybar = {
     Unit = {
