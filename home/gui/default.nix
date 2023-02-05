@@ -59,8 +59,8 @@
     pass-wayland # :: password-store
     pavucontrol # :: GTK program to control pulseaudio
     polkit_gnome
-    qt5.full
-    qt5.qtwayland
+    # qt5.full
+    # qt5.qtwayland
     shotwell
     snes9x-gtk
     sov # :: An overlay that shows schemas for all workspaces to make navigation in sway easier
