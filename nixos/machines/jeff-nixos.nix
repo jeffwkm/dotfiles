@@ -79,8 +79,8 @@
   hardware.opengl.driSupport = true;
   hardware.opengl.driSupport32Bit = true;
   hardware.opengl.extraPackages = with pkgs; [
-    amdvlk
-    driversi686Linux.amdvlk
+    # amdvlk
+    # driversi686Linux.amdvlk
     rocm-opencl-icd
     rocm-opencl-runtime
   ];
@@ -117,7 +117,7 @@
 
   # programs.steam.enable = true;
 
-  environment.systemPackages = with pkgs; [ libguestfs mpd-mpris ];
+  environment.systemPackages = with pkgs; [ libguestfs mpd-mpris darktable ];
 
   environment.sessionVariables = {
     ### use emacsclient as default editor
@@ -178,6 +178,9 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     # gtkUsePortal = true;
   };
+
+  nix.settings.cores = 8;
+  nix.settings.max-jobs = 4;
 
   system.stateVersion = "22.11";
 }

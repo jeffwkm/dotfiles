@@ -79,7 +79,7 @@
           })
           (final: prev: {
             # Use packages from nixpkgs-stable
-            inherit (final.pkgs-stable) rustracer trace-cmd;
+            inherit (final.pkgs-stable) rustracer trace-cmd spotify gthumb;
           })
           (final: prev: {
             # Use packages from nixpkgs-unstable

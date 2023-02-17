@@ -13,7 +13,7 @@ core.std.LoadAllPlugins(
 )
 # ref: http://avisynth.org.ru/mvtools/mvtools2.html#functions
 # default is 400, less means interpolation will only happen when it will work well
-ignore_threshold = 140  # 140
+ignore_threshold = 200  # 140
 # if n% of blocks change more than threshold then don't interpolate at all (default is 51%)
 scene_change_percentage = 15
 
@@ -84,5 +84,4 @@ if not ignore:
 
     f = {True: core.mv.FlowFPS, False: core.mv.BlockFPS}[flow_fps]
     clip = f(clip, sup, bvec, fvec, num=dst_fps_num, den=dst_fps_den, **blockParams)
-
-clip.set_output()
+    clip.set_output()
