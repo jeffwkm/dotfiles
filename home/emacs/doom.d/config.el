@@ -567,9 +567,9 @@ interactively for spacing value."
   (setq company-dabbrev-downcase nil
         company-dabbrev-ignore-case nil
         company-dabbrev-other-buffers t
-        company-minimum-prefix-length 3
-        company-idle-delay 0.15
-        company-tooltip-maximum-width 70
+        company-minimum-prefix-length 1
+        company-idle-delay 0.1
+        company-tooltip-maximum-width 80
         company-tooltip-offset-display 'lines
         company-box-doc-delay 0.5
         company-box-tooltip-maximum-width 90)
