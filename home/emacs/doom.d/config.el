@@ -84,7 +84,8 @@
                                  :size 17
                                  :weight 'semibold)
                     (font-spec :family "JetBrainsMono Nerd Font"
-                               :size 17))
+                               :size 17
+                               :weight 'semibold))
         doom-big-font nil
         doom-big-font-increment 2
         doom-font-increment 1
