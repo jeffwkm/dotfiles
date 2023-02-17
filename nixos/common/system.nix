@@ -71,6 +71,17 @@
 
   virtualisation.docker = { enable = true; };
 
+  xdg.mime.enable = true;
+  xdg.mime.defaultApplications = {
+    "text/html" = "chromium.desktop";
+    "x-scheme-handler/http" = "chromium.desktop";
+    "x-scheme-handler/https" = "chromium.desktop";
+    "x-scheme-handler/about" = "chromium.desktop";
+    "x-scheme-handler/unknown" = "chromium.desktop";
+  };
+  environment.sessionVariables.DEFAULT_BROWSER =
+    "${pkgs.chromium}/bin/chromium";
+
   environment.systemPackages = with pkgs; [
     acpi
     binutils
@@ -95,6 +106,8 @@
     openssl
     patchelf
     pciutils
+    pinentry
+    pinentry-curses
     pkg-config
     psmisc # :: killall, etc.
     readline
@@ -104,7 +117,6 @@
     tmux
     vim
     wget
-    pinentry
-    pinentry-curses
+    xdg-utils
   ];
 }
