@@ -26,12 +26,12 @@ in {
     "${config.home.homeDirectory}/.rustup/toolchains/stable-aarch64-apple-darwin/bin"
   ];
 
-  alacritty.fontSize = "15";
-  alacritty.fontSizeLarge = "17";
-  alacritty.fontSizeHuge = "19";
+  alacritty.fontSize = "14";
+  alacritty.fontSizeLarge = "16";
+  alacritty.fontSizeHuge = "18";
   alacritty.decorations = "buttonless";
   alacritty.fontFamily = "JetBrainsMono Nerd Font";
-  alacritty.fontStyle = "SemiBold";
+  # alacritty.fontStyle = "SemiBold";
 
   xdg.configFile."mpv/mpv.conf".text =
     (builtins.readFile ../../dotfiles/mpv/mpv.conf) + ''

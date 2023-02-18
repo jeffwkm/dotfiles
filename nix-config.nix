@@ -4,7 +4,7 @@
   nix.settings.keep-outputs = true;
   nix.settings.keep-derivations = true;
   nix.settings.extra-platforms =
-    lib.optional (pkgs.system == "aarch64-darwin") [
+    lib.lists.optionals (pkgs.system == "aarch64-darwin") [
       "aarch64-darwin"
       "x86_64-darwin"
     ];

@@ -97,7 +97,7 @@ in {
     "istat-menus"
     "iterm2"
     "pgadmin4"
-    "rescuetime"
+    # "rescuetime"
     # "slack"
     "snes9x"
     "sf-symbols"

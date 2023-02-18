@@ -33,7 +33,7 @@ in {
     mediainfo
     mr # :: Multiple Repository management tool
     # ncdu
-    ncspot # :: Cross-platform ncurses Spotify client written in Rust
+    # ncspot # :: Cross-platform ncurses Spotify client written in Rust
     neofetch
     nethack
     nixfmt # :: An opinionated formatter for Nix

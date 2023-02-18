@@ -81,8 +81,9 @@
 (defun --configure-fonts ()
   (setq doom-font (if (mac?)
                       (font-spec :family "JetBrainsMono Nerd Font"
-                                 :size 17
-                                 :weight 'semibold)
+                                 :size 14
+                                 ;; :weight 'semibold
+                                 )
                     (font-spec :family "JetBrainsMono Nerd Font"
                                :size 17
                                :weight 'semibold))
@@ -512,7 +513,7 @@ interactively for spacing value."
   (--init-copy-paste)
   (when (or (graphical?) server-process)
     (--load-default-session))
-  (let ((w (if (mac?) 6 4)))
+  (let ((w (if (mac?) 4 4)))
     (add-to-list 'default-frame-alist `(internal-border-width . ,w))
     (set-frame-parameter nil 'internal-border-width w))
   ;; (when (gui-mac?) (set-frame-fullscreen nil t))
