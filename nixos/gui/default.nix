@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }: {
-  imports = [ ./fonts.nix ./hyprland.nix ./sway.nix ];
+  imports = [ ./fonts.nix ./hyprland.nix ./sway.nix ./vscode.nix ];
   environment.systemPackages = with pkgs; [ pinentry-gtk2 ];
   nixpkgs.overlays = [
     (self: super: {
