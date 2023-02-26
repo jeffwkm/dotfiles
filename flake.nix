@@ -40,23 +40,6 @@
       inherit (inputs.nixpkgs-unstable.lib)
         attrValues makeOverridable optionalAttrs singleton mkIf;
 
-      # nixpkgs = inputs.nixpkgs-unstable;
-
-      # mkPkgs = pkgs: extraOverlays:
-      #   import pkgs {
-      #     config.allowUnfree = true; # forgive me Stallman senpai
-      #     overlays = extraOverlays ++ (attrValues self.overlays);
-      #   };
-      # pkgs = mkPkgs nixpkgs [ self.overlay ];
-      # pkgs' = mkPkgs nixpkgs [ ];
-
-      # lib = nixpkgs.lib.extend (self: super: {
-      #   my = import ./lib {
-      #     inherit pkgs inputs;
-      #     lib = self;
-      #   };
-      # });
-
       nixpkgs = inputs.nixpkgs-unstable;
 
       importModule = path:
@@ -251,7 +234,6 @@
 
       sharedModules = {
         local-util = importModule ./util;
-        # local-util-options = importModule ./util/options.nix;
         local-options = importModule ./options;
       };
 
@@ -279,19 +261,13 @@
             pkgs = nixpkgs;
           }).options.local;
         };
-        # home-local-util = { lib, config, ... }: {
-        #   options.home.util = (self.sharedModules.local-util-options {
-        #     inherit lib config;
-        #     pkgs = nixpkgs;
-        #   }).options.util;
-        # };
       };
 
       homeManagerModulesMac = { jeff-common-mac = importModule ./home/mac; };
 
       homeManagerModulesLinux = {
-        jeff-common-linux = importModule ./home/linux;
-        jeff-clojure = importModule ./home/clojure.nix;
+        local-common-linux = importModule ./home/linux;
+        local-clojure = importModule ./home/clojure.nix;
       };
     };
 }
