@@ -21,10 +21,11 @@ in {
     # pinentry-gnome
     # rofi-pass
     # sshuttle
-    # awscli2
     # cachix
     asciinema
     asciinema-agg
+    awscli2
+    aws-vault
     cmatrix # :: Simulates the falling characters theme from The Matrix movie
     direnv
     expect
