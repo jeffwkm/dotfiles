@@ -23,8 +23,12 @@ in {
     # sshuttle
     # awscli2
     # cachix
+    asciinema
+    asciinema-agg
     cmatrix # :: Simulates the falling characters theme from The Matrix movie
+    direnv
     expect
+    gh # GitHub CLI
     gnupg
     greg # :: A command-line podcast aggregator
     inetutils
@@ -46,6 +50,7 @@ in {
     spicetify-cli
     spotify-tui
     spotifyd # :: An open source Spotify client running as a UNIX daemon
+    termtosvg
     tmux
     tree
     unrar

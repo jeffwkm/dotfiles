@@ -3,7 +3,7 @@ let
   ruby-packages = (ps:
     with ps; [
       ffi
-      gio2
+      # gio2
       glib2
       sqlite3
       pkg-config

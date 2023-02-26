@@ -85,7 +85,7 @@
                                  ;; :weight 'semibold
                                  )
                     (font-spec :family "JetBrainsMono Nerd Font"
-                               :size 17
+                               :size 15
                                :weight 'semibold))
         doom-big-font nil
         doom-big-font-increment 2
@@ -483,7 +483,7 @@ interactively for spacing value."
   (format "%setc/workspaces/%s" doom-local-dir filename))
 
 (defun --default-session-file ()
-  (--session-file "default"))
+  (--session-file "default-session"))
 
 (require 'ts)
 
@@ -570,10 +570,13 @@ interactively for spacing value."
         company-dabbrev-other-buffers t
         company-minimum-prefix-length 1
         company-idle-delay 0.1
+        company-tooltip-minimum-width 60
         company-tooltip-maximum-width 80
-        company-tooltip-offset-display 'lines
-        company-box-doc-delay 0.5
-        company-box-tooltip-maximum-width 90)
+        company-tooltip-width-grow-only t
+        company-tooltip-offset-display 'scrollbar ; 'lines
+        company-box-doc-delay 0.3)
+  (when (mac?)
+    (setq company-box-tooltip-maximum-width 90))
   (set-company-backend! 'text-mode
     nil)
   (set-company-backend! 'prog-mode
@@ -583,6 +586,8 @@ interactively for spacing value."
     'company-capf
     'company-dabbrev-code
     'company-files)
+  (set-company-backend! 'nix-mode
+    'company-nixos-options)
   ;; (add-to-list 'company-transformers 'company-sort-by-occurrence)
   (use-package! company-statistics
     :config
@@ -769,7 +774,7 @@ interactively for spacing value."
   ;; (use-package! org-present)
   (use-package! org-projectile)
   (use-package! org-super-agenda)
-  (use-package! org-gcal)
+  (use-package! org-gcal :disabled t)
   (use-package! org-fancy-priorities)
   (org-fancy-priorities-mode)
   ;;(--load-org-notify)
@@ -1036,6 +1041,7 @@ interactively for spacing value."
   (use-package! nix-sandbox)
   (use-package! nix-buffer)
   (use-package! nix-update)
+  (use-package! company-nixos-options)
   (defun --nix-mode-hook ()
     (setq-local tab-width 2))
   (add-hook! nix-mode '--nix-mode-hook))

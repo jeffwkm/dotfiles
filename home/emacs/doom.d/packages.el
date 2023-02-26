@@ -4,6 +4,7 @@
 (package! aggressive-indent :pin "cb416faf61c46977c06cf9d99525b04dc109a33c")
 (package! alert :built-in 'prefer)
 ;; (package! company-nixos-options :built-in 'prefer)
+(package! company-box :built-in 'prefer)
 (package! company-quickhelp :built-in 'prefer)
 (package! company-statistics :built-in 'prefer)
 (package! elisp-slime-nav :built-in 'prefer)
