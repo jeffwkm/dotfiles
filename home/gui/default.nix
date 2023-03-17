@@ -61,7 +61,7 @@
     polkit_gnome
     # qt5.full
     # qt5.qtwayland
-    shotwell
+    # shotwell
     snes9x-gtk
     sov # :: An overlay that shows schemas for all workspaces to make navigation in sway easier
     spotify # :: Play music from the Spotify music service

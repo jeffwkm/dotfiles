@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }: {
   home.packages = [ pkgs.mako ];
 
-  programs.mako = {
+  services.mako = {
     enable = true;
     output = null; # :: show on focused display
     layer = "overlay";
