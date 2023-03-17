@@ -30,7 +30,7 @@
             # autoload
             convert
             mpris
-            mpvacious
+            # mpvacious
             mpv-playlistmanager
             # sponsorblock
             # thumbnail
