@@ -67,6 +67,7 @@
     "kvm.ignore_msrs=1"
     "kvm.report_ignored_msrs=0"
     "kvm_amd.nested=0"
+    "mitigations=off"
   ];
   boot.kernel.sysctl = {
     "fs.inotify.max_user_instances" = 8192;
