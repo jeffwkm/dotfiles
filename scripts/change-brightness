@@ -2,7 +2,7 @@
 
 name=$(basename "$0")
 
-if [ "$name" == "change-brightness" ] ; then
+if [ "$name" == "change-brightness" ]; then
   execute=1
 else
   execute=
@@ -17,7 +17,7 @@ echoerr() { printf "%s\n" "$*" >&2; }
 d_brightness="$3"
 
 brightness=""
-if [ ! -z "$d_brightness" ] ; then
+if [ ! -z "$d_brightness" ]; then
   brightness="$2 $3"
 else
   brightness="$2"
@@ -25,7 +25,7 @@ fi
 
 ddc_param=10
 
-if [ "$execute" == "1" ] ; then
+if [ "$execute" == "1" ]; then
   set -eu
 else
   set -e
@@ -38,9 +38,9 @@ popup_file=
 
 function parse_bus() {
   bus="$1"
-  if [ "$bus" == "3" ] ; then
+  if [ "$bus" == "5" ]; then
     model="PA32U"
-  elif [ "$bus" == "5" ] ; then
+  elif [ "$bus" == "6" ]; then
     model="DELL P2715Q"
   else
     echoerr "Unknown display (bus=${bus})"
@@ -52,28 +52,28 @@ function parse_bus() {
 
 function cleanup_notify_files() {
   local x
-  for x in "$popup_file" "$value_file" ; do
-    if [ -e "$x" ] ; then
-      if [ -z "$(cat $x)" ] ; then
+  for x in "$popup_file" "$value_file"; do
+    if [ -e "$x" ]; then
+      if [ -z "$(cat $x)" ]; then
         rm "$x"
       fi
     fi
   done
 }
 
-function update_notify () {
+function update_notify() {
   set +u
   expire_time="$1"
   text="$2"
   value="$3"
-  if [ "$execute" == "1" ] ; then
+  if [ "$execute" == "1" ]; then
     set -u
   fi
   args=("--expire-time=$1"
-        "--hint" "int:transient:1"
-        "--hint" "string:image-path:video-display"
-        "--replace-file=$popup_file")
-  if [ ! -z "$value" ] ; then
+    "--hint" "int:transient:1"
+    "--hint" "string:image-path:video-display"
+    "--replace-file=$popup_file")
+  if [ ! -z "$value" ]; then
     args+=("--hint" "int:value:$value")
   fi
   args+=("$model: Brightness" "$text")
@@ -81,17 +81,17 @@ function update_notify () {
   notify-send.sh "${args[@]}"
 }
 
-function current_brightness () {
-  if [ -f "$value_file" ] ; then
+function current_brightness() {
+  if [ -f "$value_file" ]; then
     cat "$value_file"
   else
     echo
   fi
 }
 
-function get_update_summary () {
-  if [ ! -z "$current" ] ; then
-    if [ ! -z "$d_brightness" ] ; then
+function get_update_summary() {
+  if [ ! -z "$current" ]; then
+    if [ ! -z "$d_brightness" ]; then
       # echo -n "$current% [ $brightness ] ..."
       # echo -n "$current% ..."
       echo -n "$current% / 100%"
@@ -105,10 +105,10 @@ function get_update_summary () {
   fi
 }
 
-function ddc_wait () {
-  for x in {1..80} ; do
+function ddc_wait() {
+  for x in {1..80}; do
     pids="$(pidof ddcutil || echo -n '')"
-    if [ ! -z "$pids" ] ; then
+    if [ ! -z "$pids" ]; then
       sleep 0.025
     else
       sleep 0.025
@@ -118,17 +118,17 @@ function ddc_wait () {
   return 1
 }
 
-function run_set () {
+function run_set() {
   sudo ddcutil --maxtries 3,3,3 --async --less-sleep --noudf --nousb --verify \
-       --sleep-multiplier=0.166 -b "$bus" \
-       setvcp $ddc_param $brightness
+    --sleep-multiplier=0.166 -b "$bus" \
+    setvcp $ddc_param $brightness
 }
 
-function run_display () {
+function run_display() {
   local BRIGHTNESS=""
-  if [ -z "$d_brightness" ] ; then
+  if [ -z "$d_brightness" ]; then
     BRIGHTNESS="$brightness"
-    echo "$brightness" > "$value_file"
+    echo "$brightness" >"$value_file"
   else
     BRIGHTNESS=$(get-brightness "$bus")
   fi
@@ -136,7 +136,7 @@ function run_display () {
   update_notify 1000 "$BRIGHTNESS% / 100%" $BRIGHTNESS
 }
 
-if [ "$execute" == "1" ] ; then
+if [ "$execute" == "1" ]; then
   parse_bus "$1"
   current="$(current_brightness)"
 
@@ -145,8 +145,8 @@ if [ "$execute" == "1" ] ; then
     (update_notify 750 "Write failed" && false)
 
   pre_notify=0
-  if [ "$pre_notify" != "0" ] ; then
-    if [ ! -z "$d_brightness" ] ; then
+  if [ "$pre_notify" != "0" ]; then
+    if [ ! -z "$d_brightness" ]; then
       update_notify 2500 "$(get_update_summary)" "$(current_brightness)"
     fi
   fi
