@@ -82,8 +82,7 @@
   (setq doom-font (if (mac?)
                       (font-spec :family "JetBrainsMono Nerd Font"
                                  :size 14
-                                 ;; :weight 'semibold
-                                 )
+                                 :weight 'semibold)
                     (font-spec :family "JetBrainsMono Nerd Font"
                                :size 15
                                :weight 'semibold))
