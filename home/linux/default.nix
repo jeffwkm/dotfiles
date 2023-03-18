@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let optimize = config.util.optimizeDefault;
 in {
-  imports = [ ../zsh/linux.nix ./ssh-agent.nix ./gpg-agent.nix ./dev.nix ];
+  imports = [ ../zsh/linux.nix ./ssh-agent.nix ./gpg-agent.nix ];
 
   xdg.configFile."mpv/mpv.conf".text =
     (builtins.readFile ../../dotfiles/mpv/mpv.conf) + ''

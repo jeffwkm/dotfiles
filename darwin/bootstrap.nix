@@ -21,6 +21,11 @@
   # Install and setup ZSH to work with nix(-darwin) as well
   programs.zsh.enable = true;
 
+  nixpkgs.config.packageOverrides = pkgs: rec {
+    oraclejdk = pkgs.openjdk8;
+    jdk = pkgs.openjdk8;
+  };
+
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;

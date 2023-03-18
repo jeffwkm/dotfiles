@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let optimize = config.util.optimizeDefault;
 in {
-  imports = [ ./zsh ];
+  imports = [ ./zsh ./dev.nix ];
 
   programs.gpg.enable = true;
   programs.jq.enable = true;

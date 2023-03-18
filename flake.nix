@@ -245,7 +245,6 @@
       darwinModules = {
         local-bootstrap = importModule ./darwin/bootstrap.nix;
         local-homebrew = importModule ./darwin/homebrew.nix;
-        local-dev = importModule ./darwin/dev.nix;
         local-postgres = importModule ./darwin/postgres.nix;
         local-system = importModule ./darwin/system;
         local-ui = importModule ./darwin/ui;
@@ -267,7 +266,6 @@
 
       homeManagerModulesLinux = {
         local-common-linux = importModule ./home/linux;
-        local-clojure = importModule ./home/clojure.nix;
       };
     };
 }

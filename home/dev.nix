@@ -1,12 +1,11 @@
 { config, lib, pkgs, ... }: {
   home.packages = with pkgs;
-    [
+    (lib.lists.optionals (!pkgs.stdenv.isDarwin) [ gcc ]) ++ [
       black
       clang-tools
       cmake
       editorconfig-checker
       editorconfig-core-c
-      gcc
       gnumake
       gnuplot
       go
@@ -18,7 +17,8 @@
       nodejs
       pandoc
       sbcl
-    ] ++ [ rustracer rustup ] ++ [ shellcheck shfmt ] ++ [
+    ] ++ [ babashka boot clj-kondo clojure clojure-lsp leiningen ]
+    ++ [ rustracer rustup ] ++ [ shellcheck shfmt ] ++ [
       cabal-install
       ghc
       haskell-language-server
