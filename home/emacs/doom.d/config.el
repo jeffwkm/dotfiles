@@ -52,9 +52,11 @@
 (defun gui-emacs-mac? () (eql window-system 'mac))
 (defun gui-mac? () (or (gui-mac-std?) (gui-emacs-mac?)))
 
-;; (setq doom-theme 'doom-one)
 (setq doom-theme 'doom-tomorrow-night
-      doom-one-brighter-comments t)
+      doom-theme 'doom-one
+      doom-one-brighter-comments t
+      doom-one-brighter-modeline nil
+      doom-themes-padded-modeline nil)
 
 ;;; Customize some theme colors
 ;; (defun --customize-doom-theme-defs ()
@@ -1359,9 +1361,9 @@ interactively for spacing value."
     (add-hook hook 'autoset-frame-margins)))
 
 (after! minimap
-  (setq minimap-update-delay 0.2
-        minimap-minimum-width 22
-        minimap-width-fraction 0.05
+  (setq minimap-update-delay 0.1
+        minimap-minimum-width 20
+        minimap-width-fraction 0.15
         minimap-always-recenter nil)
   (after! ace-window
     (add-to-list 'aw-ignored-buffers "*MINIMAP*")))
