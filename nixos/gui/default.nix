@@ -27,7 +27,7 @@
       mpv = (prev.wrapMpv
         (prev.mpv-unwrapped.override { vapoursynthSupport = true; }) {
           scripts = with final.mpvScripts; [
-            # autoload
+            autoload
             convert
             mpris
             # mpvacious
