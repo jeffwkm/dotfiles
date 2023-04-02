@@ -295,8 +295,8 @@
     # backend cannot be initialized.
     enable_experimental_conpty_backend: false
 
-    # Send ESC (\x1b) before characters when alt is pressed.
-    alt_send_esc: true
+    # (MacOS)
+    # option_as_alt = true
 
     debug:
       # Display the time it takes to redraw each frame.
