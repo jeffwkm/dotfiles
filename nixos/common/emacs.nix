@@ -4,12 +4,11 @@ let
   emacsBase = pkgs.emacsPgtk;
   emacsCustom1 = config.util.optimizeC emacsBase [
     "-march=native"
-    "-O3"
+    # "-O2"
+    # "-O3"
     "-Ofast"
     "-fno-finite-math-only"
-    "-g0"
-    # "-flto=16"
-    # "-fgraphite-identity" "-ftree-loop-distribution" "-floop-nest-optimize"
+    # "-g0"
   ];
   emacsCustom = (pkgs.emacsPackagesFor emacsCustom1).emacsWithPackages
     (epkgs: [ epkgs.vterm epkgs.all-the-icons ]);

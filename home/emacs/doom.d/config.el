@@ -211,13 +211,17 @@
 
 (defun --scroll-down-one-line ()
   (interactive)
-  (scroll-up 1)
-  (forward-line 1))
+  (forward-line 1)
+  (scroll-up 1))
 
 (defun --scroll-up-one-line ()
   (interactive)
-  (scroll-down 1)
-  (forward-line -1))
+  (forward-line -1)
+  (scroll-down 1))
+
+(when (functionp 'native-compile)
+  (native-compile '--scroll-down-one-line)
+  (native-compile '--scroll-up-one-line))
 
 (use-package! elisp-mode
   :config
