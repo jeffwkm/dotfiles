@@ -33,7 +33,6 @@
   swapDevices = [ ];
   hardware.cpu.intel.updateMicrocode = true;
   hardware.enableAllFirmware = true;
-  hardware.video.hidpi.enable = lib.mkDefault true;
 
   boot.loader = {
     efi = {

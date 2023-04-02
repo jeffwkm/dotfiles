@@ -76,7 +76,6 @@
   swapDevices = [ ];
   hardware.cpu.amd.updateMicrocode = true;
   hardware.enableAllFirmware = true;
-  hardware.video.hidpi.enable = lib.mkDefault true;
   hardware.opengl.driSupport = true;
   hardware.opengl.driSupport32Bit = true;
   hardware.opengl.extraPackages = with pkgs; [
