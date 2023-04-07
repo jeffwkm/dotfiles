@@ -179,8 +179,8 @@
     # gtkUsePortal = true;
   };
 
-  nix.settings.cores = 8;
-  nix.settings.max-jobs = 4;
+  # nix.settings.cores = 8;
+  # nix.settings.max-jobs = 4;
 
   system.stateVersion = "22.11";
 }
