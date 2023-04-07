@@ -53,7 +53,7 @@
 (defun gui-mac? () (or (gui-mac-std?) (gui-emacs-mac?)))
 
 (setq doom-theme 'doom-tomorrow-night
-      doom-theme 'doom-one
+      ;; doom-theme 'doom-one
       doom-one-brighter-comments t
       doom-one-brighter-modeline nil
       doom-themes-padded-modeline nil)
