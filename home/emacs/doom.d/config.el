@@ -219,10 +219,6 @@
   (forward-line -1)
   (scroll-down 1))
 
-(when (functionp 'native-compile)
-  (native-compile '--scroll-down-one-line)
-  (native-compile '--scroll-up-one-line))
-
 (use-package! elisp-mode
   :config
   (add-hook! (emacs-lisp-mode ielm-mode) 'elisp-slime-nav-mode))
