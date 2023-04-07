@@ -1087,7 +1087,7 @@ interactively for spacing value."
        (--remove (not (test-buffer-name (cl-second it) regexp exclude-regexp)))
        (cl-first)))
 
-(defun stop-cider-all ()
+(defun --cider-quit-all ()
   (interactive)
   (dolist (buf (match-buffer-name "\*cider-repl\ .*"))
     (save-excursion
@@ -1183,114 +1183,114 @@ interactively for spacing value."
         (cljs-file-buffer nil))
     (cl-labels
         ((open-project
-          ()
-          (find-file project-file-path))
+           ()
+           (find-file project-file-path))
          (start-clj
-          ()
-          (find-file clj-file-path)
-          (setq clj-file-buffer (current-buffer))
-          (cider-connect
-           `(:host
-             "localhost"
-             :port
-             ,(cl-second (assoc project-name (cider-locate-running-nrepl-ports))))))
+           ()
+           (find-file clj-file-path)
+           (setq clj-file-buffer (current-buffer))
+           (cider-connect
+            `(:host
+              "localhost"
+              :port
+              ,(cl-second (assoc project-name (cider-locate-running-nrepl-ports))))))
          (start-cljs
-          ()
-          (find-file cljs-file-path)
-          (setq cljs-file-buffer (current-buffer))
-          (cider-connect-cljs
-           `(:host "localhost" :port ,figwheel-port :cljs-repl-type shadow-select)))
+           ()
+           (find-file cljs-file-path)
+           (setq cljs-file-buffer (current-buffer))
+           (cider-connect-cljs
+            `(:host "localhost" :port ,figwheel-port :cljs-repl-type shadow-select)))
          (link-sesman-dirs
-          ()
-          (with-current-buffer clj-file-buffer
-            (when-let ((clj-ses (match-sesman-session
-                                 (format ".*cider-repl.*%s.*" project-name)
-                                 (format "%d" figwheel-port))))
-              (sesman-link-with-directory nil clj-ses)))
-          (with-current-buffer cljs-file-buffer
-            (when-let ((cljs-ses (match-sesman-session
-                                  (format ".*cider-repl.*%s.*%d.*"
-                                          project-name figwheel-port))))
-              (sesman-link-with-directory nil cljs-ses)))
-          (save-excursion
-            (find-file clj-test-file-path)
-            (when-let ((clj-test-ses (match-sesman-session
-                                      (format ".*cider-repl.*%s.*" project-name)
-                                      (format "%d" figwheel-port))))
-              (sesman-link-with-directory nil clj-test-ses))
-            (kill-buffer)))
+           ()
+           (with-current-buffer clj-file-buffer
+             (when-let ((clj-ses (match-sesman-session
+                                  (format ".*cider-repl.*%s.*" project-name)
+                                  (format "%d" figwheel-port))))
+               (sesman-link-with-directory nil clj-ses)))
+           (with-current-buffer cljs-file-buffer
+             (when-let ((cljs-ses (match-sesman-session
+                                   (format ".*cider-repl.*%s.*%d.*"
+                                           project-name figwheel-port))))
+               (sesman-link-with-directory nil cljs-ses)))
+           (save-excursion
+             (find-file clj-test-file-path)
+             (when-let ((clj-test-ses (match-sesman-session
+                                       (format ".*cider-repl.*%s.*" project-name)
+                                       (format "%d" figwheel-port))))
+               (sesman-link-with-directory nil clj-test-ses))
+             (kill-buffer)))
          (find-clj-repl
-          ()
-          (cl-first (match-buffer-name
-                     (format ".*cider-repl.*%s.*" project-name)
-                     (format "%d" figwheel-port))))
+           ()
+           (cl-first (match-buffer-name
+                      (format ".*cider-repl.*%s.*" project-name)
+                      (format "%d" figwheel-port))))
          (find-cljs-repl
-          ()
-          (cl-first (match-buffer-name
-                     (format ".*cider-repl.*%s.*%d.*"
-                             project-name figwheel-port))))
+           ()
+           (cl-first (match-buffer-name
+                      (format ".*cider-repl.*%s.*%d.*"
+                              project-name figwheel-port))))
          (have-repl-buffers
-          ()
-          (not (null (and (find-clj-repl) (find-cljs-repl)))))
+           ()
+           (not (null (and (find-clj-repl) (find-cljs-repl)))))
          (show-repl-buffers
-          (&optional no-init)
-          (let ((clj-repl (find-clj-repl))
-                (cljs-repl (find-cljs-repl)))
-            (delete-other-windows)
-            (when clj-repl
-              (switch-to-buffer clj-repl)
-              (when no-init
-                (goto-char (point-max))))
-            (when cljs-repl
-              (if clj-repl
-                  (switch-to-buffer-other-window cljs-repl)
-                (switch-to-buffer cljs-repl))
-              (when no-init
-                (goto-char (point-max))))
-            (unless no-init
-              (init-repl-buffers))))
+           (&optional no-init)
+           (let ((clj-repl (find-clj-repl))
+                 (cljs-repl (find-cljs-repl)))
+             (delete-other-windows)
+             (when clj-repl
+               (switch-to-buffer clj-repl)
+               (when no-init
+                 (goto-char (point-max))))
+             (when cljs-repl
+               (if clj-repl
+                   (switch-to-buffer-other-window cljs-repl)
+                 (switch-to-buffer cljs-repl))
+               (when no-init
+                 (goto-char (point-max))))
+             (unless no-init
+               (init-repl-buffers))))
          (init-repl-buffers
-          ()
-          (let ((clj-repl (find-clj-repl))
-                (cljs-repl (find-cljs-repl)))
-            (when clj-repl
-              (wait-on-buffer-text clj-repl "user>" ()
-                (let ((ns (with-current-buffer clj-file-buffer
-                            (cider-current-ns))))
-                  (save-excursion
-                    (switch-to-buffer clj-repl)
-                    (insert (format "(in-ns '%s)" ns))
-                    (cider-repl-return))
-                  (wait-on-buffer-text clj-repl (format "%s> *$" ns) ()
-                    (dolist (s clj-repl-forms)
-                      (save-excursion
-                        (switch-to-buffer clj-repl)
-                        (insert (format "%s" s))
-                        (cider-repl-return)))
-                    (--update-run-cider-progress)))))
-            (when cljs-repl
-              (wait-on-buffer-text cljs-repl "cljs\.user>" (nil nil 0.025)
-                (let ((ns (with-current-buffer cljs-file-buffer
-                            (cider-current-ns))))
-                  (save-excursion
-                    (switch-to-buffer cljs-repl)
-                    (insert (format "(in-ns '%s)" ns))
-                    (cider-repl-return))
-                  (wait-on-buffer-text cljs-repl (format "%s> *$" ns) (nil nil 0.05)
-                    (save-excursion
-                      (switch-to-buffer cljs-file-buffer)
-                      (--cider-load-buffer-reload-repl))
-                    (dolist (s cljs-repl-forms)
-                      (save-excursion
-                        (switch-to-buffer cljs-repl)
-                        (goto-char (point-max))
-                        (insert (format "%s" s))
-                        (cider-repl-return)))
-                    (--update-run-cider-progress)))))
-            (wait-on-condition (--run-cider-finished) ()
-              (show-repl-buffers t)
-              (--elapsed-alert project-name (--elapsed-seconds start-time))))))
-      (stop-cider-all)
+           ()
+           (let ((clj-repl (find-clj-repl))
+                 (cljs-repl (find-cljs-repl)))
+             (when clj-repl
+               (wait-on-buffer-text clj-repl "user>" ()
+                 (let ((ns (with-current-buffer clj-file-buffer
+                             (cider-current-ns))))
+                   (save-excursion
+                     (switch-to-buffer clj-repl)
+                     (insert (format "(in-ns '%s)" ns))
+                     (cider-repl-return))
+                   (wait-on-buffer-text clj-repl (format "%s> *$" ns) ()
+                     (dolist (s clj-repl-forms)
+                       (save-excursion
+                         (switch-to-buffer clj-repl)
+                         (insert (format "%s" s))
+                         (cider-repl-return)))
+                     (--update-run-cider-progress)))))
+             (when cljs-repl
+               (wait-on-buffer-text cljs-repl "cljs\.user>" (nil nil 0.025)
+                 (let ((ns (with-current-buffer cljs-file-buffer
+                             (cider-current-ns))))
+                   (save-excursion
+                     (switch-to-buffer cljs-repl)
+                     (insert (format "(in-ns '%s)" ns))
+                     (cider-repl-return))
+                   (wait-on-buffer-text cljs-repl (format "%s> *$" ns) (nil nil 0.05)
+                     (save-excursion
+                       (switch-to-buffer cljs-file-buffer)
+                       (--cider-load-buffer-reload-repl))
+                     (dolist (s cljs-repl-forms)
+                       (save-excursion
+                         (switch-to-buffer cljs-repl)
+                         (goto-char (point-max))
+                         (insert (format "%s" s))
+                         (cider-repl-return)))
+                     (--update-run-cider-progress)))))
+             (wait-on-condition (--run-cider-finished) ()
+               (show-repl-buffers t)
+               (--elapsed-alert project-name (--elapsed-seconds start-time))))))
+      (--cider-quit-all)
       (open-project)
       (start-clj)
       (start-cljs)
@@ -1311,20 +1311,18 @@ interactively for spacing value."
    '("(->> (q/find-count :project {}) time)")
    '("@(subscribe [:active-panel])")))
 
-(defun --cider-quit-all ()
-  (interactive)
-  (stop-cider-all)
-  (save-excursion
-    (find-file "~/code/sysrev/project.clj")
-    (dolist (b (projectile-project-buffers))
-      (kill-buffer b))))
-
 (defun --benchmark-sysrev ()
   (interactive)
-  (--cider-quit-all)
-  (with-delay 0.1 (garbage-collect))
-  (with-delay 0.25 (sysrev))
-  (with-delay 2.5 (--cider-quit-all)))
+  (cl-flet ((quit-all ()
+              (--cider-quit-all)
+              (save-excursion
+                (find-file "~/code/sysrev/project.clj")
+                (dolist (b (projectile-project-buffers))
+                  (kill-buffer b)))))
+    (quit-all)
+    (with-delay 0.1 (garbage-collect))
+    (with-delay 0.25 (sysrev))
+    (with-delay 2.5 (quit-all))))
 
 (defun --cider-repl-p (b)
   (eql 'cider-repl-mode (with-current-buffer b major-mode)))
