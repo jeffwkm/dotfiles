@@ -22,6 +22,7 @@
     ./waybar.nix
     ./wayland.nix
     ./wofi.nix
+    ./vscode.nix
   ];
 
   home.packages = with pkgs; [

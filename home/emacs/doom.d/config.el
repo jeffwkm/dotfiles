@@ -595,6 +595,15 @@ interactively for spacing value."
     (company-statistics-mode 1))
   (global-company-mode 1))
 
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+
 (after! projectile
   (setq projectile-indexing-method 'hybrid
         projectile-enable-caching nil

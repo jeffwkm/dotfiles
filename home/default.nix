@@ -43,6 +43,7 @@ in {
     nethack
     nixfmt # :: An opinionated formatter for Nix
     nodePackages.prettier
+    openai-full
     p7zip
     # passExtensions.pass-checkup
     passh # :: An sshpass alternative for non-interactive ssh auth

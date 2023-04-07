@@ -4,26 +4,29 @@ let
     pkgs.python3Packages.callPackage ../amdgpu-fan.nix { };
   python3-packages = (python-packages:
     with python-packages; [
-      pandas
-      requests
-      pulsectl
-      pip
       # pyatv
+      # swaytools
+      ### local packages
+      aioharmony
+      amdgpu-fan
+      black
       editorconfig
       isort
-      pytest
       jsbeautifier
       mpv
-      python-mpv-jsonipc
-      aioharmony
-      todoist
-      # swaytools
-      pyflakes
       nose
+      openai
+      openaiauth
+      openai-whisper
+      pandas
+      pip
+      pulsectl
+      pyflakes
+      pytest
+      python-mpv-jsonipc
+      requests
       setuptools
-      black
-      ### local packages
-      amdgpu-fan
+      todoist
       vapoursynth
     ]);
   python3-custom = pkgs.python3.withPackages python3-packages;
