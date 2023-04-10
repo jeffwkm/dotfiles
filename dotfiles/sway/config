@@ -21,7 +21,7 @@ input   *           pointer_accel -0.5
 set $out1           DP-2
 set $out2           DP-3
 
-output  *           subpixel rgb max_render_time 6
+output  *           subpixel rgb max_render_time 8
 output  $out1       position 0 0 scale 1.75
 output  $out2       position 2195 0 scale 1.75
 # output  $out2       color profile "/home/jeff/.local/share/icc/p2715q.icc"
