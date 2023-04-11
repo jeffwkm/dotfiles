@@ -79,6 +79,8 @@
         find-function-C-source-directory
         "/Users/jeff/Library/Caches/Homebrew/emacs-plus@30--git/src/"))
 
+(load! "commands.el")
+
 (defvar --large-font nil)
 (defun --configure-fonts ()
   (setq doom-font (if (mac?)
