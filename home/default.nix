@@ -44,11 +44,14 @@ in {
     nixfmt # :: An opinionated formatter for Nix
     nodePackages.prettier
     openai-full
+    pomodoro
+    procs
     p7zip
     # passExtensions.pass-checkup
     passh # :: An sshpass alternative for non-interactive ssh auth
     rbenv
     ripgrep # :: replacement for /bin/grep
+    speedtest-rs
     spicetify-cli
     spotify-tui
     spotifyd # :: An open source Spotify client running as a UNIX daemon

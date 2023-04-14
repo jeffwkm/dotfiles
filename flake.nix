@@ -31,6 +31,9 @@
       url = "github:doomemacs/doomemacs";
       flake = false;
     };
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    rust-overlay.inputs.flake-utils.follows = "flake-utils";
   };
 
   outputs = { self, darwin, home-manager, flake-utils, hyprland, ... }@inputs:

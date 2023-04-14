@@ -2,7 +2,6 @@
   home.packages = with pkgs;
     (lib.lists.optionals (!pkgs.stdenv.isDarwin) [ gcc ]) ++ [
       black
-      clang-tools
       cmake
       editorconfig-checker
       editorconfig-core-c
@@ -18,7 +17,8 @@
       pandoc
       sbcl
     ] ++ [ babashka boot clj-kondo clojure clojure-lsp leiningen ]
-    ++ [ rustracer rustup ] ++ [ shellcheck shfmt ] ++ [
+    ++ [ rustracer cargo rustc rust-analyzer rust-bindgen rustfmt ]
+    ++ [ shellcheck shfmt ] ++ [
       cabal-install
       ghc
       haskell-language-server

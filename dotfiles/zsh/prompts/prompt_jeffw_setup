@@ -203,6 +203,10 @@ function prompt_jeffw_setup {
   zstyle ':vcs_info:*+start-up:*' hooks set_novcs_prompt_symbol
   zstyle ':vcs_info:*+set-message:*' hooks set_vcs_prompt_symbol
 
+  local prompt_nix_shell=''
+  if [[ ! -z "$IN_NIX_SHELL" ]] ; then
+    prompt_nix_shell=' [nix-shell]'
+  fi
   # Define prompts.
   # PROMPT='%F{5}%n%f@%F{yellow}%m%f|%F{green}${_prompt_jeffw_pwd}%f ${vcs_info_msg_0_}
   local symbol_color="55;95;175"
@@ -212,7 +216,7 @@ function prompt_jeffw_setup {
   local main_open='%F{236}%K{236} %K{238}%F{236}'${_prompt_jeffw_arrow_right}'%f%K{238} '
   local main_close=" %k%f$(fg_rgb ${_prompt_jeffw_gray1})%k"${_prompt_jeffw_rounded_right}"%k%f"
   local main_to_pwd=' %F{238}$(bg_rgb ${_prompt_jeffw_gray1})'${_prompt_jeffw_arrow_right}'%f '
-  local prompt_main='%F{5}%n%f@%F{yellow}%m%f'
+  local prompt_main='%F{5}%n%f@%F{yellow}%m'${prompt_nix_shell}'%f'
   local prompt_pwd='%F{green}${_prompt_jeffw_pwd}%f'
   local prompt_slice=""
   if [[ ! -z "$SLICE" ]] ; then

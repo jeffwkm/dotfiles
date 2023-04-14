@@ -4,9 +4,9 @@ let
   emacsBase = pkgs.emacsPgtk;
   emacsCustom1 = config.util.optimizeC emacsBase [
     "-march=native"
-    "-O3"
-    # "-Ofast"
-    # "-fno-finite-math-only"
+    # "-O3"
+    "-Ofast"
+    "-fno-finite-math-only"
     # "-g0"
   ];
   emacsCustom = (pkgs.emacsPackagesFor emacsCustom1).emacsWithPackages

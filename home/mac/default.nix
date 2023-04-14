@@ -2,9 +2,7 @@
 with pkgs; {
   imports = [ ../zsh/mac.nix ../gui/alacritty.nix ];
 
-  home.sessionPath = [
-    "${config.home.homeDirectory}/.rustup/toolchains/stable-aarch64-apple-darwin/bin"
-  ];
+  home.sessionPath = [ ];
 
   alacritty.fontSize = "14";
   alacritty.fontSizeLarge = "16";

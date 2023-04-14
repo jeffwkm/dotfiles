@@ -292,6 +292,8 @@
       :m "B" 'lispyville-backward-atom-begin)
 
 (map! :m "C-o" nil
+      :m "<tab>" nil
+      :m "TAB" nil
       :n "M-." nil
       :g "M-<left>" nil
       :g "M-<right>" nil
@@ -299,6 +301,8 @@
       :g "C-s-k"            '+default/newline-above
       :g "C-s-<return>"     '+default/newline-below
       :g "C-s-j"            '+default/newline-below
+      "<tab>" nil
+      "TAB" nil
       "M-," 'pop-tag-mark
       "M-." '+lookup/definition
       "C-o" 'ace-select-window
@@ -597,14 +601,25 @@ interactively for spacing value."
     (company-statistics-mode 1))
   (global-company-mode 1))
 
+(setq large-file-warning-threshold (* 100 1000 1000))
+
 ;; accept completion from copilot and fallback to company
-(use-package! copilot
-  :hook (prog-mode . copilot-mode)
+(use-package copilot
+  :hook ((prog-mode . copilot-mode)
+         (conf-mode . copilot-mode))
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
+              ("<backtab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
+              ("S-TAB" . 'copilot-accept-completion)
               ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+              ("C-<tab>" . 'copilot-accept-completion-by-word))
+  :config
+  (map! :mode (prog-mode conf-mode)
+        :mi "C-TAB" 'copilot-accept-completion-by-word
+        :mi "C-<tab>" 'copilot-accept-completion-by-word
+        :mi "TAB" 'copilot-accept-completion
+        :mi "<tab>" 'copilot-accept-completion))
 
 (after! projectile
   (setq projectile-indexing-method 'hybrid
@@ -620,7 +635,7 @@ interactively for spacing value."
         :m "/" 'counsel-grep-or-swiper))
 
 (load! "ligature.el")
-(after! ligature  
+(after! ligature
   (let ((all '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
                ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
                "-<" "-<<"  "#{" "#[" "##" "###" "####" "#(" "#?" "#_"

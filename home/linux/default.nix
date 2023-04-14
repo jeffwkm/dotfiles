@@ -15,9 +15,7 @@ in {
       I vf toggle format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
     '';
 
-  home.sessionPath = [
-    "${config.home.homeDirectory}/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin"
-  ];
+  home.sessionPath = [ ];
 
   home.packages = with pkgs; [
     (optimize fd)
