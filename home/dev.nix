@@ -16,9 +16,14 @@
       nodejs
       pandoc
       sbcl
-    ] ++ [ babashka boot clj-kondo clojure clojure-lsp leiningen ]
-    ++ [ rustracer cargo rustc rust-analyzer rust-bindgen rustfmt ]
-    ++ [ shellcheck shfmt ] ++ [
+    ] ++ [ babashka boot clj-kondo clojure clojure-lsp leiningen ] ++ [
+      rustracer
+      rust-bindgen
+      (rust-bin.stable.latest.default.override {
+        extensions =
+          [ "rust-src" "rust-analyzer" "rustfmt" "rls" "rust-analysis" ];
+      })
+    ] ++ [ shellcheck shfmt ] ++ [
       cabal-install
       ghc
       haskell-language-server

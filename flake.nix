@@ -77,6 +77,7 @@
               # inherit (final.pkgs-x86) idris2;
             }))
           inputs.emacs-overlay.overlay
+          inputs.rust-overlay.overlays.default
         ];
       };
 
