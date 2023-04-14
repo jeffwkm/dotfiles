@@ -9,7 +9,7 @@ with pkgs; {
   alacritty.fontSizeHuge = "18";
   alacritty.decorations = "buttonless";
   alacritty.fontFamily = "JetBrainsMono Nerd Font";
-  # alacritty.fontStyle = "SemiBold";
+  alacritty.fontStyle = "SemiBold";
 
   xdg.configFile."mpv/mpv.conf".text =
     (builtins.readFile ../../dotfiles/mpv/mpv.conf) + ''

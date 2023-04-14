@@ -81,6 +81,8 @@
 
 (load! "commands.el")
 
+(setq +ivy-buffer-preview t)
+
 (defvar --large-font nil)
 (defun --configure-fonts ()
   (setq doom-font (if (mac?)
