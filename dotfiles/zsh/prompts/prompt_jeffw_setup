@@ -49,7 +49,7 @@ function prompt_jeffw_print_elapsed_time {
     seconds=$(( remainder % 60 ))
 
     # print -Pn "%B%F{green}>>> elapsed time "
-    print -Pn '%b%F{green}%K{234}%B Elapsed Time %b%F{234}%K{239}${_prompt_jeffw_arrow_right}%f%K{239}%B%F{green} '
+    print -Pn '%b%F{green}%K{235}%B Elapsed Time %b%F{235}%K{240}${_prompt_jeffw_arrow_right}%f%K{240}%B%F{green} '
     if (( hours >= 1 )); then
       print -Pn "${hours}h"
     fi
@@ -57,7 +57,7 @@ function prompt_jeffw_print_elapsed_time {
       print -Pn "${minutes}m"
     fi
     print -Pn "${seconds}s"
-    print -P "%K{239} %k%F{239}${_prompt_jeffw_arrow_right}%f"
+    print -P "%K{240} %k%F{240}${_prompt_jeffw_arrow_right}%f"
   fi
 }
 
@@ -166,9 +166,9 @@ function prompt_jeffw_precmd {
     prompt_jeffw_print_elapsed_time
 
     if [[ $exit != 0 ]] ; then
-      local exit_open='%b%F{9}%K{234} Status %F{234}%K{239}'${_prompt_jeffw_arrow_right}'%f%K{239}'
-      local exit_status="%B%F{9}%K{239}${exit}%b%f"
-      local exit_close="%K{239} %k%F{239}${_prompt_jeffw_rounded_right}%f"
+      local exit_open='%b%F{196}%K{235} %BStatus%b %F{235}%K{240}'${_prompt_jeffw_arrow_right}'%f%K{240}'
+      local exit_status="%F{196}%K{240} %B${exit}%b%f"
+      local exit_close="%K{240} %k%F{240}${_prompt_jeffw_arrow_right}%f"
       print -P ${exit_open}${exit_status}${exit_close}
     fi
   fi
@@ -242,10 +242,10 @@ function prompt_jeffw_setup {
   zstyle ':vcs_info:*+start-up:*' hooks set_novcs_prompt_symbol
   zstyle ':vcs_info:*+set-message:*' hooks set_vcs_prompt_symbol
 
-  local prompt_symbol="%F{234}%K{234} %F{234}%K{236}"${_prompt_jeffw_arrow_right}" %F{236}"'%K{25}'${_prompt_jeffw_arrow_right}'%F{25}%k'${_prompt_jeffw_arrow_right}'%k%f'
-  local main_open='%F{234}%K{234} %K{236}%F{234}'${_prompt_jeffw_arrow_right}'%f%K{236} '
+  local prompt_symbol="%F{235}%K{235} %F{235}%K{237}"${_prompt_jeffw_arrow_right}" %F{237}"'%K{25}'${_prompt_jeffw_arrow_right}'%F{25}%k'${_prompt_jeffw_arrow_right}'%k%f'
+  local main_open='%F{235}%K{235} %K{237}%F{235}'${_prompt_jeffw_arrow_right}'%f%K{237} '
   local prompt_main='$(_prompt_jeffw_ssh)%F{5}%n%f@%F{yellow}%m%f'
-  local main_to_pwd=' %F{236}%K{238}'${_prompt_jeffw_arrow_right}'%f '
+  local main_to_pwd=' %F{237}%K{238}'${_prompt_jeffw_arrow_right}'%f '
   local prompt_pwd='%F{green}${_prompt_jeffw_pwd}%f'
   local main_close='%k%f%F{238}%k'${_prompt_jeffw_rounded_right}'%k%f'
   local prompt_slice=""
