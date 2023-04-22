@@ -89,9 +89,10 @@ in {
 
     initExtraFirst = ''
       [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
-      unset ZDOTDIR
+      # unset ZDOTDIR
       export ZSHCONFIG="${config.home.local.nix-repo-path}/dotfiles/zsh"
-      export FPATH="$ZSHCONFIG/prompts:$FPATH"
+      fpath+=( "$ZSHCONFIG/prompts" "${config.home.homeDirectory}/.zsh/completions" )
+      # export FPATH="$ZSHCONFIG/prompts:$FPATH"
       ${extra.initExtraFirst or ""}
     '';
 

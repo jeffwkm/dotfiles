@@ -16,7 +16,8 @@
       nodejs
       pandoc
       sbcl
-    ] ++ [ babashka boot clj-kondo clojure clojure-lsp leiningen ] ++ [
+    ] ++ [ nil rnix-lsp ]
+    ++ [ babashka boot clj-kondo clojure clojure-lsp leiningen ] ++ [
       rustracer
       rust-bindgen
       (rust-bin.stable.latest.default.override {

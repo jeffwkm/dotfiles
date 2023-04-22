@@ -17,6 +17,8 @@ in {
 
   home.sessionPath = [ ];
 
+  alacritty.fontStyle = "Semibold";
+
   home.packages = with pkgs; [
     (optimize fd)
     (optimize lsd)

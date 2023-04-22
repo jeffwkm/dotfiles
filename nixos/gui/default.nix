@@ -45,7 +45,7 @@
         });
     })
   ];
-  nixpkgs.config.packageOverrides = pkgs: rec {
+  nixpkgs.config.packageOverrides = pkgs: {
     wofi = (config.util.optimizeDefault pkgs.wofi);
     alacritty = (config.util.optimizeDefault pkgs.alacritty);
     waybar = (config.util.optimizeDefault (pkgs.waybar.overrideAttrs

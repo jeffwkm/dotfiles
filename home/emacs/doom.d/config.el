@@ -126,7 +126,7 @@
 (defun --indent-tabs-on () (setq-local indent-tabs-mode t))
 (defun --indent-tabs-off () (setq-local indent-tabs-mode nil))
 (defun --indent-tabs-mode (hook enable-tabs)
-  (add-hook! hook (if enable-tabs '--indent-tabs-on '--indent-tabs-off)))
+  (add-hook hook (if enable-tabs '--indent-tabs-on '--indent-tabs-off)))
 
 (use-package! smartparens
   :init
@@ -143,7 +143,7 @@
 (use-package! evil-smartparens
   :config
   (after! smartparens
-    (add-hook 'smartparens-mode-hook 'evil-smartparens-mode)))
+    (add-hook! smartparens-mode 'evil-smartparens-mode)))
 
 (use-package evil-easymotion
   :config
@@ -152,9 +152,8 @@
 
 (use-package! lispy
   :init
-  (setq lispy-key-theme '(special lispy)))
-
-(after! lispy
+  (setq lispy-key-theme '(lispy))
+  :config
   (add-to-list 'lispy-clojure-modes 'cider-repl-mode)
   (undefine-key! lispy-mode-map-lispy "[" "]" "{" "}" "M-." "C-k" "C-j")
   (lispy-set-key-theme lispy-key-theme))
@@ -165,15 +164,13 @@
                                c-w
                                (prettify insert)
                                (atom-movement t)
-                               ;; slurp/barf-lispy
                                (additional motion)
-                               (additional-insert motion)
                                additional-motions
                                (commentary t)
-                               (additional-wrap t))))
-
-(after! lispyville
+                               mark-special))
+  :config
   (lispyville-set-key-theme lispyville-key-theme)
+  (add-hook! lispy-mode 'lispyville-mode)
   (map! :m "RET" 'newline-and-indent
         :mode lispy-mode
         :nvmi "DEL" 'lispy-delete-backward
@@ -190,7 +187,11 @@
         :i "{" 'lispy-open-curly
         :i "}" 'lispy-close-curly
         :m "C-{" 'lispyville-previous-opening
-        :m "C-}" 'lispyville-next-closing))
+        :m "C-}" 'lispyville-next-closing
+        :m "F" 'lispyville-forward-atom-end
+        :m "B" 'lispyville-backward-atom-begin
+        :mi "C-f" 'lispyville-forward-sexp
+        :mi "C-b" 'lispyville-backward-sexp))
 
 (use-package! evil-matchit
   :init (setq evilmi–shortcut "%")
@@ -235,14 +236,14 @@
 (map! :leader
       :desc "Kill sexp"
       "k" 'sp-kill-sexp
-      :desc "Kill at point"
-      "K" 'lispy-kill-at-point
+      ;; :desc "Kill at point"
+      ;; "K" 'lispy-kill-at-point
       :desc "Wrap with ()"
-      "(" 'lispyville-wrap-round
+      "(" 'sp-wrap-round
       :desc "Wrap with []"
-      "[" 'lispyville-wrap-brackets
+      "[" 'sp-wrap-square
       :desc "Wrap with {}"
-      "{" 'lispyville-wrap-braces
+      "{" 'sp-wrap-curly
       :desc "Recenter buffer"
       "l" 'recenter-top-bottom
       :desc "Mark sexp"
@@ -286,12 +287,10 @@
 
 (map! :m "0" 'doom/backward-to-bol-or-indent
       :m "C-a" 'doom/backward-to-bol-or-indent
-      :mi "C-f" 'lispyville-forward-sexp
-      :mi "C-b" 'lispyville-backward-sexp
+      :mi "C-f" 'sp-forward-sexp
+      :mi "C-b" 'sp-backward-sexp
       :m "C-e" 'evil-end-of-line
-      :mi "C-y" 'yank
-      :m "F" 'lispyville-forward-atom-end
-      :m "B" 'lispyville-backward-atom-begin)
+      :mi "C-y" 'yank)
 
 (map! :m "C-o" nil
       :m "<tab>" nil
@@ -606,7 +605,7 @@ interactively for spacing value."
 (setq large-file-warning-threshold (* 100 1000 1000))
 
 ;; accept completion from copilot and fallback to company
-(use-package copilot
+(use-package! copilot
   :hook ((prog-mode . copilot-mode)
          (conf-mode . copilot-mode))
   :bind (:map copilot-completion-map
@@ -617,6 +616,9 @@ interactively for spacing value."
               ("C-TAB" . 'copilot-accept-completion-by-word)
               ("C-<tab>" . 'copilot-accept-completion-by-word))
   :config
+  ;; (setq copilot-idle-delay 0)
+  ;; (setq copilot-max-char (* 1000 30))
+  ;; (setq copilot-log-max nil)
   (map! :mode (prog-mode conf-mode)
         :mi "C-TAB" 'copilot-accept-completion-by-word
         :mi "C-<tab>" 'copilot-accept-completion-by-word
@@ -670,7 +672,7 @@ interactively for spacing value."
 
 (defmacro --with-elapsed-time-alert (&rest body)
   `(--elapsed-alert (--body-title ',body)
-                    (--with-elapsed-time ,@body)))
+    (--with-elapsed-time ,@body)))
 ;;(--with-elapsed-time-alert (+ 1 2))
 
 (defun --describe-init ()
@@ -1066,13 +1068,19 @@ interactively for spacing value."
         recentf-auto-cleanup 'never)
   (recentf-mode +1))
 
+(after! format-all
+  (setq +format-with-lsp t))
+
 (after! nix-mode
-  (use-package! nix-sandbox)
-  (use-package! nix-buffer)
-  (use-package! nix-update)
-  (use-package! company-nixos-options)
+  (require 'lsp)
+  (require 'lsp-nix)
+  ;; (setq lsp-nix-nil-server-path nil)
+  (setq lsp-nix-rnix-server-path nil)
+  (setq lsp-nix-nil-formatter ["nixfmt"])
+  (setq-hook! 'nix-mode-hook +format-with-lsp nil)
   (defun --nix-mode-hook ()
-    (setq-local tab-width 2))
+    (setq-local tab-width 2)
+    (lsp-deferred))
   (add-hook! nix-mode '--nix-mode-hook))
 
 (defun --kill-auto-workspace ()
@@ -1080,6 +1088,35 @@ interactively for spacing value."
   (let ((ws (+workspace-current-name)))
     (when (and ws (= 2 (length ws)))
       (+workspace/delete ws))))
+
+;; List all file buffers whose path matches list of prefixes
+;; Use functional programming from 'dash package to filter buffers
+(defun --list-buffers-by-prefix (prefixes)
+  (let ((buffers (buffer-list))
+        (prefixes (-map 'expand-file-name prefixes)))
+    (->> buffers
+         (-filter (lambda (buf)
+                    (let ((path (buffer-file-name buf)))
+                      (and path
+                           (-any? (lambda (prefix)
+                                    (string-prefix-p prefix path))
+                                  prefixes))))))))
+
+(defvar --external-source-file-paths nil)
+
+(dolist (path (list "~/.cargo/registry"
+                    "~/.maven/repository"
+                    "~/.config/doom-local/straight"
+                    "/nix/store"))
+  (add-to-list '--external-source-file-paths
+               (expand-file-name path)))
+
+
+(defun --kill-external-source-buffers ()
+  (interactive)
+  (save-excursion
+    (dolist (buf (--list-buffers-by-prefix --external-source-file-paths))
+      (kill-buffer buf))))
 
 (defun --cider-load-buffer-reload-repl (&optional buffer)
   (interactive)
@@ -1135,9 +1172,10 @@ interactively for spacing value."
 
 (defmacro wait-on-condition (test-form args &rest body)
   (declare (indent 2))
-  `(--wait-on-condition (lambda () ,test-form)
-                        (lambda () ,@body)
-                        ,@args))
+  `(--wait-on-condition
+    (lambda () ,test-form)
+    (lambda () ,@body)
+    ,@args))
 ;;(wait-on-condition t nil (alert "hi"))
 
 (defun --wait-on-buffer-text (buffer match-regexp on-ready
@@ -1368,7 +1406,7 @@ interactively for spacing value."
          (when-let ((b (--cider-next-repl (current-buffer))))
            (switch-to-buffer-other-window b)))))
 
-(setq doom-modeline-buffer-file-name-style 'truncate-upto-project
+(setq doom-modeline-buffer-file-name-style 'truncate-with-project
       doom-modeline-persp-name t
       doom-modeline-persp-icon t
       doom-modeline-buffer-encoding 'nondefault
@@ -1425,6 +1463,8 @@ interactively for spacing value."
                              "activated hl-line-mode!"))))))
   (add-hook! 'treemacs-select-functions '--ensure-treemacs-hl-line-mode))
 
+(defvar --ensure-treemacs-open nil)
+
 (after! persp-mode
   (after! treemacs
     (defun --ensure-treemacs-open (arg)
@@ -1433,33 +1473,14 @@ interactively for spacing value."
           (if (doom-project-p)
               (treemacs-add-and-display-current-project)
             (treemacs)))))
-    ;; (add-to-list 'persp-activated-functions #'--ensure-treemacs-open t)
-    ))
+    (when --ensure-treemacs-open
+      (add-hook! 'persp-activated-functions :append #'--ensure-treemacs-open))))
 ;; persp-activated-functions
 ;; (setf persp-activated-functions (delete 'treemacs persp-activated-functions))
 ;; (setf persp-activated-functions (delete '+treemacs/toggle persp-activated-functions))
 
 (after! emojify
   (global-emojify-mode -1))
-
-(defun --darwin-rebuild-switch ()
-  (interactive)
-  (message "[darwin-rebuild switch] running ...")
-  (call-process-shell-command "darwin-rebuild switch")
-  (message "[darwin-rebuild switch] finished"))
-(defun --home-manager-switch ()
-  (interactive)
-  (message "[home-manager switch] running ...")
-  (call-process-shell-command "home-manager switch")
-  (message "[home-manager switch] finished"))
-(defun doom/nix-reload ()
-  (interactive)
-  (--home-manager-switch)
-  (doom/reload))
-
-(use-package! webkit-color-picker
-  :disabled t
-  :bind (("C-c C-p" . webkit-color-picker-show)))
 
 (defvar --default-server-name "server")
 

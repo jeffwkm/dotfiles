@@ -12,7 +12,6 @@
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.utils.follows = "flake-utils";
 
     # Nix helpers
     flake-compat = {
@@ -34,6 +33,10 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs-unstable";
     rust-overlay.inputs.flake-utils.follows = "flake-utils";
+    nil-server.url = "github:oxalica/nil";
+    nil-server.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    nil-server.inputs.flake-utils.follows = "flake-utils";
+    nil-server.inputs.rust-overlay.follows = "rust-overlay";
   };
 
   outputs = { self, darwin, home-manager, flake-utils, hyprland, ... }@inputs:
@@ -53,7 +56,7 @@
         config = {
           allowUnfree = true;
           allowBroken = true;
-          packageOverrides = pkgs: rec {
+          packageOverrides = pkgs: {
             # Set clang lower priority than gcc
             clang = pkgs.clang.overrideAttrs
               (attrs: { meta.priority = pkgs.gcc.meta.priority + 1; });
@@ -254,7 +257,7 @@
         local-ui = importModule ./darwin/ui;
       };
 
-      homeManagerModulesShared = rec {
+      homeManagerModulesShared = {
         local-util = importModule ./util;
         local-common = importModule ./home;
         local-emacs = importModule ./home/emacs;

@@ -84,6 +84,7 @@ in {
   home.sessionPath = [
     "${config.home.homeDirectory}/bin"
     "${config.home.homeDirectory}/bin.local"
+    "${config.home.homeDirectory}/.cargo/bin"
     "${config.home.homeDirectory}/.node_modules/bin"
   ];
 

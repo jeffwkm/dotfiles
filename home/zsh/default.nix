@@ -4,7 +4,10 @@
     sessionVariables = { };
     history = { };
 
-    envExtra = "";
+    envExtra = ''
+      fpath+=( ~/.zsh/completions )
+      export FPATH
+    '';
     profileExtra = "";
     loginExtra = "";
     logoutExtra = "";
