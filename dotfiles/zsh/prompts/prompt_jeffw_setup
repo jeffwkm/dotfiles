@@ -30,7 +30,7 @@ _prompt_jeffw_cmd_start=0
 _prompt_jeffw_start_time=$SECONDS
 
 _prompt_jeffw_gray0='53;53;53'
-_prompt_jeffw_gray1='60;60;60'
+_prompt_jeffw_gray1='62;62;62'
 _prompt_jeffw_gray2='72;72;72'
 _prompt_jeffw_time_bg=$_prompt_jeffw_gray1
 
@@ -76,6 +76,33 @@ function prompt_jeffw_preexec {
   _prompt_jeffw_cmd_start=1
 }
 
+function _prompt_jeffw_open_round {
+  print -Pn "$(fg_rgb ${_prompt_jeffw_gray1})%k${_prompt_jeffw_rounded_left}%k%f$(bg_rgb ${_prompt_jeffw_gray1})"
+}
+
+function _prompt_jeffw_close_round {
+  print -Pn "%k%f$(fg_rgb ${_prompt_jeffw_gray1})%k${_prompt_jeffw_rounded_right}%k%f"
+}
+
+function _prompt_jeffw_rounded_block {
+  local content="$*"
+  # ${_prompt_jeffw_colors[3]}
+  print -Pn ''$(_prompt_jeffw_open_round)' '${content}' '$(_prompt_jeffw_close_round)
+}
+
+function _prompt_jeffw_nix_shell {
+  if [[ ! -z "$IN_NIX_SHELL" ]] ; then
+    _prompt_jeffw_rounded_block '%B%F{208}nix-shell%f'
+    print -Pn ' %b'
+  fi
+}
+
+function _prompt_jeffw_ssh {
+  if [[ ! -z "$SSH_CLIENT" ]] ; then
+    print -Pn "${_prompt_jeffw_colors[1]}ssh://%f"
+  fi
+}
+
 function prompt_jeffw_precmd {
   exit="$?"
 
@@ -95,7 +122,7 @@ function prompt_jeffw_precmd {
     remote_status=" %F{13}${ahead_behind}%f"
   fi
 
-  local vcs_open vcs_close vcs_branch git_ls_opts
+  local vcs_open vcs_close vcs_branch git_ls_opts content
   vcs_open="$(fg_rgb ${_prompt_jeffw_gray1})%k"$_prompt_jeffw_rounded_left"%k%f$(bg_rgb ${_prompt_jeffw_gray1}) "
   vcs_close=" %k%f$(fg_rgb ${_prompt_jeffw_gray1})%k"$_prompt_jeffw_rounded_right"%k%f"
   if [[ ! -z "$vcsh" ]] ; then
@@ -105,14 +132,18 @@ function prompt_jeffw_precmd {
   fi
   if [[ ! -n $(git status --porcelain 2> /dev/null) ]]; then
     branch_format="${vcs_open}${vcs_branch}${remote_status}${vcs_close}"
+    # content="${vcs_branch}${remote_status}"
   else
     branch_format="${vcs_open}${vcs_branch} %u%c${remote_status}${vcs_close}"
+    # content="${vcs_branch} %u%c${remote_status}"
   fi
   if [[ -z "$vcsh" ]] ; then
     if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
       branch_format="${vcs_open}${vcs_branch} %u%c${_prompt_jeffw_colors[4]}●%f${remote_status}${vcs_close}"
+      # content="${vcs_branch} %u%c${_prompt_jeffw_colors[4]}●%f${remote_status}"
     fi
   fi
+  # branch_format="$(_prompt_jeffw_rounded_block $content)"
 
   zstyle ':vcs_info:*:prompt:*' formats "${branch_format}"
 
@@ -203,10 +234,6 @@ function prompt_jeffw_setup {
   zstyle ':vcs_info:*+start-up:*' hooks set_novcs_prompt_symbol
   zstyle ':vcs_info:*+set-message:*' hooks set_vcs_prompt_symbol
 
-  local prompt_nix_shell=''
-  if [[ ! -z "$IN_NIX_SHELL" ]] ; then
-    prompt_nix_shell=' [nix-shell]'
-  fi
   # Define prompts.
   # PROMPT='%F{5}%n%f@%F{yellow}%m%f|%F{green}${_prompt_jeffw_pwd}%f ${vcs_info_msg_0_}
   local symbol_color="55;95;175"
@@ -216,13 +243,13 @@ function prompt_jeffw_setup {
   local main_open='%F{236}%K{236} %K{238}%F{236}'${_prompt_jeffw_arrow_right}'%f%K{238} '
   local main_close=" %k%f$(fg_rgb ${_prompt_jeffw_gray1})%k"${_prompt_jeffw_rounded_right}"%k%f"
   local main_to_pwd=' %F{238}$(bg_rgb ${_prompt_jeffw_gray1})'${_prompt_jeffw_arrow_right}'%f '
-  local prompt_main='%F{5}%n%f@%F{yellow}%m'${prompt_nix_shell}'%f'
+  local prompt_main='$(_prompt_jeffw_ssh)%F{5}%n%f@%F{yellow}%m%f'
   local prompt_pwd='%F{green}${_prompt_jeffw_pwd}%f'
   local prompt_slice=""
   if [[ ! -z "$SLICE" ]] ; then
     prompt_slice=' %F{3}['${SLICE}']%f'
   fi
-  PROMPT="${main_open}${prompt_main}${main_to_pwd}${prompt_pwd}${main_close}${prompt_slice}"' ${vcs_info_msg_0_}
+  PROMPT="${main_open}${prompt_main}${main_to_pwd}${prompt_pwd}${main_close}${prompt_slice}"' $(_prompt_jeffw_nix_shell)${vcs_info_msg_0_}
 '"${prompt_symbol} "'$(prompt_jeffw_post_prompt)'
 
   local time_bg='60;60;60'
