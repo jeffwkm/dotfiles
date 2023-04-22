@@ -17,6 +17,11 @@ in {
       "${config.home.local.nix-repo-path}/scripts";
   };
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   home.packages = with pkgs; [
     # pinentry-gnome
     # rofi-pass
@@ -42,6 +47,7 @@ in {
     neofetch
     nethack
     nixfmt # :: An opinionated formatter for Nix
+    nix-direnv
     nodePackages.prettier
     openai-full
     pomodoro

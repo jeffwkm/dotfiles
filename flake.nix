@@ -39,7 +39,7 @@
     nil-server.inputs.rust-overlay.follows = "rust-overlay";
   };
 
-  outputs = { self, darwin, home-manager, flake-utils, hyprland, ... }@inputs:
+  outputs = { self, darwin, home-manager, hyprland, ... }@inputs:
     let
       inherit (inputs.nixos-unstable.lib) nixosSystem;
       inherit (darwin.lib) darwinSystem;
@@ -63,6 +63,9 @@
           };
         };
         overlays = attrValues self.overlays ++ [
+          (final: prev: {
+            nix-direnv = prev.nix-direnv.override { enableFlakes = true; };
+          })
           (final: prev: {
             final.stdenv = prev.fastStdenv.mkDerivation { name = "env"; };
           })
