@@ -33,6 +33,7 @@ in {
     aws-vault
     cmatrix # :: Simulates the falling characters theme from The Matrix movie
     direnv
+    ec2-api-tools
     expect
     gh # GitHub CLI
     gnupg

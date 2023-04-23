@@ -10,7 +10,7 @@ in {
       ".." = "cd ..";
       e = "emacsclient -t -a emacs";
       ee = "emacs -nw";
-      vim = "e";
+      # vim = "e";
       v = "vim";
       ### nix
       ss = "nix search nixpkgs";
@@ -71,6 +71,7 @@ in {
       _h = "| head -n";
       _t = "| tail -n";
       _l = "| less";
+      EC2AUTH = "-O $AWS_ACCESS_KEY_ID -W $AWS_SECRET_ACCESS_KEY";
       # mpv options
       V = "--volume";
       V50 = "--volume=50";
@@ -89,10 +90,8 @@ in {
 
     initExtraFirst = ''
       [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
-      # unset ZDOTDIR
       export ZSHCONFIG="${config.home.local.nix-repo-path}/dotfiles/zsh"
       fpath+=( "$ZSHCONFIG/prompts" "${config.home.homeDirectory}/.zsh/completions" )
-      # export FPATH="$ZSHCONFIG/prompts:$FPATH"
       ${extra.initExtraFirst or ""}
     '';
 
