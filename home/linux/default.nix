@@ -30,7 +30,6 @@ in {
     latencytop
     libinput
     libnotify
-    mkvtoolnix-cli # :: Cross-platform tools for Matroska (needed for svpcode)
     ncpamixer # :: full ncurses interface to pamixer
     pamixer # :: shell utility for controlling pulseaudio
     playerctl # :: shell utility for controlling media players (MPRIS)
@@ -55,7 +54,7 @@ in {
       Environment = [
         "DOOMDIR=%h/.config/doom-config"
         "DOOMLOCALDIR=%h/.config/doom-local"
-      ] ++ lib.optional (!config.home.local.emacs.install)
+      ] ++ lib.optional config.home.local.gui
         "LD_LIBRARY_PATH=${pkgs.freetype_subpixel}/lib";
     };
   };

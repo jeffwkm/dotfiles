@@ -24,8 +24,9 @@ in {
       };
       emacs = {
         enable = mkBoolOpt true;
-        install = mkBoolOpt false;
+        install-home = mkBoolOpt false;
       };
+      gui = mkBoolOpt true;
     };
   };
 }

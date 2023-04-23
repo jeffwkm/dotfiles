@@ -1,9 +1,7 @@
-{ pkgs, config, lib, inputs, ... }:
+{ pkgs, config, lib, ... }:
 with lib;
 with config.util;
-let
-  cfg = config.home.local.emacs;
-  emacsPkg = pkgs.emacs;
+let emacsPkg = pkgs.emacs-nox;
 in {
   # options = {
   #   home.emacs = {
@@ -32,10 +30,10 @@ in {
         nodePackages.javascript-typescript-langserver
         sqlite
         editorconfig-core-c
-      ] ++ optional (cfg.install) emacs;
+      ] ++ optional config.home.local.emacs.install-home emacs;
 
-    nixpkgs.overlays =
-      mkIf cfg.install [ (final: prev: { final.emacs = emacsPkg; }) ];
+    nixpkgs.overlays = mkIf config.home.local.emacs.install-home
+      [ (final: prev: { final.emacs = emacsPkg; }) ];
 
     xdg = {
       enable = true;

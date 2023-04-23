@@ -138,9 +138,18 @@
       nixosConfigurations = rec {
         bootstrap-x86 = makeOverridable nixosSystem {
           system = "x86_64-linux";
-          modules = [ ./nixos/bootstrap.nix { nixpkgs = nixpkgsConfig; } ];
+          modules = [ ./nixos/bootstrap.nix { nixpkgs = nixpkgsConfig; } ] ++ [{
+            local.primary-user = primaryUserInfo;
+            local.gui = false;
+          }];
         };
-        bootstrap-arm = bootstrap-x86.override { system = "aarch64-linux"; };
+        bootstrap-arm = bootstrap-x86.override {
+          system = "aarch64-linux";
+          modules = [{
+            local.primary-user = primaryUserInfo;
+            local.gui = false;
+          }];
+        };
 
         jeff-nixos = nixosSystem {
           system = "x86_64-linux";
@@ -172,9 +181,19 @@
         # Mininal configurations to bootstrap systems
         bootstrap-x86 = makeOverridable darwinSystem {
           system = "x86_64-darwin";
-          modules = [ ./darwin/bootstrap.nix { nixpkgs = nixpkgsConfig; } ];
+          modules = [ ./darwin/bootstrap.nix { nixpkgs = nixpkgsConfig; } ]
+                    ++ [{
+                      local.primary-user = primaryUserInfo;
+                      local.gui = false;
+                    }];
         };
-        bootstrap-arm = bootstrap-x86.override { system = "aarch64-darwin"; };
+        bootstrap-arm = bootstrap-x86.override {
+          system = "aarch64-darwin";
+          modules = [{
+            local.primary-user = primaryUserInfo;
+            local.gui = false;
+          }];
+        };
 
         jeff-m1x = darwinSystem {
           system = "aarch64-darwin";
@@ -204,7 +223,8 @@
             home.local.primary-user = primaryUserInfo;
             home.local.nix-repo-path =
               "${config.home.homeDirectory}/${nixConfigRelativePath}";
-            home.local.emacs.install = false;
+            home.local.emacs.install-home = true;
+            home.local.gui = false;
             programs.zsh.prezto.prompt.theme = "steeef";
           });
       };
