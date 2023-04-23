@@ -524,9 +524,7 @@ interactively for spacing value."
   (let ((w (if (mac?) 4 4)))
     (add-to-list 'default-frame-alist `(internal-border-width . ,w))
     (set-frame-parameter nil 'internal-border-width w))
-  ;; (when (gui-mac?) (set-frame-fullscreen nil t))
-  ;; (when (gui-mac?) (run-with-timer 0.5 nil (lambda () (toggle-frame-maximized))))
-  )
+  (--projectile-remove-external-projects))
 (add-hook! 'emacs-startup-hook :depth 90 '--emacs-startup)
 
 (after! tramp
@@ -1111,12 +1109,26 @@ interactively for spacing value."
   (add-to-list '--external-source-file-paths
                (expand-file-name path)))
 
-
 (defun --kill-external-source-buffers ()
   (interactive)
   (save-excursion
     (dolist (buf (--list-buffers-by-prefix --external-source-file-paths))
       (kill-buffer buf))))
+
+(defun --projectile-project-external-p (project)
+  (let ((path (expand-file-name (projectile-project-root project))))
+    (--any? (string-prefix-p it path)
+            --external-source-file-paths)))
+
+;; List projectile projects
+(defun --projectile-external-projects ()
+  (->> (projectile-relevant-known-projects)
+       (-filter '--projectile-project-external-p)))
+
+(defun --projectile-remove-external-projects ()
+  (interactive)
+  (dolist (project (--projectile-external-projects))
+    (projectile-remove-known-project project)))
 
 (defun --cider-load-buffer-reload-repl (&optional buffer)
   (interactive)
