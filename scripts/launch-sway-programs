@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -ux
 
+exit 0
+
 source sway-util.sh
 
 notify_msg() {
