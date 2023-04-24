@@ -26,7 +26,7 @@ in {
       xclip = self.wl-clipboard-x11;
     })
     (final: prev: {
-      mpv = (prev.wrapMpv
+      mpv = optimize (prev.wrapMpv
         (prev.mpv-unwrapped.override { vapoursynthSupport = true; }) {
                                          scripts = with final.mpvScripts; [
                                            autoload

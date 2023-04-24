@@ -1,22 +1,26 @@
 #!/usr/bin/env bash
-set -ux
+set -eu
 
+# configure cursor
 export XCURSOR_SIZE=24
 export XCURSOR_THEME="capitaine-cursors-white"
 
-sshid=$(ssh-add -l | grep $USER | wc -l)
+# ensure ssh key is loaded
+have_ssh_id() {
+    ssh-add -l | grep -q "$USER"
+}
 
-if [ "$sshid" == "0" ]; then
-    ssh-add
-fi
+while ! have_ssh_id; do
+    echo "ssh key must be added before starting sway"
+    ssh-add || (echo "Failed to add ssh key" && true)
+done
 
-# load env vars
+# load user environment
 systemctl --user import-environment
 
-# run sway
+# run sway with systemd logging
 systemd-cat --identifier=sway sway
 
 # terminate user session upon sway exit
 systemctl --user stop graphical-session.target
-
 loginctl terminate-user $UID

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -u
+
+source sway-util.sh
+
+mount_drives__prepare() {
+  if (mount | grep -q /mnt/huge); then
+    sudo umount -lf /mnt/huge || true
+    sleep 0.25
+  fi
+}
+
+mount_drives() {
+  mount /mnt/huge
+}
+
+ensure_emacs__prepare() {
+  have_emacs_server() {
+    [[ -e "/run/user/$UID/emacs/server" ]] && systemctl --user is-active emacs.service
+  }
+  for _ in {1..10}; do
+    have_emacs_server && sleep 0.2 && break
+    sleep 0.2
+  done
+}
+
+ensure_emacs() {
+  emacsclient -e '(--ensure-server-initialized)'
+}
+
+notify_action "Mount network drives" mount_drives
+notify_action "Start emacs server" ensure_emacs

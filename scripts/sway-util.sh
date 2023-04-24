@@ -1,59 +1,73 @@
 #!/usr/bin/env bash
 
-function delay () {
+delay() {
   sleep 0.2
 }
-function ui () {
-  "$@" ; delay
+
+ui() {
+  "$@"
+  delay
 }
-function move_ws () {
+
+move_ws() {
   set -eu
   local ws_name="$1"
   ui swaymsg -- "workspace $ws_name"
 }
-function ws_primary () {
+
+ws_primary() {
   set -eu
   sway-move-output-primary
 }
-function layout () {
+
+layout() {
   set -eu
   local type="$1"
-  (ui swaymsg -- "layout $type" > /dev/null) || true
+  (ui swaymsg -- "layout $type" >/dev/null) || true
 }
-function layout_stacking () {
+
+layout_stacking() {
   layout "stacking"
 }
-function layout_tabbed () {
+
+layout_tabbed() {
   layout "tabbed"
 }
-function layout_split () {
+
+layout_split() {
   layout "toggle split"
 }
-function default () {
+
+default() {
   layout default
 }
-function splith () {
+
+splith() {
   ui swaymsg -- "split horizontal"
 }
-function splitv () {
+
+splitv() {
   ui swaymsg -- "split vertical"
 }
-function new_term () {
+
+new_term() {
   set +u
   local dir config config_path
   dir="$1"
   config="$ALACRITTY_CONF"
-  if [ -z "$config" ] ; then config="alacritty.yml" ; fi
+  if [ -z "$config" ]; then config="alacritty.yml"; fi
   config_path="$HOME/.config/alacritty/$config"
   set -eu
-  alacritty --config-file="$config_path" > /dev/null &
+  alacritty --config-file="$config_path" >/dev/null &
   sleep 0.4
-  if [ -n "$dir" ] ; then
-    wtype "cd $dir ; clear" ; wtype -k Return
+  if [ -n "$dir" ]; then
+    wtype "cd $dir ; clear"
+    wtype -k Return
   fi
   sleep 0.2
 }
-function two_terms () {
+
+two_terms() {
   set +u
   local ws_name d1 d2
   ws_name="$1"
@@ -61,9 +75,12 @@ function two_terms () {
   d2="$3"
   set -eu
   move_ws "$ws_name"
-  default ; new_term "$d1" ; new_term "$d2"
+  default
+  new_term "$d1"
+  new_term "$d2"
 }
-function three_terms () {
+
+three_terms() {
   set +u
   local ws_name d1 d2 d3
   ws_name="$1"
@@ -78,7 +95,8 @@ function three_terms () {
   splitv
   new_term "$d3"
 }
-function four_terms () {
+
+four_terms() {
   set +u
   local ws_name d1 d2 d3 d4
   ws_name="$1"
@@ -88,12 +106,16 @@ function four_terms () {
   d4="$5"
   set -eu
   three_terms "$ws_name" "$d1" "$d2" "$d3"
-  ui swaymsg -- "focus left" ; splitv ; new_term "$d4"
+  ui swaymsg -- "focus left"
+  splitv
+  new_term "$d4"
 }
-function swap_ws_output () {
+
+swap_ws_output() {
   ui swaymsg -- "move workspace to output right"
 }
-function start_program_at () {
+
+start_program_at() {
   set -eu
   local ws_name command delay
   ws_name="$1"
@@ -103,4 +125,23 @@ function start_program_at () {
   bash -c "exec $command" &
   sleep "$delay"
   true
+}
+
+# icon_path=/etc/profiles/per-user/jeff/share/icons/Arc/status/128
+
+notify_sway() {
+  notify-send.sh --app-name=sway "sway" "$*"
+}
+
+notify_action() {
+  name="$1"
+  cmd="$2"
+  prepare="${cmd}__prepare"
+  if [ -n "$prepare" ] && command -v "$prepare" >/dev/null; then
+    $prepare
+  fi
+  icon=""
+  $cmd || icon=""
+
+  notify_sway "<span weight='bold' size='25pt'>$icon</span>  <span size='18pt'>$name</span>"
 }

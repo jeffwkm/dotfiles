@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ config, pkgs, ... }: {
   xdg.configFile."waybar/".source = config.lib.file.mkOutOfStoreSymlink
     "${config.home.local.nix-repo-path}/dotfiles/waybar";
 
