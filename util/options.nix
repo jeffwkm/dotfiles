@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ lib, ... }: {
   options = {
     util = lib.mkOption {
       type = lib.types.attrs;

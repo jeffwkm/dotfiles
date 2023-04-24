@@ -3,13 +3,6 @@ with lib;
 with config.util;
 let emacsPkg = pkgs.emacs-nox;
 in {
-  # options = {
-  #   home.emacs = {
-  #     enable = mkBoolOpt true;
-  #     install = mkBoolOpt false;
-  #   };
-  # };
-
   config = {
     home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
 

@@ -4,15 +4,13 @@ let
     pkgs.python3Packages.callPackage ../amdgpu-fan.nix { };
   python3-packages = (python-packages:
     with python-packages; [
-      # pyatv
-      # swaytools
-      ### local packages
       aioharmony
       amdgpu-fan
       black
       editorconfig
       isort
       jsbeautifier
+      lsprotocol
       mpv
       nose
       openai
@@ -23,6 +21,7 @@ let
       pulsectl
       pyflakes
       pytest
+      python-lsp-server
       python-mpv-jsonipc
       requests
       setuptools

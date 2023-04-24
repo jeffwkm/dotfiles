@@ -27,10 +27,11 @@
 
   programs.zsh = {
     enable = true;
-    enableCompletion = true;
-    enableBashCompletion = true;
+    # enableCompletion = false;
+    # enableBashCompletion = false;
   };
-  users.defaultUserShell = "/run/current-system/sw/bin/zsh";
+  users.defaultUserShell = pkgs.zsh;
+  environment.shells = [ pkgs.zsh ];
 
   programs.fuse = { userAllowOther = true; };
   programs.dconf.enable = true;

@@ -18,6 +18,9 @@
 ;; they are implemented.
 
 (use-package! dash)
+(use-package! s)
+(use-package! f)
+(use-package! ht)
 
 (menu-bar-mode -1)
 
@@ -226,12 +229,13 @@
 
 (use-package! elisp-mode
   :config
-  (add-hook! (emacs-lisp-mode ielm-mode) 'elisp-slime-nav-mode))
+  (add-hook! (emacs-lisp-mode ielm-mode) 'elisp-slime-nav-mode)
+  (map! :mode elisp-slime-nav-mode
+        "M-." nil))
 
 (after! magit
   (map! :mode magit-mode
-        ;; "0" nil
-        ))
+        :nv "/" nil))
 
 (map! :leader
       :desc "Kill sexp"
@@ -524,6 +528,7 @@ interactively for spacing value."
   (let ((w (if (mac?) 4 4)))
     (add-to-list 'default-frame-alist `(internal-border-width . ,w))
     (set-frame-parameter nil 'internal-border-width w))
+  (--kill-external-source-buffers)
   (--projectile-remove-external-projects))
 (add-hook! 'emacs-startup-hook :depth 90 '--emacs-startup)
 
@@ -541,12 +546,14 @@ interactively for spacing value."
 (defun --sh-mode-hook ()
   (setq-local tab-width 2)
   (add-hook! 'after-save-hook :local
-             'executable-make-buffer-file-executable-if-script-p))
+             'executable-make-buffer-file-executable-if-script-p)
+  (company-shell-rebuild-cache))
 
 (after! sh-script
   (set-mode-name sh-mode "Sh")
   (add-hook! sh-mode '--sh-mode-hook)
-  (add-hook! (sh-mode shell-mode) 'rainbow-mode))
+  (add-hook! (sh-mode shell-mode) 'rainbow-mode)
+  (use-package! company-shell))
 
 (after! rainbow-mode
   (setq rainbow-html-colors t
@@ -573,16 +580,14 @@ interactively for spacing value."
 (after! company
   (setq company-dabbrev-downcase nil
         company-dabbrev-ignore-case nil
-        company-dabbrev-other-buffers t
+        company-dabbrev-other-buffers nil
         company-minimum-prefix-length 1
-        company-idle-delay 0.1
-        company-tooltip-minimum-width 60
+        company-idle-delay 0.2
+        company-tooltip-minimum-width 50
         company-tooltip-maximum-width 80
         company-tooltip-width-grow-only t
         company-tooltip-offset-display 'scrollbar ; 'lines
-        company-box-doc-delay 0.3)
-  (when (mac?)
-    (setq company-box-tooltip-maximum-width 90))
+        company-box-doc-delay 0.5)
   (set-company-backend! 'text-mode
     nil)
   (set-company-backend! 'prog-mode
@@ -594,6 +599,11 @@ interactively for spacing value."
     'company-files)
   (set-company-backend! 'nix-mode
     'company-nixos-options)
+  (set-company-backend! 'sh-mode
+    'company-capf
+    'company-files
+    'company-shell
+    'company-shell-env)
   ;; (add-to-list 'company-transformers 'company-sort-by-occurrence)
   (use-package! company-statistics
     :config
@@ -614,9 +624,9 @@ interactively for spacing value."
               ("C-TAB" . 'copilot-accept-completion-by-word)
               ("C-<tab>" . 'copilot-accept-completion-by-word))
   :config
-  ;; (setq copilot-idle-delay 0)
-  ;; (setq copilot-max-char (* 1000 30))
-  ;; (setq copilot-log-max nil)
+  (setq copilot-idle-delay 0)
+  (setq copilot-max-char (* 1000 50))
+  (setq copilot-log-max 100)
   (map! :mode (prog-mode conf-mode)
         :mi "C-TAB" 'copilot-accept-completion-by-word
         :mi "C-<tab>" 'copilot-accept-completion-by-word
@@ -1104,7 +1114,8 @@ interactively for spacing value."
 
 (dolist (path (list "~/.cargo/registry"
                     "~/.maven/repository"
-                    "~/.config/doom-local/straight"
+                    doom-emacs-dir
+                    doom-local-dir
                     "/nix/store"))
   (add-to-list '--external-source-file-paths
                (expand-file-name path)))

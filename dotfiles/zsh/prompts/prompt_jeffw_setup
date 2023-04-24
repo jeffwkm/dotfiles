@@ -98,8 +98,8 @@ function _prompt_jeffw_rounded_block {
 
 function _prompt_jeffw_nix_shell {
   if [[ ! -z "$IN_NIX_SHELL" ]] ; then
-    _prompt_jeffw_rounded_block '%F{208}nix-shell%f'
-    print -n ' %b'
+    _prompt_jeffw_rounded_block '%F{208}nix-shell%f' 1
+    print -n ' '
   fi
 }
 

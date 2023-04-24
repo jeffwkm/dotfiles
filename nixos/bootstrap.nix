@@ -15,17 +15,7 @@
     oraclejdk8 = pkgs.openjdk8;
     jdk8 = pkgs.openjdk8;
     jdk = pkgs.openjdk8;
-    zsh = config.util.optimizeDefault config.util.unstable.zsh;
-    clang = pkgs.clang.overrideAttrs (attrs: {
-      # Lower priority than gcc.
-      meta.priority = pkgs.gcc.meta.priority + 1;
-    });
   };
-  nixpkgs.overlays = [
-    (final: prev: {
-      final.stdenv = prev.fastStdenv.mkDerivation { name = "env"; };
-    })
-  ];
   nixpkgs.config.permittedInsecurePackages = [
     "nodejs-10.24.1"
     "nodejs-12.22.12"

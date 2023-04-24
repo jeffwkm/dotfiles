@@ -11,3 +11,4 @@ tmp/
 flycheck_init.el
 /.clj-kondo/
 /.lsp/
+/home/emacs/doom.d/custom.el

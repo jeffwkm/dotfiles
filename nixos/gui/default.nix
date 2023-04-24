@@ -1,4 +1,6 @@
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }:
+let optimize = config.util.optimizeDefault;
+in {
   imports = [ ./fonts.nix ./hyprland.nix ./sway.nix ];
   environment.systemPackages = with pkgs; [ pinentry-gtk2 ];
   nixpkgs.overlays = [
@@ -26,29 +28,26 @@
     (final: prev: {
       mpv = (prev.wrapMpv
         (prev.mpv-unwrapped.override { vapoursynthSupport = true; }) {
-          scripts = with final.mpvScripts; [
-            autoload
-            convert
-            mpris
-            # mpvacious
-            mpv-playlistmanager
-            # sponsorblock
-            # thumbnail
-            # unstable.mpvScripts.youtube-quality
-          ];
-          extraMakeWrapperArgs = [
-            "--prefix"
-            "LD_LIBRARY_PATH"
-            ":"
-            "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
-          ];
-        });
+                                         scripts = with final.mpvScripts; [
+                                           autoload
+                                           convert
+                                           mpris
+                                           # mpvacious
+                                           mpv-playlistmanager
+                                           # sponsorblock
+                                           # thumbnail
+                                           # unstable.mpvScripts.youtube-quality
+                                         ];
+                                         extraMakeWrapperArgs = [
+                                           "--prefix"
+                                           "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+                                         ];
+                                       });
     })
   ];
   nixpkgs.config.packageOverrides = pkgs: {
-    wofi = (config.util.optimizeDefault pkgs.wofi);
-    alacritty = (config.util.optimizeDefault pkgs.alacritty);
-    waybar = (config.util.optimizeDefault (pkgs.waybar.overrideAttrs
-      (prev: { mesonFlags = prev.mesonFlags ++ [ "-Dexperimental=true" ]; })));
+    wofi = optimize pkgs.wofi;
+    alacritty = optimize pkgs.alacritty;
+    waybar = optimize pkgs.waybar;
   };
 }

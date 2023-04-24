@@ -62,6 +62,7 @@ in {
     spicetify-cli
     spotify-tui
     spotifyd # :: An open source Spotify client running as a UNIX daemon
+    starship
     termtosvg
     tmux
     tree

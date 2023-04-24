@@ -59,6 +59,7 @@ in {
       greg = "greg -cf ~/.greg.conf";
       H = "history -50000 | grep -i";
       n = "cd ${config.home.local.nix-repo-path}";
+      zsh-profile = "ZPROFILE=1 zsh -i -c exit";
     } // (extra.shellAliases or { });
 
     shellGlobalAliases = {
@@ -93,6 +94,7 @@ in {
       export ZSHCONFIG="${config.home.local.nix-repo-path}/dotfiles/zsh"
       fpath+=( "$ZSHCONFIG/prompts" "${config.home.homeDirectory}/.zsh/completions" )
       ${extra.initExtraFirst or ""}
+      [[ -n "$ZPROFILE" ]] && zmodload zsh/zprof
     '';
 
     initExtra = ''
@@ -108,6 +110,8 @@ in {
 
       setopt PROMPT_CR
       setopt PROMPT_SP
+
+      [[ -n "$ZPROFILE" ]] && zprof
 
       ${extra.initExtra or ""}
     '';

@@ -27,6 +27,7 @@ in {
         install-home = mkBoolOpt false;
       };
       gui = mkBoolOpt true;
+      cloud = mkBoolOpt false;
     };
   };
 }

@@ -46,7 +46,14 @@
       inherit (inputs.nixpkgs-unstable.lib)
         attrValues makeOverridable optionalAttrs singleton mkIf;
 
+      lib = inputs.nixpkgs-unstable.lib;
       nixpkgs = inputs.nixpkgs-unstable;
+
+      compile = importModule ./util/compile.nix {
+        inherit lib;
+        pkgs = nixpkgs;
+        config = { };
+      };
 
       importModule = path:
         { lib, config, pkgs, ... }:
@@ -73,10 +80,7 @@
             # Use packages from nixpkgs-stable
             inherit (final.pkgs-stable) rustracer trace-cmd spotify gthumb;
           })
-          (final: prev: {
-            # Use packages from nixpkgs-unstable
-            inherit (final.pkgs-unstable) zsh;
-          })
+          (final: prev: { zsh = compile.util.optimizeDefault prev.zsh; })
           # Sub in x86 version of packages that don't build on Apple Silicon yet
           (final: prev:
             (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
@@ -100,8 +104,8 @@
       systemHomeManagerModules = ({ extraModules ? [ ], darwin, ... }: {
         home-manager = (if darwin then
           home-manager.darwinModules.home-manager
-        else
-          home-manager.nixosModules.home-manager);
+                        else
+                          home-manager.nixosModules.home-manager);
         hm-config = ({ config, ... }:
           let
             username = primaryUserInfo.username;
@@ -122,10 +126,10 @@
               users.${username} = {
                 # inherit (config) user;
                 imports = (attrValues self.homeManagerModulesShared)
-                  ++ (attrValues (if darwin then
-                    self.homeManagerModulesMac
-                  else
-                    self.homeManagerModulesLinux)) ++ extraModules;
+                          ++ (attrValues (if darwin then
+                            self.homeManagerModulesMac
+                                          else
+                                            self.homeManagerModulesLinux)) ++ extraModules;
                 home.stateVersion = homeManagerStateVersion;
                 home.local.primary-user = primaryUserInfo;
                 home.local.nix-repo-path = configDir;

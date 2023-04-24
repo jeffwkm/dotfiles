@@ -8,7 +8,7 @@
 (package! company-statistics :built-in 'prefer)
 ;; (package! copilot :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 (package! copilot :type :virtual
-  :recipe (:host nil :repo "~/code/copilot.el" :files ("*.el" "dist" "assets")))
+  :recipe (:host nil :repo "/home/jeff/code/copilot.el" :files ("*.el" "dist" "assets")))
 (package! elisp-slime-nav :built-in 'prefer)
 (package! evil-lisp-state)
 (package! evil-matchit)

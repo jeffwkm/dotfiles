@@ -3,10 +3,10 @@
     enable = true;
     sessionVariables = { };
     history = { };
-
+    # enableCompletion = false;
+    initExtraBeforeCompInit = "";
     envExtra = ''
       fpath+=( ~/.zsh/completions )
-      export FPATH
     '';
     profileExtra = "";
     loginExtra = "";
@@ -33,8 +33,6 @@
       ssh.identities = [ "id_rsa" ];
       terminal.autoTitle = true;
       utility.safeOps = false;
-      # gnuUtility.prefix = "g";
-      extraConfig = "";
     };
   };
 }

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 let
   addFlagC = pkg: flag:
     pkg.overrideAttrs (attrs: {
@@ -14,13 +14,11 @@ let
     pkgs.lib.foldl' (pkg: flag: addFlagRust pkg flag) pkg flags;
   addFlags = pkg: flagsC: flagsRust:
     addFlagsRust (addFlagsC pkg flagsC) flagsRust;
+  rustFlags = [ "-C" "opt-level=3" "-C" "target-cpu=native" ];
+  cFlags = [ "-O3" "-march=native" ];
 in {
   util.optimizeC = addFlagsC;
-  util.optimizeDefault = pkg:
-    addFlags pkg [ "-O3" "-march=native" ] [
-      "-C"
-      "opt-level=3"
-      "-C"
-      "target-cpu=native"
-    ];
+  util.optimizeDefault = pkg: addFlags pkg cFlags rustFlags;
+  util.optimizeFast = pkg:
+    addFlags pkg [ "-march=native" "-Ofast" "-fno-finite-math-only" ] rustFlags;
 }

@@ -1,11 +1,11 @@
 show=run
-width=20%
+width=24%
 # height=40%
 term=alacritty
 matching=contains
 #matching=fuzzy
 insensitive=true
-lines=10
+lines=12
 gtk_dark=true
 location=center
 # filter_rate=250
