@@ -24,6 +24,7 @@
         extensions =
           [ "rust-src" "rust-analyzer" "rustfmt" "rls" "rust-analysis" ];
       })
+      # if pkgs.stdenv.isDarwin then rustup
     ] ++ [ shellcheck shfmt ] ++ [
       cabal-install
       ghc

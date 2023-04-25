@@ -54,6 +54,7 @@
         pkgs = nixpkgs;
         config = { };
       };
+      optimize = compile.util.optimizeDefault;
 
       importModule = path:
         { lib, config, pkgs, ... }:
@@ -80,11 +81,13 @@
             # Use packages from nixpkgs-stable
             inherit (final.pkgs-stable) rustracer trace-cmd spotify gthumb;
           })
-          (final: prev: { zsh = compile.util.optimizeDefault prev.zsh; })
+          (final: prev: {
+            zsh = if prev.stdenv.isDarwin then prev.zsh else optimize prev.zsh;
+          })
           # Sub in x86 version of packages that don't build on Apple Silicon yet
           (final: prev:
             (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-              # inherit (final.pkgs-x86) idris2;
+              # inherit (final.pkgs-x86);
             }))
           inputs.emacs-overlay.overlay
           inputs.rust-overlay.overlays.default
