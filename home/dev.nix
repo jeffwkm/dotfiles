@@ -28,7 +28,6 @@
       stylish-haskell
     ]) ++ [ editorconfig-checker editorconfig-core-c gnumake nodejs ]
     ++ [ nil rnix-lsp ] ++ [ babashka ] ++ [
-      rustracer
       rust-bindgen
       (rust-bin.stable.latest.default.override {
         extensions =
