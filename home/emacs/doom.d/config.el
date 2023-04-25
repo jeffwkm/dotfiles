@@ -45,7 +45,8 @@
 
 (setq-default tab-width 2
               fill-column 100
-              byte-compile-warning-types '(not free-vars constants))
+              byte-compile-warning-types '(not free-vars constants)
+              lisp-indent-offset nil)
 
 (defun --window-system-available () (< 0 (length (getenv "DISPLAY"))))
 (defun --wayland-available () (< 0 (length (getenv "WAYLAND_DISPLAY"))))
@@ -546,7 +547,6 @@ interactively for spacing value."
                                  ("-c")))))
 
 (defun --sh-mode-hook ()
-  (setq-local tab-width 2)
   (add-hook! 'after-save-hook :local
              'executable-make-buffer-file-executable-if-script-p)
   (company-shell-rebuild-cache))
@@ -584,7 +584,7 @@ interactively for spacing value."
         company-dabbrev-ignore-case nil
         company-dabbrev-other-buffers nil
         company-minimum-prefix-length 1
-        company-idle-delay 0.2
+        company-idle-delay 0.1
         company-tooltip-minimum-width 50
         company-tooltip-maximum-width 80
         company-tooltip-width-grow-only t
@@ -594,18 +594,18 @@ interactively for spacing value."
     nil)
   (set-company-backend! 'prog-mode
     'company-capf
+    'company-dabbrev-code
     'company-files)
   (set-company-backend! 'conf-mode
     'company-capf
     'company-dabbrev-code
     'company-files)
-  (set-company-backend! 'nix-mode
-    'company-nixos-options)
   (set-company-backend! 'sh-mode
     'company-capf
-    'company-files
     'company-shell
-    'company-shell-env)
+    'company-shell-env
+    'company-dabbrev-code
+    'company-files)
   ;; (add-to-list 'company-transformers 'company-sort-by-occurrence)
   (use-package! company-statistics
     :config
@@ -877,7 +877,7 @@ interactively for spacing value."
 (after! cider
   (require 'tramp)
   (setq clojure-use-backtracking-indent t
-        clojure-indent-style 'always-align ;; 'align-arguments
+        clojure-indent-style 'align-arguments  ;; 'always-align
         cider-repl-use-pretty-printing t
         cider-auto-select-error-buffer t
         cider-prompt-for-symbol nil
@@ -886,7 +886,8 @@ interactively for spacing value."
         cider-preferred-build-tool 'shadow-cljs
         cider-default-cljs-repl 'shadow-select
         cider-shadow-default-options ":dev"
-        clojure-docstring-fill-column 80)
+        clojure-docstring-fill-column 80
+        clojure-align-forms-automatically t)
   (set-mode-name clojure-mode "CLJ")
   (set-mode-name clojurescript-mode "CLJS")
   (set-mode-name clojurec-mode "CLJC")
@@ -1090,17 +1091,15 @@ interactively for spacing value."
 (after! format-all
   (setq +format-with-lsp t))
 
+(after! editorconfig
+  (setq editorconfig-lisp-use-default-indent t))
+
 (after! nix-mode
-  (require 'lsp)
-  (require 'lsp-nix)
-  ;; (setq lsp-nix-nil-server-path nil)
+  ;; (setq-hook! nix-mode +format-with-lsp t)
+  ;; (setq lsp-nix-nil-ignored-diagnostics nil)
   (setq lsp-nix-rnix-server-path nil)
-  (setq lsp-nix-nil-formatter ["nixfmt"])
-  (setq-hook! 'nix-mode-hook +format-with-lsp nil)
-  (defun --nix-mode-hook ()
-    (setq-local tab-width 2)
-    (lsp-deferred))
-  (add-hook! nix-mode '--nix-mode-hook))
+  (setq lsp-nix-nil-formatter ["nixfmt" "-w" "80"])
+  (add-to-list 'aggressive-indent-excluded-modes 'nix-mode))
 
 (defun --kill-auto-workspace ()
   "Delete empty auto-created workspace named #1, #2, ..."
