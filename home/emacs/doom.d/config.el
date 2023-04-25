@@ -184,6 +184,8 @@
         :mode lispyville-mode
         :nm "<" 'lispyville-beginning-of-defun
         :nm ">" 'lispyville-beginning-of-next-defun
+        :i "<" nil
+        :i ">" nil
         :nmi "C->" 'lispyville-end-of-defun
         :i "[" 'lispy-open-square
         :i "]" 'lispy-close-square
@@ -587,7 +589,7 @@ interactively for spacing value."
         company-tooltip-maximum-width 80
         company-tooltip-width-grow-only t
         company-tooltip-offset-display 'scrollbar ; 'lines
-        company-box-doc-delay 0.5)
+        company-box-doc-delay 0.75)
   (set-company-backend! 'text-mode
     nil)
   (set-company-backend! 'prog-mode
@@ -616,22 +618,31 @@ interactively for spacing value."
 (use-package! copilot
   :hook ((prog-mode . copilot-mode)
          (conf-mode . copilot-mode))
-  :bind (:map copilot-completion-map
-              ("<tab>" . 'copilot-accept-completion)
-              ("<backtab>" . 'copilot-accept-completion)
-              ("TAB" . 'copilot-accept-completion)
-              ("S-TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word))
   :config
-  (setq copilot-idle-delay 0)
-  (setq copilot-max-char (* 1000 50))
-  (setq copilot-log-max 100)
-  (map! :mode (prog-mode conf-mode)
-        :mi "C-TAB" 'copilot-accept-completion-by-word
-        :mi "C-<tab>" 'copilot-accept-completion-by-word
-        :mi "TAB" 'copilot-accept-completion
-        :mi "<tab>" 'copilot-accept-completion))
+  (setq copilot-idle-delay nil)
+  (setq copilot-max-char (* 1000 30))
+  (setq copilot-log-max 0)
+  (map! :mode copilot-mode
+        :nmi "TAB" '--copilot-show-or-accept
+        :nmi "<tab>" '--copilot-show-or-accept
+        :nmi "M-<tab>" '--copilot-complete-or-next
+        :nmi "M-TAB" '--copilot-complete-or-next)
+  (map! :map copilot-completion-map
+        :nmi "TAB" 'copilot-accept-completion
+        :nmi "<tab>" 'copilot-accept-completion
+        :nmi "S-TAB" 'copilot-accept-completion-by-line
+        :nmi "<backtab>" 'copilot-accept-completion-by-line
+        :nmi "C-TAB"  'copilot-accept-completion-by-word
+        :nmi "C-<tab>" 'copilot-accept-completion-by-word)
+  (after! company
+    (--each '(company-select-next-or-abort
+              company-select-previous-or-abort
+              --copilot-complete-or-next
+              --copilot-show-or-accept)
+      (add-to-list 'copilot-clear-overlay-ignore-commands it))
+    (map! :map company-active-map
+          "TAB" nil
+          "<tab>" nil)))
 
 (after! projectile
   (setq projectile-indexing-method 'hybrid

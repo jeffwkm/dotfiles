@@ -24,3 +24,17 @@
     (with-current-buffer buffer
       (when (eq major-mode mode)
         (kill-buffer buffer)))))
+
+(require 'copilot)
+
+(defun --copilot-complete-or-next ()
+  (interactive)
+  (if (copilot--overlay-visible)
+      (copilot-next-completion)
+    (copilot-complete)))
+
+(defun --copilot-show-or-accept ()
+  (interactive)
+  (if (copilot--overlay-visible)
+      (copilot-accept-completion)
+    (copilot-complete)))
