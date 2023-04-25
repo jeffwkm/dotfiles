@@ -85,6 +85,14 @@ in {
     ".lein/profiles.clj".source = ../dotfiles/lein/profiles.clj;
   };
 
+  home.sessionVariables = {
+    AWS_VAULT_BACKEND = "pass";
+    AWS_VAULT_PASS_CMD = "pass";
+    AWS_VAULT_PASS_PASSWORD_STORE_DIR =
+      "${config.home.homeDirectory}/.password-store";
+    AWS_VAULT_PASS_PREFIX = "awsvault";
+  };
+
   home.sessionPath = [
     "${config.home.homeDirectory}/bin.local"
     "${config.home.homeDirectory}/bin"
