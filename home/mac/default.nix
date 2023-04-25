@@ -2,8 +2,6 @@
 with pkgs; {
   imports = [ ../zsh/mac.nix ../gui/alacritty.nix ];
 
-  home.sessionPath = [ ];
-
   alacritty.fontSize = "14";
   alacritty.fontSizeLarge = "16";
   alacritty.fontSizeHuge = "18";

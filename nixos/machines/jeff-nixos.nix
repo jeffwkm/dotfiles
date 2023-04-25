@@ -2,6 +2,13 @@
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix") ../vfio ../gui ];
 
+  environment.systemPackages = with pkgs; [
+    firmwareLinuxNonfree
+    libguestfs
+    mpd-mpris
+    darktable
+  ];
+
   networking.hostName = "jeff-nixos";
 
   networking.interfaces.enp6s0.useDHCP = true;
@@ -116,8 +123,6 @@
   };
 
   # programs.steam.enable = true;
-
-  environment.systemPackages = with pkgs; [ libguestfs mpd-mpris darktable ];
 
   environment.sessionVariables = {
     ### use emacsclient as default editor

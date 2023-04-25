@@ -9,7 +9,6 @@
 
   # boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  environment.systemPackages = with pkgs; [ firmwareLinuxNonfree ];
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.packageOverrides = pkgs: rec {
     oraclejdk8 = pkgs.openjdk8;

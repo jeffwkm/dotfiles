@@ -27,6 +27,9 @@ in {
         install-home = mkBoolOpt false;
       };
       gui = mkBoolOpt true;
+      optimize = mkBoolOpt true;
+      printing = mkBoolOpt false;
+      docker = mkBoolOpt false;
       cloud = mkBoolOpt false;
     };
   };

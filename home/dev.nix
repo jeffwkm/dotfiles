@@ -1,11 +1,9 @@
 { config, lib, pkgs, ... }: {
   home.packages = with pkgs;
-    (lib.lists.optionals (!pkgs.stdenv.isDarwin) [ gcc ]) ++ [
+    (lib.lists.optionals (!pkgs.stdenv.isDarwin) [ gcc ])
+    ++ (lib.lists.optionals (!config.home.local.cloud) [
       black
       cmake
-      editorconfig-checker
-      editorconfig-core-c
-      gnumake
       gnuplot
       go
       html-tidy
@@ -13,19 +11,14 @@
       lessc
       maven
       mono
-      nodejs
       pandoc
       sbcl
-    ] ++ [ nil rnix-lsp ]
-    ++ [ babashka boot clj-kondo clojure clojure-lsp leiningen ] ++ [
-      rustracer
-      rust-bindgen
-      (rust-bin.stable.latest.default.override {
-        extensions =
-          [ "rust-src" "rust-analyzer" "rustfmt" "rls" "rust-analysis" ];
-      })
-      # if pkgs.stdenv.isDarwin then rustup
-    ] ++ [ shellcheck shfmt ] ++ [
+      boot
+      clj-kondo
+      clojure
+      clojure-lsp
+      leiningen
+      ## haskell packages
       cabal-install
       ghc
       haskell-language-server
@@ -33,5 +26,13 @@
       ormolu
       stack
       stylish-haskell
-    ];
+    ]) ++ [ editorconfig-checker editorconfig-core-c gnumake nodejs ]
+    ++ [ nil rnix-lsp ] ++ [ babashka ] ++ [
+      rustracer
+      rust-bindgen
+      (rust-bin.stable.latest.default.override {
+        extensions =
+          [ "rust-src" "rust-analyzer" "rustfmt" "rls" "rust-analysis" ];
+      })
+    ] ++ [ shellcheck shfmt ] ++ [ ];
 }

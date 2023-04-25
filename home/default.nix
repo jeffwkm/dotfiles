@@ -22,60 +22,56 @@ in {
     nix-direnv.enable = true;
   };
 
-  home.packages = with pkgs; [
-    # pinentry-gnome
-    # rofi-pass
-    # sshuttle
-    # cachix
-    asciinema
-    asciinema-agg
-    awscli2
-    aws-vault
-    cmatrix # :: Simulates the falling characters theme from The Matrix movie
-    direnv
-    ec2-api-tools
-    expect
-    gh # GitHub CLI
-    gnupg
-    greg # :: A command-line podcast aggregator
-    inetutils
-    jc
-    jq
-    mediainfo
-    mr # :: Multiple Repository management tool
-    # ncdu
-    # ncspot # :: Cross-platform ncurses Spotify client written in Rust
-    neofetch
-    nethack
-    nixfmt # :: An opinionated formatter for Nix
-    nix-direnv
-    nodePackages.prettier
-    openai-full
-    pomodoro
-    procs
-    p7zip
-    # passExtensions.pass-checkup
-    passh # :: An sshpass alternative for non-interactive ssh auth
-    rbenv
-    ripgrep # :: replacement for /bin/grep
-    speedtest-rs
-    spicetify-cli
-    spotify-tui
-    spotifyd # :: An open source Spotify client running as a UNIX daemon
-    starship
-    termtosvg
-    tmux
-    tree
-    unrar
-    unzip
-    vcsh # :: Version Control System for $HOME
-    w3m
-    wget
-    youtube-dl # :: download web videos by URL from many websites
-    yt-dlp
-    zip
-    epr
-  ];
+  home.packages = with pkgs;
+    [
+      asciinema
+      asciinema-agg
+      autossh
+      aws-vault
+      awscli2
+      cmatrix # :: Simulates the falling characters theme from The Matrix movie
+      direnv
+      ec2-api-tools
+      expect
+      gh # GitHub CLI
+      gnupg
+      greg # :: A command-line podcast aggregator
+      inetutils
+      jc
+      jq
+      mediainfo
+      mr # :: Multiple Repository management tool
+      ncdu
+      neofetch
+      nethack
+      nix-direnv
+      nixfmt # :: An opinionated formatter for Nix
+      nodePackages.prettier
+      openai-full
+      p7zip
+      passh # :: An sshpass alternative for non-interactive ssh auth
+      pomodoro
+      procs
+      rbenv
+      ripgrep # :: replacement for /bin/grep
+      speedtest-rs
+      starship
+      termtosvg
+      tmux
+      tree
+      unrar
+      unzip
+      vcsh # :: Version Control System for $HOME
+      w3m
+      wget
+      yt-dlp
+      zip
+    ] ++ lib.lists.optionals config.home.local.gui [
+      ncspot # :: Cross-platform ncurses Spotify client written in Rust
+      spicetify-cli
+      spotify-tui
+      spotifyd # :: An open source Spotify client running as a UNIX daemon
+    ];
 
   xdg.configFile = {
     "htop/htoprc".source = config.lib.file.mkOutOfStoreSymlink
@@ -90,8 +86,8 @@ in {
   };
 
   home.sessionPath = [
-    "${config.home.homeDirectory}/bin"
     "${config.home.homeDirectory}/bin.local"
+    "${config.home.homeDirectory}/bin"
     "${config.home.homeDirectory}/.cargo/bin"
     "${config.home.homeDirectory}/.node_modules/bin"
   ];

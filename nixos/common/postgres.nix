@@ -1,5 +1,7 @@
-{ config, lib, pkgs, ... }: {
-  services.postgresql = {
+{ config, lib, pkgs, ... }:
+let cloud = config.local.cloud;
+in {
+  services.postgresql = lib.optionalAttrs (!cloud) {
     enable = true;
     package = pkgs.postgresql;
     enableTCPIP = true;
@@ -14,5 +16,5 @@
       local   all             all                                     trust'';
   };
 
-  environment.systemPackages = with pkgs; [ postgresql ];
+  environment.systemPackages = with pkgs; lib.optional (!cloud) postgresql;
 }

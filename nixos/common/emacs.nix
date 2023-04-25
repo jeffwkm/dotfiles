@@ -1,6 +1,7 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 let
-  emacsBase = pkgs.emacsPgtk;
+  emacsBase =
+    if !config.local.cloud then pkgs.emacsPgtk else pkgs.emacsNativeComp;
   emacsCustom = config.util.optimizeDefault emacsBase;
   emacsCustomWithPackages =
     (pkgs.emacsPackagesFor emacsCustom).emacsWithPackages (epkgs:
@@ -9,7 +10,8 @@ let
       ]);
 in {
   nixpkgs.overlays =
-    [ (final: prev: { final.emacs = emacsCustomWithPackages; }) ];
+    [ (final: prev: { final.emacs = emacsCustomWithPackages; }) ]
+    ++ lib.optional (!config.local.cloud) inputs.emacs-overlay.overlay;
 
   environment.systemPackages = [ emacsCustomWithPackages ];
 }

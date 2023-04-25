@@ -1,6 +1,5 @@
 { pkgs, config, lib, ... }:
 with lib;
-with config.util;
 let emacsPkg = pkgs.emacs-nox;
 in {
   config = {

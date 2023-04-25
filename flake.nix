@@ -89,7 +89,6 @@
             (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
               # inherit (final.pkgs-x86);
             }))
-          inputs.emacs-overlay.overlay
           inputs.rust-overlay.overlays.default
         ];
       };
@@ -182,6 +181,21 @@
               ./nixos/machines/jeff-home.nix
             ];
         };
+
+        jeff-cloud = let
+          local = {
+            gui = false;
+            cloud = true;
+            primary-user = primaryUserInfo;
+          };
+        in nixosSystem {
+          system = "x86_64-linux";
+          modules = (attrValues (self.sharedModules // self.nixosModules
+                                 // (systemHomeManagerModules {
+                                   darwin = false;
+                                   extraModules = [{ home.local = local; }];
+                                 }))) ++ [ { local = local; } ./nixos/machines/jeff-cloud.nix ];
+        };
       };
 
       darwinConfigurations = rec {
@@ -232,6 +246,7 @@
               "${config.home.homeDirectory}/${nixConfigRelativePath}";
             home.local.emacs.install-home = true;
             home.local.gui = false;
+            home.local.cloud = true;
             programs.zsh.prezto.prompt.theme = "steeef";
           });
       };

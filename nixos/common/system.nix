@@ -66,58 +66,50 @@
     settings.X11Forwarding = true;
   };
 
-  services.printing = { enable = true; };
+  services.printing = { enable = config.local.printing; };
 
   programs.mosh.enable = true;
 
-  virtualisation.docker = { enable = true; };
+  virtualisation.docker = { enable = config.local.docker; };
 
   xdg.mime.enable = true;
-  xdg.mime.defaultApplications = {
-    "text/html" = "chromium.desktop";
-    "x-scheme-handler/http" = "chromium.desktop";
-    "x-scheme-handler/https" = "chromium.desktop";
-    "x-scheme-handler/about" = "chromium.desktop";
-    "x-scheme-handler/unknown" = "chromium.desktop";
-  };
-  environment.sessionVariables.DEFAULT_BROWSER =
-    "${pkgs.chromium}/bin/chromium";
 
-  environment.systemPackages = with pkgs; [
-    acpi
-    binutils
-    coreutils
-    curl
-    dbus
-    docker
-    docker-compose
-    exfat
-    file
-    glib
-    inetutils
-    kernelshark
-    kmon
-    libtool
-    linuxPackages.cpupower
-    lm_sensors
-    lsof
-    nix-index # :: A files database for nixpkgs
-    nix-prefetch-scripts
-    openssh
-    openssl
-    patchelf
-    pciutils
-    pinentry
-    pinentry-curses
-    pkg-config
-    psmisc # :: killall, etc.
-    readline
-    screen
-    smartmontools
-    sshfs
-    tmux
-    vim
-    wget
-    xdg-utils
-  ];
+  environment.systemPackages = with pkgs;
+    [
+      binutils
+      coreutils
+      curl
+      file
+      inetutils
+      kmon
+      libtool
+      lsof
+      nix-index # :: A files database for nixpkgs
+      nix-prefetch-scripts
+      openssh
+      openssl
+      patchelf
+      pinentry
+      pinentry-curses
+      pkg-config
+      psmisc # :: killall, etc.
+      readline
+      screen
+      sshfs
+      tmux
+      vim
+      wget
+      xdg-utils
+    ] ++ lib.lists.optionals config.local.docker [ docker docker-compose ]
+    ++ lib.lists.optionals (!config.local.cloud) [
+      smartmontools
+      lm_sensors
+      acpi
+      exfat
+      kernelshark
+      pciutils
+      linuxPackages.cpupower
+      glib
+      exfat
+    ];
 }

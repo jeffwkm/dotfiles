@@ -1,14 +1,10 @@
 { lib, pkgs, modulesPath, ... }: {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
+  environment.systemPackages = with pkgs; [ firmwareLinuxNonfree rtorrent ];
+
   networking.hostName = "jeff-home";
   networking.useDHCP = lib.mkDefault true;
-
-  # networking.interfaces.enp6s0.useDHCP = true;
-  # networking.bridges.br0.interfaces = [ "enp6s0" ];
-  # networking.dhcpcd.enable = true;
-  # networking.dhcpcd.allowInterfaces = [ "br0" ];
-  # systemd.services.br0-netdev.wantedBy = [ "multi-user.target" ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/47e5286f-f005-4c20-bc46-35f68059137b";
@@ -102,5 +98,4 @@
     torguard = { config = "config /root/vpn/torguard.conf"; };
   };
 
-  environment.systemPackages = with pkgs; [ rtorrent ];
 }

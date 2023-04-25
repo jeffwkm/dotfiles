@@ -1,3 +1,5 @@
+(require 'fringe)
+
 (defconst doom-fringe-size '16 "Default fringe width")
 
 ;;; Setting up the fringe

@@ -13,4 +13,7 @@ let
       curses
     ]);
   ruby-custom = pkgs.ruby_2_7.withPackages ruby-packages;
-in { environment.systemPackages = with pkgs; [ ruby-custom ]; }
+in {
+  environment.systemPackages = with pkgs;
+    [ (if !config.local.cloud then ruby-custom else ruby) ];
+}

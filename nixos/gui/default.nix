@@ -1,8 +1,21 @@
 { config, lib, pkgs, ... }:
 let optimize = config.util.optimizeDefault;
 in {
-  imports = [ ./fonts.nix ./hyprland.nix ./sway.nix ];
+  imports =
+    [ ./fonts.nix ./hyprland.nix ./sway.nix ./audio.nix ./freetype.nix ];
+
   environment.systemPackages = with pkgs; [ pinentry-gtk2 ];
+
+  xdg.mime.defaultApplications = {
+    "text/html" = "chromium.desktop";
+    "x-scheme-handler/http" = "chromium.desktop";
+    "x-scheme-handler/https" = "chromium.desktop";
+    "x-scheme-handler/about" = "chromium.desktop";
+    "x-scheme-handler/unknown" = "chromium.desktop";
+  };
+  environment.sessionVariables.DEFAULT_BROWSER =
+    "${pkgs.chromium}/bin/chromium";
+
   nixpkgs.overlays = [
     (self: super: {
       wl-clipboard-x11 = super.stdenv.mkDerivation rec {

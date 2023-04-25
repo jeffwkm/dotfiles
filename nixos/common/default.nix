@@ -1,11 +1,3 @@
 { config, pkgs, ... }: {
-  imports = [
-    ./audio.nix
-    ./emacs.nix
-    ./freetype.nix
-    ./python.nix
-    ./ruby.nix
-    ./system.nix
-    ./postgres.nix
-  ];
+  imports = [ ./emacs.nix ./python.nix ./ruby.nix ./system.nix ./postgres.nix ];
 }

@@ -13,6 +13,8 @@
       ../../dotfiles/looking-glass-client.ini;
   };
 
+  alacritty.fontStyle = "Semibold";
+
   imports = [
     ./alacritty.nix
     ./mako.nix

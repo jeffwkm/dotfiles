@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
-let optimize = config.util.optimizeDefault;
+let
+  optimize = config.util.optimizeDefault;
+  cloud = config.home.local.cloud;
 in {
   imports = [ ../zsh/linux.nix ./ssh-agent.nix ./gpg-agent.nix ];
 
@@ -15,31 +17,29 @@ in {
       I vf toggle format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
     '';
 
-  home.sessionPath = [ ];
-
-  alacritty.fontStyle = "Semibold";
-
-  home.packages = with pkgs; [
-    (optimize fd)
-    (optimize lsd)
-    # caerbannog # :: Mobile-friendly Gtk frontend for password-store
-    ddcutil # :: shell utility for controlling displays (DDC)
-    ffmpegthumbnailer
-    inxi
-    iotop
-    latencytop
-    libinput
-    libnotify
-    ncpamixer # :: full ncurses interface to pamixer
-    pamixer # :: shell utility for controlling pulseaudio
-    playerctl # :: shell utility for controlling media players (MPRIS)
-    podgrab # :: A self-hosted podcast manager to download episodes as soon as they become live
-    screenfetch # :: Fetches system/theme information in terminal for Linux desktop screenshots
-    spotdl # :: Download your Spotify playlists and songs along with album art and metadata
-    spotify-cli-linux # :: A command line interface to Spotify on Linux
-    usbutils
-    xdg-user-dirs
-  ];
+  home.packages = with pkgs;
+    [
+      (if !cloud then (optimize fd) else fd)
+      (if !cloud then (optimize lsd) else lsd)
+      inxi
+      iotop
+      screenfetch # :: Fetches system/theme information in terminal for Linux desktop screenshots
+    ] ++ lib.lists.optionals (!cloud) [
+      spotdl # :: Download your Spotify playlists and songs along with album art and metadata
+      spotify-cli-linux # :: A command line interface to Spotify on Linux
+      usbutils
+      xdg-user-dirs
+      latencytop
+      libinput
+      libnotify
+      ncpamixer # :: full ncurses interface to pamixer
+      pamixer # :: shell utility for controlling pulseaudio
+      playerctl # :: shell utility for controlling media players (MPRIS)
+      podgrab # :: A self-hosted podcast manager to download episodes as soon as they become live
+      caerbannog # :: Mobile-friendly Gtk frontend for password-store
+      ddcutil # :: shell utility for controlling displays (DDC)
+      ffmpegthumbnailer
+    ];
 
   systemd.user.services.emacs = {
     Unit = {
@@ -59,7 +59,7 @@ in {
     };
   };
 
-  programs.git.package = (optimize pkgs.git);
+  programs.git.package = if !cloud then (optimize pkgs.git) else pkgs.git;
 
   # xdg.configFile."dconf/user".source = ../../dotfiles/dconf/user;
 }

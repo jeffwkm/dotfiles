@@ -30,5 +30,9 @@ let
     ]);
   python3-custom = pkgs.python3.withPackages python3-packages;
 in {
-  environment.systemPackages = with pkgs; [ pipenv python2 python3-custom ];
+  environment.systemPackages = with pkgs; [
+    pipenv
+    python2
+    (if !config.local.cloud then python3-custom else python3)
+  ];
 }
