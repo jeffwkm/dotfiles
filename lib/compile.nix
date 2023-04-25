@@ -1,24 +1,23 @@
-{ pkgs, ... }:
+{ lib, ... }:
 let
+  inherit (lib) foldl';
   addFlagC = pkg: flag:
     pkg.overrideAttrs (attrs: {
       NIX_CFLAGS_COMPILE = (attrs.NIX_CFLAGS_COMPILE or "") + " ${flag}";
       CFLAGS = (attrs.CFLAGS or "") + " ${flag}";
     });
-  addFlagsC = pkg: flags:
-    pkgs.lib.foldl' (pkg: flag: addFlagC pkg flag) pkg flags;
+  addFlagsC = pkg: flags: foldl' (pkg: flag: addFlagC pkg flag) pkg flags;
   addFlagRust = pkg: flag:
     pkg.overrideAttrs
     (attrs: { RUSTFLAGS = (attrs.RUSTFLAGS or "") + " ${flag}"; });
-  addFlagsRust = pkg: flags:
-    pkgs.lib.foldl' (pkg: flag: addFlagRust pkg flag) pkg flags;
+  addFlagsRust = pkg: flags: foldl' (pkg: flag: addFlagRust pkg flag) pkg flags;
   addFlags = pkg: flagsC: flagsRust:
     addFlagsRust (addFlagsC pkg flagsC) flagsRust;
   rustFlags = [ "-C" "opt-level=3" "-C" "target-cpu=native" ];
   cFlags = [ "-O3" "-march=native" ];
 in {
-  util.optimizeC = addFlagsC;
-  util.optimizeDefault = pkg: addFlags pkg cFlags rustFlags;
-  util.optimizeFast = pkg:
+  optimizeC = addFlagsC;
+  optimizeDefault = pkg: addFlags pkg cFlags rustFlags;
+  optimizeFast = pkg:
     addFlags pkg [ "-march=native" "-Ofast" "-fno-finite-math-only" ] rustFlags;
 }

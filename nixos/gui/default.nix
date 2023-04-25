@@ -1,10 +1,15 @@
-{ config, lib, pkgs, ... }:
-let optimize = config.util.optimizeDefault;
+{ lib, pkgs, ... }:
+let
+  inherit (lib.my) importModules;
+  optimize = lib.my.optimizeDefault;
 in {
-  imports =
-    [ ./fonts.nix ./hyprland.nix ./sway.nix ./audio.nix ./freetype.nix ];
-
-  environment.systemPackages = with pkgs; [ pinentry-gtk2 ];
+  imports = importModules [
+    ./fonts.nix
+    ./hyprland.nix
+    ./sway.nix
+    ./audio.nix
+    ./freetype.nix
+  ];
 
   xdg.mime.defaultApplications = {
     "text/html" = "chromium.desktop";
@@ -13,8 +18,11 @@ in {
     "x-scheme-handler/about" = "chromium.desktop";
     "x-scheme-handler/unknown" = "chromium.desktop";
   };
+
   environment.sessionVariables.DEFAULT_BROWSER =
     "${pkgs.chromium}/bin/chromium";
+
+  environment.systemPackages = with pkgs; [ pinentry-gtk2 xsel xclip ];
 
   nixpkgs.overlays = [
     (self: super: {
@@ -41,21 +49,21 @@ in {
     (final: prev: {
       mpv = optimize (prev.wrapMpv
         (prev.mpv-unwrapped.override { vapoursynthSupport = true; }) {
-                                         scripts = with final.mpvScripts; [
-                                           autoload
-                                           convert
-                                           mpris
-                                           # mpvacious
-                                           mpv-playlistmanager
-                                           # sponsorblock
-                                           # thumbnail
-                                           # unstable.mpvScripts.youtube-quality
-                                         ];
-                                         extraMakeWrapperArgs = [
-                                           "--prefix"
-                                           "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
-                                         ];
-                                       });
+          scripts = with final.mpvScripts; [
+            autoload
+            convert
+            mpris
+            # mpvacious
+            mpv-playlistmanager
+            # sponsorblock
+            # thumbnail
+            # unstable.mpvScripts.youtube-quality
+          ];
+          extraMakeWrapperArgs = [
+            "--prefix"
+            "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+          ];
+        });
     })
   ];
   nixpkgs.config.packageOverrides = pkgs: {

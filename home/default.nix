@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }:
-let optimize = config.util.optimizeDefault;
+let optimize = lib.my.optimizeDefault;
 in {
   imports = [ ./zsh ./dev.nix ];
 

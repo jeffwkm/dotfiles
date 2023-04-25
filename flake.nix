@@ -19,6 +19,9 @@
       flake = false;
     };
     flake-utils.url = "github:numtide/flake-utils";
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    agenix.inputs.darwin.follows = "darwin";
 
     # Additional sources
     emacs-overlay.url = "github:nix-community/emacs-overlay";
@@ -46,63 +49,33 @@
       inherit (inputs.nixpkgs-unstable.lib)
         attrValues makeOverridable optionalAttrs singleton mkIf;
 
-      lib = inputs.nixpkgs-unstable.lib;
-      mylib = lib // {
-        inherit (inputs.flake-compat.lib) mkMerge;
-        importModule = path:
-          { config, pkgs, lib, ... }:
-          import path { inherit config pkgs inputs lib; };
-        importModules = paths: lib.lists.map importModule paths;
-      };
-      nixpkgs = inputs.nixpkgs-unstable;
-
-      compile = importModule ./util/compile.nix {
-        inherit lib;
-        pkgs = nixpkgs;
-        config = { };
-      };
-      optimize = compile.util.optimizeDefault;
-
-      importModule = path:
-        { config, pkgs, ... }:
-        import path {
-          inherit config pkgs inputs;
-          lib = lib // { my = mylib; };
-        };
+      nixpkgs-unstable = inputs.nixpkgs-unstable;
 
       nixpkgsConfig = {
         config = {
           allowUnfree = true;
           allowBroken = true;
           packageOverrides = pkgs: {
-            # Set clang lower priority than gcc
             clang = pkgs.clang.overrideAttrs
               (attrs: { meta.priority = pkgs.gcc.meta.priority + 1; });
           };
         };
-        overlays = attrValues self.overlays ++ [
-          (final: prev: {
-            nix-direnv = prev.nix-direnv.override { enableFlakes = true; };
-          })
-          (final: prev: {
-            final.stdenv = prev.fastStdenv.mkDerivation { name = "env"; };
-          })
-          (final: prev:
-            {
-              # Use packages from nixpkgs-stable
-              # inherit (final.pkgs-stable) spotify;
-            })
-          (final: prev: {
-            zsh = if prev.stdenv.isDarwin then prev.zsh else optimize prev.zsh;
-          })
-          # Sub in x86 version of packages that don't build on Apple Silicon yet
-          (final: prev:
-            (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-              # inherit (final.pkgs-x86);
-            }))
-          inputs.rust-overlay.overlays.default
-        ];
+        overlays = attrValues self.overlays;
       };
+
+      pkgs = import nixpkgs-unstable {
+        system = builtins.currentSystem;
+        inherit (nixpkgsConfig) config overlays;
+      };
+
+      mylib = nixpkgs-unstable.lib.extend (self: super: {
+        my = import ./lib {
+          inherit pkgs inputs;
+          lib = self;
+        };
+      });
+
+      lib = mylib;
 
       homeManagerStateVersion = "22.11";
 
@@ -129,11 +102,10 @@
             nixpkgs = nixpkgsConfig;
             nix.nixPath = mkIf (darwin) {
               "darwin-config" = "${configDir}";
-              nixpkgs = "${inputs.nixpkgs-unstable}";
+              nixpkgs = "${pkgs}";
             };
             users.users.${username}.home = homeDir;
             home-manager = {
-              # extraSpecialArgs = { mylib = lib.my; };
               useGlobalPkgs = true;
               useUserPackages = true;
               users.${username} = {
@@ -151,7 +123,17 @@
             nix.registry.my.flake = self;
           });
       });
+
+      inherit (lib.my) importModule;
+
+      modulesPath = "${nixpkgs-unstable}/nixos/modules";
+
+      importModule' = path:
+        { config, pkgs, ... }:
+        import path { inherit lib config pkgs inputs modulesPath; };
     in {
+      lib = lib;
+
       nixosConfigurations = rec {
         bootstrap-x86 = makeOverridable nixosSystem {
           system = "x86_64-linux";
@@ -160,6 +142,7 @@
             local.gui = false;
           }];
         };
+
         bootstrap-arm = bootstrap-x86.override {
           system = "aarch64-linux";
           modules = [{
@@ -176,6 +159,7 @@
             printing = true;
             emacs.enable = true;
             emacs.install-home = false;
+            docker = true;
           };
         in nixosSystem {
           system = "x86_64-linux";
@@ -184,7 +168,12 @@
               darwin = false;
               extraModules =
                 [ (importModule ./home/gui) { home.local = local; } ];
-            }))) ++ [ { local = local; } ./nixos/machines/jeff-nixos.nix ];
+            }))) ++ [
+              { local = local; }
+              (importModule' ./nixos/machines/jeff-nixos.nix)
+              (importModule ./nixos/vfio)
+              (importModule ./nixos/gui)
+            ];
         };
 
         jeff-home = let
@@ -193,7 +182,9 @@
             gui = true;
             cloud = false;
             printing = true;
+            emacs.enable = true;
             emacs.install-home = false;
+            docker = true;
           };
         in nixosSystem {
           system = "x86_64-linux";
@@ -202,7 +193,10 @@
               darwin = false;
               extraModules =
                 [ (importModule ./home/gui) { home.local = local; } ];
-            }))) ++ [ { local = local; } ./nixos/machines/jeff-home.nix ];
+            }))) ++ [
+              { local = local; }
+              (importModule' ./nixos/machines/jeff-home.nix)
+            ];
         };
 
         jeff-cloud = let
@@ -217,7 +211,10 @@
             // (systemHomeManagerModules {
               darwin = false;
               extraModules = [{ home.local = local; }];
-            }))) ++ [ { local = local; } ./nixos/machines/jeff-cloud.nix ];
+            }))) ++ [
+              { local = local; }
+              (importModule' ./nixos/machines/jeff-cloud.nix)
+            ];
         };
       };
 
@@ -255,10 +252,7 @@
       # home-manager config for Linux cloud VMs
       # > nix build .#homeConfigurations.jeff.activationPackage ; ./result/activate
       homeConfigurations.jeff = home-manager.lib.homeManagerConfiguration {
-        pkgs = import inputs.nixpkgs-unstable {
-          system = "x86_64-linux";
-          inherit (nixpkgsConfig) config overlays;
-        };
+        inherit pkgs;
         modules = (attrValues self.homeManagerModulesLinux) ++ singleton
           ({ config, ... }: {
             home.username = config.local.primary-user.username;
@@ -274,43 +268,9 @@
           });
       };
 
-      overlays = {
-        # Overlays to add different versions `nixpkgs` into package set
-        pkgs-stable = _: prev: {
-          pkgs-stable = import inputs.nixpkgs-stable {
-            inherit (prev.stdenv) system;
-            inherit (nixpkgsConfig) config;
-          };
-        };
-        pkgs-unstable = _: prev: {
-          pkgs-unstable = import inputs.nixpkgs-unstable {
-            inherit (prev.stdenv) system;
-            inherit (nixpkgsConfig) config;
-          };
-        };
+      overlays = import ./overlays.nix { inherit lib inputs nixpkgsConfig; };
 
-        # Overlay useful on Macs with Apple Silicon
-        apple-silicon = _: prev:
-          optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-            # Add access to x86 packages system is running Apple Silicon
-            pkgs-x86 = import inputs.nixpkgs-unstable {
-              system = "x86_64-darwin";
-              inherit (nixpkgsConfig) config;
-            };
-          };
-
-        # Overlay to include node packages listed in `./pkgs/node-packages/package.json`
-        # Run `nix run my#nodePackages.node2nix -- -14` to update packages.
-        nodePackages = _: prev: {
-          nodePackages = prev.nodePackages
-            // import ./pkgs/node-packages { pkgs = prev; };
-        };
-      };
-
-      sharedModules = {
-        local-util = importModule ./util;
-        local-options = importModule ./options;
-      };
+      sharedModules = { local-options = importModule ./options; };
 
       nixosModules = {
         local-bootstrap = importModule ./nixos/bootstrap.nix;
@@ -326,13 +286,11 @@
       };
 
       homeManagerModulesShared = {
-        local-util = importModule ./util;
         local-common = importModule ./home;
         local-emacs = importModule ./home/emacs;
         home-local-options = { lib, config, ... }: {
           options.home.local = (self.sharedModules.local-options {
-            inherit lib config;
-            pkgs = nixpkgs;
+            inherit lib config pkgs;
           }).options.local;
         };
       };

@@ -1,13 +1,13 @@
 { config, lib, pkgs, inputs, ... }:
 let
+  # these packages sometimes fail to build
+  includePackages = false;
+  optimize = lib.my.optimizeDefault;
   emacsBase =
     if !config.local.cloud then pkgs.emacsPgtk else pkgs.emacsNativeComp;
-  emacsCustom = config.util.optimizeDefault emacsBase;
   emacsCustomWithPackages =
-    (pkgs.emacsPackagesFor emacsCustom).emacsWithPackages (epkgs:
-      [ # epkgs.vterm
-        # epkgs.all-the-icons
-      ]);
+    (pkgs.emacsPackagesFor (optimize emacsBase)).emacsWithPackages
+    (epkgs: lib.optionals includePackages [ epkgs.vterm epkgs.all-the-icons ]);
 in {
   nixpkgs.overlays =
     [ (final: prev: { final.emacs = emacsCustomWithPackages; }) ]

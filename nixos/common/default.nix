@@ -1,6 +1,5 @@
-{ lib, ... }:
-with lib.my; {
-  imports = importModules [
+{ lib, ... }: {
+  imports = lib.my.importModules [
     ./emacs.nix
     ./python.nix
     ./ruby.nix

@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  optimize = config.util.optimizeDefault;
+  optimize = lib.my.optimizeDefault;
   cloud = config.home.local.cloud;
 in {
   imports = [ ../zsh/linux.nix ./ssh-agent.nix ./gpg-agent.nix ];

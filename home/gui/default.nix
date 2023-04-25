@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ pkgs, ... }: {
   xdg.configFile = {
     "gtkrc-2.0".source = ../../dotfiles/gtkrc-2.0;
     "gtk-2.0/gtkfilechooser.ini".source =

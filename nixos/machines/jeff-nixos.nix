@@ -1,6 +1,5 @@
-{ config, lib, pkgs, modulesPath, ... }: {
-  imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix") ../vfio ../gui ];
+{ pkgs, modulesPath, ... }: {
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   environment.systemPackages = with pkgs; [
     firmwareLinuxNonfree

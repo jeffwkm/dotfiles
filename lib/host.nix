@@ -56,10 +56,7 @@ in {
     rootPath:
     darwinSystem {
       inherit system;
-      specialArgs = {
-        mylib = lib.my;
-        inherit lib inputs system rootPath;
-      };
+      specialArgs = { inherit lib inputs system rootPath; };
       modules = [
         {
           networking.hostName =

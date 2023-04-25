@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  optimize = config.util.optimizeDefault;
+  optimize = lib.my.optimizeDefault;
   iccOverlay = (final: prev: {
     ## build sway/wlroots from icc color-profiles branch
     wlroots = optimize (prev.wlroots.overrideAttrs (old: {

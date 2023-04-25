@@ -1,6 +1,7 @@
-{ config, lib, ... }:
-with config.util;
-let inherit (lib) mkOption types;
+{ lib, ... }:
+let
+  inherit (lib) mkOption types;
+  inherit (lib.my.options) mkBoolOpt;
 in {
   options = {
     local = {
