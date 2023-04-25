@@ -45,7 +45,8 @@ in {
       neofetch
       nethack
       nix-direnv
-      nixfmt # :: An opinionated formatter for Nix
+      nixfmt
+      nixpkgs-fmt
       nodePackages.prettier
       openai-full
       p7zip

@@ -39,7 +39,7 @@
     nil-server.inputs.rust-overlay.follows = "rust-overlay";
   };
 
-  outputs = { self, darwin, home-manager, hyprland, ... }@inputs:
+  outputs = { self, darwin, home-manager, ... }@inputs:
     let
       inherit (inputs.nixos-unstable.lib) nixosSystem;
       inherit (darwin.lib) darwinSystem;
@@ -47,6 +47,13 @@
         attrValues makeOverridable optionalAttrs singleton mkIf;
 
       lib = inputs.nixpkgs-unstable.lib;
+      mylib = lib // {
+        inherit (inputs.flake-compat.lib) mkMerge;
+        importModule = path:
+          { config, pkgs, lib, ... }:
+          import path { inherit config pkgs inputs lib; };
+        importModules = paths: lib.lists.map importModule paths;
+      };
       nixpkgs = inputs.nixpkgs-unstable;
 
       compile = importModule ./util/compile.nix {
@@ -57,8 +64,11 @@
       optimize = compile.util.optimizeDefault;
 
       importModule = path:
-        { lib, config, pkgs, ... }:
-        import path { inherit lib config pkgs inputs; };
+        { config, pkgs, ... }:
+        import path {
+          inherit config pkgs inputs;
+          lib = lib // { my = mylib; };
+        };
 
       nixpkgsConfig = {
         config = {
@@ -77,10 +87,11 @@
           (final: prev: {
             final.stdenv = prev.fastStdenv.mkDerivation { name = "env"; };
           })
-          (final: prev: {
-            # Use packages from nixpkgs-stable
-            inherit (final.pkgs-stable) rustracer trace-cmd spotify gthumb;
-          })
+          (final: prev:
+            {
+              # Use packages from nixpkgs-stable
+              # inherit (final.pkgs-stable) spotify;
+            })
           (final: prev: {
             zsh = if prev.stdenv.isDarwin then prev.zsh else optimize prev.zsh;
           })
@@ -106,8 +117,8 @@
       systemHomeManagerModules = ({ extraModules ? [ ], darwin, ... }: {
         home-manager = (if darwin then
           home-manager.darwinModules.home-manager
-                        else
-                          home-manager.nixosModules.home-manager);
+        else
+          home-manager.nixosModules.home-manager);
         hm-config = ({ config, ... }:
           let
             username = primaryUserInfo.username;
@@ -128,10 +139,10 @@
               users.${username} = {
                 # inherit (config) user;
                 imports = (attrValues self.homeManagerModulesShared)
-                          ++ (attrValues (if darwin then
-                            self.homeManagerModulesMac
-                                          else
-                                            self.homeManagerModulesLinux)) ++ extraModules;
+                  ++ (attrValues (if darwin then
+                    self.homeManagerModulesMac
+                  else
+                    self.homeManagerModulesLinux)) ++ extraModules;
                 home.stateVersion = homeManagerStateVersion;
                 home.local.primary-user = primaryUserInfo;
                 home.local.nix-repo-path = configDir;
@@ -157,29 +168,41 @@
           }];
         };
 
-        jeff-nixos = nixosSystem {
+        jeff-nixos = let
+          local = {
+            primary-user = primaryUserInfo;
+            gui = true;
+            cloud = false;
+            printing = true;
+            emacs.enable = true;
+            emacs.install-home = false;
+          };
+        in nixosSystem {
           system = "x86_64-linux";
           modules = (attrValues (self.sharedModules // self.nixosModules
             // (systemHomeManagerModules {
               darwin = false;
-              extraModules = [ (importModule ./home/gui) ];
-            }))) ++ [
-              { local.primary-user = primaryUserInfo; }
-              hyprland.nixosModules.default
-              ./nixos/machines/jeff-nixos.nix
-            ];
+              extraModules =
+                [ (importModule ./home/gui) { home.local = local; } ];
+            }))) ++ [ { local = local; } ./nixos/machines/jeff-nixos.nix ];
         };
 
-        jeff-home = nixosSystem {
+        jeff-home = let
+          local = {
+            primary-user = primaryUserInfo;
+            gui = true;
+            cloud = false;
+            printing = true;
+            emacs.install-home = false;
+          };
+        in nixosSystem {
           system = "x86_64-linux";
           modules = (attrValues (self.sharedModules // self.nixosModules
             // (systemHomeManagerModules {
               darwin = false;
-              extraModules = [ (importModule ./home/gui) ];
-            }))) ++ [
-              { local.primary-user = primaryUserInfo; }
-              ./nixos/machines/jeff-home.nix
-            ];
+              extraModules =
+                [ (importModule ./home/gui) { home.local = local; } ];
+            }))) ++ [ { local = local; } ./nixos/machines/jeff-home.nix ];
         };
 
         jeff-cloud = let
@@ -191,10 +214,10 @@
         in nixosSystem {
           system = "x86_64-linux";
           modules = (attrValues (self.sharedModules // self.nixosModules
-                                 // (systemHomeManagerModules {
-                                   darwin = false;
-                                   extraModules = [{ home.local = local; }];
-                                 }))) ++ [ { local = local; } ./nixos/machines/jeff-cloud.nix ];
+            // (systemHomeManagerModules {
+              darwin = false;
+              extraModules = [{ home.local = local; }];
+            }))) ++ [ { local = local; } ./nixos/machines/jeff-cloud.nix ];
         };
       };
 
@@ -203,10 +226,10 @@
         bootstrap-x86 = makeOverridable darwinSystem {
           system = "x86_64-darwin";
           modules = [ ./darwin/bootstrap.nix { nixpkgs = nixpkgsConfig; } ]
-                    ++ [{
-                      local.primary-user = primaryUserInfo;
-                      local.gui = false;
-                    }];
+            ++ [{
+              local.primary-user = primaryUserInfo;
+              local.gui = false;
+            }];
         };
         bootstrap-arm = bootstrap-x86.override {
           system = "aarch64-darwin";
