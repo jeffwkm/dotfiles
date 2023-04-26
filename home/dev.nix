@@ -1,7 +1,8 @@
-{ config, lib, pkgs, ... }: {
+{ lib, pkgs, ... }: {
   home.packages = with pkgs;
     (lib.lists.optionals (!pkgs.stdenv.isDarwin) [ gcc ])
-    ++ (lib.lists.optionals (!config.home.local.cloud) [
+    ## (!config.home.local.cloud)
+    ++ (lib.optionals true [
       black
       cmake
       gnuplot

@@ -1122,11 +1122,12 @@ interactively for spacing value."
 
 (defvar --external-source-file-paths nil)
 
-(dolist (path (list "~/.cargo/registry"
+(dolist (path (list "/nix/store"
                     "~/.maven/repository"
+                    "~/.cargo/registry"
+                    "~/.rustup"
                     doom-emacs-dir
-                    doom-local-dir
-                    "/nix/store"))
+                    doom-local-dir))
   (add-to-list '--external-source-file-paths
                (expand-file-name path)))
 

@@ -63,15 +63,17 @@
         overlays = attrValues self.overlays;
       };
 
-      pkgs = import nixpkgs-unstable {
-        system = builtins.currentSystem;
-        inherit (nixpkgsConfig) config overlays;
-      };
+      pkgsForSystem = system:
+        import nixpkgs-unstable {
+          inherit system;
+          inherit (nixpkgsConfig) config overlays;
+        };
 
       mylib = nixpkgs-unstable.lib.extend (self: super: {
         my = import ./lib {
-          inherit pkgs inputs;
           lib = self;
+          pkgs = pkgsForSystem super.stdenv.system;
+          inherit inputs;
         };
       });
 
@@ -87,7 +89,7 @@
         email = "jeff.workman@gmail.com";
       };
 
-      systemHomeManagerModules = ({ extraModules ? [ ], darwin, ... }: {
+      systemHomeManagerModules = ({ extraModules ? [ ], darwin, system, ... }: {
         home-manager = (if darwin then
           home-manager.darwinModules.home-manager
         else
@@ -102,7 +104,7 @@
             nixpkgs = nixpkgsConfig;
             nix.nixPath = mkIf (darwin) {
               "darwin-config" = "${configDir}";
-              nixpkgs = "${pkgs}";
+              nixpkgs = "${inputs.nixpkgs-unstable}";
             };
             users.users.${username}.home = homeDir;
             home-manager = {
@@ -110,7 +112,7 @@
               useUserPackages = true;
               users.${username} = {
                 # inherit (config) user;
-                imports = (attrValues self.homeManagerModulesShared)
+                imports = (attrValues (self.homeManagerModulesShared system))
                   ++ (attrValues (if darwin then
                     self.homeManagerModulesMac
                   else
@@ -198,6 +200,7 @@
         };
 
         jeff-nixos = let
+          system = "x86_64-linux";
           local = {
             primary-user = primaryUserInfo;
             gui = true;
@@ -208,9 +211,10 @@
             docker = true;
           };
         in nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = (attrValues (self.sharedModules // self.nixosModules
             // (systemHomeManagerModules {
+              inherit system;
               darwin = false;
               extraModules =
                 [ (importModule ./home/gui) { home.local = local; } ];
@@ -223,6 +227,7 @@
         };
 
         jeff-home = let
+          system = "x86_64-linux";
           local = {
             primary-user = primaryUserInfo;
             gui = true;
@@ -233,9 +238,10 @@
             docker = true;
           };
         in nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = (attrValues (self.sharedModules // self.nixosModules
             // (systemHomeManagerModules {
+              inherit system;
               darwin = false;
               extraModules =
                 [ (importModule ./home/gui) { home.local = local; } ];
@@ -246,15 +252,17 @@
         };
 
         jeff-cloud = let
+          system = "x86_64-linux";
           local = {
             gui = false;
             cloud = true;
             primary-user = primaryUserInfo;
           };
         in nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = (attrValues (self.sharedModules // self.nixosModules
             // (systemHomeManagerModules {
+              inherit system;
               darwin = false;
               extraModules = [{ home.local = local; }];
             }))) ++ [
@@ -274,31 +282,42 @@
               local.gui = false;
             }];
         };
-        bootstrap-arm = bootstrap-x86.override {
-          system = "aarch64-darwin";
-          modules = [{
-            local.primary-user = primaryUserInfo;
-            local.gui = false;
-          }];
-        };
+        bootstrap-arm = bootstrap-x86.override { system = "aarch64-darwin"; };
 
-        jeff-m1x = darwinSystem {
+        jeff-m1x = let
           system = "aarch64-darwin";
+          local = {
+            primary-user = primaryUserInfo;
+            gui = false;
+            cloud = false;
+            printing = false;
+            emacs.enable = true;
+            emacs.install-home = false;
+            docker = false;
+          };
+        in darwinSystem {
+          inherit system;
           modules = (attrValues (self.sharedModules // self.darwinModules
-            // (systemHomeManagerModules { darwin = true; }))) ++ [{
-              local.primary-user = primaryUserInfo;
-              networking.computerName = "Jeff-M1X";
-              networking.hostName = "jeff-m1x";
-              networking.knownNetworkServices =
-                [ "Wi-Fi" "USB 10/100/1000 LAN" ];
-            }];
+            // (systemHomeManagerModules {
+              inherit system;
+              darwin = true;
+              extraModules = [{ home.local = local; }];
+            }))) ++ [
+              { local = local; }
+              {
+                networking.computerName = "Jeff-M1X";
+                networking.hostName = "jeff-m1x";
+                networking.knownNetworkServices =
+                  [ "Wi-Fi" "USB 10/100/1000 LAN" ];
+              }
+            ];
         };
       };
 
       # home-manager config for Linux cloud VMs
       # > nix build .#homeConfigurations.jeff.activationPackage ; ./result/activate
       homeConfigurations.jeff = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+        pkgs = pkgsForSystem "x86_64-linux";
         modules = (attrValues self.homeManagerModulesLinux) ++ singleton
           ({ config, ... }: {
             home.username = config.local.primary-user.username;
@@ -329,12 +348,13 @@
         local-ui = importModule ./darwin/ui;
       };
 
-      homeManagerModulesShared = {
+      homeManagerModulesShared = system: {
         local-common = importModule ./home;
         local-emacs = importModule ./home/emacs;
         home-local-options = { lib, config, ... }: {
           options.home.local = (self.sharedModules.local-options {
-            inherit lib config pkgs;
+            inherit lib config;
+            pkgs = pkgsForSystem system;
           }).options.local;
         };
       };

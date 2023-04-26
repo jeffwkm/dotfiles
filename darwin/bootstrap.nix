@@ -20,9 +20,11 @@
   programs.bash.enable = true;
   # Install and setup ZSH to work with nix(-darwin) as well
   programs.zsh.enable = true;
-  # programs.zsh.enableCompletion = false;
+  programs.zsh.enableCompletion = false;
+  programs.zsh.enableBashCompletion = false;
+  programs.zsh.promptInit = "";
 
-  nixpkgs.config.packageOverrides = pkgs: rec {
+  nixpkgs.config.packageOverrides = pkgs: {
     oraclejdk = pkgs.openjdk8;
     jdk = pkgs.openjdk8;
   };

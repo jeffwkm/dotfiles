@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let optimize = lib.my.optimizeDefault;
 in {
-  imports = [ ./zsh ./dev.nix ];
+  imports = lib.my.importModules [ ./zsh ./dev.nix ];
 
   programs.gpg.enable = true;
   programs.jq.enable = true;
@@ -32,6 +32,7 @@ in {
       cmatrix # :: Simulates the falling characters theme from The Matrix movie
       direnv
       ec2-api-tools
+      entr
       expect
       gh # GitHub CLI
       gnupg
@@ -46,7 +47,7 @@ in {
       nethack
       nix-direnv
       nixfmt
-      nixpkgs-fmt
+      # nixpkgs-fmt
       nodePackages.prettier
       openai-full
       p7zip
@@ -57,6 +58,7 @@ in {
       ripgrep # :: replacement for /bin/grep
       speedtest-rs
       starship
+      subversion
       termtosvg
       tmux
       tree
@@ -67,7 +69,7 @@ in {
       wget
       yt-dlp
       zip
-    ] ++ lib.lists.optionals config.home.local.gui [
+    ] ++ lib.optionals config.home.local.gui [
       ncspot # :: Cross-platform ncurses Spotify client written in Rust
       spicetify-cli
       spotify-tui

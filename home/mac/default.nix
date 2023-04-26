@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 with pkgs; {
-  imports = [ ../zsh/mac.nix ../gui/alacritty.nix ];
+  imports = lib.my.importModules [ ../zsh/mac.nix ../gui/alacritty.nix ];
 
   alacritty.fontSize = "14";
   alacritty.fontSizeLarge = "16";

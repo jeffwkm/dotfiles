@@ -1,10 +1,5 @@
-{ config, lib, pkgs, ... }:
-let
-  inherit (lib) mkIf;
-  mkIfCaskPresent = cask: mkIf (lib.any (x: x == cask) config.homebrew.casks);
-  brewEnabled = config.homebrew.enable;
-in {
-  environment.shellInit = mkIf brewEnabled ''
+{ config, lib, ... }: {
+  environment.shellInit = lib.mkIf config.homebrew.enable ''
     eval "$(${config.homebrew.brewPrefix}/brew shellenv)"
   '';
 
@@ -35,7 +30,6 @@ in {
   homebrew.brews = [
     "FelixKratz/formulae/sketchybar"
     "adwaita-icon-theme"
-    "aspell"
     "autoconf"
     "automake"
     "binutils"
@@ -43,21 +37,18 @@ in {
     "cairo"
     "cmake"
     "coreutils"
-    "curl"
-    "entr"
     "expat"
-    "fd"
     "ffmpeg"
     "gcc"
-    "gh"
     "giflib"
-    "git"
     "glib"
+    "gnutls"
     "gtk+3"
     "ifstat"
-    "insilica/srvc/srvc"
+    # "insilica/srvc/srvc"
     "imagemagick"
     "ispell"
+    "jansson"
     "jpeg"
     "libgccjit"
     "libheif"
@@ -65,21 +56,15 @@ in {
     "libpng"
     "librsvg"
     "libxml2"
-    "lsd"
     "mailutils"
     "make"
     "mpv"
     "pango"
-    "pass"
     "pkg-config"
     "python3"
-    "rbenv"
-    "subversion"
-    "tmux"
+    "texinfo"
     "vapoursynth"
-    "yt-dlp"
     "zlib"
-    "zsh"
     "zsh-completions"
   ];
 
@@ -108,11 +93,11 @@ in {
   ];
 
   homebrew.extraConfig = ''
-    # brew "railwaycat/emacsmacport/emacs-mac", args: ["with-native-comp", "with-emacs-big-sur-icon", "with-librsvg"]
-    brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-native-comp", "with-modern-paper-icon", "with-no-frame-refocus", "with-no-titlebar-and-round-corners"]
+    brew "railwaycat/emacsmacport/emacs-mac", args: ["with-native-compilation", "with-emacs-big-sur-icon", "with-librsvg", "with-no-title-bars", "with-mac-metal" ]
+    brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-native-comp", "with-modern-paper-icon", "with-no-titlebar-and-round-corners"]
+    # brew "d12frosted/emacs-plus/emacs-plus@29", args: ["with-native-comp", "with-poll", "with-modern-paper-icon", "with-no-titlebar-and-round-corners", "with-no-frame-refocus"]
     # brew "d12frosted/emacs-plus/emacs-plus@30", args: ["with-native-comp", "with-modern-paper-icon", "with-no-frame-refocus", "with-poll"]
     brew "koekeishiya/formulae/yabai", args: ["HEAD"]
-    # brew "FelixKratz/formulae/fyabai", args: ["HEAD"]
     brew "nginx", restart_service: true
     brew "md5sha1sum", link: false
   '';
