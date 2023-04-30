@@ -8,7 +8,7 @@ let
 in {
   options.modules.programs.vscode = { enable = mkBoolOpt false; };
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && !darwin) {
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.sessionVariables =
         mkIf modules.wayland.enable { NIXOS_OZONE_WL = "1"; };

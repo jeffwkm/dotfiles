@@ -5,11 +5,13 @@
       dev.rust.enable = true;
       dev.jdk.enable = true;
       dev.clojure.enable = true;
+      aws.enable = true;
       fonts.enable = true;
       emacs.enable = true;
       emacs.install = false;
       programs.mpv.enable = true;
       programs.spotify.enable = true;
+      programs.vscode.enable = true;
       programs.alacritty = {
         enable = true;
         fontSize = "14";
