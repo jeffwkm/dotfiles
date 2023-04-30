@@ -30,7 +30,7 @@ in {
 
       home.packages = with pkgs;
         [
-          openai-full
+          openai
           babashka
           cmake
           shellcheck
