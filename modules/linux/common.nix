@@ -61,7 +61,6 @@ in {
       readline
       sshfs
       tmux
-      vim
       wget
       xdg-utils
     ];

@@ -32,6 +32,9 @@
     nil-server.inputs.nixpkgs.follows = "nixpkgs";
     nil-server.inputs.flake-utils.follows = "flake-utils";
     nil-server.inputs.rust-overlay.follows = "rust-overlay";
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    vscode-server.inputs.nixpkgs.follows = "nixpkgs";
+    vscode-server.inputs.flake-utils.follows = "flake-utils";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:

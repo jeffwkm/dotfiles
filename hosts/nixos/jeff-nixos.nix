@@ -18,6 +18,7 @@
       programs.chromium.enable = true;
       services.mpd.enable = true;
       services.mpd.musicDirectory = "/mnt/huge/Music";
+      programs.vscode.enable = true;
     };
 
     services.printing.enable = true;

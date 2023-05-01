@@ -22,6 +22,12 @@ in {
         package = optimize config pkgs.htop;
       };
 
+      programs.neovim = {
+        enable = true;
+        viAlias = true;
+        vimAlias = true;
+      };
+
       home.packages = with pkgs; [
         (optimize config fd)
         (optimize config lsd)
