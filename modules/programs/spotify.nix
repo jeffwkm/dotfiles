@@ -13,13 +13,23 @@ in {
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = {
       home.packages = with pkgs;
-        [ ncspot spotify-tui ] ++ optional cfg.spotifyd.enable [ spotifyd ]
-        ++ optionals modules.desktop.enable [
-          spotify
-          spotifywm # :: Wrapper around Spotify that correctly sets class name before opening the window
-        ];
+        [ ncspot spotify-tui ]
+        ++ optionals modules.desktop.enable [ spotify spotifywm ];
 
-      services.spotifyd = mkIf cfg.spotifyd.enable { enable = true; };
+      services.spotifyd = mkIf cfg.spotifyd.enable {
+        enable = true;
+        package = pkgs.spotifyd.override {
+          withPulseAudio = true;
+          withMpris = true;
+        };
+        settings = {
+          global = {
+            username = "${user.email}";
+            password_cmd = "pass show media/spotify";
+            device_name = "${host.name}";
+          };
+        };
+      };
     };
   };
 }

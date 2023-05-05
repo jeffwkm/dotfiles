@@ -15,6 +15,7 @@
       programs.alacritty.fontStyle = "Semibold";
       programs.mpv.enable = true;
       programs.spotify.enable = true;
+      programs.spotify.spotifyd.enable = true;
       programs.chromium.enable = true;
       services.mpd.enable = true;
       services.mpd.musicDirectory = "/mnt/huge/Music";

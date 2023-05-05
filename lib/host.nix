@@ -51,6 +51,7 @@ in rec {
           options =
             (import ../hosts/options.nix { inherit lib config; }).options;
           config.host.darwin = darwin;
+          config.host.name = hostname;
         })
         { config = { networking.hostName = lib.mkDefault hostname; }; }
       ] ++ [ path ../nix-config.nix ] ++ (lib.attrValues
