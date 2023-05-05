@@ -21,7 +21,7 @@
       programs.vscode.enable = true;
     };
 
-    services.printing.enable = true;
+    # services.printing.enable = true;
 
     environment.systemPackages = with pkgs; [
       firmwareLinuxNonfree

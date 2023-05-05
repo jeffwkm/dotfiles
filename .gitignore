@@ -13,3 +13,4 @@ flycheck_init.el
 /.lsp/
 **/doom.d/custom.el
 /bin/do-ssh-add*
+/dotfiles/nvim/data/

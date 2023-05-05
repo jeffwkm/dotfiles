@@ -28,6 +28,9 @@ in {
         vimAlias = true;
       };
 
+      xdg.configFile."nvim/".source =
+        config.lib.file.mkOutOfStoreSymlink "${host.config-dir}/dotfiles/nvim";
+
       home.packages = with pkgs; [
         (optimize config fd)
         (optimize config lsd)
