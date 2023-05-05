@@ -57,7 +57,6 @@ let
       ".." = "cd ..";
       e = "emacsclient -t -a emacs";
       ee = "emacs -nw";
-      # vim = "e";
       v = "vim";
       ### nix
       ss = "${nix-flake-search}";

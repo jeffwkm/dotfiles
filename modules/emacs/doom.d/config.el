@@ -89,19 +89,14 @@
 
 (defvar --large-font nil)
 (defun --configure-fonts ()
-  (setq doom-font (if (mac?)
-                      (font-spec :family "JetBrainsMono Nerd Font"
-                                 :size 14
-                                 :weight 'semibold)
-                    (font-spec :family "JetBrainsMono Nerd Font"
-                               :size 15
-                               :weight 'semibold))
+  (setq doom-font (font-spec :family "JetBrainsMono Nerd Font"
+                             :size (if (mac?) 14 15)
+                             :weight 'semibold)
         doom-big-font nil
         doom-big-font-increment 2
         doom-font-increment 1
-        doom-variable-pitch-font (if (mac?) nil
-                                   (font-spec :family "Noto Sans"
-                                              :size (if --large-font 17 15)))))
+        doom-variable-pitch-font (font-spec :family "Noto Sans"
+                                            :size (if --large-font 17 15))))
 (defun --sync-fonts ()
   (when (graphical?)
     (set-frame-font doom-font)))
@@ -1498,7 +1493,7 @@ interactively for spacing value."
   (treemacs-git-mode 1)
   (treemacs-hide-gitignored-files-mode 1)
   (treemacs-fringe-indicator-mode 'always)
-  (defun --ensure-treemacs-hl-line-mode (&optional state)
+  (defun --ensure-treemacs-hl-line-mode (&optional _state)
     ;; (message "running for %s" state)
     (when (treemacs-is-treemacs-window-selected?)
       (let ((dbg nil)
