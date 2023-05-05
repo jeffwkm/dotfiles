@@ -17,6 +17,31 @@ in {
       "${config.user.home}/.node_modules/bin"
     ];
 
+    programs.ssh = {
+      enable = true;
+      matchBlocks = {
+        "jeff-aws" = {
+          host = "jeff-aws.ddns.net";
+          user = "jeff";
+        };
+        "sysrev" = {
+          host = "sysrev.com";
+          user = "jeff";
+        };
+        "staging" = {
+          host = "staging.sysrev.com";
+          user = "jeff";
+        };
+      };
+      forwardAgent = true;
+      compression = true;
+      serverAliveInterval = 30;
+      serverAliveCountMax = 3;
+      extraConfig = ''
+        ExitOnForwardFailure yes
+      '';
+    };
+
     home.packages = with pkgs; [
       asciinema
       asciinema-agg

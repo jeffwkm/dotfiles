@@ -105,12 +105,6 @@ in {
       settings.X11Forwarding = true;
     };
 
-    programs.ssh.extraConfig = ''
-      ServerAliveInterval 30
-      ServerAliveCountMax 3
-      ExitOnForwardFailure yes
-    '';
-
     services.dbus.enable = true;
 
     programs.mosh.enable = true;
