@@ -142,7 +142,7 @@ if [ "$execute" == "1" ]; then
 
   run_set ||
     (ddc_wait && run_set) ||
-    (update_notify 750 "Write failed" && false)
+    (update_notify 1000 "Write failed" && false)
 
   pre_notify=0
   if [ "$pre_notify" != "0" ]; then
@@ -151,5 +151,5 @@ if [ "$execute" == "1" ]; then
     fi
   fi
 
-  run_display || (update_notify 750 "Read failed" && false)
+  run_display || (update_notify 1000 "Read failed" && false)
 fi
