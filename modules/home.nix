@@ -21,16 +21,19 @@ in {
       enable = true;
       matchBlocks = {
         "jeff-aws" = {
-          host = "jeff-aws.ddns.net";
+          match = "host jeff-aws,jeff-aws.ddns.net";
+          hostname = "jeff-aws.ddns.net";
           user = "jeff";
         };
         "sysrev" = {
-          host = "sysrev.com";
-          user = "jeff";
+          match = "host sysrev,sysrev.com";
+          hostname = "sysrev.com";
+          user = "ubuntu";
         };
         "staging" = {
-          host = "staging.sysrev.com";
-          user = "jeff";
+          match = "host staging,staging.sysrev.com";
+          hostname = "staging.sysrev.com";
+          user = "ubuntu";
         };
       };
       forwardAgent = true;

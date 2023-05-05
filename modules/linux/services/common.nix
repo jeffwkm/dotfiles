@@ -24,8 +24,11 @@ in {
         Install = { WantedBy = [ "default.target" ]; };
         Service = {
           Type = "oneshot";
-          Environment = "SSH_AUTH_SOCK=%t/ssh-agent.socket";
-          ExecStart = "${pkgs.bash}/bin/bash %h/bin/do-ssh-add";
+          Environment = [
+            "SSH_AUTH_SOCK=%t/ssh-agent.socket"
+            "PATH=/run/current-system/sw/bin"
+          ];
+          ExecStart = "${pkgs.expect}/bin/expect -f %h/bin/do-ssh-add";
         };
       };
 

@@ -12,3 +12,4 @@ flycheck_init.el
 /.clj-kondo/
 /.lsp/
 **/doom.d/custom.el
+/bin/do-ssh-add*
