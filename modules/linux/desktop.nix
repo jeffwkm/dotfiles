@@ -97,6 +97,8 @@ in {
       in {
         home.packages = gnomePackages ++ qtPackages ++ cli ++ gui;
 
+        services.pass-secret-service.enable = true;
+
         qt = {
           enable = true;
         } // mkIf cfg.gnome.enable {
