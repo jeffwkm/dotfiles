@@ -7,6 +7,11 @@ let
 in {
   options.modules.linux = { systemd-boot = mkBoolOpt false; };
 
+  imports = optionals modules.programs.vscode.enable
+    [ inputs.vscode-server.nixosModule ];
+
+  services.vscode-server.enable = modules.programs.vscode.enable;
+
   config = {
     nixpkgs.config.permittedInsecurePackages =
       [ "nodejs-10.24.1" "nodejs-12.22.12" "python-2.7.18.6" ];

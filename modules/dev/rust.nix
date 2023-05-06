@@ -2,7 +2,7 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user host modules;
+  inherit (config) user modules;
   inherit (modules) dev;
   cfg = config.modules.dev.rust;
 in {
