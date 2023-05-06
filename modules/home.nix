@@ -17,33 +17,33 @@ in {
       "${config.user.home}/.node_modules/bin"
     ];
 
-    programs.ssh = {
-      enable = true;
-      matchBlocks = {
-        "jeff-aws" = {
-          match = "host jeff-aws,jeff-aws.ddns.net";
-          hostname = "jeff-aws.ddns.net";
-          user = "jeff";
-        };
-        "sysrev" = {
-          match = "host sysrev,sysrev.com";
-          hostname = "sysrev.com";
-          user = "ubuntu";
-        };
-        "staging" = {
-          match = "host staging,staging.sysrev.com";
-          hostname = "staging.sysrev.com";
-          user = "ubuntu";
-        };
-      };
-      forwardAgent = true;
-      compression = true;
-      serverAliveInterval = 30;
-      serverAliveCountMax = 3;
-      extraConfig = ''
-        ExitOnForwardFailure yes
-      '';
-    };
+    # programs.ssh = {
+    #   enable = true;
+    #   matchBlocks = {
+    #     "jeff-aws" = {
+    #       match = "host jeff-aws,jeff-aws.ddns.net";
+    #       hostname = "jeff-aws.ddns.net";
+    #       user = "jeff";
+    #     };
+    #     "sysrev" = {
+    #       match = "host sysrev,sysrev.com";
+    #       hostname = "sysrev.com";
+    #       user = "ubuntu";
+    #     };
+    #     "staging" = {
+    #       match = "host staging,staging.sysrev.com";
+    #       hostname = "staging.sysrev.com";
+    #       user = "ubuntu";
+    #     };
+    #   };
+    #   forwardAgent = true;
+    #   compression = true;
+    #   serverAliveInterval = 30;
+    #   serverAliveCountMax = 3;
+    #   extraConfig = ''
+    #     ExitOnForwardFailure yes
+    #   '';
+    # };
 
     home.packages = with pkgs; [
       asciinema
