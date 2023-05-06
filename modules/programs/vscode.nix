@@ -32,17 +32,7 @@ in {
             nixfmt
             git
             zsh
-          ] ++ optionals modules.dev.rust.enable [
-            cargo
-            rustc
-            rust-analyzer
-            rustfmt
-          ] ++ optionals modules.dev.clojure.enable [
-            clojure
-            jdk
-            leiningen
-            boot
-          ]);
+          ] );
       };
     };
   };
