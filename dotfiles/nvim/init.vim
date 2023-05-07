@@ -91,8 +91,10 @@ nmap 0 <Cmd>call Go0orIndentStart()<CR>
 omap 0 normal! 0
 
 function EscInsertExit() abort
-  call feedkeys("\<Esc>", "n")
-  call feedkeys("l", "n")
+  call nvim_feedkeys("\<Esc>", "n", 0)
+  if col(".") != 1
+    call nvim_feedkeys("\<Right>", "n", 0)
+  endif
 endfunction
 
 imap <Esc> <Cmd>call EscInsertExit()<CR>
