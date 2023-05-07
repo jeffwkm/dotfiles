@@ -1,44 +1,7 @@
-" set leader key to space
-let g:mapleader = " "
-
-function! BackspaceInInsertMode() abort
-  if col(".") == 1
-    call nvim_feedkeys("\<Insert>","n",0)
-    call nvim_feedkeys("\<BS>\<Right>","n",0)
-    call nvim_feedkeys("\<Esc>","n",0)
-  else
-    call nvim_feedkeys("\<Left>x","n",0)
-  endif
-endfunction
-
-function! EnterInInsertMode() abort
-  if col(".") == col("$") - 1
-    call nvim_feedkeys("a", "n", 0)
-  else
-    call nvim_feedkeys("i", "n", 0)
-  endif
-  call nvim_feedkeys("\<CR>", "n", 0)
-  call nvim_feedkeys("\<Esc>", "n", 0)
-endfunction
-
-nnoremap <BS> :call BackspaceInInsertMode()<CR>
-nnoremap <CR> :call EnterInInsertMode()<CR>
-
 xmap gc  <Plug>VSCodeCommentary
 nmap gc  <Plug>VSCodeCommentary
 omap gc  <Plug>VSCodeCommentary
 nmap gcc <Plug>VSCodeCommentaryLine
-
-nnoremap <Leader>s <Plug>(easymotion-s2)
-onoremap <Leader>s <Plug>(easymotion-s2)
-nnoremap t <Plug>(easymotion-tl)
-onoremap t <Plug>(easymotion-tl)
-nnoremap T <Plug>(easymotion-Tl)
-onoremap T <Plug>(easymotion-Tl)
-nnoremap <Leader>j <Plug>(easymotion-j)
-onoremap <Leader>j <Plug>(easymotion-j)
-nnoremap <Leader>k <Plug>(easymotion-k)
-onoremap <Leader>k <Plug>(easymotion-k)
 
 nnoremap <Leader><enter> <Cmd>call VSCodeNotifyVisual('workbench.action.showCommands', 0)<CR>
 nnoremap <Leader>, <Cmd>call VSCodeNotifyVisual('workbench.action.quickOpen', 1)<CR>
@@ -64,4 +27,4 @@ nnoremap <Leader>okk <Cmd>call VSCodeNotify('workbench.action.openGlobalKeybindi
 nnoremap <Leader>osj <Cmd>call VSCodeNotify('workbench.action.openSettingsJson')<CR>
 nnoremap <Leader>okj <Cmd>call VSCodeNotify('workbench.action.openGlobalKeybindingsFile')<CR>
 
-"  runtime macros/sandwich/keymap/surround.vim
+" runtime macros/sandwich/keymap/surround.vim
