@@ -15,7 +15,7 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = optional cfg.install-in-home
-      (final: prev: { final.emacs = optimize config prev.emacsNativeComp; })
+      (final: prev: { emacs = optimize config prev.emacsNativeComp; })
       ++ optionals modules.wayland.enable [
         inputs.emacs-overlay.overlay
         (final: prev:

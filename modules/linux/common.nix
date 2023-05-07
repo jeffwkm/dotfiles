@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 with lib;
 with lib.my;
 let
@@ -6,11 +6,6 @@ let
   cfg = config.modules.linux;
 in {
   options.modules.linux = { systemd-boot = mkBoolOpt false; };
-
-  imports = optionals modules.programs.vscode.enable
-    [ inputs.vscode-server.nixosModule ];
-
-  services.vscode-server.enable = modules.programs.vscode.enable;
 
   config = {
     nixpkgs.config.permittedInsecurePackages =
@@ -31,6 +26,8 @@ in {
       "x-scheme-handler/about" = "chromium.desktop";
       "x-scheme-handler/unknown" = "chromium.desktop";
     };
+
+    services.vscode-server.enable = modules.programs.vscode.enable;
 
     users.defaultUserShell = mkIf modules.zsh.enable pkgs.zsh;
 

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, ... }:
 with lib;
 with lib.my;
 let
@@ -16,28 +16,24 @@ in {
       programs.vscode = {
         enable = true;
         package = pkgs.vscode.fhsWithPackages (ps:
-          with ps; [
-            zlib
-            openssl.dev
-            pkg-config
-            nodejs
+          with ps;
+          [
             babashka
-            shfmt
             direnv
-            shellcheck
-            shfmt
+            git
+            neovim
             nil
             nixfmt
+            nodejs
             openssh
-            git
+            openssl.dev
+            pkg-config
+            shellcheck
+            shfmt
+            zlib
             zsh
-            neovim
-          ] ++ optionals modules.dev.rust.enable [
-            (rust-bin.stable.latest.default.override {
-              extensions =
-                [ "rust-src" "rust-analyzer" "rustfmt" "rls" "rust-analysis" ];
-            })
-          ] ++ optionals modules.dev.jdk.enable [ jdk maven clang-tools ]
+          ] ++ optionals modules.dev.rust.enable [ rustup ]
+          ++ optionals modules.dev.jdk.enable [ clang-tools jdk maven ]
           ++ optionals modules.dev.clojure.enable [
             boot
             clj-kondo

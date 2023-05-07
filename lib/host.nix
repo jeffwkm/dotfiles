@@ -1,4 +1,5 @@
 { inputs, lib, ... }:
+with lib;
 let
   inherit (lib.my.import) importModule importModules;
   inherit (lib.my.modules) mapModules mapModulesRec' ignoreDarwin ignoreLinux;
@@ -16,7 +17,7 @@ in rec {
         home-manager.nixosModules.home-manager);
       hm-config = ({ config, ... }: {
         nixpkgs = nixpkgsConfig;
-        nix.nixPath = lib.mkIf (darwin) {
+        nix.nixPath = mkIf (darwin) {
           "darwin-config" = "${config.host.config-dir}";
           # "darwin-config" = "${configDir}";
           nixpkgs = "${inputs.nixpkgs}";
@@ -41,7 +42,7 @@ in rec {
     let
       mkSystem = if darwin then darwinSystem else nixosSystem;
       ignore = if darwin then ignoreLinux else ignoreDarwin;
-      hostname = (lib.removeSuffix ".nix" (baseNameOf path));
+      hostname = (removeSuffix ".nix" (baseNameOf path));
     in mkSystem {
       inherit system;
       specialArgs = { inherit lib inputs system; };
@@ -53,11 +54,12 @@ in rec {
           config.host.darwin = darwin;
           config.host.name = hostname;
         })
-        { config = { networking.hostName = lib.mkDefault hostname; }; }
+        { config = { networking.hostName = mkDefault hostname; }; }
       ] ++ [ path ../nix-config.nix ] ++ (lib.attrValues
         (systemHomeManagerModules {
           inherit system nixpkgs nixpkgsConfig darwin;
-        })) ++ (mapModulesRec' (toString ../modules) importModule ignore);
+        })) ++ optionals (!darwin) [ inputs.vscode-server.nixosModule ]
+        ++ (mapModulesRec' (toString ../modules) importModule ignore);
     };
 
   mapHosts = dir:

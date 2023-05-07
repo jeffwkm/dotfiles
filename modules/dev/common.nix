@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 with lib;
 with lib.my;
 let
@@ -20,6 +20,7 @@ in {
       (final: prev: {
         nix-direnv = prev.nix-direnv.override { enableFlakes = true; };
       })
+      inputs.nil-server.overlays.nil
     ];
 
     home-manager.users.${user.name} = {
