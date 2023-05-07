@@ -3,7 +3,7 @@ function! Cond(Cond, ...)
   return a:Cond ? opts : extend(opts, { 'on': [], 'for': [] })
 endfunction
 
-let g:EasyMotion_do_mapping = 0
+let g:logging_level = 'warn'
 let g:EasyMotion_startofline = 0
 let g:EasyMotion_verbose = 0
 let g:EasyMotion_prompt = ''
@@ -18,12 +18,12 @@ call plug#end()
 " Plug 'kovisoft/paredit'
 " Plug 'justinmk/vim-sneak'
 
+" Add hook to run before EasyMotion is initialized
+" to prevent creating key bindings
 augroup easymotion_config
   autocmd!
   autocmd VimEnter * let g:EasyMotion_do_mapping = 0
 augroup END
-
-let g:logging_level = 'warn'
 
 set hlsearch
 set nonumber
