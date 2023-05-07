@@ -23,11 +23,27 @@ in {
             nodejs
             babashka
             shfmt
+            direnv
             shellcheck
+            shfmt
             nil
             nixfmt
+            openssh
             git
             zsh
+            neovim
+          ] ++ optionals modules.dev.rust.enable [
+            (rust-bin.stable.latest.default.override {
+              extensions =
+                [ "rust-src" "rust-analyzer" "rustfmt" "rls" "rust-analysis" ];
+            })
+          ] ++ optionals modules.dev.jdk.enable [ jdk maven clang-tools ]
+          ++ optionals modules.dev.clojure.enable [
+            boot
+            clj-kondo
+            clojure
+            clojure-lsp
+            leiningen
           ]);
       };
     };
