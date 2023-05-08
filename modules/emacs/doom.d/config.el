@@ -1105,9 +1105,9 @@ interactively for spacing value."
   ;; (setq lsp-nix-nil-ignored-diagnostics nil)
   (setq lsp-nix-rnix-server-path nil)
   (setq lsp-nix-nil-formatter ["nixfmt" "-w" "80"])
-  ;; (lsp-workspace-restart)
   (add-to-list 'aggressive-indent-excluded-modes 'nix-mode))
 
+(use-package! vimrc-mode)
 (defun --kill-auto-workspace ()
   "Delete empty auto-created workspace named #1, #2, ..."
   (let ((ws (+workspace-current-name)))

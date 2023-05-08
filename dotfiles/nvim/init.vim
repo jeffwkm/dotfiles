@@ -10,7 +10,7 @@ let g:EasyMotion_show_prompt = 0
 let g:EasyMotion_prompt = ''
 
 call plug#begin('~/.config/nvim/data/plugged')
-Plug 'tpope/vim-sensible'
+"  Plug 'tpope/vim-sensible'
 Plug 'easymotion/vim-easymotion', Cond(!exists('g:vscode'))
 Plug 'asvetliakov/vim-easymotion', Cond(exists('g:vscode'), { 'as': 'vsc-easymotion' })
 Plug 'tpope/vim-commentary', Cond(!exists('g:vscode'))
@@ -29,6 +29,9 @@ augroup END
 " set leader key to space
 let g:mapleader = " "
 
+" Define global variable to prevent triggering hooks when entering insert mode
+let g:fake_insert_mode = 0
+
 nnoremap <Leader>s <Plug>(easymotion-s2)
 onoremap <Leader>s <Plug>(easymotion-s2)
 nnoremap t <Plug>(easymotion-tl)
@@ -41,6 +44,7 @@ nnoremap <Leader>k <Plug>(easymotion-k)
 onoremap <Leader>k <Plug>(easymotion-k)
 
 function! BackspaceInNormalMode() abort
+  let g:fake_insert_mode = 1
   if col(".") == 1
     call nvim_feedkeys("i", "n", 0)
     call nvim_feedkeys("\<BS>", "n", 0)
@@ -53,6 +57,7 @@ function! BackspaceInNormalMode() abort
 endfunction
 
 function! EnterInNormalMode() abort
+  let g:fake_insert_mode = 1
   if col(".") == col("$") - 1
     call nvim_feedkeys("a", "n", 0)
   else
@@ -87,8 +92,8 @@ function Go0orIndentStart() abort
   endif
 endfunction
 
-nmap 0 <Cmd>call Go0orIndentStart()<CR>
-omap 0 normal! 0
+nnoremap 0 <Cmd>call Go0orIndentStart()<CR>
+onoremap 0 normal! 0
 
 function EscInsertExit() abort
   call nvim_feedkeys("\<Esc>", "n", 0)
@@ -97,7 +102,7 @@ function EscInsertExit() abort
   endif
 endfunction
 
-imap <Esc> <Cmd>call EscInsertExit()<CR>
+inoremap <Esc> <Cmd>call EscInsertExit()<CR>
 
 " Fix cursor position after leaving insert mode
 " TODO: delete? replaced by EscInsertExit()

@@ -13,8 +13,9 @@ in {
         userName = "${config.user.full-name}";
         userEmail = "${config.user.email}";
         extraConfig = {
-          push = { default = "current"; };
-          pull = { rebase = true; };
+          push.default = "current";
+          pull.rebase = true;
+          init.defaultBranch = "main";
           url."https://aur.archlinux.org/".insteadOf = "aur://";
           url."git@github.com:".insteadOf = "gh://";
           url."git@bitbucket.org:".insteadOf = "bb://";

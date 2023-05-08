@@ -8,6 +8,7 @@
 (package! company-statistics :built-in 'prefer)
 (package! copilot :recipe
   (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+(package! vimrc-mode)
 (package! elisp-slime-nav :built-in 'prefer)
 (package! evil-lisp-state)
 (package! evil-matchit)
