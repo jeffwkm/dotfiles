@@ -6,7 +6,7 @@ seat    *           xcursor_theme capitaine-cursors-white 24
 
 ## keyboard settings
 set $keyboard       2131:256:Topre_Corporation_HHKB_Professional
-input   *           repeat_delay 150
+input   *           repeat_delay 200
 input   *           repeat_rate 50
 
 ## mouse settings
