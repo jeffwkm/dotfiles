@@ -13,8 +13,7 @@ in {
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = {
       home.packages = with pkgs;
-        [ ncspot spotify-tui ]
-        ++ optionals modules.desktop.enable [ spotify spotifywm ];
+        [ ncspot spotify-tui ] ++ optionals modules.desktop.enable [ spotify ];
 
       services.spotifyd = mkIf cfg.spotifyd.enable {
         enable = true;

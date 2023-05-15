@@ -8,7 +8,7 @@ let
 in {
   options.modules.dev.rust = {
     enable = mkBoolOpt dev.enable-all;
-    rustup = mkBoolOpt true;
+    rustup = mkBoolOpt config.host.darwin;
   };
 
   config = mkIf cfg.enable {
@@ -16,10 +16,9 @@ in {
 
     home-manager.users.${user.name} = {
       home.packages = with pkgs;
-        [ rust-bindgen ] ++ (if cfg.rustup then [
-          rustup
-          rust-analyzer
-        ] else
+        [ rust-bindgen ] ++ (if cfg.rustup then
+          [ rustup ]
+        else
           [
             (rust-bin.stable.latest.default.override {
               extensions =
