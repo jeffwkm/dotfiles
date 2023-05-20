@@ -45,7 +45,7 @@
        ;; tabs             ; a tab bar for Emacs
        (treemacs +lsp)     ; a project drawer, like neotree but cooler
        unicode             ; extended unicode support for various languages
-       (vc-gutter)         ; vcs diff in the fringe
+       (vc-gutter +pretty) ; vcs diff in the fringe
        vi-tilde-fringe     ; fringe tildes to mark beyond EOB
        window-select       ; visually switch windows
        workspaces          ; tab emulation, persistence & separate workspaces
@@ -58,7 +58,7 @@
        (format +onsave)    ; automated prettiness
        ;; god              ; run Emacs commands without modifier keys
        lispy               ; vim for lisp, for people who don't like vim
-       ;;multiple-cursors  ; editing in many places at once
+       ;; multiple-cursors ; editing in many places at once
        ;; objed            ; text object editing for the innocent
        ;; parinfer         ; turn lisp into python, sort of
        rotate-text         ; cycle region at point between text candidates
@@ -66,7 +66,7 @@
        word-wrap           ; soft wrapping with language-aware indent
 
        :emacs
-       (dired +icons +ranger) ; making dired pretty [functional]
+       (dired +icons)      ; making dired pretty [functional]
        ;; electric         ; smarter, keyword-based electric-indent
        (ibuffer +icons)    ; interactive buffer management
        undo                ; persistent, smarter undo for your inevitable mistakes
@@ -79,7 +79,7 @@
        vterm               ; the best terminal emulation in Emacs
 
        :checkers
-       (syntax +childframe) ; tasing you for every semicolon you forget
+       syntax               ; tasing you for every semicolon you forget
        ;; spell             ; tasing you for misspelling mispelling
        ;; grammar           ; tasing grammar mistake every you make
 
@@ -97,7 +97,7 @@
        magit               ; a git porcelain for Emacs
        ;; make             ; run make tasks from Emacs
        pass                ; password manager for nerds
-       pdf                 ; pdf enhancements
+       ;; pdf                 ; pdf enhancements
        ;; prodigy          ; FIXME managing external services & code builders
        rgb                 ; creating color strings
        ;; terraform        ; infrastructure as code
@@ -113,7 +113,7 @@
        ;; agda             ; types of types of types of types...
        ;; beancount        ; mind the GAAP
        (cc +tree-sitter)   ; C > C++ == 1
-       (clojure +lsp +tree-sitter) ; java with a lisp
+       (clojure +lsp)      ; java with a lisp
        common-lisp         ; if you've seen one lisp, you've seen them all
        ;; coq              ; proofs-as-programs
        ;; crystal          ; ruby at the speed of c
@@ -151,7 +151,7 @@
        ;; php              ; perl's insecure younger brother
        ;; plantuml         ; diagrams for confusing people more
        ;; purescript       ; javascript, but functional
-       (python +lsp +tree-sitter +poetry +pyenv) ; beautiful is better than ugly
+       (python +lsp +tree-sitter +poetry) ; beautiful is better than ugly
        ;; qt               ; the 'cutest' gui framework ever
        ;; racket           ; a DSL for DSLs
        ;; raku             ; the artist formerly known as perl6

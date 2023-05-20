@@ -1,7 +1,7 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
-(package! aggressive-indent :pin "cb416faf61c46977c06cf9d99525b04dc109a33c")
+(package! aggressive-indent :built-in 'prefer)
 (package! alert :built-in 'prefer)
 (package! company-box :built-in 'prefer)
 (package! company-quickhelp :built-in 'prefer)
@@ -15,8 +15,6 @@
 (package! evil-smartparens)
 (package! flycheck-clojure :built-in 'prefer)
 (package! gh-md)
-(package! git-gutter :built-in 'prefer)
-(package! git-gutter-fringe :built-in 'prefer)
 (package! groovy-mode)
 (package! mpv)
 (package! nginx-mode)

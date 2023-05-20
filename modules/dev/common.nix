@@ -42,6 +42,8 @@ in {
           gnumake
           nodejs
           nodePackages.pnpm
+          nodePackages.stylelint
+          python310Packages.grip
           nil
           rnix-lsp
           nixfmt

@@ -33,8 +33,6 @@
       display-line-numbers-type nil
       emojify-download-emojis-p t
       org-directory "~/org/"
-      org-generic-id-locations-file (convert-standard-filename
-                                     (concat doom-local-dir ".org-generic-id-locations"))
       confirm-kill-processes nil
       frame-title-format '((:eval (concat (if (buffer-file-name)
                                               (abbreviate-file-name (buffer-file-name))
@@ -45,7 +43,7 @@
 
 (setq-default tab-width 2
               fill-column 100
-              byte-compile-warning-types '(not free-vars constants)
+              byte-compile-warning-types '(not free-vars constants mutate-constant)
               lisp-indent-offset nil)
 
 (defun --window-system-available () (< 0 (length (getenv "DISPLAY"))))
@@ -109,7 +107,12 @@
 (use-package! hydra)
 (use-package! ivy :config (require 'ivy-hydra))
 
-(load! "fringe.el")
+(use-package! fringe
+  :config
+  (setq-default fringes-outside-margins t)
+  (add-to-list 'default-frame-alist '(right-fringe . 16))
+  (add-to-list 'default-frame-alist '(left-fringe . 16))
+  (fringe-mode 16))
 
 (use-package! ruby-mode
   :mode (("\\.lic\\'" . ruby-mode)
@@ -714,15 +717,15 @@ interactively for spacing value."
   (map! :mode flycheck-mode
         "C-c ." 'flycheck-next-error
         "C-c ," 'flycheck-previous-error)
-  (use-package! fringe-helper)
-  (fringe-helper-define 'flycheck-fringe-bitmap-double-arrow 'center
-    "...X...."
-    "..XX...."
-    ".XXX...."
-    "XXXX...."
-    ".XXX...."
-    "..XX...."
-    "...X....")
+  ;; (use-package! fringe-helper)
+  ;; (fringe-helper-define 'flycheck-fringe-bitmap-double-arrow 'center
+  ;;   "...X...."
+  ;;   "..XX...."
+  ;;   ".XXX...."
+  ;;   "XXXX...."
+  ;;   ".XXX...."
+  ;;   "..XX...."
+  ;;   "...X....")
   (global-flycheck-mode 1))
 
 (use-package! paren-face
@@ -776,7 +779,7 @@ interactively for spacing value."
   (setq groovy-indent-offset 2)
   (defun --groovy-mode-config ()
     (setq-local tab-width 2))
-  (add-hook 'groovy-mode-hook #'--groovy-mode-config))
+  (add-hook 'groovy-mode-hook '--groovy-mode-config))
 
 (after! markdown-mode
   (use-package! gh-md))
@@ -970,53 +973,7 @@ interactively for spacing value."
          "\\.overrides\\'")
   :config (add-hook! less-css 'rainbow-mode))
 
-(use-package! js2-mode
-  :disabled t
-  :mode ("\\.js\\'"
-         "\\.json\\'"
-         "\\.config/waybar/config\\'")
-  :config
-  (flycheck-add-mode 'javascript-eslint 'js2-mode)
-  (flycheck-add-mode 'javascript-eslint 'js2-jsx-mode)
-  (setq js2-include-node-externs t
-        js2-include-browser-externs t
-        js2-strict-trailing-comma-warning nil
-        js2-basic-offset 2)
-  (defun --custom-js2-mode-hook ()
-    (setq-local js2-basic-offset 2)
-    ;;(tern-mode t)
-    (when (executable-find "eslint")
-      (flycheck-select-checker 'javascript-eslint)))
-  (add-hook! js2-mode '--custom-js2-mode-hook)
-  (add-hook js2-jsx-mode '--custom-js2-mode-hook))
-
-(use-package! js
-  :disabled t
-  :mode (("\\.js\\'"                      . js-mode)
-         ("\\.json\\'"                    . js-mode)
-         ("\\.config/waybar/config\\'"    . js-mode))
-  :init (setq js-indent-level 2))
-
-(use-package! web-mode
-  :disabled t
-  :mode "\\.jsx\\'" ;; ("\\.js\\'" "\\.jsx\\'" "\\.json\\'")
-  :config
-  (use-package! tern :disabled t)
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (add-to-list 'flycheck-disabled-checkers 'javascript-jshint)
-  (add-to-list 'flycheck-disabled-checkers 'json-jsonlist)
-  (defun --custom-web-mode-hook ()
-    (setq web-mode-markup-indent-offset 2)
-    (setq web-mode-css-indent-offset 2)
-    (setq web-mode-code-indent-offset 2)
-    (flycheck-mode 1)
-    ;; (tern-mode t)
-    (when (executable-find "eslint")
-      (flycheck-select-checker 'javascript-eslint)))
-  (add-hook! web-mode '--custom-web-mode-hook))
-
 (use-package! jade-mode
-  :disabled t
   :mode "\\.jade\\'")
 
 (global-auto-revert-mode t)
@@ -1076,17 +1033,6 @@ interactively for spacing value."
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
 
-(use-package! recentf
-  :disabled t
-  :config
-  (setq recentf-save-file (expand-file-name "recentf" --savefile-dir)
-        recentf-max-saved-items 500
-        recentf-max-menu-items 15
-        ;; disable recentf-cleanup on Emacs start, because it can cause
-        ;; problems with remote files
-        recentf-auto-cleanup 'never)
-  (recentf-mode +1))
-
 (after! format-all
   (setq +format-with-lsp t
         +format-on-save-enabled-modes '(not emacs-lisp-mode
@@ -1100,10 +1046,8 @@ interactively for spacing value."
 (after! editorconfig
   (setq editorconfig-lisp-use-default-indent t))
 
-(use-package! nix-mode
-  :init
+(after! nix-mode
   (use-package! lsp)
-  :config
   (setq-hook! nix-mode +format-with-lsp t)
   (defcustom-lsp lsp-nix-nil-auto-archive nil
                  "Auto-archiving behavior which may use network."
@@ -1135,12 +1079,8 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   ;; (setq lsp-nix-nil-nixpkgs-input-name nil)
   (add-to-list 'aggressive-indent-excluded-modes 'nix-mode))
 
-(use-package! vimrc-mode)
-(defun --kill-auto-workspace ()
-  "Delete empty auto-created workspace named #1, #2, ..."
-  (let ((ws (+workspace-current-name)))
-    (when (and ws (= 2 (length ws)))
-      (+workspace/delete ws))))
+(use-package! vimrc-mode
+  :mode "\\.vim\\(rc\\)?\\'")
 
 ;; List all file buffers whose path matches list of prefixes
 ;; Use functional programming from 'dash package to filter buffers
@@ -1250,13 +1190,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 (defun --wait-on-buffer-text (buffer match-regexp on-ready
                                      &optional interval timeout delay)
   (let ((buffer buffer)
-        (match-regexp match-regexp)
-        ;; (on-ready on-ready)
-        ;; (interval interval)
-        ;; (timeout timeout)
-        ;; (delay delay)
-        ;; (delay (or delay 0.02))
-        )
+        (match-regexp match-regexp))
     (--wait-on-condition (lambda ()
                            (string-match-p match-regexp
                                            (with-current-buffer buffer
@@ -1501,9 +1435,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   (after! ace-window
     (add-to-list 'aw-ignored-buffers "*MINIMAP*")))
 
-(use-package! treemacs
-  :defer t
-  :init
+(after! treemacs
   (setq +treemacs-git-mode 'deferred
         treemacs-display-in-side-window t
         treemacs-file-event-delay 500
@@ -1514,13 +1446,13 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
         treemacs-is-never-other-window t
         treemacs-show-cursor nil)
   :config
-  ;; (treemacs)
   (treemacs-follow-mode 1)
-  ;; (treemacs-project-follow-mode 1)
+  (treemacs-project-follow-mode 1)
   (treemacs-filewatch-mode 1)
   (treemacs-git-mode 1)
   (treemacs-hide-gitignored-files-mode 1)
   (treemacs-fringe-indicator-mode 'always)
+  ;; (lsp-treemacs-sync-mode 1)
   (defun --ensure-treemacs-hl-line-mode (&optional _state)
     ;; (message "running for %s" state)
     (when (treemacs-is-treemacs-window-selected?)
@@ -1543,7 +1475,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
               (treemacs-add-and-display-current-project)
             (treemacs)))))
     (when --ensure-treemacs-open
-      (add-hook! 'persp-activated-functions :append #'--ensure-treemacs-open))))
+      (add-hook! 'persp-activated-functions :append '--ensure-treemacs-open))))
 ;; persp-activated-functions
 ;; (setf persp-activated-functions (delete 'treemacs persp-activated-functions))
 ;; (setf persp-activated-functions (delete '+treemacs/toggle persp-activated-functions))
@@ -1551,10 +1483,13 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 (after! emojify
   (global-emojify-mode -1))
 
+(after! web-mode
+  (setq typescript-indent-level 2))
+
 (defvar --default-server-name "server")
 
 (defun --default-session-file-path (&optional session-name)
-  (concat doom-etc-dir
+  (concat doom-data-dir
           "workspaces/default-session"
           (unless (or (null session-name)
                       (equal session-name --default-server-name))
@@ -1585,3 +1520,9 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
       (setq --server-initialized t))))
 
 (add-hook! 'server-after-make-frame-hook '--ensure-server-initialized)
+
+;; byte-compile-warning-types
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars constants mutate-constant)
+;; End:

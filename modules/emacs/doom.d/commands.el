@@ -38,3 +38,10 @@
   (if (copilot--overlay-visible)
       (copilot-accept-completion)
     (copilot-complete)))
+
+(defun --kill-auto-workspace ()
+  "Delete empty auto-created workspace named #1, #2, ..."
+  (interactive)
+  (let ((ws (+workspace-current-name)))
+    (when (and ws (= 2 (length ws)))
+      (+workspace/delete ws))))
