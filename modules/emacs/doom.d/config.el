@@ -1100,11 +1100,39 @@ interactively for spacing value."
 (after! editorconfig
   (setq editorconfig-lisp-use-default-indent t))
 
-(after! nix-mode
-  ;; (setq-hook! nix-mode +format-with-lsp t)
-  ;; (setq lsp-nix-nil-ignored-diagnostics nil)
+(use-package! nix-mode
+  :init
+  (use-package! lsp)
+  :config
+  (setq-hook! nix-mode +format-with-lsp t)
+  (defcustom-lsp lsp-nix-nil-auto-archive nil
+                 "Auto-archiving behavior which may use network."
+                 :type 'lsp-json-bool
+                 :group 'lsp-nix-nil
+                 :lsp-path "nil.nix.flake.autoArchive"
+                 :package-version '(lsp-mode . "8.0.1"))
+  (defcustom-lsp lsp-nix-nil-auto-eval-inputs nil
+                 "Whether to auto-eval flake inputs.
+The evaluation result is used to improve completion, but may cost lots of time and/or memory."
+                 :type 'boolean
+                 :group 'lsp-nix-nil
+                 :lsp-path "nil.nix.flake.autoEvalInputs"
+                 :package-version '(lsp-mode . "8.0.1"))
+  (defcustom-lsp lsp-nix-nil-nixpkgs-input-name nil
+                 "The input name of nixpkgs for NixOS options evaluation.
+The options hierarchy is used to improve completion, but may cost lots of time and/or memory.
+If this value is `null` or is not found in the workspace flake's inputs, NixOS options are not evaluated."
+                 :type 'string
+                 :group 'lsp-nix-nil
+                 :lsp-path "nil.nix.flake.nixpkgsInputName"
+                 :package-version '(lsp-mode . "8.0.1"))
   (setq lsp-nix-rnix-server-path nil)
+  (setq lsp-nix-nil-server-path "nil")
   (setq lsp-nix-nil-formatter ["nixfmt" "-w" "80"])
+  (setq lsp-nix-nil-auto-archive t)
+  (setq lsp-nix-nil-auto-eval-inputs nil)
+  (setq lsp-nix-nil-nixpkgs-input-name "nixpkgs")
+  ;; (setq lsp-nix-nil-nixpkgs-input-name nil)
   (add-to-list 'aggressive-indent-excluded-modes 'nix-mode))
 
 (use-package! vimrc-mode)

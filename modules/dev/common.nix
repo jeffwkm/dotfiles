@@ -41,11 +41,13 @@ in {
           editorconfig-core-c
           gnumake
           nodejs
+          nodePackages.pnpm
           nil
           rnix-lsp
           nixfmt
           rbenv
           subversion
+          srvc
         ] ++ optionals (!darwin) [ gcc ];
     };
   };
