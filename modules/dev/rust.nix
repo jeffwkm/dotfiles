@@ -21,8 +21,14 @@ in {
         else
           [
             (rust-bin.stable.latest.default.override {
-              extensions =
-                [ "rust-src" "rust-analyzer" "rustfmt" "rls" "rust-analysis" ];
+              extensions = [
+                "rust-src"
+                "rust-analyzer"
+                "rustfmt"
+                "rls"
+                "rust-analysis"
+                "clippy"
+              ];
             })
           ]);
     };

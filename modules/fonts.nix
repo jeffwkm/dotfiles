@@ -17,7 +17,6 @@ in {
       anonymousPro
       cantarell-fonts
       carlito
-      cascadia-code
       cm_unicode
       dejavu_fonts
       emacs-all-the-icons-fonts
@@ -32,6 +31,16 @@ in {
       jetbrains-mono
       nerdfonts
       meslo-lg
+      ##
+      borg-sans-mono
+      cascadia-code
+      monoid
+      victor-mono
+      maple-mono
+      maple-mono-NF
+      maple-mono-SC-NF
+      maple-mono-otf
+      ##
       mononoki
       noto-fonts
       open-sans

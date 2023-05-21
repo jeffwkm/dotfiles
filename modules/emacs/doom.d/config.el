@@ -88,12 +88,14 @@
 (defvar --large-font nil)
 (defun --configure-fonts ()
   (setq doom-font (font-spec :family "JetBrainsMono Nerd Font"
+                             ;; :family "FiraCode Nerd Font Medium"
                              :size (if (mac?) 14 15)
                              :weight 'semibold)
         doom-big-font nil
         doom-big-font-increment 2
         doom-font-increment 1
         doom-variable-pitch-font (font-spec :family "Noto Sans"
+                                            ;; :family "Fira Sans"
                                             :size (if --large-font 17 15))))
 (defun --sync-fonts ()
   (when (graphical?)
@@ -142,26 +144,22 @@
                                    ("C-<right>"   . nil))
         sp-navigate-interactive-always-progress-point t))
 
-(use-package! evil-smartparens
-  :config
-  (after! smartparens
-    (add-hook! smartparens-mode 'evil-smartparens-mode)))
+
+(after! smartparens
+  (add-hook! smartparens-mode 'evil-smartparens-mode))
 
 (use-package evil-easymotion
   :config
   (define-key evilem-map "=" #'evilem-motion-next-line-first-non-blank)
   (evilem-default-keybindings "g s"))
 
-(use-package! lispy
-  :init
+(after! lispy
   (setq lispy-key-theme '(lispy))
-  :config
   (add-to-list 'lispy-clojure-modes 'cider-repl-mode)
   (undefine-key! lispy-mode-map-lispy "[" "]" "{" "}" "M-." "C-k" "C-j")
   (lispy-set-key-theme lispy-key-theme))
 
-(use-package! lispyville
-  :init
+(after! lispyville
   (setq lispyville-key-theme '((operators normal)
                                c-w
                                (prettify insert)
@@ -170,7 +168,6 @@
                                additional-motions
                                (commentary t)
                                mark-special))
-  :config
   (lispyville-set-key-theme lispyville-key-theme)
   (add-hook! lispy-mode 'lispyville-mode)
   (map! :m "RET" 'newline-and-indent
@@ -178,8 +175,6 @@
         :nvmi "DEL" 'lispy-delete-backward
         "M-<up>" 'lispyville-drag-backward
         "M-<down>" 'lispyville-drag-forward
-        ;; "M-<down>" 'drag-stuff-down
-        ;; "M-<up>" 'drag-stuff-up
         :mode lispyville-mode
         :nm "<" 'lispyville-beginning-of-defun
         :nm ">" 'lispyville-beginning-of-next-defun
@@ -198,16 +193,21 @@
         :mi "C-b" 'lispyville-backward-sexp))
 
 (use-package! evil-matchit
+  :after evil
   :init (setq evilmi–shortcut "%")
   :config (global-evil-matchit-mode 1))
 
 (use-package! evil-snipe
-  :config
+  :after evil
+  :init
   (setq evil-snipe-scope 'whole-visible
         evil-snipe-repeat-scope 'whole-visible
         evil-snipe-spillover-scope nil
         evil-snipe-smart-case t
         evil-snipe-tab-increment t)
+  :config
+  (evil-snipe-mode 1)
+  (evil-snipe-override-mode 1)
   (map! :mode (evil-snipe-override-mode evil-snipe-override-local-mode)
         :m "F" nil))
 
@@ -555,13 +555,28 @@ interactively for spacing value."
   (add-hook! (sh-mode shell-mode) 'rainbow-mode)
   (use-package! company-shell))
 
+(after! rustic
+  (setq lsp-rust-analyzer-server-display-inlay-hints t)
+  (setq lsp-rust-analyzer-server-format-inlay-hints t)
+  (setq lsp-rust-analyzer-display-parameter-hints nil)
+  (setq lsp-rust-analyzer-max-inlay-hint-length 15)
+  (setq lsp-rust-clippy-preference "opt-in")
+  (setq lsp-rust-rustfmt-path "rustfmt")
+  (setq lsp-rust-analyzer-diagnostics-disabled ["inactive-code"])
+  (setq lsp-rust-analyzer-display-chaining-hints t))
+
 (after! rainbow-mode
   (setq rainbow-html-colors t
         rainbow-html-colors-alist nil
         rainbow-ansi-colors 'auto
         rainbow-x-colors nil
         rainbow-latex-colors nil
-        rainbow-r-colors nil))
+        rainbow-r-colors nil)
+  (after! hl-line
+    ;; Disable hl-line-mode when rainbow-mode is enabled
+    ;; because it interferes with the colors.
+    (add-hook! rainbow-mode
+      (hl-line-mode (if rainbow-mode -1 +1)))))
 
 (use-package! cc-mode
   :config
@@ -589,7 +604,7 @@ interactively for spacing value."
         company-tooltip-offset-display 'scrollbar ; 'lines
         company-box-doc-delay 0.75)
   (set-company-backend! 'text-mode
-    nil)
+    'company-capf)
   (set-company-backend! 'prog-mode
     'company-capf
     'company-dabbrev-code
@@ -606,6 +621,7 @@ interactively for spacing value."
     'company-files)
   ;; (add-to-list 'company-transformers 'company-sort-by-occurrence)
   (use-package! company-statistics
+    :disabled t
     :config
     (company-statistics-mode 1))
   (global-company-mode 1))
@@ -624,23 +640,34 @@ interactively for spacing value."
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept
         :nmi "M-<tab>" '--copilot-complete-or-next
-        :nmi "M-TAB" '--copilot-complete-or-next)
+        :nmi "M-TAB" '--copilot-complete-or-next
+        ;; :nmi "S-TAB" 'copilot-accept-completion-by-line
+        ;; :nmi "<backtab>" 'copilot-accept-completion-by-line
+        ;; :nmi "C-TAB"  'copilot-accept-completion-by-word
+        ;; :nmi "C-<tab>" 'copilot-accept-completion-by-word
+        )
   (map! :map copilot-completion-map
         :nmi "TAB" 'copilot-accept-completion
-        :nmi "<tab>" 'copilot-accept-completion
-        :nmi "S-TAB" 'copilot-accept-completion-by-line
-        :nmi "<backtab>" 'copilot-accept-completion-by-line
-        :nmi "C-TAB"  'copilot-accept-completion-by-word
-        :nmi "C-<tab>" 'copilot-accept-completion-by-word)
+        :nmi "<tab>" 'copilot-accept-completion)
+  (map! :i "C-TAB" nil
+        :i "C-<tab>" nil
+        :i "<backtab>" nil)
   (after! company
     (--each '(company-select-next-or-abort
               company-select-previous-or-abort
               --copilot-complete-or-next
-              --copilot-show-or-accept)
+              --copilot-show-or-accept
+              copilot-accept-completion-by-word
+              copilot-accept-completion-by-line
+              company-complete
+              +company/complete)
       (add-to-list 'copilot-clear-overlay-ignore-commands it))
     (map! :map company-active-map
           "TAB" nil
-          "<tab>" nil)))
+          "<tab>" nil
+          "<enter>" 'company-complete-selection
+          "RET" 'company-complete-selection
+          "<return>" 'company-complete-selection)))
 
 (after! projectile
   (setq projectile-indexing-method 'hybrid
@@ -655,30 +682,37 @@ interactively for spacing value."
         "C-S-S" 'swiper-all
         :m "/" 'counsel-grep-or-swiper))
 
-(load! "ligature.el")
+(eval-and-compile
+  (defun --load-native (file)
+    (-> (expand-file-name file doom-user-dir)
+        (native-compile-async nil t))))
+
+(--load-native "ligature.el")
+
 (after! ligature
-  (let ((all '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
-               ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
-               "-<" "-<<"  "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
-               "#_(" ".-" ".=" ".." "..<" "..." "?=" "??"  "/*" "/**"
-               "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
-               "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
-               "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
-               "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
-               "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
-               "<~" "<~~" "</" "</>" "~>" "~~>" "%%"
-               ;; ";;" "~-" "~@" "~~" "-~"
-               )))
-    ;; (ligature-set-ligatures 't all)
-    (ligature-set-ligatures 'prog-mode all))
-  ;; (global-ligature-mode t)
-  )
+  ;; ";;" "~-" "~@" "~~" "-~"
+  (->> '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
+         ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
+         "-<" "-<<"  "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
+         "#_(" ".-" ".=" ".." "..<" "..." "?=" "??"  "/*" "/**"
+         "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
+         "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
+         "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
+         "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
+         "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
+         "<~" "<~~" "</" "</>" "~>" "~~>" "%%"
+         ";;" ";;;")
+       ;; (ligature-set-ligatures 'prog-mode)
+       (ligature-set-ligatures t))
+  (global-ligature-mode 1))
 
 (use-package! hl-todo
+  :defer-incrementally t
   :config
   (global-hl-todo-mode 1))
 
 (use-package! alert
+  :defer-incrementally t
   :config
   (setq alert-default-style (if (graphical?) 'libnotify 'message)
         alert-fade-time 3))
@@ -760,14 +794,12 @@ interactively for spacing value."
   :bind ("C-=" . er/expand-region))
 
 (use-package! whitespace
-  :config
-  ;; (add-hook! 'before-save-hook 'whitespace-cleanup)
+  :commands whitespace-mode
+  :init
   (add-hook! (prog-mode text-mode) 'whitespace-mode)
+  :config
   (setq whitespace-line-column nil)
-  (setq whitespace-style '(face tabs empty trailing indentation space-after-tab space-before-tab))
-  ;; render warning background for lines exceeding `fill-column`
-  ;; (add-to-list 'whitespace-style 'lines-tail t #'eql)
-  )
+  (setq whitespace-style '(face tabs empty trailing indentation space-after-tab space-before-tab)))
 
 (use-package! systemd
   :mode (("\\.service\\'" . systemd-mode)
@@ -821,51 +853,24 @@ interactively for spacing value."
   ;; (use-package! org-ql)
   ;; (use-package! org-present)
   (use-package! org-projectile)
-  (use-package! org-super-agenda)
-  (use-package! org-gcal :disabled t)
+  (use-package! org-super-agenda
+    :config (org-super-agenda-mode 1))
   (use-package! org-fancy-priorities)
-  (org-fancy-priorities-mode)
-  ;;(--load-org-notify)
   (use-package! org-bullets
+    :disabled t
     :config
     (add-hook! 'org-mode-hook 'org-bullets-mode)
     ;; ◉ ○ ✸ ✿ ♥ ● ◇ ✚ ✜ ☯ ◆ ♠ ♣ ♦ ☢ ❀ ◆ ◖ ▶
     ;; ► • ★ ▸
     ;; '("◆" "◇")
     (setq org-bullets-bullet-list '("●" "◉")))
-  (use-package! org-pomodoro
-    ;; https://github.com/marcinkoziej/org-pomodoro
-    ;; M-x org-pomodoro (activate on org task)
+  (use-package! org-superstar
     :config
-    (defun --org-clock-heading () "")
-    (setq org-pomodoro-length 25
-          org-pomodoro-short-break-length 5
-          ;; org-pomodoro-audio-player (executable-find "mpv")
-          org-pomodoro-audio-player (or (executable-find "afplay")
-                                        (executable-find "mpv"))
-          org-pomodoro-start-sound-p t
-          ;; org-clock-clocked-in-display nil
-          org-clock-clocked-in-display 'mode-line
-          org-clock-string-limit 12
-          ;; org-clock-heading-function #'--org-clock-heading
-          org-clock-heading-function nil
-          ))
-  (use-package! mpv
-    :disabled t
-    :config
-    (org-link-set-parameters "mpv" :follow #'mpv-play)
-    (add-hook! 'org-open-at-point-functions #'mpv-seek-to-position-at-point)
-    (defun org-mpv-complete-link (&optional arg)
-      (replace-regexp-in-string "file:" "mpv:"
-                                (org-link-complete-file arg)
-                                t t)))
-  (use-package! todoist
-    :disabled t
-    :init
-    ;; FIXME: don't put secret token in git
-    (setq todoist-token "adf7ece6c35893ffc5ab2e91c6431c08bc8601c7"))
+    (setq org-superstar-special-todo-items t)
+    (setq org-superstar-remove-leading-stars nil))
   (defun --org-mode-hook ()
-    (org-fancy-priorities-mode))
+    (org-fancy-priorities-mode 1)
+    (org-superstar-mode 1))
   (add-hook! 'org-mode-hook '--org-mode-hook))
 
 (use-package! pkgbuild-mode :mode "/PKGBUILD")
@@ -925,53 +930,11 @@ interactively for spacing value."
                                   (lambda (_response) nil)))))
   (add-hook 'cider-file-loaded-hook '--cider-reload-repl-ns))
 
-(use-package! scala-mode
-  :disabled t
-  :mode (("\\.scala\\'" . scala-mode)
-         ("\\.sbt\\'" . scala-mode))
-  :config
-  (use-package! ensime
-    :disabled t
-    :diminish ensime-mode
-    :config
-    (setq ensime-startup-snapshot-notification nil)
-    (setq ensime-auto-generate-config t)
-    (setq ensime-typecheck-idle-interval 0.3)
-    (setq ensime-completion-style 'company)
-    (map! :mode scala-mode
-          "C-t"     'ensime-type-at-point
-          "C-M-e"   'ensime-print-errors-at-point
-          "C-c ."   'ensime-forward-note
-          "C-c ,"   'ensime-backward-note()
-          "C-M-."   'ensime-show-uses-of-symbol-at-point)))
-
-(use-package! haskell-mode
-  :disabled t
-  :mode "\\.hs\\'" "\\.hs-boot\\'" "\\.lhs\\'" "\\.lhs-boot\\'"
-  :config
-  (use-package! ghc)
-  (use-package! ac-haskell-process
-    :disabled t
-    :config
-    (add-hook 'interactive-haskell-mode-hook 'ac-haskell-process-setup)
-    (add-hook 'haskell-interactive-mode-hook 'ac-haskell-process-setup)
-    (add-to-list 'ac-modes 'haskell-interactive-mode))
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  (autoload 'ghc-init "ghc" nil t)
-  (autoload 'ghc-debug "ghc" nil t)
-  (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
-  (setq haskell-process-suggest-remove-import-lines t)
-  (setq haskell-process-auto-import-loaded-modules t)
-  (setq haskell-process-log t)
-  (setq haskell-process-type 'cabal-repl))
-
 (use-package! less-css-mode
   :mode ("\\.less\\'"
          "\\.variables\\'"
          "\\.overrides\\'")
-  :config (add-hook! less-css 'rainbow-mode))
+  :config (add-hook! less-css-mode 'rainbow-mode))
 
 (use-package! jade-mode
   :mode "\\.jade\\'")
@@ -1046,9 +1009,9 @@ interactively for spacing value."
 (after! editorconfig
   (setq editorconfig-lisp-use-default-indent t))
 
-(after! nix-mode
-  (use-package! lsp)
-  (setq-hook! nix-mode +format-with-lsp t)
+(after! (nix-mode lsp-mode)
+  (setq-mode-local nix-mode +format-with-lsp t)
+  (add-to-list 'aggressive-indent-excluded-modes 'nix-mode)
   (defcustom-lsp lsp-nix-nil-auto-archive nil
                  "Auto-archiving behavior which may use network."
                  :type 'lsp-json-bool
@@ -1076,7 +1039,6 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   (setq lsp-nix-nil-auto-archive t)
   (setq lsp-nix-nil-auto-eval-inputs nil)
   (setq lsp-nix-nil-nixpkgs-input-name "nixpkgs")
-  ;; (setq lsp-nix-nil-nixpkgs-input-name nil)
   (add-to-list 'aggressive-indent-excluded-modes 'nix-mode))
 
 (use-package! vimrc-mode
@@ -1097,20 +1059,19 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 
 (defvar --external-source-file-paths nil)
 
-(dolist (path (list "/nix/store"
-                    "~/.maven/repository"
-                    "~/.cargo/registry"
-                    "~/.rustup"
-                    doom-emacs-dir
-                    doom-local-dir))
-  (add-to-list '--external-source-file-paths
-               (expand-file-name path)))
+(--each `("/nix/store"
+          "~/.maven/repository"
+          "~/.cargo/registry"
+          "~/.rustup"
+          ,doom-emacs-dir
+          ,doom-local-dir)
+  (add-to-list '--external-source-file-paths (expand-file-name it)))
 
 (defun --kill-external-source-buffers ()
   (interactive)
   (save-excursion
-    (dolist (buf (--list-buffers-by-prefix --external-source-file-paths))
-      (kill-buffer buf))))
+    (-> (--list-buffers-by-prefix --external-source-file-paths)
+        (-each 'kill-buffer))))
 
 (defun --projectile-project-external-p (project)
   (let ((path (expand-file-name (projectile-project-root project))))
@@ -1124,16 +1085,14 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 
 (defun --projectile-remove-external-projects ()
   (interactive)
-  (dolist (project (--projectile-external-projects))
-    (projectile-remove-known-project project)))
+  (-> (--projectile-external-projects)
+      (-each 'projectile-remove-known-project)))
 
 (defun --cider-load-buffer-reload-repl (&optional buffer)
   (interactive)
-  (let ((result (if buffer
-                    (cider-load-buffer buffer)
-                  (cider-load-buffer))))
-    (--cider-reload-repl-ns)
-    result))
+  (cider-load-buffer buffer)
+  (--cider-reload-repl-ns)
+  nil)
 
 (defun all-sesman-sessions ()
   (sesman-sessions (sesman--system) t))
@@ -1144,13 +1103,13 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
          (not (string-match exclude-regexp (buffer-name buf))))))
 
 (defun match-buffer-name (regexp &optional exclude-regexp)
-  (--filter (test-buffer-name it regexp exclude-regexp)
-            (buffer-list)))
+  (->> (buffer-list)
+       (--filter (test-buffer-name it regexp exclude-regexp))))
 
 (defun match-sesman-session (regexp &optional exclude-regexp)
   (->> (all-sesman-sessions)
        (--remove (not (test-buffer-name (cl-second it) regexp exclude-regexp)))
-       (cl-first)))
+       (-first-item)))
 
 (defun --cider-quit-all ()
   (interactive)
@@ -1418,7 +1377,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 
 (defvar --auto-margin nil)
 
-(load! "auto-margin.el")
+(--load-native "auto-margin.el")
 
 (when --auto-margin
   (dolist (hook '(window-setup-hook
@@ -1466,25 +1425,59 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 
 (defvar --ensure-treemacs-open nil)
 
-(after! persp-mode
-  (after! treemacs
-    (defun --ensure-treemacs-open (arg)
-      (when (eq arg 'frame)
-        (unless (eql 'visible (treemacs-current-visibility))
-          (if (doom-project-p)
-              (treemacs-add-and-display-current-project)
-            (treemacs)))))
-    (when --ensure-treemacs-open
-      (add-hook! 'persp-activated-functions :append '--ensure-treemacs-open))))
-;; persp-activated-functions
-;; (setf persp-activated-functions (delete 'treemacs persp-activated-functions))
-;; (setf persp-activated-functions (delete '+treemacs/toggle persp-activated-functions))
+(after! (persp-mode treemacs)
+  (defun --ensure-treemacs-open (arg)
+    (when (eq arg 'frame)
+      ;; (unless (eql 'visible (treemacs-current-visibility)))
+      ;; (if (doom-project-p) )
+      (let* ((persp (get-current-persp))
+             (w (frame-selected-window))
+             (persp-name (persp-name persp))
+             (buf (->> (persp-buffers (get-current-persp))
+                       (-filter 'buffer-file-name)
+                       (-find (lambda (buf)
+                                (-some-> buf
+                                  buffer-file-name
+                                  file-name-directory
+                                  projectile-project-root
+                                  projectile-project-name
+                                  (equal persp-name)))))))
+        (if buf
+            (progn
+              (switch-to-buffer buf)
+              (treemacs-add-and-display-current-project-exclusively))
+          (treemacs))
+        (select-window w))))
+  (when --ensure-treemacs-open
+    (add-hook! 'persp-activated-functions :append '--ensure-treemacs-open)))
 
-(after! emojify
-  (global-emojify-mode -1))
+(use-package! emojify
+  :config
+  (global-emojify-mode -1)
+  (global-emojify-mode-line-mode -1)
+  (custom-set-variables
+   '(emojify-display-style 'image)
+   '(emojify-emoji-styles '(unicode))))
 
-(after! web-mode
-  (setq typescript-indent-level 2))
+(defmacro --setup-js-prettier-modes (feature-modes extra-modes)
+  "Configure modes that are auto-formatted by external `prettier` tool."
+  (let* ((features feature-modes)
+         (modes `(,@feature-modes ,@extra-modes))
+         (forms (-mapcat (lambda (mode)
+                           (list `(setq-mode-local ,mode +format-with-lsp nil)
+                                 `(add-to-list 'aggressive-indent-excluded-modes ',mode)))
+                         modes)))
+    `(after! (lsp-mode aggressive-indent)
+       (-each ',features 'require)
+       (after! ,features ,@forms)
+       ',modes)))
+
+(--setup-js-prettier-modes
+ (web-mode typescript-mode json-mode rjsx-mode js2-mode)
+ (typescript-tsx-mode))
+
+(use-package! json-mode
+  :mode "\\.json\\'" "/.prettierrc$")
 
 (defvar --default-server-name "server")
 
