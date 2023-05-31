@@ -48,6 +48,7 @@ in {
         pass
         p7zip
         procs
+        pueue
         ripgrep
         screenfetch
         tmux

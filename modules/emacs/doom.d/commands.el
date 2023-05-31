@@ -45,3 +45,26 @@
   (let ((ws (+workspace-current-name)))
     (when (and ws (= 2 (length ws)))
       (+workspace/delete ws))))
+
+(defun --minor-mode-active-p (buffer mode)
+  "Return t if minor mode MODE is active in BUFFER."
+  (with-current-buffer buffer
+    (--any? (eq mode it) (doom-active-minor-modes))))
+
+(defun --buffers-with-minor-mode (mode)
+  (--filter (--minor-mode-active-p it mode) (buffer-list)))
+
+(defun --fix-git-gutter-buffers (&optional frame)
+  "Ensure git-gutter-fringe-mode is used in all buffers if FRAME is graphical."
+  (interactive)
+  (let ((frame (or frame (selected-frame))))
+    (when (display-graphic-p frame)
+      (let ((gg-buffers (--buffers-with-minor-mode 'git-gutter-mode))
+            (count 0))
+        (dolist (buffer gg-buffers)
+          (with-current-buffer buffer
+            (git-gutter-mode -1)
+            (+vc-gutter-init-maybe-h)
+            (git-gutter-mode +1)
+            (incf count)))
+        (message "Restarted git-gutter-mode in %d buffers" count)))))

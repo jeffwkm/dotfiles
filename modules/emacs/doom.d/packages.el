@@ -16,6 +16,7 @@
 (package! flycheck-clojure :built-in 'prefer)
 (package! gh-md)
 (package! groovy-mode)
+(package! ligature)
 (package! mpv)
 (package! nginx-mode)
 (package! nix-buffer :built-in 'prefer)

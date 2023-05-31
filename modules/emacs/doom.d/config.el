@@ -111,10 +111,9 @@
 
 (use-package! fringe
   :config
-  (setq-default fringes-outside-margins t)
-  (add-to-list 'default-frame-alist '(right-fringe . 16))
-  (add-to-list 'default-frame-alist '(left-fringe . 16))
-  (fringe-mode 16))
+  (add-to-list 'default-frame-alist '(right-fringe . 8))
+  (add-to-list 'default-frame-alist '(left-fringe . 8))
+  (fringe-mode 8))
 
 (use-package! ruby-mode
   :mode (("\\.lic\\'" . ruby-mode)
@@ -556,7 +555,7 @@ interactively for spacing value."
   (use-package! company-shell))
 
 (after! rustic
-  (setq lsp-rust-analyzer-server-display-inlay-hints t)
+  (setq lsp-rust-analyzer-server-display-inlay-hints nil)
   (setq lsp-rust-analyzer-server-format-inlay-hints t)
   (setq lsp-rust-analyzer-display-parameter-hints nil)
   (setq lsp-rust-analyzer-max-inlay-hint-length 15)
@@ -653,14 +652,8 @@ interactively for spacing value."
         :i "C-<tab>" nil
         :i "<backtab>" nil)
   (after! company
-    (--each '(company-select-next-or-abort
-              company-select-previous-or-abort
-              --copilot-complete-or-next
-              --copilot-show-or-accept
-              copilot-accept-completion-by-word
-              copilot-accept-completion-by-line
-              company-complete
-              +company/complete)
+    (--each '(--copilot-complete-or-next
+              --copilot-show-or-accept)
       (add-to-list 'copilot-clear-overlay-ignore-commands it))
     (map! :map company-active-map
           "TAB" nil
@@ -682,12 +675,7 @@ interactively for spacing value."
         "C-S-S" 'swiper-all
         :m "/" 'counsel-grep-or-swiper))
 
-(eval-and-compile
-  (defun --load-native (file)
-    (-> (expand-file-name file doom-user-dir)
-        (native-compile-async nil t))))
-
-(--load-native "ligature.el")
+(use-package! ligature)
 
 (after! ligature
   ;; ";;" "~-" "~@" "~~" "-~"
@@ -704,6 +692,14 @@ interactively for spacing value."
          ";;" ";;;")
        ;; (ligature-set-ligatures 'prog-mode)
        (ligature-set-ligatures t))
+  (--each '(org-mode
+            magit-status-mode
+            magit-diff-mode
+            magit-log-mode
+            magit-stash-mode
+            magit-revision-mode
+            magit-section-mode)
+    (add-to-list 'ligature-ignored-major-modes it))
   (global-ligature-mode 1))
 
 (use-package! hl-todo
@@ -1377,7 +1373,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 
 (defvar --auto-margin nil)
 
-(--load-native "auto-margin.el")
+(load! "auto-margin.el")
 
 (when --auto-margin
   (dolist (hook '(window-setup-hook
@@ -1513,6 +1509,12 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
       (setq --server-initialized t))))
 
 (add-hook! 'server-after-make-frame-hook '--ensure-server-initialized)
+
+;; Session can be restored with buffers configured to use
+;; 'git-gutter-mode instead of 'git-gutter-fringe-mode.
+;; This restarts git-gutter-mode for all buffers
+;; upon opening a graphical frame.
+(add-hook! 'server-after-make-frame-hook '--fix-git-gutter-buffers)
 
 ;; byte-compile-warning-types
 
