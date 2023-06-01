@@ -95,12 +95,10 @@ in {
       item = "nofile";
       value = "1048576";
     }];
-    services.logind = {
-      powerKey = "ignore";
-      rebootKey = "ignore";
-      suspendKey = "ignore";
-      hibernateKey = "ignore";
-    };
+    services.logind.extraConfig = ''
+      # don’t shutdown when power button is short-pressed
+      HandlePowerKey=ignore
+    '';
 
     xdg.mime.enable = true;
 
