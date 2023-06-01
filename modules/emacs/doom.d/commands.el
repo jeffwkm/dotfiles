@@ -54,11 +54,22 @@
 (defun --buffers-with-minor-mode (mode)
   (--filter (--minor-mode-active-p it mode) (buffer-list)))
 
+(defun --derived-mode-p (ancestor &optional mode)
+  "Return t if major mode MODE is derived from ANCESTOR."
+  (let ((mode (or mode major-mode)))
+    (or (eq mode ancestor)
+        (-when-let (derived-mode (get mode 'derived-mode-parent))
+          (--derived-mode-p ancestor derived-mode)))))
+
 (defun --fix-git-gutter-buffers (&optional frame)
   "Ensure git-gutter-fringe-mode is used in all buffers if FRAME is graphical."
   (interactive)
   (let ((frame (or frame (selected-frame))))
     (when (display-graphic-p frame)
+      (--each (buffer-list)
+        (with-current-buffer it
+          (unless (memq major-mode git-gutter:disabled-modes)
+            (git-gutter-mode +1))))
       (let ((gg-buffers (--buffers-with-minor-mode 'git-gutter-mode))
             (count 0))
         (dolist (buffer gg-buffers)
@@ -66,5 +77,5 @@
             (git-gutter-mode -1)
             (+vc-gutter-init-maybe-h)
             (git-gutter-mode +1)
-            (incf count)))
+            (cl-incf count)))
         (message "Restarted git-gutter-mode in %d buffers" count)))))
