@@ -20,9 +20,10 @@ in {
     time.timeZone = "America/New_York";
 
     console = {
-      font = "Lat2-Terminus16";
+      earlySetup = false;
       keyMap = "us";
-      earlySetup = true;
+      packages = with pkgs; [ terminus_font ];
+      font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
     };
 
     users.extraUsers.root.extraGroups =
