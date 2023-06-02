@@ -7,7 +7,7 @@ tmp/
 /scripts/do-ssh*
 /dotfiles/chromium_dev_keys.sh
 /nixos/result
-/home/emacs/doom.d/flycheck_config.el
+**/flycheck_config.el
 flycheck_init.el
 /.clj-kondo/
 /.lsp/

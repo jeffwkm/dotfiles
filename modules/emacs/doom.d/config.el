@@ -589,19 +589,27 @@ interactively for spacing value."
   (setq aggressive-indent-sit-for-time 0)
   (dolist (mode '(cider-repl-mode c-mode c++-mode objc-mode java-mode))
     (add-to-list 'aggressive-indent-excluded-modes mode))
-  (aggressive-indent-global-mode 1))
+  (after! elisp-mode
+    (add-hook! emacs-lisp-mode 'aggressive-indent-mode))
+  (after! markdown-mode
+    (add-hook! markdown-mode 'aggressive-indent-mode))
+  (after! gfm-mode
+    (add-hook! gfm-mode 'aggressive-indent-mode))
+  ;; conflicts with format-all-mode
+  ;; (aggressive-indent-global-mode +1)
+  )
 
 (after! company
   (setq company-dabbrev-downcase nil
         company-dabbrev-ignore-case nil
         company-dabbrev-other-buffers nil
         company-minimum-prefix-length 1
-        company-idle-delay 0.1
+        company-idle-delay 0.15
         company-tooltip-minimum-width 50
         company-tooltip-maximum-width 80
         company-tooltip-width-grow-only t
         company-tooltip-offset-display 'scrollbar ; 'lines
-        company-box-doc-delay 0.75)
+        company-box-doc-delay 0.6)
   (set-company-backend! 'text-mode
     'company-capf)
   (set-company-backend! 'prog-mode
@@ -632,29 +640,30 @@ interactively for spacing value."
   :hook ((prog-mode . copilot-mode)
          (conf-mode . copilot-mode))
   :config
-  (setq copilot-idle-delay 0)
-  (setq copilot-max-char (* 1000 30))
-  (setq copilot-log-max 0)
+  (setq copilot-idle-delay 0
+        copilot-max-char (* 1000 30))
   (map! :mode copilot-mode
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept
         :nmi "M-<tab>" '--copilot-complete-or-next
         :nmi "M-TAB" '--copilot-complete-or-next
-        ;; :nmi "S-TAB" 'copilot-accept-completion-by-line
-        ;; :nmi "<backtab>" 'copilot-accept-completion-by-line
-        ;; :nmi "C-TAB"  'copilot-accept-completion-by-word
-        ;; :nmi "C-<tab>" 'copilot-accept-completion-by-word
-        )
+        :nmi "S-TAB" 'copilot-accept-completion-by-line
+        :nmi "<backtab>" 'copilot-accept-completion-by-line
+        :nmi "C-TAB"  'copilot-accept-completion-by-word
+        :nmi "C-<tab>" 'copilot-accept-completion-by-word)
   (map! :map copilot-completion-map
         :nmi "TAB" 'copilot-accept-completion
         :nmi "<tab>" 'copilot-accept-completion)
   (map! :i "C-TAB" nil
         :i "C-<tab>" nil
         :i "<backtab>" nil)
+  (add-hook! (lisp-mode emacs-lisp-mode clojure-mode clojurescript-mode cider-repl-mode)
+    (defun --copilot-disable-auto-complete ()
+      (setq-local copilot-idle-delay 10000)))
+  (--each '(--copilot-complete-or-next
+            --copilot-show-or-accept)
+    (add-to-list 'copilot-clear-overlay-ignore-commands it))
   (after! company
-    (--each '(--copilot-complete-or-next
-              --copilot-show-or-accept)
-      (add-to-list 'copilot-clear-overlay-ignore-commands it))
     (map! :map company-active-map
           "TAB" nil
           "<tab>" nil
@@ -1004,6 +1013,16 @@ interactively for spacing value."
 
 (after! editorconfig
   (setq editorconfig-lisp-use-default-indent t))
+
+(after! (lsp-mode company)
+  ;; trying to fix company-mode errors from conflict with lsp-mode
+  (setq lsp-completion-enable-additional-text-edit nil
+        lsp-completion-default-behaviour :insert
+        lsp-enable-snippet nil
+        lsp-enable-links nil
+        lsp-enable-symbol-highlighting nil
+        lsp-response-timeout 5
+        lsp-symbol-highlighting-skip-current t))
 
 (after! (nix-mode lsp-mode)
   (setq-mode-local nix-mode +format-with-lsp t)

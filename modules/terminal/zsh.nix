@@ -82,6 +82,7 @@ let
       lS = "lsize -l1 --blocks size,date,name --no-symlink";
       ldu = "lsize -lSr --blocks size,date,name";
       lduq = "lsize -lSr --blocks size,name --no-symlink";
+      lst = "lsd --tree";
       lsd_help = ''alias | grep -Ee "(lsd|lsize |'ll |'lt )" | cat'';
       ### git
       gwS = "git status --ignore-submodules=$_git_status_ignore_submodules";
