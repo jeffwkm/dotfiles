@@ -136,14 +136,21 @@
 
     hardware.cpu.amd.updateMicrocode = true;
     hardware.enableAllFirmware = true;
-    hardware.opengl.driSupport = true;
-    hardware.opengl.driSupport32Bit = true;
-    hardware.opengl.extraPackages = with pkgs; [
-      # amdvlk
-      # driversi686Linux.amdvlk
-      rocm-opencl-icd
-      rocm-opencl-runtime
-    ];
+    hardware.opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+      extraPackages = with pkgs; [
+        vaapiVdpau
+        libvdpau-va-gl
+        amdvlk
+        rocm-opencl-icd
+        rocm-opencl-runtime
+        amdgpu_top
+        vdpauinfo
+        libva-utils
+      ];
+    };
 
     system.stateVersion = "22.11";
   };
