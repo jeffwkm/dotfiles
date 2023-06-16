@@ -58,9 +58,9 @@ in {
         StartLimitIntervalSec = 60;
         StartLimitBurst = 10;
       };
-      wantedBy = [ "default.target" "pulseaudio.service" ];
-      after = [ "pulseaudio.service" ];
-      bindsTo = [ "pulseaudio.service" ];
+      wantedBy = [ "default.target" "pipewire-pulse.service" ];
+      after = [ "pipewire-pulse.service" ];
+      bindsTo = [ "pipewire-pulse.service" ];
     };
 
     virtualisation.libvirtd = {

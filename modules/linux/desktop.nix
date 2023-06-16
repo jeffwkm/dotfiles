@@ -31,11 +31,32 @@ in {
 
     sound.enable = true;
 
-    hardware.pulseaudio = {
+    security.rtkit.enable = true;
+    services.pipewire = {
       enable = true;
-      package = pkgs.pulseaudio;
-      daemon.logLevel = "info";
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
     };
+
+    environment.etc."pipewire/pipewire-pulse.d/92-low-latency.conf".source =
+      let json = pkgs.formats.json { };
+      in json.generate "92-low-latency.conf" {
+        context.modules = [{
+          name = "libpipewire-module-protocol-pulse";
+          args = {
+            pulse.min.req = "32/48000";
+            pulse.default.req = "32/48000";
+            pulse.max.req = "32/48000";
+            pulse.min.quantum = "32/48000";
+            pulse.max.quantum = "32/48000";
+          };
+        }];
+        stream.properties = {
+          node.latency = "32/48000";
+          resample.quality = 1;
+        };
+      };
 
     xdg.portal = {
       enable = true;
@@ -97,6 +118,8 @@ in {
         gui = with pkgs; [ pinentry-gtk2 pavucontrol snes9x-gtk ];
       in {
         home.packages = gnomePackages ++ qtPackages ++ cli ++ gui;
+
+        services.easyeffects = { enable = true; };
 
         services.pass-secret-service.enable = true;
 

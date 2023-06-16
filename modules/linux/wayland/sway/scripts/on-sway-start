@@ -29,7 +29,9 @@ ensure_emacs() {
   emacsclient -e '(--ensure-server-initialized)'
 }
 
-systemctl --user start pulseaudio.socket
-systemctl --user start pulseaudio.service
+systemctl --user start pipewire.socket
+systemctl --user start pipewire.service
+systemctl --user start pipewire-pulse.socket
+systemctl --user start pipewire-pulse.service
 notify_action "Mount network drives" mount_drives
 notify_action "Start emacs server" ensure_emacs
