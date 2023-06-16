@@ -47,7 +47,7 @@ ignore = mpix > 10 or clip_fps > 50
 fast_mode = mpix > 2.5 or clip_fps >= 50
 
 flow_fps = not fast_mode
-# flow_fps = False
+flow_fps = False
 
 if not ignore:
     analParams = {
