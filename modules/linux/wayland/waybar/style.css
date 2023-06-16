@@ -7,7 +7,7 @@
   /* font-family: "InputC4Mono Nerd Font", Inconsolata, monospace; */
   font-family: "JetBrains Mono Nerd Font", Inconsolata, monospace;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 window#waybar {
@@ -70,8 +70,8 @@ window#waybar.chromium {
 }
 
 #mode {
-background-color: rgba(90, 105, 115, 0.6);
-border-bottom: 1.5px solid rgba(255, 255, 255, 0.8);
+  background-color: rgba(90, 105, 115, 0.6);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.8);
 }
 
 #clock,
