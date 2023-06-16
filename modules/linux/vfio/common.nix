@@ -47,8 +47,8 @@ in {
       description = "Scream IVSHMEM";
       serviceConfig = {
         Type = "exec";
-        ExecCondition = ''
-          ${pkgs.bash}/bin/bash -c '[ "$(sudo virsh -E domstate win10)" == "running" ]' '';
+        # ExecCondition = ''
+        #   ${pkgs.bash}/bin/bash -c '[ "$(sudo virsh domstate win10)" == "running" ]' '';
         ExecStart =
           "${pkgs.scream}/bin/scream -m /dev/shm/scream -o pulse -t 16 -v";
         Restart = "always";
