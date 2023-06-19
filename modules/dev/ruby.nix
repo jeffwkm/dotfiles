@@ -15,7 +15,7 @@ let
       pango
       curses
     ]);
-  rubyCustom = pkgs.ruby_2_7.withPackages rubyPackages;
+  rubyCustom = pkgs.ruby_3_2.withPackages rubyPackages;
   cfg = config.modules.dev.ruby;
 in {
   options.modules.dev.ruby = { enable = mkBoolOpt dev.enable-all; };

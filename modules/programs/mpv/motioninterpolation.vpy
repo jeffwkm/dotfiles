@@ -9,7 +9,7 @@ import vapoursynth
 
 core = vapoursynth.core
 core.std.LoadAllPlugins(
-    "/nix/var/nix/profiles/per-user/jeff/home-manager/home-path/lib/vapoursynth"
+    "/etc/profiles/per-user/jeff/lib/vapoursynth"
 )
 # ref: http://avisynth.org.ru/mvtools/mvtools2.html#functions
 # default is 400, less means interpolation will only happen when it will work well

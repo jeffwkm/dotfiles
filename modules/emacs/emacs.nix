@@ -21,10 +21,10 @@ in {
         (final: prev:
           let
             withPkgs = false;
-            base = optimize config prev.emacsPgtk;
-            emacsPgtkCustom = (prev.emacsPackagesFor base).emacsWithPackages
+            base = optimize config prev.emacs-pgtk;
+            emacs-pgtk-custom = (prev.emacsPackagesFor base).emacsWithPackages
               (epkgs: optionals withPkgs [ epkgs.vterm epkgs.all-the-icons ]);
-          in { emacs = emacsPgtkCustom; })
+          in { emacs = emacs-pgtk-custom; })
       ];
 
     environment.systemPackages = optional cfg.install pkgs.emacs;
