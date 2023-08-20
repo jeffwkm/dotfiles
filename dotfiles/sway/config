@@ -22,7 +22,7 @@ set $out1           DP-2
 set $out2           DP-3
 
 output  *           subpixel rgb
-output  *           max_render_time 8
+output  *           max_render_time 10
 output  $out1       position 0 0 scale 1.75
 output  $out2       position 2195 0 scale 1.75
 # output  $out2       color profile "/home/jeff/.local/share/icc/p2715q.icc"

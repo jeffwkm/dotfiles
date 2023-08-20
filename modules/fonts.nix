@@ -12,7 +12,7 @@ in {
     environment.systemPackages = with pkgs; [ fontconfig ];
 
     fonts.fontDir.enable = true;
-    fonts.fonts = with pkgs; [
+    fonts.packages = with pkgs; [
       ankacoder
       anonymousPro
       cantarell-fonts

@@ -32,7 +32,7 @@ in {
     users.defaultUserShell = mkIf modules.zsh.enable pkgs.zsh;
 
     fonts = mkIf modules.fonts.enable {
-      enableDefaultFonts = true;
+      enableDefaultPackages = true;
       fontDir.enable = true;
       fontDir.decompressFonts = true;
       fontconfig = {
