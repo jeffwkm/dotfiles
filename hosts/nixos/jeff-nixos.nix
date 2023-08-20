@@ -28,6 +28,7 @@
       firmwareLinuxNonfree
       libguestfs
       darktable
+      pgadmin
     ];
 
     # create machine definitions in /etc/machines
