@@ -20,10 +20,11 @@ while ! have_ssh_id; do
 done
 
 # load user environment
-systemctl --user import-environment
+# systemctl --user import-environment
 
 # run sway with systemd logging
-systemd-cat --identifier=sway sway
+# systemd-cat --identifier=sway sway
+sway
 
 # terminate user session upon sway exit
 systemctl --user stop graphical-session.target
