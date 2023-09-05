@@ -635,13 +635,13 @@ interactively for spacing value."
 
 (setq large-file-warning-threshold (* 100 1000 1000))
 
-;; accept completion from copilot and fallback to company
 (use-package! copilot
   :hook ((prog-mode . copilot-mode)
          (conf-mode . copilot-mode))
   :config
-  (setq copilot-idle-delay 0
-        copilot-max-char (* 1000 30))
+  (setq copilot-idle-delay 0.05
+        ;; copilot-max-char 100000
+        )
   (map! :mode copilot-mode
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept
@@ -657,12 +657,13 @@ interactively for spacing value."
   (map! :i "C-TAB" nil
         :i "C-<tab>" nil
         :i "<backtab>" nil)
-  (add-hook! (lisp-mode emacs-lisp-mode clojure-mode clojurescript-mode cider-repl-mode)
-    (defun --copilot-disable-auto-complete ()
-      (setq-local copilot-idle-delay 10000)))
+  ;; (add-hook! (lisp-mode emacs-lisp-mode clojure-mode clojurec-mode clojurescript-mode cider-repl-mode)
+  ;;   (defun --copilot-disable-auto-complete ()
+  ;;     (setq-local copilot-idle-delay 10000)))
   (--each '(--copilot-complete-or-next
             --copilot-show-or-accept)
     (add-to-list 'copilot-clear-overlay-ignore-commands it))
+  ;; (setq copilot-clear-overlay-ignore-commands nil)
   (after! company
     (map! :map company-active-map
           "TAB" nil
@@ -903,9 +904,9 @@ interactively for spacing value."
   (set-mode-name clojure-mode "CLJ")
   (set-mode-name clojurescript-mode "CLJS")
   (set-mode-name clojurec-mode "CLJC")
-  (add-hook! '(clojure-mode-hook clojurescript-mode-hook)
+  (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode)
              'cider-mode)
-  (add-hook! '(clojure-mode-hook clojurescript-mode-hook cider-repl-mode-hook)
+  (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode cider-repl-mode-hook)
              'lispy-mode)
   (define-key! 'cider-mode-map
     "M-." nil ;; 'cider-find-var
@@ -926,7 +927,7 @@ interactively for spacing value."
       (cljr-add-keybindings-with-prefix "C-'"))
     (bind-keys* :map clojure-mode-map
                 ("C-<return>" . hydra-cljr-help-menu/body))
-    (add-hook! '(clojure-mode-hook clojurescript-mode-hook)
+    (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode)
                'clj-refactor-clojure-mode-hook))
   (defun --cider-reload-repl-ns ()
     (let ((ns (buffer-local-value 'cider-buffer-ns (car (cider-repls)))))
@@ -1009,7 +1010,11 @@ interactively for spacing value."
                                         latex-mode
                                         org-msg-edit-mode
                                         markdown-mode
-                                        gfm-mode)))
+                                        gfm-mode
+                                        clojure-mode
+                                        clojurescript-mode
+                                        clojurec-mode
+                                        )))
 
 (after! editorconfig
   (setq editorconfig-lisp-use-default-indent t))
@@ -1388,7 +1393,8 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
       doom-modeline-persp-icon t
       doom-modeline-buffer-encoding 'nondefault
       doom-modeline-default-eol-type 0
-      doom-modeline-indent-info t)
+      doom-modeline-indent-info t
+      doom-modeline-modal-icon t)
 
 (defvar --auto-margin nil)
 

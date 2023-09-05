@@ -6,8 +6,9 @@
 (package! company-box :built-in 'prefer)
 (package! company-quickhelp :built-in 'prefer)
 (package! company-statistics :built-in 'prefer)
-(package! copilot :recipe
-  (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+;; (package! clojure-mode :recipe (:host github :repo "clojure-emacs/clojure-mode"))
+;; (package! cider :recipe (:host github :repo "clojure-emacs/cider"))
+(package! copilot :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 (package! vimrc-mode)
 (package! elisp-slime-nav :built-in 'prefer)
 (package! evil-lisp-state)
