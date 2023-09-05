@@ -20,11 +20,15 @@ in {
         inputs.emacs-overlay.overlay
         (final: prev:
           let
-            withPkgs = false;
-            base = optimize config prev.emacs-pgtk;
-            emacs-pgtk-custom = (prev.emacsPackagesFor base).emacsWithPackages
-              (epkgs: optionals withPkgs [ epkgs.vterm epkgs.all-the-icons ]);
-          in { emacs = emacs-pgtk-custom; })
+            emacs-base = optimize config prev.emacs29-pgtk;
+            emacs-custom = (prev.emacsPackagesFor emacs-base).emacsWithPackages
+              (epkgs:
+                with epkgs; [
+                  vterm
+                  all-the-icons
+                  treesit-grammars.with-all-grammars
+                ]);
+          in { emacs = emacs-custom; })
       ];
 
     environment.systemPackages = optional cfg.install pkgs.emacs;
