@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 with lib;
 with lib.my;
 let
@@ -10,7 +10,11 @@ in {
   config = mkIf modules.fonts.infinality {
     nixpkgs.overlays = [
       (final: prev:
-        let base = (prev.freetype.override { useEncumberedCode = true; });
+        let
+          base =
+            (inputs.nixpkgs-stable.legacyPackages.x86_64-linux.freetype.override {
+              useEncumberedCode = true;
+            });
         in {
           freetype_subpixel = optimize config (base.overrideAttrs (attrs: {
             patches = attrs.patches ++ [
