@@ -4,7 +4,7 @@
   inputs = {
     ## Package sets
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-22.05-darwin";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
     ## Environment/system management
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
