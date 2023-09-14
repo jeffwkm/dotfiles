@@ -39,10 +39,12 @@ in {
         curl
         entr
         expect
+        glow
         inetutils
         inxi
         jc
         jq
+        mods
         ncdu
         neofetch
         pass
