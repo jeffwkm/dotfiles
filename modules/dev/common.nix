@@ -31,25 +31,26 @@ in {
 
       home.packages = with pkgs;
         [
-          openai
           babashka
+          bun
           cmake
-          shellcheck
-          shfmt
           direnv
           editorconfig-checker
           editorconfig-core-c
           gnumake
-          nodejs
+          nil
+          nixfmt
           nodePackages.pnpm
           nodePackages.stylelint
+          nodejs
+          openai
           python310Packages.grip
-          nil
-          rnix-lsp
-          nixfmt
           rbenv
-          subversion
+          rnix-lsp
+          shellcheck
+          shfmt
           srvc
+          subversion
         ] ++ optionals (!darwin) [ gcc ];
     };
   };
