@@ -17,6 +17,21 @@
 #   - Shows direnv/nix-shell environment
 #
 
+# Initialize last modified time with the current time.
+zshrc_last_modified=$(stat -c %Y ~/.zshrc)
+
+# Function to check for changes and reload .zshrc
+function reload_zshrc_if_changed() {
+  local current_modified
+  current_modified=$(stat -c %Y ~/.zshrc)
+
+  if [[ $current_modified -ne $zshrc_last_modified ]]; then
+    source ~/.zshrc
+    zshrc_last_modified=$current_modified
+    echo -e "\n--- reloaded .zshrc for changes ---\n"
+  fi
+}
+
 _prompt_jeffw_arrow_left=$'\ue0b2'
 _prompt_jeffw_arrow_right=$'\ue0b0'
 _prompt_jeffw_rounded_left=$'\ue0b6'
@@ -120,6 +135,8 @@ function _prompt_jeffw_time_block() {
 
 function prompt_jeffw_precmd {
   exit="$?"
+
+  # reload_zshrc_if_changed
 
   local ahead_behind remote_status vcsh
   vcsh="$VCSH_REPO_NAME"
