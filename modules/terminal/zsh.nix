@@ -33,17 +33,21 @@ let
         "terminal"
         "editor"
         "history"
+        "history-substring-search"
         "directory"
         "spectrum"
         "utility"
         "git"
+        "archive"
         "completion"
+        "fasd"
         "autosuggestions"
         "command-not-found"
         "prompt"
       ];
       pmoduleDirs = [ ../../dotfiles/zsh/prompts ];
       prompt.theme = lib.mkDefault "jeffw";
+      # prompt.theme = lib.mkDefault "powerlevel10k";
       ssh.identities = [ "id_rsa" ];
       terminal.autoTitle = true;
       utility.safeOps = false;
@@ -134,11 +138,17 @@ let
     } // (extra.shellGlobalAliases or { });
 
     initExtraFirst = ''
+      export USING_P10K=0
       [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
       export ZSHCONFIG="${config.host.config-dir}/dotfiles/zsh"
       fpath+=( "$ZSHCONFIG/prompts" "${config.user.home}/.zsh/completions" )
       ${extra.initExtraFirst or ""}
       [[ -n "$ZPROFILE" ]] && zmodload zsh/zprof
+      if [[ "$USING_P10K" -eq 1 ]]; then
+        if [[ -r "$HOME/.cache/p10k-instant-prompt-$USER.zsh" ]]; then
+          source "$HOME/.cache/p10k-instant-prompt-$USER.zsh"
+        fi
+      fi
     '';
 
     initExtra = ''
@@ -150,10 +160,17 @@ let
 
       source ${lsd_completion} 2> /dev/null
 
-      setopt PROMPT_CR
+      if [[ "$USING_P10K" -ne 1 ]] ; then
+        setopt PROMPT_CR
+      fi
       setopt PROMPT_SP
 
       [[ -n "$ZPROFILE" ]] && zprof
+
+      if [[ "$USING_P10K" -eq 1 ]]; then
+        [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+        p10k finalize
+      fi
 
       ${extra.initExtra or ""}
     '';
@@ -211,7 +228,11 @@ in {
 
     home-manager.users.${user.name} = {
       programs.zsh = userConfig;
-      home.packages = with pkgs; [ starship ];
+      home.packages = with pkgs; [
+        nix-zsh-completions
+        starship
+        zsh-better-npm-completion
+      ];
     };
   };
 }
