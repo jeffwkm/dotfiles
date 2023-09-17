@@ -12,9 +12,10 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      (final: prev: {
-        mpv = optimize config (prev.wrapMpv
-          (prev.mpv-unwrapped.override { vapoursynthSupport = true; }) {
+      # customize mpv build
+      (final: prev:
+        let
+          mpvOpts = {
             scripts = with final.mpvScripts; [
               autoload
               convert
@@ -25,8 +26,22 @@ in {
               "--prefix"
               "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
             ];
-          });
-      })
+          };
+          withVS = mpv-unwrapped:
+            mpv-unwrapped.override { vapoursynthSupport = true; };
+          fromGit = mpv-unwrapped:
+            mpv-unwrapped.overrideAttrs (old: {
+              # use mpv from github master
+              src = prev.fetchFromGitHub {
+                owner = "mpv-player";
+                repo = "mpv";
+                rev = "181eddc80e087ebdde775c1c4e2e758a150f440c";
+                sha256 = "sha256-xAXnyF7tEXRV8O2/HUo8i/Mj7PSwYXWsdnn6Z5lVNk8=";
+              };
+            });
+          mpv-unwrapped = (withVS (fromGit prev.mpv-unwrapped));
+          mpv = (prev.wrapMpv mpv-unwrapped mpvOpts);
+        in { mpv = optimize config mpv; })
     ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
