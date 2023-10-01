@@ -1051,9 +1051,10 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
           "~/.maven/repository"
           "~/.cargo/registry"
           "~/.rustup"
+          "~/.cache"
           ,doom-emacs-dir
           ,doom-local-dir)
-  (add-to-list '--external-source-file-paths (expand-file-name it)))
+  (pushnew! --external-source-file-paths (expand-file-name it)))
 
 (defun --kill-external-source-buffers ()
   (interactive)
