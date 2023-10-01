@@ -24,22 +24,43 @@
 
 (menu-bar-mode -1)
 
-(setq user-full-name "Jeff Workman"
-      user-mail-address "jeff.workman@gmail.com"
-      doom-leader-key "SPC"
-      doom-leader-alt-key "C-SPC"
-      smie-indent-basic 2
-      +workspaces-on-switch-project-behavior 'non-empty
-      display-line-numbers-type nil
-      emojify-download-emojis-p t
-      org-directory "~/org/"
-      confirm-kill-processes nil
-      frame-title-format '((:eval (concat (if (buffer-file-name)
-                                              (abbreviate-file-name (buffer-file-name))
-                                            "%b")
-                                          ;; " | <Emacs>"
-                                          )))
-      require-final-newline t)
+(defun --relative-file-path (&optional path)
+  "Return path of current buffer file relative to project root"
+  (let ((root (projectile-project-root))
+        (path (or path (buffer-file-name))))
+    (when path
+      (if root
+          (f-relative path root)
+        path))))
+
+(setq! user-full-name "Jeff Workman"
+       user-mail-address "jeff.workman@gmail.com"
+       doom-leader-key "SPC"
+       doom-leader-alt-key "C-SPC"
+
+       smie-indent-basic 2
+       +workspaces-on-switch-project-behavior 'non-empty
+       display-line-numbers-type nil
+       emojify-download-emojis-p t
+       org-directory "~/org/"
+       confirm-kill-processes nil
+       frame-title-format '((:eval (if (doom-project-name)
+                                       (format! "[%s]:%s"
+                                                (doom-project-name)
+                                                (or (--relative-file-path) "%b"))
+                                     (if (buffer-file-name)
+                                         (abbreviate-file-name (buffer-file-name))
+                                       "%b"))))
+       require-final-newline t
+       +ivy-buffer-preview t
+       large-file-warning-threshold (* 100 1000 1000)
+
+       doom-theme 'doom-tomorrow-night
+       ;; doom-theme 'doom-one
+       doom-one-brighter-comments t
+       doom-one-brighter-modeline nil
+       doom-themes-padded-modeline nil
+       doom-gruvbox-dark-variant "soft")
 
 (setq-default tab-width 2
               fill-column 100
@@ -54,27 +75,6 @@
 (defun gui-emacs-mac? () (eql window-system 'mac))
 (defun gui-mac? () (or (gui-mac-std?) (gui-emacs-mac?)))
 
-(setq doom-theme 'doom-tomorrow-night
-      ;; doom-theme 'doom-one
-      doom-one-brighter-comments t
-      doom-one-brighter-modeline nil
-      doom-themes-padded-modeline nil)
-
-;;; Customize some theme colors
-;; (defun --customize-doom-theme-defs ()
-;;   (apply
-;;    custom-theme-set-faces
-;;    'doom-tomorrow-night))
-;; (add-hook! '(doom-after-init-hook doom-after-reload-hook) :append
-;;            '--customize-doom-theme-defs)
-
-;; (load-theme doom-theme t)
-;; 'doom-one 'doom-gruvbox 'doom-tomorrow-night 'doom-spacegrey 'doom-material-dark 'doom-zenburn
-(setq doom-themes-padded-modeline nil)
-(setq doom-gruvbox-dark-variant "soft")
-;; (setq doom-gruvbox-dark-variant "medium")
-;; (setq doom-gruvbox-dark-variant "hard")
-
 (when (mac?)
   (setq mac-command-modifier 'meta
         mac-option-modifier 'super
@@ -82,8 +82,6 @@
         "/Users/jeff/Library/Caches/Homebrew/emacs-plus@28--git/src/"))
 
 (load! "commands.el")
-
-(setq +ivy-buffer-preview t)
 
 (defvar --large-font nil)
 (defun --configure-fonts ()
@@ -101,7 +99,7 @@
   (when (graphical?)
     (set-frame-font doom-font)))
 (--configure-fonts)
-(add-hook! 'doom-after-reload-hook  :append '--configure-fonts '--sync-fonts)
+(add-hook! 'doom-after-reload-hook :append '--configure-fonts '--sync-fonts)
 
 (use-package! hl-line)
 
@@ -111,8 +109,7 @@
 
 (use-package! fringe
   :config
-  (add-to-list 'default-frame-alist '(right-fringe . 8))
-  (add-to-list 'default-frame-alist '(left-fringe . 8))
+  (pushnew! default-frame-alist '(right-fringe . 8) '(left-fringe . 8))
   (fringe-mode 8))
 
 (use-package! ruby-mode
@@ -126,11 +123,6 @@
   (doom/reload-font)
   (message "--large-font %s" (if --large-font "enabled" "disabled")))
 
-(defun --indent-tabs-on () (setq-local indent-tabs-mode t))
-(defun --indent-tabs-off () (setq-local indent-tabs-mode nil))
-(defun --indent-tabs-mode (hook enable-tabs)
-  (add-hook hook (if enable-tabs '--indent-tabs-on '--indent-tabs-off)))
-
 (use-package! smartparens
   :init
   (setq sp-base-key-bindings 'sp
@@ -143,7 +135,6 @@
                                    ("C-<right>"   . nil))
         sp-navigate-interactive-always-progress-point t))
 
-
 (after! smartparens
   (add-hook! smartparens-mode 'evil-smartparens-mode))
 
@@ -154,19 +145,19 @@
 
 (after! lispy
   (setq lispy-key-theme '(lispy))
-  (add-to-list 'lispy-clojure-modes 'cider-repl-mode)
+  (pushnew! lispy-clojure-modes 'cider-repl-mode)
   (undefine-key! lispy-mode-map-lispy "[" "]" "{" "}" "M-." "C-k" "C-j")
   (lispy-set-key-theme lispy-key-theme))
 
 (after! lispyville
-  (setq lispyville-key-theme '((operators normal)
-                               c-w
-                               (prettify insert)
-                               (atom-movement t)
-                               (additional motion)
-                               additional-motions
-                               (commentary t)
-                               mark-special))
+  (setq! lispyville-key-theme '((operators normal)
+                                c-w
+                                (prettify insert)
+                                (atom-movement t)
+                                (additional motion)
+                                additional-motions
+                                (commentary t)
+                                mark-special))
   (lispyville-set-key-theme lispyville-key-theme)
   (add-hook! lispy-mode 'lispyville-mode)
   (map! :m "RET" 'newline-and-indent
@@ -193,17 +184,17 @@
 
 (use-package! evil-matchit
   :after evil
-  :init (setq evilmi–shortcut "%")
+  :init (setq! evilmi–shortcut "%")
   :config (global-evil-matchit-mode 1))
 
 (use-package! evil-snipe
   :after evil
   :init
-  (setq evil-snipe-scope 'whole-visible
-        evil-snipe-repeat-scope 'whole-visible
-        evil-snipe-spillover-scope nil
-        evil-snipe-smart-case t
-        evil-snipe-tab-increment t)
+  (setq! evil-snipe-scope 'whole-visible
+         evil-snipe-repeat-scope 'whole-visible
+         evil-snipe-spillover-scope nil
+         evil-snipe-smart-case t
+         evil-snipe-tab-increment t)
   :config
   (evil-snipe-mode 1)
   (evil-snipe-override-mode 1)
@@ -359,6 +350,10 @@
 (defun active-minor-modes ()
   (--filter (and (boundp it) (symbol-value it)) minor-mode-list))
 
+(defun --show-active-minor-modes ()
+  (interactive)
+  (ivy-read "" (active-minor-modes)))
+
 (defun minor-mode-active-p (minor-mode)
   (if (member minor-mode (active-minor-modes)) t nil))
 
@@ -482,13 +477,13 @@ interactively for spacing value."
         ((and (--wayland-available)
               (--have-shell-command "wl-copy")
               (--have-shell-command "wl-paste"))
-         (setq interprogram-cut-function 'wl-copy
-               interprogram-paste-function 'wl-paste))
+         (setq! interprogram-cut-function 'wl-copy
+                interprogram-paste-function 'wl-paste))
         ((and (null window-system)
               (--window-system-available)
               (--have-shell-command "xsel"))
-         (setq interprogram-cut-function 'xsel-copy
-               interprogram-paste-function 'xsel-paste))))
+         (setq! interprogram-cut-function 'xsel-copy
+                interprogram-paste-function 'xsel-paste))))
 ;; (add-hook! 'after-make-frame-functions '--init-copy-paste)
 
 (defun --session-file (filename)
@@ -526,22 +521,22 @@ interactively for spacing value."
   (when (or (graphical?) server-process)
     (--load-default-session))
   (let ((w (if (mac?) 4 4)))
-    (add-to-list 'default-frame-alist `(internal-border-width . ,w))
+    (pushnew! default-frame-alist `(internal-border-width . ,w))
     (set-frame-parameter nil 'internal-border-width w))
   (--kill-external-source-buffers)
   (--projectile-remove-external-projects))
 (add-hook! 'emacs-startup-hook :depth 90 '--emacs-startup)
 
 (after! tramp
-  (setq tramp-default-method "ssh")
-  (add-to-list 'tramp-methods '("vcsh"
-                                (tramp-login-program "vcsh")
-                                (tramp-login-args
-                                 (("enter")
-                                  ("%h")))
-                                (tramp-remote-shell "/bin/sh")
-                                (tramp-remote-shell-args
-                                 ("-c")))))
+  (setq! tramp-default-method "ssh")
+  (pushnew! tramp-methods '("vcsh"
+                            (tramp-login-program "vcsh")
+                            (tramp-login-args
+                             (("enter")
+                              ("%h")))
+                            (tramp-remote-shell "/bin/sh")
+                            (tramp-remote-shell-args
+                             ("-c")))))
 
 (defun --sh-mode-hook ()
   (add-hook! 'after-save-hook :local
@@ -555,61 +550,57 @@ interactively for spacing value."
   (use-package! company-shell))
 
 (after! rustic
-  (setq lsp-rust-analyzer-server-display-inlay-hints nil)
-  (setq lsp-rust-analyzer-server-format-inlay-hints t)
-  (setq lsp-rust-analyzer-display-parameter-hints nil)
-  (setq lsp-rust-analyzer-max-inlay-hint-length 15)
-  (setq lsp-rust-clippy-preference "opt-in")
-  (setq lsp-rust-rustfmt-path "rustfmt")
-  (setq lsp-rust-analyzer-diagnostics-disabled ["inactive-code"])
-  (setq lsp-rust-analyzer-display-chaining-hints t))
+  (setq! lsp-rust-analyzer-server-format-inlay-hints t
+         lsp-rust-analyzer-display-parameter-hints nil
+         lsp-rust-analyzer-max-inlay-hint-length 15
+         lsp-rust-clippy-preference "opt-in"
+         lsp-rust-rustfmt-path "rustfmt"
+         lsp-rust-analyzer-diagnostics-disabled ["inactive-code"]
+         lsp-rust-analyzer-display-chaining-hints t))
 
 (after! rainbow-mode
-  (setq rainbow-html-colors t
-        rainbow-html-colors-alist nil
-        rainbow-ansi-colors 'auto
-        rainbow-x-colors nil
-        rainbow-latex-colors nil
-        rainbow-r-colors nil)
+  (setq! rainbow-html-colors t
+         rainbow-html-colors-alist nil
+         rainbow-ansi-colors 'auto
+         rainbow-x-colors nil
+         rainbow-latex-colors nil
+         rainbow-r-colors nil)
   (after! hl-line
     ;; Disable hl-line-mode when rainbow-mode is enabled
     ;; because it interferes with the colors.
     (add-hook! rainbow-mode
       (hl-line-mode (if rainbow-mode -1 +1)))))
 
-(use-package! cc-mode
+(after! cc-mode
   :config
-  (--indent-tabs-mode 'c-mode-hook t)
-  (--indent-tabs-mode 'c++-mode-hook t)
-  (--indent-tabs-mode 'objc-mode-hook t)
-  (--indent-tabs-mode 'java-mode-hook t))
+  (setq-hook! (c-mode c++-mode objc-mode java-mode)
+    indent-tabs-mode t))
 
 (use-package! aggressive-indent
   :config
-  (setq aggressive-indent-sit-for-time 0)
+  (setq! aggressive-indent-sit-for-time 0)
   (dolist (mode '(cider-repl-mode c-mode c++-mode objc-mode java-mode))
-    (add-to-list 'aggressive-indent-excluded-modes mode))
+    (pushnew! aggressive-indent-excluded-modes mode))
   (after! elisp-mode
     (add-hook! emacs-lisp-mode 'aggressive-indent-mode))
   (after! markdown-mode
     (add-hook! markdown-mode 'aggressive-indent-mode))
   (after! gfm-mode
     (add-hook! gfm-mode 'aggressive-indent-mode))
-  ;; conflicts with format-all-mode
-  ;; (aggressive-indent-global-mode +1)
-  )
+  ;; conflicts with apheleia-mode
+  (global-aggressive-indent-mode 0))
 
 (after! company
-  (setq company-dabbrev-downcase nil
-        company-dabbrev-ignore-case nil
-        company-dabbrev-other-buffers nil
-        company-minimum-prefix-length 1
-        company-idle-delay 0.15
-        company-tooltip-minimum-width 50
-        company-tooltip-maximum-width 80
-        company-tooltip-width-grow-only t
-        company-tooltip-offset-display 'scrollbar ; 'lines
-        company-box-doc-delay 0.6)
+  (setq! company-dabbrev-downcase nil
+         company-dabbrev-ignore-case nil
+         company-dabbrev-other-buffers nil
+         company-minimum-prefix-length 1
+         company-idle-delay 0.15
+         company-tooltip-minimum-width 50
+         company-tooltip-maximum-width 80
+         company-tooltip-width-grow-only t
+         company-tooltip-offset-display 'scrollbar ; 'lines
+         company-box-doc-delay 0.6)
   (set-company-backend! 'text-mode
     'company-capf)
   (set-company-backend! 'prog-mode
@@ -626,22 +617,18 @@ interactively for spacing value."
     'company-shell-env
     'company-dabbrev-code
     'company-files)
-  ;; (add-to-list 'company-transformers 'company-sort-by-occurrence)
   (use-package! company-statistics
     :disabled t
     :config
     (company-statistics-mode 1))
   (global-company-mode 1))
 
-(setq large-file-warning-threshold (* 100 1000 1000))
-
 (use-package! copilot
   :hook ((prog-mode . copilot-mode)
          (conf-mode . copilot-mode))
   :config
-  (setq copilot-idle-delay 0.05
-        ;; copilot-max-char 100000
-        )
+  (setq! copilot-idle-delay 0.05
+         copilot-max-char 100000)
   (map! :mode copilot-mode
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept
@@ -850,34 +837,14 @@ interactively for spacing value."
         "C-S-<right>"    'org-metaright
         "C-S-<down>"     'org-metadown
         "C-S-<up>"       'org-metaup
-        "C-S-<return>"   'org-meta-return
-        ;; "M-s a"          'org-agenda-list
-        ;; "M-s s"          'org-schedule
-        ;; "M-s d"          'org-deadline
-        )
-  ;; 'org-notify-check
-  ;; (use-package! org-ql)
-  ;; (use-package! org-present)
+        "C-S-<return>"   'org-meta-return)
+  (use-package! org-ql :disabled t)
+  (use-package! org-present :disabled t)
   (use-package! org-projectile)
-  (use-package! org-super-agenda
-    :config (org-super-agenda-mode 1))
+  (use-package! org-super-agenda :config (org-super-agenda-mode 1))
   (use-package! org-fancy-priorities)
-  (use-package! org-bullets
-    :disabled t
-    :config
-    (add-hook! 'org-mode-hook 'org-bullets-mode)
-    ;; ◉ ○ ✸ ✿ ♥ ● ◇ ✚ ✜ ☯ ◆ ♠ ♣ ♦ ☢ ❀ ◆ ◖ ▶
-    ;; ► • ★ ▸
-    ;; '("◆" "◇")
-    (setq org-bullets-bullet-list '("●" "◉")))
-  (use-package! org-superstar
-    :config
-    (setq org-superstar-special-todo-items t)
-    (setq org-superstar-remove-leading-stars nil))
-  (defun --org-mode-hook ()
-    (org-fancy-priorities-mode 1)
-    (org-superstar-mode 1))
-  (add-hook! 'org-mode-hook '--org-mode-hook))
+  (use-package! org-superstar :config (setq org-superstar-special-todo-items t))
+  (add-hook! org-mode '(org-superstar-mode org-fancy-priorities-mode)))
 
 (use-package! pkgbuild-mode :mode "/PKGBUILD")
 
@@ -1002,57 +969,58 @@ interactively for spacing value."
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
 
-(after! format-all
+(after! apheleia
   (setq +format-with-lsp t
-        +format-on-save-enabled-modes '(not emacs-lisp-mode
-                                        sql-mode
-                                        tex-mode
-                                        latex-mode
-                                        org-msg-edit-mode
-                                        markdown-mode
-                                        gfm-mode
-                                        clojure-mode
-                                        clojurescript-mode
-                                        clojurec-mode
-                                        )))
+        +format-on-save-disabled-modes '(emacs-lisp-mode
+                                         sql-mode
+                                         tex-mode
+                                         latex-mode
+                                         org-msg-edit-mode
+                                         ;; markdown-mode
+                                         ;; gfm-mode
+                                         clojure-mode
+                                         clojurescript-mode
+                                         clojurec-mode
+                                         )))
 
 (after! editorconfig
-  (setq editorconfig-lisp-use-default-indent t))
+  (setq! editorconfig-lisp-use-default-indent t))
+
+(after! lsp-mode
+  (setq! lsp-idle-delay 0.5
+         lsp-response-timeout 10))
 
 (after! (lsp-mode company)
   ;; trying to fix company-mode errors from conflict with lsp-mode
-  (setq lsp-completion-enable-additional-text-edit nil
-        lsp-completion-default-behaviour :insert
-        lsp-enable-snippet nil
-        lsp-enable-links nil
-        lsp-enable-symbol-highlighting nil
-        lsp-response-timeout 5
-        lsp-symbol-highlighting-skip-current t))
+  (setq! lsp-completion-enable-additional-text-edit t
+         lsp-completion-default-behaviour :replace
+         lsp-enable-snippet t
+         lsp-enable-links nil
+         lsp-enable-symbol-highlighting t
+         lsp-symbol-highlighting-skip-current nil))
 
 (after! (nix-mode lsp-mode)
-  (setq-mode-local nix-mode +format-with-lsp t)
-  (add-to-list 'aggressive-indent-excluded-modes 'nix-mode)
   (defcustom-lsp lsp-nix-nil-auto-archive nil
-                 "Auto-archiving behavior which may use network."
-                 :type 'lsp-json-bool
-                 :group 'lsp-nix-nil
-                 :lsp-path "nil.nix.flake.autoArchive"
-                 :package-version '(lsp-mode . "8.0.1"))
+    "Auto-archiving behavior which may use network."
+    :type 'lsp-json-bool
+    :group 'lsp-nix-nil
+    :lsp-path "nil.nix.flake.autoArchive"
+    :package-version '(lsp-mode . "8.0.1"))
   (defcustom-lsp lsp-nix-nil-auto-eval-inputs nil
-                 "Whether to auto-eval flake inputs.
+    "Whether to auto-eval flake inputs.
 The evaluation result is used to improve completion, but may cost lots of time and/or memory."
-                 :type 'boolean
-                 :group 'lsp-nix-nil
-                 :lsp-path "nil.nix.flake.autoEvalInputs"
-                 :package-version '(lsp-mode . "8.0.1"))
+    :type 'boolean
+    :group 'lsp-nix-nil
+    :lsp-path "nil.nix.flake.autoEvalInputs"
+    :package-version '(lsp-mode . "8.0.1"))
   (defcustom-lsp lsp-nix-nil-nixpkgs-input-name nil
-                 "The input name of nixpkgs for NixOS options evaluation.
+    "The input name of nixpkgs for NixOS options evaluation.
 The options hierarchy is used to improve completion, but may cost lots of time and/or memory.
 If this value is `null` or is not found in the workspace flake's inputs, NixOS options are not evaluated."
-                 :type 'string
-                 :group 'lsp-nix-nil
-                 :lsp-path "nil.nix.flake.nixpkgsInputName"
-                 :package-version '(lsp-mode . "8.0.1"))
+    :type 'string
+    :group 'lsp-nix-nil
+    :lsp-path "nil.nix.flake.nixpkgsInputName"
+    :package-version '(lsp-mode . "8.0.1"))
   (setq lsp-nix-rnix-server-path nil)
   (setq lsp-nix-nil-server-path "nil")
   (setq lsp-nix-nil-formatter ["nixfmt" "-w" "80"])
@@ -1486,7 +1454,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
          (modes `(,@feature-modes ,@extra-modes))
          (forms (-mapcat (lambda (mode)
                            (list `(setq-mode-local ,mode +format-with-lsp nil)
-                                 `(add-to-list 'aggressive-indent-excluded-modes ',mode)))
+                                 `(pushnew! aggressive-indent-excluded-modes ',mode)))
                          modes)))
     `(after! (lsp-mode aggressive-indent)
        (-each ',features 'require)
@@ -1494,11 +1462,60 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
        ',modes)))
 
 (--setup-js-prettier-modes
- (web-mode typescript-mode json-mode rjsx-mode js2-mode)
- (typescript-tsx-mode))
+ (web-mode
+  typescript-mode
+  typescript-ts-mode
+  json-mode
+  json-ts-mode
+  rjsx-mode
+  js2-mode)
+ (typescript-tsx-mode tsx-ts-mode))
 
-(use-package! json-mode
-  :mode "\\.json\\'" "/.prettierrc$")
+(use-package! css-mode
+  :mode "\\.postcss\\'" "\\.css\\'"
+  :config
+  (add-hook! css-mode 'css-ts-mode)
+  (add-hook! css-ts-mode 'lsp-mode)
+  (setq-hook! css-ts-mode +format-with 'prettier-css))
+
+(use-package! typescript-ts-mode
+  :mode "\\.ts\\'" "\\.js\\'" "\\.cjs\\'"
+  :config
+  (add-hook! (typescript-ts-mode tsx-ts-mode) 'lsp-mode))
+
+(use-package! typescript-tsx-mode
+  :mode "\\.tsx\\'"
+  :config
+  (use-package! typescript-ts-mode)
+  (add-hook! typescript-tsx-mode 'tsx-ts-mode))
+
+(use-package! json-ts-mode
+  :mode "\\.json\\'" "/.prettierrc$"
+  :config
+  (add-hook! json-ts-mode 'lsp-mode))
+
+(after! web-mode
+  (add-hook! web-mode (defun --web-mode-hook ()
+                        (lsp-mode +1)
+                        (when (equal web-mode-engine "svelte")
+                          (setq-local +format-with 'prettier-svelte)))))
+
+(after! python
+  (add-hook! (python-mode python-ts-mode) 'lsp-mode))
+
+(use-package! lsp-tailwindcss
+  :init
+  (setq! lsp-tailwindcss-add-on-mode t)
+  :config
+  (--each '(web-mode
+            css-mode
+            css-ts-mode
+            scss-mode
+            less-css-mode
+            tsx-ts-mode
+            typescript-ts-mode
+            rjsx-mode)
+    (pushnew! lsp-tailwindcss-major-modes it)))
 
 (defvar --default-server-name "server")
 
