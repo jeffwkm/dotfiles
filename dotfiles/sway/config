@@ -210,6 +210,8 @@ bindsym $Su+8          workspace $WSPB_8
 bindsym $Su+9          workspace $WSPB_9
 bindsym $Su+0          workspace $WSPB_10
 #
+bindsym $Su+Period     workspace back_and_forth
+#
 bindsym $Su+Left       workspace prev_on_output
 bindsym $Su+Right      workspace next_on_output
 bindsym $Su+$S+Left    focus output left

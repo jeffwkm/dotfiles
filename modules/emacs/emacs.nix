@@ -20,8 +20,8 @@ in {
         inputs.emacs-overlay.overlay
         (final: prev:
           let
-            # emacs-base = optimize config prev.emacs29-pgtk;
-            emacs-base = optimize config prev.emacs-pgtk;
+            emacs-base = optimize config prev.emacs29-pgtk;
+            # emacs-base = optimize config prev.emacs-pgtk;
             emacs-custom = (prev.emacsPackagesFor emacs-base).emacsWithPackages
               (epkgs:
                 with epkgs; [

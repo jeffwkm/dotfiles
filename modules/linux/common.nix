@@ -129,6 +129,7 @@ in {
       coreutils
       curl
       file
+      fscrypt-experimental
       inetutils
       iotop
       kmon

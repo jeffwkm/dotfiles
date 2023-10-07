@@ -581,12 +581,7 @@ interactively for spacing value."
   (setq! aggressive-indent-sit-for-time 0)
   (dolist (mode '(cider-repl-mode c-mode c++-mode objc-mode java-mode))
     (pushnew! aggressive-indent-excluded-modes mode))
-  (after! elisp-mode
-    (add-hook! emacs-lisp-mode 'aggressive-indent-mode))
-  (after! markdown-mode
-    (add-hook! markdown-mode 'aggressive-indent-mode))
-  (after! gfm-mode
-    (add-hook! gfm-mode 'aggressive-indent-mode))
+  (after! elisp-mode (add-hook! emacs-lisp-mode 'aggressive-indent-mode))
   ;; conflicts with apheleia-mode
   (global-aggressive-indent-mode 0))
 
@@ -807,7 +802,8 @@ interactively for spacing value."
   (add-hook 'groovy-mode-hook '--groovy-mode-config))
 
 (after! markdown-mode
-  (use-package! gh-md))
+  (use-package! gh-md)
+  (setq-hook! (gfm-mode markdown-mode) +format-with 'prettier-markdown))
 
 (use-package! nginx-mode
   :mode ("/nginx.conf$" "\\.nginx-site\\'"))
@@ -976,8 +972,6 @@ interactively for spacing value."
                                          tex-mode
                                          latex-mode
                                          org-msg-edit-mode
-                                         ;; markdown-mode
-                                         ;; gfm-mode
                                          clojure-mode
                                          clojurescript-mode
                                          clojurec-mode
