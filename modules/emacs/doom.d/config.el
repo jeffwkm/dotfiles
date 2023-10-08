@@ -22,6 +22,8 @@
 (use-package! f)
 (use-package! ht)
 
+(add-load-path! (dir!))
+
 (menu-bar-mode -1)
 
 (defun --relative-file-path (&optional path)
@@ -32,6 +34,7 @@
       (if root
           (f-relative path root)
         path))))
+(doom-compile-functions '--relative-file-path)
 
 (setq! user-full-name "Jeff Workman"
        user-mail-address "jeff.workman@gmail.com"
@@ -67,13 +70,9 @@
               byte-compile-warning-types '(not free-vars constants mutate-constant)
               lisp-indent-offset nil)
 
-(defun --window-system-available () (< 0 (length (getenv "DISPLAY"))))
-(defun --wayland-available () (< 0 (length (getenv "WAYLAND_DISPLAY"))))
-(defun graphical? () (cl-some #'display-graphic-p (frame-list)))
-(defun mac? () (eql system-type 'darwin))
-(defun gui-mac-std? () (eql window-system 'ns))
-(defun gui-emacs-mac? () (eql window-system 'mac))
-(defun gui-mac? () (or (gui-mac-std?) (gui-emacs-mac?)))
+(require 'commands)
+(-> (list (locate-file "commands.el" load-path))
+    (native-compile-async nil t))
 
 (when (mac?)
   (setq mac-command-modifier 'meta
@@ -81,21 +80,17 @@
         find-function-C-source-directory
         "/Users/jeff/Library/Caches/Homebrew/emacs-plus@28--git/src/"))
 
-(load! "commands.el")
-
-(defvar --large-font nil)
 (defun --configure-fonts ()
-  (setq doom-font (font-spec :family "JetBrainsMono Nerd Font"
-                             ;; :family "FiraCode Nerd Font Medium"
-                             :size (if (mac?) 14 15)
-                             :weight 'semibold)
-        doom-big-font nil
-        doom-big-font-increment 2
-        doom-font-increment 1
-        doom-variable-pitch-font (font-spec :family "Noto Sans"
-                                            ;; :family "Fira Sans"
-                                            :size (if --large-font 17 15))))
+  (setq! doom-font (font-spec :family "JetBrainsMono Nerd Font"
+                              ;; :family "FiraCode Nerd Font"
+                              :size (if (mac?) 14 15)
+                              :weight 'medium)
+         doom-big-font nil
+         doom-big-font-increment 2
+         doom-font-increment 1
+         doom-variable-pitch-font (font-spec :family "Inter" :size 15 :weight 'medium)))
 (defun --sync-fonts ()
+  (interactive)
   (when (graphical?)
     (set-frame-font doom-font)))
 (--configure-fonts)
@@ -104,8 +99,9 @@
 (use-package! hl-line)
 
 ;; fixes for warnings/errors on doom init and reload
-(use-package! hydra)
-(use-package! ivy :config (require 'ivy-hydra))
+(after! ivy
+  (use-package! hydra)
+  (require 'ivy-hydra))
 
 (use-package! fringe
   :config
@@ -124,6 +120,7 @@
   (message "--large-font %s" (if --large-font "enabled" "disabled")))
 
 (use-package! smartparens
+  :defer-incrementally t
   :init
   (setq sp-base-key-bindings 'sp
         sp-override-key-bindings '(("C-M-<left>"  . nil)
@@ -139,12 +136,13 @@
   (add-hook! smartparens-mode 'evil-smartparens-mode))
 
 (use-package evil-easymotion
+  :defer-incrementally t
   :config
   (define-key evilem-map "=" #'evilem-motion-next-line-first-non-blank)
   (evilem-default-keybindings "g s"))
 
 (after! lispy
-  (setq lispy-key-theme '(lispy))
+  (setq! lispy-key-theme '(lispy))
   (pushnew! lispy-clojure-modes 'cider-repl-mode)
   (undefine-key! lispy-mode-map-lispy "[" "]" "{" "}" "M-." "C-k" "C-j")
   (lispy-set-key-theme lispy-key-theme))
@@ -207,16 +205,6 @@
   ")" "]"
   "[" "("
   "]" ")")
-
-(defun --scroll-down-one-line ()
-  (interactive)
-  (forward-line 1)
-  (scroll-up 1))
-
-(defun --scroll-up-one-line ()
-  (interactive)
-  (forward-line -1)
-  (scroll-down 1))
 
 (use-package! elisp-mode
   :config
@@ -344,41 +332,6 @@
               (and current (not active)))
       (toggle-frame-fullscreen frame))))
 
-(defun print-to-buffer (x)
-  (princ (concat "\n" (with-output-to-string (print x))) (current-buffer)))
-
-(defun active-minor-modes ()
-  (--filter (and (boundp it) (symbol-value it)) minor-mode-list))
-
-(defun --show-active-minor-modes ()
-  (interactive)
-  (ivy-read "" (active-minor-modes)))
-
-(defun minor-mode-active-p (minor-mode)
-  (if (member minor-mode (active-minor-modes)) t nil))
-
-(defun --body-title (body)
-  (let* ((form (car (last body)))
-         (full (prin1-to-string form)))
-    (cond ((<= (length full) 40)
-           full)
-          ((and (listp form) (symbolp (car form)))
-           (format "(%s ...)" (symbol-name (car form))))
-          (t "<body>"))))
-
-(defun --elapsed-seconds (start-time)
-  (time-to-seconds (time-since start-time)))
-
-(defmacro --with-elapsed-time (&rest body)
-  `(let ((time-start (current-time)))
-     ,@body
-     (let ((elapsed (time-since time-start)))
-       (time-to-seconds elapsed))))
-
-(defun --init-time (&optional as-string)
-  (let ((init-time (float-time
-                    (time-subtract after-init-time before-init-time))))
-    (if as-string (format "%.2fs" init-time) init-time)))
 ;;(--init-time t)
 
 (defmacro with-delay (seconds &rest body)
@@ -401,89 +354,6 @@
       `((t (:foreground ,curly-color)))
       "Face for displaying curly brackets."
       :group 'paren-face)))
-
-(defun nxml-pretty-format ()
-  (interactive)
-  (save-excursion
-    (shell-command-on-region (point-min) (point-max)
-                             "xmllint --format -" (buffer-name) t)
-    (nxml-mode)
-    (indent-region (point-min) (point-max))))
-
-(require 'align)
-
-(defun --align-regexp (beg end regexp &optional group spacing repeat)
-  "Modified version of `align-regexp`, changed to always prompt
-interactively for spacing value."
-  (interactive
-   (append
-    (list (region-beginning) (region-end))
-    (if current-prefix-arg
-        (list (read-string "Complex align using regexp: "
-                           "\\(\\s-*\\)" 'align-regexp-history)
-              (string-to-number
-               (read-string
-                "Parenthesis group to modify (justify if negative): " "1"))
-              (string-to-number
-               (read-string "Amount of spacing (or column if negative): "
-                            (number-to-string align-default-spacing)))
-              (y-or-n-p "Repeat throughout line? "))
-      (list (concat "\\(\\s-*\\)"
-                    (read-string "Align regexp: "))
-            1
-            (string-to-number
-             (read-string "Amount of spacing (or column if negative): "
-                          (number-to-string align-default-spacing)))
-            nil))))
-  (align-regexp beg end regexp group spacing repeat))
-
-(defun --have-shell-command (cmd)
-  (-> (shell-command-to-string (format "which %s" cmd))
-      (substring-no-properties 0 1)
-      (equal "/")))
-
-(defun --root-user ()
-  (equal (user-login-name) "root"))
-
-(defun --normal-user ()
-  (not (--root-user)))
-
-;; clipboard integration
-;;
-;; Emacs needs to be started after Xorg or Wayland for this to work
-;;
-(defun xsel-paste ()
-  (shell-command-to-string "xsel -ob"))
-;;
-(defun xsel-copy (text &optional _push)
-  (let ((process-connection-type nil))
-    (let ((proc (start-process "xsel -ib" "*Messages*" "xsel" "-ib")))
-      (process-send-string proc text)
-      (process-send-eof proc))))
-;;
-(defun wl-paste ()
-  (shell-command-to-string "wl-paste -n"))
-;;
-(defun wl-copy (text &optional _push)
-  (let ((process-connection-type nil))
-    (let ((proc (start-process "wl-copy" "*Messages*" "wl-copy")))
-      (process-send-string proc text)
-      (process-send-eof proc))))
-;;
-(defun --init-copy-paste ()
-  (interactive)
-  (cond ((mac?) nil)
-        ((--root-user) nil)
-        ((and (--wayland-available)
-              (--have-shell-command "wl-copy")
-              (--have-shell-command "wl-paste"))
-         (setq! interprogram-cut-function 'wl-copy
-                interprogram-paste-function 'wl-paste))
-        ((and (null window-system)
-              (--window-system-available)
-              (--have-shell-command "xsel"))
-         (setq! interprogram-cut-function 'xsel-copy
-                interprogram-paste-function 'xsel-paste))))
 ;; (add-hook! 'after-make-frame-functions '--init-copy-paste)
 
 (defun --session-file (filename)
@@ -622,8 +492,8 @@ interactively for spacing value."
   :hook ((prog-mode . copilot-mode)
          (conf-mode . copilot-mode))
   :config
-  (setq! copilot-idle-delay 0.05
-         copilot-max-char 100000)
+  (setq! copilot-idle-delay 0
+         copilot-max-char 300000)
   (map! :mode copilot-mode
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept
@@ -656,6 +526,7 @@ interactively for spacing value."
 
 (after! projectile
   (setq projectile-indexing-method 'hybrid
+        projectile-indexing-method 'alien
         projectile-enable-caching nil
         projectile-completion-system 'ivy)
   (map! "C-M-s" '+ivy/project-search))
@@ -1015,61 +886,15 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
     :group 'lsp-nix-nil
     :lsp-path "nil.nix.flake.nixpkgsInputName"
     :package-version '(lsp-mode . "8.0.1"))
-  (setq lsp-nix-rnix-server-path nil)
-  (setq lsp-nix-nil-server-path "nil")
-  (setq lsp-nix-nil-formatter ["nixfmt" "-w" "80"])
-  (setq lsp-nix-nil-auto-archive t)
-  (setq lsp-nix-nil-auto-eval-inputs nil)
-  (setq lsp-nix-nil-nixpkgs-input-name "nixpkgs")
-  (add-to-list 'aggressive-indent-excluded-modes 'nix-mode))
+  (setq! lsp-nix-rnix-server-path nil
+         lsp-nix-nil-server-path "nil"
+         lsp-nix-nil-formatter ["nixfmt" "-w" "80"]
+         lsp-nix-nil-auto-archive t
+         lsp-nix-nil-auto-eval-inputs nil
+         lsp-nix-nil-nixpkgs-input-name "nixpkgs"))
 
 (use-package! vimrc-mode
   :mode "\\.vim\\(rc\\)?\\'")
-
-;; List all file buffers whose path matches list of prefixes
-;; Use functional programming from 'dash package to filter buffers
-(defun --list-buffers-by-prefix (prefixes)
-  (let ((buffers (buffer-list))
-        (prefixes (-map 'expand-file-name prefixes)))
-    (->> buffers
-         (-filter (lambda (buf)
-                    (let ((path (buffer-file-name buf)))
-                      (and path
-                           (-any? (lambda (prefix)
-                                    (string-prefix-p prefix path))
-                                  prefixes))))))))
-
-(defvar --external-source-file-paths nil)
-
-(--each `("/nix/store"
-          "~/.maven/repository"
-          "~/.cargo/registry"
-          "~/.rustup"
-          "~/.cache"
-          ,doom-emacs-dir
-          ,doom-local-dir)
-  (pushnew! --external-source-file-paths (expand-file-name it)))
-
-(defun --kill-external-source-buffers ()
-  (interactive)
-  (save-excursion
-    (-> (--list-buffers-by-prefix --external-source-file-paths)
-        (-each 'kill-buffer))))
-
-(defun --projectile-project-external-p (project)
-  (let ((path (expand-file-name (projectile-project-root project))))
-    (--any? (string-prefix-p it path)
-            --external-source-file-paths)))
-
-;; List projectile projects
-(defun --projectile-external-projects ()
-  (->> (projectile-relevant-known-projects)
-       (-filter '--projectile-project-external-p)))
-
-(defun --projectile-remove-external-projects ()
-  (interactive)
-  (-> (--projectile-external-projects)
-      (-each 'projectile-remove-known-project)))
 
 (defun --cider-load-buffer-reload-repl (&optional buffer)
   (interactive)
@@ -1359,16 +1184,15 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
       doom-modeline-indent-info t
       doom-modeline-modal-icon t)
 
-(defvar --auto-margin nil)
+(require 'auto-margin)
+(-> (list (locate-file "auto-margin.el" load-path))
+    (native-compile-async nil t))
 
-(load! "auto-margin.el")
-
-(when --auto-margin
-  (dolist (hook '(window-setup-hook
-                  window-size-change-functions
-                  after-make-frame-functions
-                  after-setting-font-hook))
-    (add-hook hook 'autoset-frame-margins)))
+;; (dolist (hook '(window-setup-hook
+;;                 window-size-change-functions
+;;                 after-make-frame-functions
+;;                 after-setting-font-hook))
+;;   (add-hook hook 'autoset-frame-margins))
 
 (after! minimap
   (setq minimap-update-delay 0.1
@@ -1378,67 +1202,96 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   (after! ace-window
     (add-to-list 'aw-ignored-buffers "*MINIMAP*")))
 
-(after! treemacs
-  (setq +treemacs-git-mode 'deferred
-        treemacs-display-in-side-window t
-        treemacs-file-event-delay 500
-        treemacs-silent-filewatch t
-        treemacs-file-follow-delay 0.1
-        treemacs-recenter-after-file-follow 'on-distance
-        treemacs-recenter-distance 0.1
-        treemacs-is-never-other-window t
-        treemacs-show-cursor nil)
+(defun --ensure-treemacs-hl-line-mode (&rest _)
+  (unless (subrp (symbol-function '--ensure-treemacs-hl-line-mode))
+    (doom-compile-functions '--ensure-treemacs-hl-line-mode))
+  (when (treemacs-is-treemacs-window-selected?)
+    (unless (buffer-local-value 'hl-line-mode (window-buffer))
+      (hl-line-mode 1))))
+
+(use-package! treemacs
+  :defer-incrementally t
+  :init
+  (setq! +treemacs-git-mode 'deferred
+         treemacs-display-in-side-window t
+         treemacs-file-event-delay 250
+         treemacs-silent-filewatch t
+         treemacs-silent-refresh t
+         treemacs-deferred-git-apply-delay 0.5
+         treemacs-file-follow-delay 0.1
+         treemacs-recenter-after-file-follow 'on-distance
+         treemacs-recenter-distance 0.1
+         treemacs-is-never-other-window t
+         treemacs-show-cursor nil)
   :config
+  (require 'treemacs-faces)
   (treemacs-follow-mode 1)
   (treemacs-project-follow-mode 1)
   (treemacs-filewatch-mode 1)
   (treemacs-git-mode 1)
   (treemacs-hide-gitignored-files-mode 1)
   (treemacs-fringe-indicator-mode 'always)
-  ;; (lsp-treemacs-sync-mode 1)
-  (defun --ensure-treemacs-hl-line-mode (&optional _state)
-    ;; (message "running for %s" state)
-    (when (treemacs-is-treemacs-window-selected?)
-      (let ((dbg nil)
-            (active (buffer-local-value 'hl-line-mode (window-buffer))))
-        (unless active (hl-line-mode 1))
-        (when dbg (message (if active
-                               "hl-line-mode already active"
-                             "activated hl-line-mode!"))))))
+  (require 'lsp-treemacs)
+  (lsp-treemacs-generic-mode 1)
+  (lsp-treemacs-sync-mode 1)
+  (lsp-treemacs-error-list-mode 1)
+  (dolist (face '(treemacs-directory-face
+                  treemacs-file-face
+                  treemacs-git-added-face
+                  treemacs-git-modified-face))
+    (set-face-font face doom-variable-pitch-font))
+  (dolist (face '(treemacs-root-face))
+    (->> `(:family ,(font-get doom-variable-pitch-font :family)
+           :weight semibold
+           :size ,(+ 4 (font-get doom-variable-pitch-font :size)))
+         (apply #'font-spec)
+         (set-face-font face)))
+  (dolist (face '(treemacs-git-added-face
+                  treemacs-git-modified-face
+                  treemacs-git-conflict-face
+                  treemacs-git-renamed-face))
+    (set-face-font face doom-variable-pitch-font)
+    (quote (->> `(:family ,(font-get doom-variable-pitch-font :family)
+                  :weight ,(font-get doom-variable-pitch-font :weight)
+                  :size ,(+ 1 (font-get doom-variable-pitch-font :size)))
+            (apply #'font-spec)
+            (set-face-font face))))
   (add-hook! 'treemacs-select-functions '--ensure-treemacs-hl-line-mode))
 
 (defvar --ensure-treemacs-open nil)
 
+(defun --ensure-treemacs-open (arg)
+  (when (and (eq arg 'frame)
+             --ensure-treemacs-open
+             (display-graphic-p (selected-frame)))
+    (let* ((persp (get-current-persp))
+           (w (frame-selected-window))
+           (persp-name (persp-name persp))
+           (buf (->> (persp-buffers (get-current-persp))
+                     (-filter 'buffer-file-name)
+                     (-find (lambda (buf)
+                              (-some-> buf
+                                buffer-file-name
+                                file-name-directory
+                                projectile-project-root
+                                projectile-project-name
+                                (equal persp-name)))))))
+      (if buf
+          (progn
+            (switch-to-buffer buf)
+            (treemacs-add-and-display-current-project-exclusively))
+        (treemacs))
+      (select-window w))))
+(doom-compile-functions '--ensure-treemacs-open)
+
 (after! (persp-mode treemacs)
-  (defun --ensure-treemacs-open (arg)
-    (when (eq arg 'frame)
-      ;; (unless (eql 'visible (treemacs-current-visibility)))
-      ;; (if (doom-project-p) )
-      (let* ((persp (get-current-persp))
-             (w (frame-selected-window))
-             (persp-name (persp-name persp))
-             (buf (->> (persp-buffers (get-current-persp))
-                       (-filter 'buffer-file-name)
-                       (-find (lambda (buf)
-                                (-some-> buf
-                                  buffer-file-name
-                                  file-name-directory
-                                  projectile-project-root
-                                  projectile-project-name
-                                  (equal persp-name)))))))
-        (if buf
-            (progn
-              (switch-to-buffer buf)
-              (treemacs-add-and-display-current-project-exclusively))
-          (treemacs))
-        (select-window w))))
-  (when --ensure-treemacs-open
-    (add-hook! 'persp-activated-functions :append '--ensure-treemacs-open)))
+  (add-hook! 'persp-activated-functions :append '--ensure-treemacs-open))
 
 (use-package! emojify
+  :defer-incrementally t
   :config
-  (global-emojify-mode -1)
-  (global-emojify-mode-line-mode -1)
+  (global-emojify-mode +1)
+  (global-emojify-mode-line-mode +1)
   (custom-set-variables
    '(emojify-display-style 'image)
    '(emojify-emoji-styles '(unicode))))
@@ -1489,11 +1342,14 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   :config
   (add-hook! json-ts-mode 'lsp-mode))
 
+(defun --web-mode-hook ()
+  (lsp-mode +1)
+  (when (equal web-mode-engine "svelte")
+    (setq-local +format-with 'prettier-svelte)))
+(doom-compile-functions '--web-mode-hook)
+
 (after! web-mode
-  (add-hook! web-mode (defun --web-mode-hook ()
-                        (lsp-mode +1)
-                        (when (equal web-mode-engine "svelte")
-                          (setq-local +format-with 'prettier-svelte)))))
+  (add-hook! web-mode '--web-mode-hook))
 
 (after! python
   (add-hook! (python-mode python-ts-mode) 'lsp-mode))

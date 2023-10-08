@@ -1,4 +1,4 @@
-;;; auto-margin.el --- Description -*- lexical-binding: t; -*-
+;;; auto-margin.el -*- lexical-binding: t; -*-
 
 (require 'dash)
 

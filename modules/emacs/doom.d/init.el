@@ -46,7 +46,7 @@
        (treemacs +lsp)     ; a project drawer, like neotree but cooler
        unicode             ; extended unicode support for various languages
        (vc-gutter +pretty) ; vcs diff in the fringe
-       vi-tilde-fringe     ; fringe tildes to mark beyond EOB
+       ;; vi-tilde-fringe     ; fringe tildes to mark beyond EOB
        window-select       ; visually switch windows
        workspaces          ; tab emulation, persistence & separate workspaces
        zen                 ; distraction-free coding or writing
@@ -131,7 +131,7 @@
        ;; fstar            ; (dependent) types and (monadic) effects and Z3
        ;; gdscript         ; the language you waited for
        (go +lsp +tree-sitter) ; the hipster dialect
-       (haskell +lsp +tree-sitter) ; a language that's lazier than I am
+       (haskell +tree-sitter) ; a language that's lazier than I am
        ;; hy               ; readability of scheme w/ speed of python
        ;; idris            ; a language you can depend on
        (json +lsp +tree-sitter) ; At least it ain't XML
