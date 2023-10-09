@@ -19,7 +19,6 @@ in {
       carlito
       cm_unicode
       dejavu_fonts
-      emacs-all-the-icons-fonts
       encode-sans
       fantasque-sans-mono
       fira-code

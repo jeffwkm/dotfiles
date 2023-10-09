@@ -79,7 +79,7 @@
        vterm               ; the best terminal emulation in Emacs
 
        :checkers
-       syntax               ; tasing you for every semicolon you forget
+       (syntax +childframe) ; tasing you for every semicolon you forget
        ;; spell             ; tasing you for misspelling mispelling
        ;; grammar           ; tasing grammar mistake every you make
 
@@ -178,7 +178,7 @@
        :app
        calendar
        ;; emms
-       ;; everywhere          ; *leave* Emacs!? You must be joking
+       everywhere          ; *leave* Emacs!? You must be joking
        ;; irc              ; how neckbeards socialize
        ;; (rss +org)       ; emacs as an RSS reader
        twitter             ; twitter client https://twitter.com/vnought

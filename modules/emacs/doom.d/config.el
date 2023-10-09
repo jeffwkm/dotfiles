@@ -17,16 +17,23 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(use-package! dash)
-(use-package! s)
-(use-package! f)
-(use-package! ht)
+(require 'dash)
+(require 's)
+(require 'f)
+(require 'ht)
+(require 'doom-lib)
+(require 'doom)
+(require 'deferred)
+(require 'shut-up)
 
 (add-load-path! (dir!))
 
+(require 'commands)
+(require 'auto-margin)
+
 (menu-bar-mode -1)
 
-(defun --relative-file-path (&optional path)
+(--defun-native --relative-file-path (&optional path) projectile
   "Return path of current buffer file relative to project root"
   (let ((root (projectile-project-root))
         (path (or path (buffer-file-name))))
@@ -34,7 +41,6 @@
       (if root
           (f-relative path root)
         path))))
-(doom-compile-functions '--relative-file-path)
 
 (setq! user-full-name "Jeff Workman"
        user-mail-address "jeff.workman@gmail.com"
@@ -70,10 +76,6 @@
               byte-compile-warning-types '(not free-vars constants mutate-constant)
               lisp-indent-offset nil)
 
-(require 'commands)
-(-> (list (locate-file "commands.el" load-path))
-    (native-compile-async nil t))
-
 (when (mac?)
   (setq mac-command-modifier 'meta
         mac-option-modifier 'super
@@ -81,10 +83,11 @@
         "/Users/jeff/Library/Caches/Homebrew/emacs-plus@28--git/src/"))
 
 (defun --configure-fonts ()
-  (setq! doom-font (font-spec :family "JetBrainsMono Nerd Font"
+  (setq! doom-font (font-spec :family "JetBrains Mono"
+                              ;; :family "JetBrainsMono Nerd Font"
                               ;; :family "FiraCode Nerd Font"
                               :size (if (mac?) 14 15)
-                              :weight 'medium)
+                              :weight 'semibold)
          doom-big-font nil
          doom-big-font-increment 2
          doom-font-increment 1
@@ -120,7 +123,7 @@
   (message "--large-font %s" (if --large-font "enabled" "disabled")))
 
 (use-package! smartparens
-  :defer-incrementally t
+  :defer t
   :init
   (setq sp-base-key-bindings 'sp
         sp-override-key-bindings '(("C-M-<left>"  . nil)
@@ -136,27 +139,32 @@
   (add-hook! smartparens-mode 'evil-smartparens-mode))
 
 (use-package evil-easymotion
-  :defer-incrementally t
+  :after evil
   :config
   (define-key evilem-map "=" #'evilem-motion-next-line-first-non-blank)
   (evilem-default-keybindings "g s"))
 
+(setq lispy-key-theme '(lispy))
 (after! lispy
-  (setq! lispy-key-theme '(lispy))
   (pushnew! lispy-clojure-modes 'cider-repl-mode)
   (undefine-key! lispy-mode-map-lispy "[" "]" "{" "}" "M-." "C-k" "C-j")
-  (lispy-set-key-theme lispy-key-theme))
+  (lispy-set-key-theme lispy-key-theme)
+  (doom-require 'lispyville))
 
+(setq! lispyville-key-theme '((operators normal)
+                              c-w
+                              (prettify insert)
+                              (atom-movement t)
+                              (additional motion)
+                              additional-motions
+                              (commentary t)
+                              mark-special))
 (after! lispyville
-  (setq! lispyville-key-theme '((operators normal)
-                                c-w
-                                (prettify insert)
-                                (atom-movement t)
-                                (additional motion)
-                                additional-motions
-                                (commentary t)
-                                mark-special))
-  (lispyville-set-key-theme lispyville-key-theme)
+  ;; for changing lispyville-key-theme after package has loaded
+  ''(progn
+      (setq! lispyville-mode-map (make-sparse-keymap))
+      (lispyville-set-key-theme lispyville-key-theme)
+      (setf (alist-get 'lispyville-mode minor-mode-map-alist) lispyville-mode-map))
   (add-hook! lispy-mode 'lispyville-mode)
   (map! :m "RET" 'newline-and-indent
         :mode lispy-mode
@@ -187,6 +195,7 @@
 
 (use-package! evil-snipe
   :after evil
+  :defer-incrementally t
   :init
   (setq! evil-snipe-scope 'whole-visible
          evil-snipe-repeat-scope 'whole-visible
@@ -207,12 +216,16 @@
   "]" ")")
 
 (use-package! elisp-mode
+  :mode ("\\.el\\'" . emacs-lisp-mode)
+  :defer-incrementally t
   :config
   (add-hook! (emacs-lisp-mode ielm-mode) 'elisp-slime-nav-mode)
   (map! :mode elisp-slime-nav-mode
         "M-." nil))
 
-(after! magit
+(use-package! magit
+  :defer-incrementally t
+  :config
   (map! :mode magit-mode
         :nv "/" nil))
 
@@ -266,7 +279,9 @@
       :desc "Workspace 8"
       "8" '+workspace/switch-to-7
       :desc "Workspace 9"
-      "9" '+workspace/switch-to-8)
+      "9" '+workspace/switch-to-8
+      :desc "Query replace in project"
+      "p q" 'project-query-replace-regexp)
 
 (map! :m "0" 'doom/backward-to-bol-or-indent
       :m "C-a" 'doom/backward-to-bol-or-indent
@@ -274,6 +289,10 @@
       :mi "C-b" 'sp-backward-sexp
       :m "C-e" 'evil-end-of-line
       :mi "C-y" 'yank)
+
+(with-eval-after-load 'help-mode
+  (map! :mode help-mode
+        :n "C-o" nil))
 
 (map! :m "C-o" nil
       :m "<tab>" nil
@@ -314,33 +333,6 @@
       "C-x \\" '--align-regexp
       "C-\\" '--align-regexp)
 
-(eval-and-compile
-  (defun symbol-suffix (sym suffix)
-    (intern (concat (symbol-name sym) suffix))))
-
-(defmacro set-mode-name (mode name)
-  (let ((func-name (intern (concat "--set-mode-name--" (symbol-name mode)))))
-    `(progn
-       (defun ,func-name () (setq mode-name ,name))
-       (add-hook ',(symbol-suffix mode "-hook") #',func-name 100)
-       (when (eql major-mode ',mode)
-         (,func-name)))))
-
-(defun set-frame-fullscreen (frame active)
-  (let ((current (frame-parameter (or frame (selected-frame)) 'fullscreen)))
-    (when (or (and active (not current))
-              (and current (not active)))
-      (toggle-frame-fullscreen frame))))
-
-;;(--init-time t)
-
-(defmacro with-delay (seconds &rest body)
-  (declare (indent 1))
-  `(let ((seconds ,seconds))
-     (if (and (numberp seconds) (> seconds 0))
-         (run-with-timer seconds nil (lambda () ,@body))
-       (progn ,@body))))
-
 (defun --set-paren-face-colors ()
   (let ((paren-color  (cond (t "#707070")))
         (square-color (cond (t "#bbbf40")))
@@ -355,35 +347,6 @@
       "Face for displaying curly brackets."
       :group 'paren-face)))
 ;; (add-hook! 'after-make-frame-functions '--init-copy-paste)
-
-(defun --session-file (filename)
-  (format "%setc/workspaces/%s" doom-local-dir filename))
-
-(defun --default-session-file ()
-  (--session-file "default-session"))
-
-(require 'ts)
-
-(defun --today-date ()
-  (ts-format "%Y-%m-%d"))
-
-(defun --session-file-current ()
-  (--session-file (ts-format "session.%Y-%m-%d_%H_%M")))
-
-(defun --load-default-session ()
-  (interactive)
-  (doom/load-session (--default-session-file)))
-
-(defun --save-current-session ()
-  (interactive)
-  (doom/save-session (--session-file-current))
-  t)
-
-(defun --save-default-session ()
-  (interactive)
-  (doom/save-session (--session-file-current))
-  (doom/save-session (--default-session-file))
-  t)
 
 (defun --emacs-startup ()
   (auto-compression-mode 1)
@@ -451,21 +414,18 @@
   (setq! aggressive-indent-sit-for-time 0)
   (dolist (mode '(cider-repl-mode c-mode c++-mode objc-mode java-mode))
     (pushnew! aggressive-indent-excluded-modes mode))
-  (after! elisp-mode (add-hook! emacs-lisp-mode 'aggressive-indent-mode))
   ;; conflicts with apheleia-mode
   (global-aggressive-indent-mode 0))
 
 (after! company
-  (setq! company-dabbrev-downcase nil
-         company-dabbrev-ignore-case nil
-         company-dabbrev-other-buffers nil
-         company-minimum-prefix-length 1
+  (setq! company-minimum-prefix-length 2
          company-idle-delay 0.15
          company-tooltip-minimum-width 50
          company-tooltip-maximum-width 80
          company-tooltip-width-grow-only t
          company-tooltip-offset-display 'scrollbar ; 'lines
-         company-box-doc-delay 0.6)
+         company-box-doc-delay 0.5
+         company-box-enable-icon nil)
   (set-company-backend! 'text-mode
     'company-capf)
   (set-company-backend! 'prog-mode
@@ -571,8 +531,7 @@
   (global-hl-todo-mode 1))
 
 (use-package! alert
-  :defer-incrementally t
-  :config
+  :init
   (setq alert-default-style (if (graphical?) 'libnotify 'message)
         alert-fade-time 3))
 
@@ -667,10 +626,8 @@
 (use-package! groovy-mode
   :mode "/Jenkinsfile"
   :config
-  (setq groovy-indent-offset 2)
-  (defun --groovy-mode-config ()
-    (setq-local tab-width 2))
-  (add-hook 'groovy-mode-hook '--groovy-mode-config))
+  (setq! groovy-indent-offset 2)
+  (setq-hook! groovy-mode tab-width 2))
 
 (after! markdown-mode
   (use-package! gh-md)
@@ -838,8 +795,7 @@
 
 (after! apheleia
   (setq +format-with-lsp t
-        +format-on-save-disabled-modes '(emacs-lisp-mode
-                                         sql-mode
+        +format-on-save-disabled-modes '(sql-mode
                                          tex-mode
                                          latex-mode
                                          org-msg-edit-mode
@@ -851,9 +807,12 @@
 (after! editorconfig
   (setq! editorconfig-lisp-use-default-indent t))
 
-(after! lsp-mode
+(use-package! lsp-mode
+  :defer-incrementally t
+  :init
   (setq! lsp-idle-delay 0.5
-         lsp-response-timeout 10))
+         lsp-response-timeout 10
+         lsp-enable-dap-auto-configure nil))
 
 (after! (lsp-mode company)
   ;; trying to fix company-mode errors from conflict with lsp-mode
@@ -1184,10 +1143,6 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
       doom-modeline-indent-info t
       doom-modeline-modal-icon t)
 
-(require 'auto-margin)
-(-> (list (locate-file "auto-margin.el" load-path))
-    (native-compile-async nil t))
-
 ;; (dolist (hook '(window-setup-hook
 ;;                 window-size-change-functions
 ;;                 after-make-frame-functions
@@ -1202,19 +1157,24 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   (after! ace-window
     (add-to-list 'aw-ignored-buffers "*MINIMAP*")))
 
-(defun --ensure-treemacs-hl-line-mode (&rest _)
-  (unless (subrp (symbol-function '--ensure-treemacs-hl-line-mode))
-    (doom-compile-functions '--ensure-treemacs-hl-line-mode))
+(--defun-native --ensure-treemacs-hl-line-mode (&rest _) (treemacs hl-line)
   (when (treemacs-is-treemacs-window-selected?)
     (unless (buffer-local-value 'hl-line-mode (window-buffer))
       (hl-line-mode 1))))
 
+(with-eval-after-load 'treemacs
+  (setq! doom-themes-treemacs-enable-variable-pitch t)
+  (require 'doom-themes-ext-treemacs))
+
+(with-eval-after-load 'org
+  (require 'doom-themes-ext-org))
+
 (use-package! treemacs
-  :defer-incrementally t
+  :defer t
   :init
   (setq! +treemacs-git-mode 'deferred
          treemacs-display-in-side-window t
-         treemacs-file-event-delay 250
+         treemacs-file-event-delay 500
          treemacs-silent-filewatch t
          treemacs-silent-refresh t
          treemacs-deferred-git-apply-delay 0.5
@@ -1224,38 +1184,17 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
          treemacs-is-never-other-window t
          treemacs-show-cursor nil)
   :config
-  (require 'treemacs-faces)
+  (treemacs-git-mode 1)
   (treemacs-follow-mode 1)
   (treemacs-project-follow-mode 1)
   (treemacs-filewatch-mode 1)
-  (treemacs-git-mode 1)
   (treemacs-hide-gitignored-files-mode 1)
   (treemacs-fringe-indicator-mode 'always)
-  (require 'lsp-treemacs)
-  (lsp-treemacs-generic-mode 1)
-  (lsp-treemacs-sync-mode 1)
-  (lsp-treemacs-error-list-mode 1)
-  (dolist (face '(treemacs-directory-face
-                  treemacs-file-face
-                  treemacs-git-added-face
-                  treemacs-git-modified-face))
-    (set-face-font face doom-variable-pitch-font))
-  (dolist (face '(treemacs-root-face))
-    (->> `(:family ,(font-get doom-variable-pitch-font :family)
-           :weight semibold
-           :size ,(+ 4 (font-get doom-variable-pitch-font :size)))
-         (apply #'font-spec)
-         (set-face-font face)))
-  (dolist (face '(treemacs-git-added-face
-                  treemacs-git-modified-face
-                  treemacs-git-conflict-face
-                  treemacs-git-renamed-face))
-    (set-face-font face doom-variable-pitch-font)
-    (quote (->> `(:family ,(font-get doom-variable-pitch-font :family)
-                  :weight ,(font-get doom-variable-pitch-font :weight)
-                  :size ,(+ 1 (font-get doom-variable-pitch-font :size)))
-            (apply #'font-spec)
-            (set-face-font face))))
+  (map! :mode treemacs-mode "C-o" (cmd! (call-interactively 'other-window)))
+  ;; (require 'lsp-treemacs)
+  ;; (lsp-treemacs-generic-mode 1)
+  ;; (lsp-treemacs-sync-mode 1)
+  ;; (lsp-treemacs-error-list-mode 1)
   (add-hook! 'treemacs-select-functions '--ensure-treemacs-hl-line-mode))
 
 (defvar --ensure-treemacs-open nil)
@@ -1282,16 +1221,15 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
             (treemacs-add-and-display-current-project-exclusively))
         (treemacs))
       (select-window w))))
-(doom-compile-functions '--ensure-treemacs-open)
 
 (after! (persp-mode treemacs)
   (add-hook! 'persp-activated-functions :append '--ensure-treemacs-open))
 
 (use-package! emojify
-  :defer-incrementally t
+  :defer t
   :config
-  (global-emojify-mode +1)
-  (global-emojify-mode-line-mode +1)
+  (global-emojify-mode -1)
+  (global-emojify-mode-line-mode -1)
   (custom-set-variables
    '(emojify-display-style 'image)
    '(emojify-emoji-styles '(unicode))))
@@ -1342,11 +1280,10 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   :config
   (add-hook! json-ts-mode 'lsp-mode))
 
-(defun --web-mode-hook ()
+(--defun-native --web-mode-hook () (web-mode lsp-mode)
   (lsp-mode +1)
   (when (equal web-mode-engine "svelte")
     (setq-local +format-with 'prettier-svelte)))
-(doom-compile-functions '--web-mode-hook)
 
 (after! web-mode
   (add-hook! web-mode '--web-mode-hook))
@@ -1412,5 +1349,5 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 ;; byte-compile-warning-types
 
 ;; Local Variables:
-;; byte-compile-warnings: (not free-vars constants mutate-constant)
+;; byte-compile-warnings: (not free-vars constants mutate-constant docstrings)
 ;; End:

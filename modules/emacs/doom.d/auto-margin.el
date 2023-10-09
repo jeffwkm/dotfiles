@@ -105,4 +105,10 @@
 (defun autoset-window-frame-margins (window)
   (autoset-frame-margins (window-frame window)))
 
+(require 'doom-lib)
+(require 'doom)
+
+(with-eval-after-load 'auto-margin
+  (native-compile-async `(,(file!)) nil t))
+
 (provide 'auto-margin)

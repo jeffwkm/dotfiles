@@ -5,6 +5,8 @@
 (require 'ht)
 (require 'doom-lib)
 (require 'doom)
+(require 'deferred)
+(require 'shut-up)
 
 (cl-declaim doom-active-minor-modes)
 
@@ -15,6 +17,10 @@
 (defun gui-mac-std? () (eql window-system 'ns))
 (defun gui-emacs-mac? () (eql window-system 'mac))
 (defun gui-mac? () (or (gui-mac-std?) (gui-emacs-mac?)))
+
+(defun -msg (inhibit msg &rest args)
+  (let ((inhibit-message (not (not inhibit))))
+    (message (apply #'format msg args))))
 
 (defun --scroll-down-one-line ()
   (interactive)
@@ -183,7 +189,7 @@ interactively for spacing value."
 ;;
 (defun xsel-copy (text &optional _push)
   (let ((process-connection-type nil))
-    (let ((proc (start-process "xsel -ib" "*Messages*" "xsel" "-ib")))
+    (let ((proc (start-process "xsel -ib" "*xsel*" "xsel" "-ib")))
       (process-send-string proc text)
       (process-send-eof proc))))
 ;;
@@ -192,7 +198,7 @@ interactively for spacing value."
 ;;
 (defun wl-copy (text &optional _push)
   (let ((process-connection-type nil))
-    (let ((proc (start-process "wl-copy" "*Messages*" "wl-copy")))
+    (let ((proc (start-process "wl-copy" "*wl-copy*" "wl-copy")))
       (process-send-string proc text)
       (process-send-eof proc))))
 ;;
@@ -257,5 +263,95 @@ interactively for spacing value."
   (interactive)
   (-> (--projectile-external-projects)
       (-each 'projectile-remove-known-project)))
+
+(eval-and-compile
+  (defun symbol-suffix (sym suffix)
+    (intern (concat (symbol-name sym) suffix))))
+
+(defmacro set-mode-name (mode name)
+  (let ((func-name (intern (concat "--set-mode-name--" (symbol-name mode)))))
+    `(progn
+       (defun ,func-name () (setq mode-name ,name))
+       (add-hook ',(symbol-suffix mode "-hook") #',func-name 100)
+       (when (eql major-mode ',mode)
+         (,func-name)))))
+
+(defun set-frame-fullscreen (frame active)
+  (let ((current (frame-parameter (or frame (selected-frame)) 'fullscreen)))
+    (when (or (and active (not current))
+              (and current (not active)))
+      (toggle-frame-fullscreen frame))))
+
+(defmacro with-delay (seconds &rest body)
+  (declare (indent 1))
+  `(let ((seconds ,seconds))
+     (if (and (numberp seconds) (> seconds 0))
+         (run-with-timer seconds nil (lambda () ,@body))
+       (progn ,@body))))
+
+(defun --session-file (filename)
+  (format "%setc/workspaces/%s" doom-local-dir filename))
+
+(defun --default-session-file ()
+  (--session-file "default-session"))
+
+(require 'ts)
+
+(defun --today-date ()
+  (ts-format "%Y-%m-%d"))
+
+(defun --session-file-current ()
+  (--session-file (ts-format "session.%Y-%m-%d_%H_%M")))
+
+(doom-require 'doom-lib 'sessions)
+(declare-function doom/load-session nil)
+(declare-function doom/save-session nil)
+
+(defun --load-default-session ()
+  (interactive)
+  (doom/load-session (--default-session-file)))
+
+(defun --save-current-session ()
+  (interactive)
+  (doom/save-session (--session-file-current))
+  t)
+
+(defun --save-default-session ()
+  (interactive)
+  (doom/save-session (--session-file-current))
+  (doom/save-session (--default-session-file))
+  t)
+
+(defun --native-comp (f)
+  (unless (subr-native-elisp-p (indirect-function f))
+    (native-compile f)
+    (-msg nil "Compiled function: %s" f)
+    t))
+
+(defun --compile-soon (&rest fn-syms)
+  ''(-msg t "Compiling %s" (-> (--map (format "'%s" (symbol-name it)) fn-syms)
+                               (string-join " ")))
+  (when fn-syms
+    (deferred:$
+     (deferred:wait-idle 1500)
+     (deferred:nextc it (fn! (--native-comp (car fn-syms))))
+     (deferred:nextc it (fn! (-some->> (cdr fn-syms) (apply '--compile-soon)))))
+    nil))
+
+(defmacro --defun-native (name args features &rest body)
+  (declare (indent defun))
+  (let* ((features (if (listp features) features (list features)))
+         (docstring (when (stringp (car body)) (pop body)))
+         (decl (when (eq (car-safe body) 'declare) (pop body)))
+         (interactive (when (eq (car-safe body) 'interactive) (pop body))))
+    `(progn
+       (defun ,@`(,name ,args ,@(-non-nil `(,docstring ,decl ,interactive)))
+           ,@body)
+       (when (native-comp-available-p)
+         (after! ,`(doom ,@features)
+           (--compile-soon ',name))))))
+
+(with-eval-after-load 'commands
+  (native-compile-async `(,(file!)) nil t))
 
 (provide 'commands)
