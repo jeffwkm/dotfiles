@@ -30,8 +30,19 @@
 
 (require 'commands)
 (require 'auto-margin)
+;; (dolist (hook '(window-setup-hook
+;;                 window-size-change-functions
+;;                 after-make-frame-functions
+;;                 after-setting-font-hook))
+;;   (add-hook hook 'autoset-frame-margins))
 
 (menu-bar-mode -1)
+
+(when (mac?)
+  (setq mac-command-modifier 'meta
+        mac-option-modifier 'super
+        find-function-C-source-directory
+        "/Users/jeff/Library/Caches/Homebrew/emacs-plus@28--git/src/"))
 
 (--defun-native --relative-file-path (&optional path) projectile
   "Return path of current buffer file relative to project root"
@@ -53,22 +64,21 @@
        emojify-download-emojis-p t
        org-directory "~/org/"
        confirm-kill-processes nil
-       frame-title-format '((:eval (if (doom-project-name)
-                                       (format! "[%s]:%s"
-                                                (doom-project-name)
-                                                (or (--relative-file-path) "%b"))
-                                     (if (buffer-file-name)
-                                         (abbreviate-file-name (buffer-file-name))
-                                       "%b"))))
+       frame-title-format
+       '((:eval (if (doom-project-name)
+                    (format! "[%s]:%s"
+                             (doom-project-name)
+                             (or (--relative-file-path) "|%b|"))
+                  (or (-some-> (buffer-file-name) abbreviate-file-name) "<%b>"))))
        require-final-newline t
        +ivy-buffer-preview t
        large-file-warning-threshold (* 100 1000 1000)
 
+       doom-theme 'doom-one
        doom-theme 'doom-tomorrow-night
-       ;; doom-theme 'doom-one
        doom-one-brighter-comments t
        doom-one-brighter-modeline nil
-       doom-themes-padded-modeline nil
+       doom-themes-padded-modeline t
        doom-gruvbox-dark-variant "soft")
 
 (setq-default tab-width 2
@@ -76,28 +86,64 @@
               byte-compile-warning-types '(not free-vars constants mutate-constant)
               lisp-indent-offset nil)
 
-(when (mac?)
-  (setq mac-command-modifier 'meta
-        mac-option-modifier 'super
-        find-function-C-source-directory
-        "/Users/jeff/Library/Caches/Homebrew/emacs-plus@28--git/src/"))
+(defvar --modeline-font nil)
+(defvar --font-family "JetBrains Mono")
+;; (defvar --font-family "JetBrainsMono Nerd Font")
+;; (defvar --font-family "FiraCode Nerd Font")
+(defvar --font-weight 'semibold)
+(defvar --font-size 15)
+(defvar --font-size-mac-offset -1)
+(defvar --font-family-variable "Inter")
+(defvar --font-size-variable 14)
+(defvar --font-weight-variable 'medium)
+(defun --get-font-size (&optional variable?)
+  (+ (if variable? --font-size-variable --font-size)
+     (if (mac?) --font-size-mac-offset 0)))
+
+(defun --get-font-spec (&optional variable? &rest args)
+  (apply 'font-spec
+         :family (if variable? --font-family-variable --font-family)
+         :size (--get-font-size variable?)
+         :weight (if variable? --font-weight-variable --font-weight)
+         args))
 
 (defun --configure-fonts ()
-  (setq! doom-font (font-spec :family "JetBrains Mono"
-                              ;; :family "JetBrainsMono Nerd Font"
-                              ;; :family "FiraCode Nerd Font"
-                              :size (if (mac?) 14 15)
-                              :weight 'semibold)
-         doom-big-font nil
-         doom-big-font-increment 2
-         doom-font-increment 1
-         doom-variable-pitch-font (font-spec :family "Inter" :size 15 :weight 'medium)))
-(defun --sync-fonts ()
-  (interactive)
-  (when (graphical?)
-    (set-frame-font doom-font)))
+  (setq doom-font (--get-font-spec)
+        --modeline-font (--get-font-spec nil :size (- (--get-font-size) 1))
+        doom-big-font nil
+        doom-big-font-increment 2
+        doom-font-increment 1
+        doom-variable-pitch-font (--get-font-spec t))
+  (custom-theme-set-faces! nil
+    `(doom-modeline :font ,--modeline-font)
+    `(mode-line :font ,--modeline-font)
+    `(mode-line-active :font ,--modeline-font)
+    `(mode-line-inactive :font ,--modeline-font)))
+
 (--configure-fonts)
-(add-hook! 'doom-after-reload-hook :append '--configure-fonts '--sync-fonts)
+
+(after! doom-modeline
+  ;; workaround for modeline focus bug
+  ;; running doom/reload-font after focusing frame also fixes this
+  (remove-function after-focus-change-function #'doom-modeline-focus-change))
+
+(--defun-native --sync-fonts (&optional frame) ()
+  (interactive)
+  (--configure-fonts)
+  (when (and (graphical?) (null frame))
+    (set-frame-font doom-font)))
+
+(add-hook! 'doom-after-reload-hook :append '--sync-fonts)
+
+(setq doom-modeline-buffer-file-name-style 'truncate-with-project
+      doom-modeline-persp-name t
+      doom-modeline-persp-icon t
+      doom-modeline-buffer-encoding 'nondefault
+      doom-modeline-default-eol-type 0
+      doom-modeline-indent-info t
+      doom-modeline-modal-icon t
+      ;; doom-modeline-height 21
+      )
 
 (use-package! hl-line)
 
@@ -284,6 +330,7 @@
       "p q" 'project-query-replace-regexp)
 
 (map! :m "0" 'doom/backward-to-bol-or-indent
+      :m "g 0" 'evil-beginning-of-line
       :m "C-a" 'doom/backward-to-bol-or-indent
       :mi "C-f" 'sp-forward-sexp
       :mi "C-b" 'sp-backward-sexp
@@ -418,14 +465,15 @@
   (global-aggressive-indent-mode 0))
 
 (after! company
-  (setq! company-minimum-prefix-length 2
-         company-idle-delay 0.15
+  (setq! company-minimum-prefix-length 1
+         company-idle-delay 0.2
          company-tooltip-minimum-width 50
          company-tooltip-maximum-width 80
          company-tooltip-width-grow-only t
          company-tooltip-offset-display 'scrollbar ; 'lines
          company-box-doc-delay 0.5
-         company-box-enable-icon nil)
+         company-box-enable-icon t
+         company-box-icons-alist 'company-box-icons-all-the-icons)
   (set-company-backend! 'text-mode
     'company-capf)
   (set-company-backend! 'prog-mode
@@ -561,23 +609,49 @@
                 clojure-cider-eastwood
                 emacs-lisp-checkdoc))
 
+(use-package! elsa
+  :defer t)
+
+(use-package! elsa-lsp
+  :commands elsa-lsp-register)
+
+(defun --set-flycheck-eslint ()
+  (lsp-diagnostics-lsp-checker-if-needed)
+  (setq-local flycheck-checker 'javascript-eslint)
+  (flycheck-add-next-checker 'javascript-eslint 'lsp)
+  (flycheck-mode 1)
+  (lsp-mode 1)
+  (flycheck-select-checker 'javascript-eslint))
+
+(--defun-native +syntax-init-popups-h () (flycheck lsp-mode)
+  (unless (and (bound-and-true-p lsp-ui-mode)
+               lsp-ui-sideline-enable)
+    (if (and (fboundp 'flycheck-pos-tip-mode)
+             (display-graphic-p))
+        (flycheck-pos-tip-mode +1)
+      (flycheck-popup-tip-mode +1))))
+
 (after! flycheck
-  ;; '(clojure-mode clojurec-mode clojurescript-mode groovy-mode)
-  (setq flycheck-global-modes '(not org-mode js-mode)
-        flycheck-indication-mode 'right-fringe ; git-gutter uses left fringe
-        )
+  (setq flycheck-global-modes '(not org-mode)
+        ;; git-gutter uses left fringe
+        flycheck-indication-mode 'right-fringe)
   (map! :mode flycheck-mode
         "C-c ." 'flycheck-next-error
         "C-c ," 'flycheck-previous-error)
-  ;; (use-package! fringe-helper)
-  ;; (fringe-helper-define 'flycheck-fringe-bitmap-double-arrow 'center
-  ;;   "...X...."
-  ;;   "..XX...."
-  ;;   ".XXX...."
-  ;;   "XXXX...."
-  ;;   ".XXX...."
-  ;;   "..XX...."
-  ;;   "...X....")
+
+  (flycheck-add-mode 'javascript-eslint 'typescript-ts-mode)
+  (flycheck-add-mode 'javascript-eslint 'tsx-ts-mode)
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+
+  (after! typescript-ts-mode
+    (add-hook! (typescript-ts-mode tsx-ts-mode) '--set-flycheck-eslint))
+  (after! web-mode
+    (add-hook! web-mode '--set-flycheck-eslint))
+
+  (use-package! flycheck-pos-tip
+    :config
+    (flycheck-pos-tip-mode 1))
+
   (global-flycheck-mode 1))
 
 (use-package! paren-face
@@ -605,16 +679,12 @@
         paxedit-whitespace-cleanup t)
   (add-to-list 'emacs-lisp-mode-hook 'paxedit-mode))
 
-(use-package! git-timemachine
-  :bind ("C-M-g" . git-timemachine))
-
-(use-package! expand-region
-  :bind ("C-=" . er/expand-region))
+(use-package! expand-region)
 
 (use-package! whitespace
   :commands whitespace-mode
   :init
-  (add-hook! (prog-mode text-mode) 'whitespace-mode)
+  (add-hook! (prog-mode text-mode conf-mode) 'whitespace-mode)
   :config
   (setq whitespace-line-column nil)
   (setq whitespace-style '(face tabs empty trailing indentation space-after-tab space-before-tab)))
@@ -644,6 +714,8 @@
     (require 'org-notify)
     (setq org-notify-interval 600
           org-notify-fade-time 7)))
+
+(require 'doom-themes-ext-org)
 
 (after! org
   (setq org-log-done 'time
@@ -740,24 +812,13 @@
 (transient-mark-mode t)
 (delete-selection-mode t)
 
-;; (windmove-default-keybindings '(shift))
 (windmove-default-keybindings '(control meta))
-;; (windmove-default-keybindings '(control shift))
 (windmove-mode +1)
-
-;; Mouse support for terminal (iterm2/alacritty)
-'(when (null window-system) ;; (and (mac?) (null window-system))
-   (require 'mwheel)
-   (require 'mouse)
-   (xterm-mouse-mode t)
-   (mouse-wheel-mode t)
-   (global-set-key [mouse-5] 'next-line)
-   (global-set-key [mouse-4] 'previous-line))
 
 (use-package! uniquify
   :config
   (setq uniquify-buffer-name-style 'post-forward
-        uniquify-separator "/"
+        uniquify-separator "|"
         uniquify-after-kill-buffer-p t
         uniquify-ignore-buffers-re "^\\*"))
 
@@ -1135,19 +1196,6 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
          (when-let ((b (--cider-next-repl (current-buffer))))
            (switch-to-buffer-other-window b)))))
 
-(setq doom-modeline-buffer-file-name-style 'truncate-with-project
-      doom-modeline-persp-name t
-      doom-modeline-persp-icon t
-      doom-modeline-buffer-encoding 'nondefault
-      doom-modeline-default-eol-type 0
-      doom-modeline-indent-info t
-      doom-modeline-modal-icon t)
-
-;; (dolist (hook '(window-setup-hook
-;;                 window-size-change-functions
-;;                 after-make-frame-functions
-;;                 after-setting-font-hook))
-;;   (add-hook hook 'autoset-frame-margins))
 
 (after! minimap
   (setq minimap-update-delay 0.1
@@ -1158,44 +1206,75 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
     (add-to-list 'aw-ignored-buffers "*MINIMAP*")))
 
 (--defun-native --ensure-treemacs-hl-line-mode (&rest _) (treemacs hl-line)
-  (when (treemacs-is-treemacs-window-selected?)
-    (unless (buffer-local-value 'hl-line-mode (window-buffer))
-      (hl-line-mode 1))))
+  (-when-let (window (treemacs-get-local-window))
+    (with-current-buffer (window-buffer window)
+      (unless (buffer-local-value 'hl-line-mode (window-buffer))
+        (hl-line-mode 1)))))
 
-(with-eval-after-load 'treemacs
-  (setq! doom-themes-treemacs-enable-variable-pitch t)
-  (require 'doom-themes-ext-treemacs))
+(--defun-native --treemacs-variable-pitch (&rest _) (treemacs)
+  (dolist (face '(treemacs-root-face
+                  treemacs-git-unmodified-face
+                  treemacs-git-modified-face
+                  treemacs-git-renamed-face
+                  treemacs-git-ignored-face
+                  treemacs-git-untracked-face
+                  treemacs-git-added-face
+                  treemacs-git-conflict-face
+                  treemacs-directory-face
+                  treemacs-directory-collapsed-face
+                  treemacs-file-face
+                  treemacs-tags-face))
+    (let ((faces (face-attribute face :inherit nil)))
+      (set-face-attribute
+       face nil :inherit
+       `(variable-pitch
+         ,@(delq 'unspecified (if (listp faces) faces (list faces))))))))
 
-(with-eval-after-load 'org
-  (require 'doom-themes-ext-org))
+(--defun-native --treemacs-hide-fringes (&rest _) (treemacs)
+  (-when-let (window (treemacs-get-local-window))
+    (with-current-buffer (window-buffer window)
+      ;; ensure fringe-indicator-mode is enabled
+      (unless (eq (buffer-local-value 'treemacs-fringe-indicator-mode (current-buffer)) 'always)
+        (treemacs-fringe-indicator-mode 'always))
+      ;; disable right fringe
+      (set-window-fringes window nil 0))))
 
-(use-package! treemacs
-  :defer t
-  :init
-  (setq! +treemacs-git-mode 'deferred
-         treemacs-display-in-side-window t
-         treemacs-file-event-delay 500
-         treemacs-silent-filewatch t
-         treemacs-silent-refresh t
-         treemacs-deferred-git-apply-delay 0.5
-         treemacs-file-follow-delay 0.1
-         treemacs-recenter-after-file-follow 'on-distance
-         treemacs-recenter-distance 0.1
-         treemacs-is-never-other-window t
-         treemacs-show-cursor nil)
-  :config
+(setq! +treemacs-git-mode 'deferred
+       treemacs-display-in-side-window t
+       treemacs-file-event-delay 500
+       treemacs-silent-filewatch t
+       treemacs-silent-refresh t
+       treemacs-deferred-git-apply-delay 0.5
+       treemacs-file-follow-delay 0.1
+       treemacs-recenter-after-file-follow 'on-distance
+       treemacs-recenter-distance 0.1
+       treemacs-is-never-other-window t
+       treemacs-show-cursor nil)
+
+(after! treemacs
+  (setq-hook! treemacs-mode mode-line-format nil)
+  (setq-hook! treemacs-mode tab-width 1)
+  (--treemacs-variable-pitch)
+  (add-hook! 'doom-load-theme-hook :append '--treemacs-variable-pitch)
+  (after! solaire-mode
+    (pushnew! solaire-mode-remap-alist
+              '(treemacs-window-background-face . solaire-default-face))
+    (pushnew! solaire-mode-remap-alist
+              '(treemacs-hl-line-face . solaire-hl-line-face))
+    (add-hook! lsp-treemacs-error-list-mode 'solaire-mode)
+    (solaire-global-mode +1))
   (treemacs-git-mode 1)
   (treemacs-follow-mode 1)
   (treemacs-project-follow-mode 1)
   (treemacs-filewatch-mode 1)
   (treemacs-hide-gitignored-files-mode 1)
-  (treemacs-fringe-indicator-mode 'always)
-  (map! :mode treemacs-mode "C-o" (cmd! (call-interactively 'other-window)))
-  ;; (require 'lsp-treemacs)
-  ;; (lsp-treemacs-generic-mode 1)
-  ;; (lsp-treemacs-sync-mode 1)
-  ;; (lsp-treemacs-error-list-mode 1)
-  (add-hook! 'treemacs-select-functions '--ensure-treemacs-hl-line-mode))
+  (after! (lsp-mode lsp-treemacs)
+    (lsp-treemacs-sync-mode 1))
+  (add-hook! 'treemacs-select-functions
+             '--ensure-treemacs-hl-line-mode
+             '--treemacs-hide-fringes)
+  (map! :mode treemacs-mode
+        "C-o" (cmd! (call-interactively 'other-window))))
 
 (defvar --ensure-treemacs-open nil)
 
@@ -1230,6 +1309,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   :config
   (global-emojify-mode -1)
   (global-emojify-mode-line-mode -1)
+
   (custom-set-variables
    '(emojify-display-style 'image)
    '(emojify-emoji-styles '(unicode))))
@@ -1304,6 +1384,10 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
             typescript-ts-mode
             rjsx-mode)
     (pushnew! lsp-tailwindcss-major-modes it)))
+
+(after! lsp-css
+  (setq! lsp-css-lint-unknown-at-rules "ignore")
+  (setq! lsp-svelte-plugin-css-diagnostics-enable nil))
 
 (defvar --default-server-name "server")
 

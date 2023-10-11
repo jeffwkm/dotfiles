@@ -230,6 +230,13 @@ interactively for spacing value."
                                     (string-prefix-p prefix path))
                                   prefixes))))))))
 
+(defun --list-buffers-by-regexps (regexps)
+  (let* ((regexps (-list regexps))
+         (match? (lambda (path)
+                   (--any? (string-match it path) regexps))))
+    (--filter (-some->> (buffer-file-name it) (funcall match?))
+              (buffer-list))))
+
 (defvar --external-source-file-paths nil)
 
 (--each `("/nix/store"
@@ -244,7 +251,8 @@ interactively for spacing value."
 (defun --kill-external-source-buffers ()
   (interactive)
   (save-excursion
-    (-> (--list-buffers-by-prefix --external-source-file-paths)
+    (-> (append (--list-buffers-by-prefix --external-source-file-paths)
+                (--list-buffers-by-regexps '("/node_modules/")))
         (-each 'kill-buffer))))
 
 (require 'projectile)
@@ -345,11 +353,11 @@ interactively for spacing value."
          (decl (when (eq (car-safe body) 'declare) (pop body)))
          (interactive (when (eq (car-safe body) 'interactive) (pop body))))
     `(progn
-       (defun ,@`(,name ,args ,@(-non-nil `(,docstring ,decl ,interactive)))
-           ,@body)
-       (when (native-comp-available-p)
+       (when ,(native-comp-available-p)
          (after! ,`(doom ,@features)
-           (--compile-soon ',name))))))
+           (--compile-soon ',name)))
+       (defun ,@`(,name ,args ,@(-non-nil `(,docstring ,decl ,interactive)))
+           ,@body))))
 
 (with-eval-after-load 'commands
   (native-compile-async `(,(file!)) nil t))

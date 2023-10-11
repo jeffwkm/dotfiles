@@ -14,7 +14,7 @@ in {
       "${config.user.home}/bin.local"
       "${config.user.home}/bin"
       "${config.user.home}/.cargo/bin"
-      "${config.user.home}/.node_modules/bin"
+      "${config.user.home}/node_modules/bin"
     ];
 
     # programs.ssh = {

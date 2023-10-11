@@ -40,8 +40,8 @@
       "^5": "",
       // "^8": "",
       // "^10": "",
-      "urgent": "",
-      "focused": "",
+      // "urgent": "",
+      // "focused": "",
       "default": ""
     },
     "persistent_workspaces": {

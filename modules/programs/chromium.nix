@@ -32,8 +32,8 @@ in {
       home.packages = with pkgs; [ chromium chromedriver google-chrome ];
 
       home.sessionVariables = {
-        # BROWSER = "${chromiumSh}/bin/chromium.sh";
-        # DEFAULT_BROWSER = "${chromiumSh}/bin/chromium.sh";
+        BROWSER = "${chromiumSh}/bin/chromium.sh";
+        DEFAULT_BROWSER = "${chromiumSh}/bin/chromium.sh";
       };
     };
   };

@@ -2,18 +2,20 @@
   border: none;
   border-radius: 0;
   /* `otf-font-awesome` is required to be installed for icons */
-  /* font-family: Roboto, Helvetica, Arial, sans-serif; */
-  /* font-family: 'InputMono Nerd Font', Inconsolata, monospace; */
-  /* font-family: "InputC4Mono Nerd Font", Inconsolata, monospace; */
+
   font-family: "JetBrains Mono Nerd Font", Inconsolata, monospace;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
+
+  /* font-family: "Inter", system-ui, sans-serif; */
+  /* font-size: 14px; */
+  /* font-weight: 500; */
 }
 
 window#waybar {
   background: rgba(0, 0, 0, 0.7);
   /*  border-bottom: 1.5px solid rgba(100, 114, 125, 0.5); */
-  border-bottom: 1.5px solid rgba(105, 105, 105, 0.6);
+  border-bottom: 1.5px solid rgba(105, 105, 105, 0.75);
   color: #ffffff;
   transition-property: background-color;
   transition-duration: 0.33s;

@@ -79,6 +79,17 @@
     networking.dhcpcd.allowInterfaces = [ "br0" ];
     systemd.services.br0-netdev.wantedBy = [ "multi-user.target" ];
 
+    systemd.services.keyd = {
+      enable = true;
+      after = [ "systemd-udevd.service" ];
+      requires = [ "systemd-udevd.service" ];
+      wantedBy = [ "default.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.keyd}/bin/keyd";
+      };
+    };
+
     fileSystems = {
       "/" = {
         device = "/dev/disk/by-uuid/77f52a6d-7ee3-44c8-ade9-0628efb1b63f";

@@ -90,30 +90,28 @@ in {
           optionals cfg.qt.enable [ qt5.full qt5.qtwayland ];
         cli = with pkgs;
           [
-            xdg-user-dirs
-            usbutils
-            libnotify
-            pamixer
-            playerctl
+            caerbannog
+            ddcutil
+            ffmpegthumbnailer
+            keyd
             latencytop
             libinput
+            libnotify
             ncpamixer
             pamixer
             playerctl
-            ddcutil
-            ffmpegthumbnailer
-            caerbannog
             podgrab
+            usbutils
+            xdg-user-dirs
           ] ++ [
-            smartmontools
-            lm_sensors
             acpi
             exfat
-            kernelshark
-            pciutils
-            linuxPackages.cpupower
             glib
-            exfat
+            kernelshark
+            linuxPackages.cpupower
+            lm_sensors
+            pciutils
+            smartmontools
           ];
         gui = with pkgs; [ pinentry-gtk2 pavucontrol snes9x-gtk ];
       in {
