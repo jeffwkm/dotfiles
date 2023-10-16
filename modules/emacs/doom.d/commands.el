@@ -20,7 +20,8 @@
 
 (defun -msg (inhibit msg &rest args)
   (let ((inhibit-message (not (not inhibit))))
-    (message (apply #'format msg args))))
+    (message (apply #'format msg args))
+    nil))
 
 (defun --scroll-down-one-line ()
   (interactive)
@@ -251,9 +252,13 @@ interactively for spacing value."
 (defun --kill-external-source-buffers ()
   (interactive)
   (save-excursion
-    (-> (append (--list-buffers-by-prefix --external-source-file-paths)
-                (--list-buffers-by-regexps '("/node_modules/")))
-        (-each 'kill-buffer))))
+    (let ((buffers (append (--list-buffers-by-prefix --external-source-file-paths)
+                           (--list-buffers-by-regexps '("/node_modules/" "/.svelte-kit/")))))
+      (if (null buffers)
+          (-msg nil "No external file buffers found")
+        (-msg nil "Killing %d buffer(s)" (length buffers))
+        (-each buffers 'kill-buffer)
+        nil))))
 
 (require 'projectile)
 

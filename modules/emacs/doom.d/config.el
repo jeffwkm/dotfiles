@@ -118,7 +118,8 @@
     `(doom-modeline :font ,--modeline-font)
     `(mode-line :font ,--modeline-font)
     `(mode-line-active :font ,--modeline-font)
-    `(mode-line-inactive :font ,--modeline-font)))
+    `(mode-line-inactive :font ,--modeline-font)
+    `(font-lock-comment-face :foreground "#7a7b7b")))
 
 (--configure-fonts)
 
@@ -430,14 +431,7 @@
   (add-hook! (sh-mode shell-mode) 'rainbow-mode)
   (use-package! company-shell))
 
-(after! rustic
-  (setq! lsp-rust-analyzer-server-format-inlay-hints t
-         lsp-rust-analyzer-display-parameter-hints nil
-         lsp-rust-analyzer-max-inlay-hint-length 15
-         lsp-rust-clippy-preference "opt-in"
-         lsp-rust-rustfmt-path "rustfmt"
-         lsp-rust-analyzer-diagnostics-disabled ["inactive-code"]
-         lsp-rust-analyzer-display-chaining-hints t))
+
 
 (after! rainbow-mode
   (setq! rainbow-html-colors t
@@ -498,11 +492,11 @@
   (global-company-mode 1))
 
 (use-package! copilot
-  :hook ((prog-mode . copilot-mode)
-         (conf-mode . copilot-mode))
+  :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
-  (setq! copilot-idle-delay 0
-         copilot-max-char 300000)
+  (setq! copilot-idle-delay (* 1000 1000)
+         copilot-max-char 100000)
+  ;; (remove-hook! (prog-mode conf-mode) 'copilot-mode)
   (map! :mode copilot-mode
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept
@@ -616,7 +610,7 @@
 (use-package! elsa-lsp
   :commands elsa-lsp-register)
 
-(defun --set-flycheck-eslint ()
+(--defun-native --set-flycheck-eslint () (flycheck lsp-mode)
   (lsp-diagnostics-lsp-checker-if-needed)
   (setq-local flycheck-checker 'javascript-eslint)
   (flycheck-add-next-checker 'javascript-eslint 'lsp)
@@ -869,50 +863,77 @@
 (after! editorconfig
   (setq! editorconfig-lisp-use-default-indent t))
 
+(--defun-native --lsp-ui-doc-glance-toggle () (lsp-mode lsp-ui lsp-ui-doc)
+  (interactive)
+  (if (lsp-ui-doc--frame-visible-p)
+      (lsp-ui-doc-hide)
+    (lsp-ui-doc-glance)))
+
 (use-package! lsp-mode
   :defer-incrementally t
-  :init
+  :config
   (setq! lsp-idle-delay 0.5
          lsp-response-timeout 10
-         lsp-enable-dap-auto-configure nil))
-
-(after! (lsp-mode company)
-  ;; trying to fix company-mode errors from conflict with lsp-mode
-  (setq! lsp-completion-enable-additional-text-edit t
-         lsp-completion-default-behaviour :replace
-         lsp-enable-snippet t
-         lsp-enable-links nil
-         lsp-enable-symbol-highlighting t
-         lsp-symbol-highlighting-skip-current nil))
-
-(after! (nix-mode lsp-mode)
-  (defcustom-lsp lsp-nix-nil-auto-archive nil
-    "Auto-archiving behavior which may use network."
-    :type 'lsp-json-bool
-    :group 'lsp-nix-nil
-    :lsp-path "nil.nix.flake.autoArchive"
-    :package-version '(lsp-mode . "8.0.1"))
-  (defcustom-lsp lsp-nix-nil-auto-eval-inputs nil
-    "Whether to auto-eval flake inputs.
+         lsp-enable-dap-auto-configure nil
+         lsp-ui-doc-max-width 100
+         lsp-ui-doc-max-height 13
+         lsp-ui-doc-use-childframe t
+         lsp-ui-doc-use-webkit nil)
+  (use-package! lsp-ui)
+  (use-package! lsp-ui-doc)
+  (after! rustic
+    (setq! lsp-rust-analyzer-server-format-inlay-hints t
+           lsp-rust-analyzer-display-parameter-hints nil
+           lsp-rust-analyzer-max-inlay-hint-length 15
+           lsp-rust-clippy-preference "opt-in"
+           lsp-rust-rustfmt-path "rustfmt"
+           lsp-rust-analyzer-diagnostics-disabled ["inactive-code"]
+           lsp-rust-analyzer-display-chaining-hints t))
+  (after! company
+    ;; trying to fix company-mode errors from conflict with lsp-mode
+    (setq! lsp-completion-enable-additional-text-edit t
+           lsp-completion-default-behaviour :replace
+           lsp-enable-snippet nil
+           lsp-enable-links nil
+           lsp-enable-symbol-highlighting t
+           lsp-symbol-highlighting-skip-current nil))
+  (after! nix-mode
+    (defcustom-lsp lsp-nix-nil-auto-archive nil
+      "Auto-archiving behavior which may use network."
+      :type 'lsp-json-bool
+      :group 'lsp-nix-nil
+      :lsp-path "nil.nix.flake.autoArchive"
+      :package-version '(lsp-mode . "8.0.1"))
+    (defcustom-lsp lsp-nix-nil-auto-eval-inputs nil
+      "Whether to auto-eval flake inputs.
 The evaluation result is used to improve completion, but may cost lots of time and/or memory."
-    :type 'boolean
-    :group 'lsp-nix-nil
-    :lsp-path "nil.nix.flake.autoEvalInputs"
-    :package-version '(lsp-mode . "8.0.1"))
-  (defcustom-lsp lsp-nix-nil-nixpkgs-input-name nil
-    "The input name of nixpkgs for NixOS options evaluation.
+      :type 'boolean
+      :group 'lsp-nix-nil
+      :lsp-path "nil.nix.flake.autoEvalInputs"
+      :package-version '(lsp-mode . "8.0.1"))
+    (defcustom-lsp lsp-nix-nil-nixpkgs-input-name nil
+      "The input name of nixpkgs for NixOS options evaluation.
 The options hierarchy is used to improve completion, but may cost lots of time and/or memory.
 If this value is `null` or is not found in the workspace flake's inputs, NixOS options are not evaluated."
-    :type 'string
-    :group 'lsp-nix-nil
-    :lsp-path "nil.nix.flake.nixpkgsInputName"
-    :package-version '(lsp-mode . "8.0.1"))
-  (setq! lsp-nix-rnix-server-path nil
-         lsp-nix-nil-server-path "nil"
-         lsp-nix-nil-formatter ["nixfmt" "-w" "80"]
-         lsp-nix-nil-auto-archive t
-         lsp-nix-nil-auto-eval-inputs nil
-         lsp-nix-nil-nixpkgs-input-name "nixpkgs"))
+      :type 'string
+      :group 'lsp-nix-nil
+      :lsp-path "nil.nix.flake.nixpkgsInputName"
+      :package-version '(lsp-mode . "8.0.1"))
+    (setq! lsp-nix-rnix-server-path nil
+           lsp-nix-nil-server-path "nil"
+           lsp-nix-nil-formatter ["nixfmt" "-w" "80"]
+           lsp-nix-nil-auto-archive t
+           lsp-nix-nil-auto-eval-inputs nil
+           lsp-nix-nil-nixpkgs-input-name "nixpkgs"))
+  (map! :mode lsp-mode
+        "s-l" '--lsp-ui-doc-glance-toggle
+        "s-L" (cmd! (lsp-ui-doc--delete-frame) (command-execute 'lsp-ui-doc-glance))
+        "s-;" 'lsp-ui-doc-focus-frame
+        :mode lsp-ui-doc-frame-mode
+        "s-l" 'lsp-ui-doc-hide
+        "s-;" 'lsp-ui-doc-unfocus-frame
+        :leader
+        "l" 'lsp-ui-doc-toggle))
 
 (use-package! vimrc-mode
   :mode "\\.vim\\(rc\\)?\\'")

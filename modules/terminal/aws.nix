@@ -14,7 +14,7 @@ in {
         AWS_VAULT_PASS_PASSWORD_STORE_DIR = "${user.home}/.password-store";
         AWS_VAULT_PASS_PREFIX = "awsvault";
       };
-      home.packages = with pkgs; [ awscli2 aws-vault ec2-api-tools pass ];
+      home.packages = with pkgs; [ awscli2 aws-vault pass ];
     };
   };
 }
