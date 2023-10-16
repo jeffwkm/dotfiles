@@ -49,7 +49,6 @@ in {
           rnix-lsp
           shellcheck
           shfmt
-          srvc
           subversion
         ] ++ optionals (!darwin) [ gcc ];
     };

@@ -19,7 +19,6 @@ with lib.my; {
       "d12frosted/emacs-plus"
       "homebrew/bundle"
       "homebrew/cask"
-      "homebrew/cask-drivers"
       "homebrew/cask-fonts"
       "homebrew/cask-versions"
       "homebrew/core"
@@ -27,7 +26,6 @@ with lib.my; {
       "koekeishiya/formulae"
       "railwaycat/emacsmacport"
       "cmacrae/formulae"
-      "insilica/srvc"
     ];
 
     homebrew.brews = [
@@ -48,7 +46,6 @@ with lib.my; {
       "gnutls"
       "gtk+3"
       "ifstat"
-      # "insilica/srvc/srvc"
       "imagemagick"
       "ispell"
       "jansson"

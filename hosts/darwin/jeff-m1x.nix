@@ -8,7 +8,7 @@
       aws.enable = true;
       fonts.enable = true;
       emacs.enable = true;
-      emacs.install = false;
+      emacs.install = true;
       programs.mpv.enable = true;
       programs.spotify.enable = true;
       programs.vscode.enable = true;
@@ -20,6 +20,7 @@
         decorations = "buttonless";
         fontFamily = "JetBrainsMono Nerd Font";
         fontStyle = "Medium";
+        # opacity = "0.9";
       };
     };
 

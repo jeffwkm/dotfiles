@@ -266,6 +266,7 @@
   :defer-incrementally t
   :config
   (add-hook! (emacs-lisp-mode ielm-mode) 'elisp-slime-nav-mode)
+  (add-hook! emacs-lisp-mode 'tree-sitter-mode)
   (map! :mode elisp-slime-nav-mode
         "M-." nil))
 
@@ -623,7 +624,7 @@
   (lsp-mode 1)
   (flycheck-select-checker 'javascript-eslint))
 
-(--defun-native +syntax-init-popups-h () (flycheck lsp-mode)
+(--defun-native +syntax-init-popups-h () (flycheck lsp-mode lsp-ui-sideline)
   (unless (and (bound-and-true-p lsp-ui-mode)
                lsp-ui-sideline-enable)
     (if (and (fboundp 'flycheck-pos-tip-mode)

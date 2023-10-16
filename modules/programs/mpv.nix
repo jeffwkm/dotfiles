@@ -56,8 +56,8 @@ in {
 
       xdg.configFile = let
         mpvExtra = (if darwin then ''
-          icc-profile-auto=yes
-          hwdec=auto
+          profile=gpu-hq
+          no-native-fs
           input-ipc-server=/tmp/mpvsocket
         '' else ''
           profile=gpu-hq

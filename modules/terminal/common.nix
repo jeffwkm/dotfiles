@@ -9,6 +9,9 @@ in {
   options.modules.terminal = { enable = mkBoolOpt true; };
 
   config = mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      cachix
+    ];
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       xdg.configFile = {
         "htop/htoprc".source = config.lib.file.mkOutOfStoreSymlink
