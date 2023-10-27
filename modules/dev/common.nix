@@ -46,9 +46,13 @@ in {
           openai
           python310Packages.grip
           rbenv
+          reg
+          regctl
           rnix-lsp
+          semgrep
           shellcheck
           shfmt
+          skopeo
           subversion
         ] ++ optionals (!darwin) [ gcc ];
     };

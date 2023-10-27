@@ -33,11 +33,9 @@
   (forward-line -1)
   (scroll-down 1))
 
-(require 'ivy)
-
 (defun --show-active-minor-modes ()
   (interactive)
-  (ivy-read "" (doom-active-minor-modes)))
+  (completing-read "" (doom-active-minor-modes)))
 
 (defun -uniq-major-modes ()
   "Return list of unique major modes of all buffers."
@@ -346,7 +344,7 @@ interactively for spacing value."
                                (string-join " ")))
   (when fn-syms
     (deferred:$
-     (deferred:wait-idle 1500)
+     (deferred:wait-idle 500)
      (deferred:nextc it (fn! (--native-comp (car fn-syms))))
      (deferred:nextc it (fn! (-some->> (cdr fn-syms) (apply '--compile-soon)))))
     nil))

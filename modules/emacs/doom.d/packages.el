@@ -3,7 +3,6 @@
 
 (package! aggressive-indent :built-in 'prefer)
 (package! alert :built-in 'prefer)
-(package! company-box :built-in 'prefer)
 (package! company-quickhelp :built-in 'prefer)
 (package! company-statistics :built-in 'prefer)
 (package! copilot :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
@@ -19,7 +18,6 @@
 (package! groovy-mode)
 (package! ligature)
 (package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
-(package! mpv)
 (package! nginx-mode)
 (package! nix-buffer :built-in 'prefer)
 (package! nix-sandbox :built-in 'prefer)

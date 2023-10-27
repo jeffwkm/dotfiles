@@ -9,7 +9,7 @@ let
     nix="${pkgs.nix}/bin/nix"
     cd "${config.host.config-dir}"
     nixpkgs_flake="$($nix eval --raw '.#inputs.nixpkgs')"
-    $nix search -I nixpkgs="$nixpkgs_flake" nixpkgs "$*"
+    $nix search -I nixpkgs="$nixpkgs_flake" nixpkgs $@
   '';
 
   lsd_completion =
@@ -64,6 +64,7 @@ let
       v = "vim";
       ### nix
       ss = "${nix-flake-search}";
+      ns = "nix search nixpkgs";
       ### tmux
       tmux = "tmux -2";
       tn = "tmux new-session -s";

@@ -71,7 +71,6 @@
                              (or (--relative-file-path) "|%b|"))
                   (or (-some-> (buffer-file-name) abbreviate-file-name) "<%b>"))))
        require-final-newline t
-       +ivy-buffer-preview t
        large-file-warning-threshold (* 100 1000 1000)
 
        doom-theme 'doom-one
@@ -147,11 +146,6 @@
       )
 
 (use-package! hl-line)
-
-;; fixes for warnings/errors on doom init and reload
-(after! ivy
-  (use-package! hydra)
-  (require 'ivy-hydra))
 
 (use-package! fringe
   :config
@@ -264,10 +258,10 @@
 
 (use-package! elisp-mode
   :mode ("\\.el\\'" . emacs-lisp-mode)
-  :defer-incrementally t
   :config
+  (use-package! tree-sitter)
   (add-hook! (emacs-lisp-mode ielm-mode) 'elisp-slime-nav-mode)
-  (add-hook! emacs-lisp-mode 'tree-sitter-mode)
+  ;; (add-hook! emacs-lisp-mode 'tree-sitter-mode)
   (map! :mode elisp-slime-nav-mode
         "M-." nil))
 
@@ -431,8 +425,6 @@
   (add-hook! (sh-mode shell-mode) 'rainbow-mode)
   (use-package! company-shell))
 
-
-
 (after! rainbow-mode
   (setq! rainbow-html-colors t
          rainbow-html-colors-alist nil
@@ -529,10 +521,8 @@
 
 (after! projectile
   (setq projectile-indexing-method 'hybrid
-        projectile-indexing-method 'alien
         projectile-enable-caching nil
-        projectile-completion-system 'ivy)
-  (map! "C-M-s" '+ivy/project-search))
+        projectile-completion-system 'auto))
 
 (after! swiper
   (setq swiper-action-recenter t)
@@ -541,9 +531,8 @@
         "C-S-S" 'swiper-all
         :m "/" 'counsel-grep-or-swiper))
 
-(use-package! ligature)
-
-(after! ligature
+(use-package! ligature
+  :config
   ;; ";;" "~-" "~@" "~~" "-~"
   (->> '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
          ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
@@ -648,6 +637,10 @@
     (flycheck-pos-tip-mode 1))
 
   (global-flycheck-mode 1))
+
+(after! lsp-semgrep
+  (setq! lsp-semgrep-languages (-remove (fn! (-contains? '("docker" "dockerfile") %1))
+                                        lsp-semgrep-languages)))
 
 (use-package! paren-face
   :disabled t
@@ -1422,15 +1415,16 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 
 (defun --restore-default-session (session-name)
   "Runs `doom/load-session' using default session file for `session-name'."
-  (interactive
-   (list (intern
-          (let ((options (->> (list server-name --default-server-name)
-                              (-filter #'stringp)
-                              (-distinct)
-                              (-map (lambda (x)
-                                      (list x "extra 1"))))))
-            (ivy-read "Load session name: " options
-                      :initial-input (caar options))))))
+  (interactive)
+  ''(interactive
+     (list (intern
+            (let ((options (->> (list server-name --default-server-name)
+                                (-filter #'stringp)
+                                (-distinct)
+                                (-map (lambda (x)
+                                        (list x "extra 1"))))))
+              (ivy-read "Load session name: " options
+                        :initial-input (caar options))))))
   (doom/load-session (--default-session-file-path session-name)))
 
 (defvar --server-initialized nil)

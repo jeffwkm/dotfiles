@@ -20,22 +20,22 @@
        ;; layout           ; auie,ctsrnm is the superior home row
 
        :completion
-       (company +childframe) ; the ultimate code completion backend
+       (company)           ; the ultimate code completion backend
        ;; helm             ; the *other* search engine for love and life
        ;; ido              ; the other *other* search engine...
-       (ivy +icons +prescient) ; a search engine for love and life
+       ;; (ivy +icons +prescient) ; a search engine for love and life
+       (vertico +icons)
 
        :ui
        ;; deft             ; notational velocity for Emacs
        doom                ; what makes DOOM look the way it does
        doom-dashboard      ; a nifty splash screen for Emacs
-       doom-quit           ; DOOM quit-message prompts when you quit Emacs
+       ;; doom-quit           ; DOOM quit-message prompts when you quit Emacs
        (emoji +unicode)    ; 🙂
-       ;; fill-column      ; a `fill-column' indicator
        hl-todo             ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ;; indent-guides    ; highlighted indent columns
-       ;; ligatures        ; ligatures and symbols to make your code pretty again
+       ligatures        ; ligatures and symbols to make your code pretty again
        minimap             ; show a map of the code on the side
        modeline            ; snazzy, Atom-inspired modeline, plus API
        nav-flash           ; blink cursor line after big motions
@@ -44,7 +44,7 @@
        (popup +defaults)   ; tame sudden yet inevitable temporary windows
        ;; tabs             ; a tab bar for Emacs
        (treemacs +lsp)     ; a project drawer, like neotree but cooler
-       unicode             ; extended unicode support for various languages
+       ;; unicode             ; extended unicode support for various languages
        (vc-gutter +pretty) ; vcs diff in the fringe
        ;; vi-tilde-fringe     ; fringe tildes to mark beyond EOB
        window-select       ; visually switch windows
@@ -67,7 +67,7 @@
 
        :emacs
        (dired +icons)      ; making dired pretty [functional]
-       ;; electric         ; smarter, keyword-based electric-indent
+       electric         ; smarter, keyword-based electric-indent
        (ibuffer +icons)    ; interactive buffer management
        undo                ; persistent, smarter undo for your inevitable mistakes
        vc                  ; version-control and Emacs, sitting in a tree
@@ -85,9 +85,9 @@
 
        :tools
        ;; ansible
-       (debugger +lsp)     ; FIXME stepping through code, to help you add bugs
+       ;; (debugger +lsp)     ; FIXME stepping through code, to help you add bugs
        direnv
-       ;; docker
+       (docker +lsp)
        editorconfig        ; let someone else argue about tabs vs spaces
        ;; ein              ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
@@ -102,8 +102,8 @@
        rgb                 ; creating color strings
        ;; terraform        ; infrastructure as code
        ;; tmux             ; an API for interacting with tmux
-       ;; upload           ; map local to remote projects via ssh/ftp
        tree-sitter
+       upload           ; map local to remote projects via ssh/ftp
 
        :os
        (:if IS-MAC macos)  ; improve compatibility with macOS
