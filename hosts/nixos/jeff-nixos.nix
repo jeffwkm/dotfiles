@@ -101,7 +101,15 @@
       };
       "/mnt/arch" = {
         device = "/dev/disk/by-label/arch_os_nvme";
+        neededForBoot = true;
         fsType = "ext4";
+      };
+      "/nix" = {
+        device = "/mnt/arch/nix";
+        depends = [ "/" "/mnt/arch" ];
+        neededForBoot = true;
+        fsType = "none";
+        options = "bind";
       };
       "/mnt/huge" = {
         device = "jeff@jeff-home:/mnt/huge";
