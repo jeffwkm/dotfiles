@@ -131,13 +131,22 @@
       };
     };
 
-    # boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.kernelPackages = pkgs.linuxPackages_latest;
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
       [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
-    boot.initrd.kernelModules =
-      [ "vfio" "vfio_iommu_type1" "vfio_pci" "vfio_virqfd" "amdgpu" ];
+    # boot.initrd.kernelModules =
+    #   [ "vfio" "vfio_iommu_type1" "vfio_pci" "vfio_virqfd" "amdgpu" ];
+    boot.initrd.kernelModules = [
+      "vfio"
+      "vfio_iommu_type1"
+      "vfio_pci"
+      "vfio_pci_core"
+      "irqbypass"
+      "iommufd"
+      "amdgpu"
+    ];
     boot.blacklistedKernelModules = [ "nouveau" "nvidia" ];
     boot.kernelParams = [
       "amd_iommu=on"
