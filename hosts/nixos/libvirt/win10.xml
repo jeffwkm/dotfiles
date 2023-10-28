@@ -239,12 +239,12 @@
   <seclabel type='dynamic' model='dac' relabel='yes'/>
   <qemu:commandline>
     <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=kbd1,evdev=/dev/input/by-id/uinput-persist-keyboard0,grab_all=on,repeat=on,grab-toggle=alt-alt'/>
+    <qemu:arg value='input-linux,id=kbd1,evdev=/dev/input/by-id/usb-Topre_Corporation_HHKB_Professional-event-kbd,grab_all=on,repeat=on,grab-toggle=alt-alt'/>
     <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/uinput-persist-mouse0'/>
+    <qemu:arg value='input-linux,id=mouse1,evdev=/dev/input/by-id/usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-mouse'/>
     <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=mouse2,evdev=/dev/input/by-id/uinput-persist-mouse1'/>
+    <qemu:arg value='input-linux,id=mouse2,evdev=/dev/input/by-id/usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-if01-event-kbd'/>
     <qemu:arg value='-object'/>
-    <qemu:arg value='input-linux,id=mouse3,evdev=/dev/input/by-id/uinput-persist-mouse2'/>
+    <qemu:arg value='input-linux,id=mouse3,evdev=/dev/input/by-id/usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-if02'/>
   </qemu:commandline>
 </domain>

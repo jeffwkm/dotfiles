@@ -38,7 +38,7 @@
     # - this is needed so that qemu "-object input-linux,evdev=..." won't break
     #   if the host device is temporarily disconnected
     services.persistent-evdev = {
-      enable = true;
+      enable = false;
       devices = {
         persist-keyboard0 = "usb-Topre_Corporation_HHKB_Professional-event-kbd";
         persist-mouse0 =
@@ -47,7 +47,7 @@
           "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-if02";
         persist-mouse2 =
           "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-if01-event-kbd";
-        persist-steam0 = "usb-Valve_Software_Steam_Controller-event-mouse";
+        # persist-steam0 = "usb-Valve_Software_Steam_Controller-event-mouse";
       };
     };
 
