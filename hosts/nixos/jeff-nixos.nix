@@ -38,7 +38,7 @@
     # - this is needed so that qemu "-object input-linux,evdev=..." won't break
     #   if the host device is temporarily disconnected
     services.persistent-evdev = {
-      enable = false;
+      enable = true;
       devices = {
         persist-keyboard0 = "usb-Topre_Corporation_HHKB_Professional-event-kbd";
         persist-mouse0 =
@@ -47,7 +47,7 @@
           "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-event-if02";
         persist-mouse2 =
           "usb-SteelSeries_SteelSeries_Prime_Mini_Wireless-if01-event-kbd";
-        # persist-steam0 = "usb-Valve_Software_Steam_Controller-event-mouse";
+        persist-steam0 = "usb-Valve_Software_Steam_Controller-event-mouse";
       };
     };
 
@@ -69,7 +69,7 @@
         "/dev/input/by-id/uinput-persist-mouse1",
         "/dev/input/by-id/uinput-persist-mouse2",
         "/dev/input/by-id/uinput-persist-steam0"
-        ]
+      ]
 
       namespaces = []'';
 
@@ -80,9 +80,9 @@
     systemd.services.br0-netdev.wantedBy = [ "multi-user.target" ];
 
     systemd.services.keyd = {
-      enable = true;
-      after = [ "systemd-udevd.service" ];
-      requires = [ "systemd-udevd.service" ];
+      enable = false;
+      after = [ "systemd-udevd.service" "persistent-evdev.service" ];
+      requires = [ "systemd-udevd.service" "persistent-evdev.service" ];
       wantedBy = [ "default.target" ];
       serviceConfig = {
         Type = "simple";
