@@ -30,15 +30,17 @@ in {
           withVS = mpv-unwrapped:
             mpv-unwrapped.override { vapoursynthSupport = true; };
           fromGit = mpv-unwrapped:
-            mpv-unwrapped.overrideAttrs (old: {
-              # use mpv from github master
-              src = prev.fetchFromGitHub {
-                owner = "mpv-player";
-                repo = "mpv";
-                rev = "181eddc80e087ebdde775c1c4e2e758a150f440c";
-                sha256 = "sha256-xAXnyF7tEXRV8O2/HUo8i/Mj7PSwYXWsdnn6Z5lVNk8=";
-              };
-            });
+            mpv-unwrapped.overrideAttrs (old:
+              lib.optionalAttrs false {
+                # use mpv from github master
+                src = prev.fetchFromGitHub {
+                  owner = "mpv-player";
+                  repo = "mpv";
+                  rev = "e76660cc54751726eee041c9b2ebd1beaff68599";
+                  sha256 =
+                    "sha256-PC6deDra8Gd91CpF5RJSlVrvkmXgrUmfqR29B7DRRUk=";
+                };
+              });
           mpv-unwrapped = (withVS (fromGit prev.mpv-unwrapped));
           mpv = (prev.wrapMpv mpv-unwrapped mpvOpts);
         in { mpv = optimize config mpv; })
