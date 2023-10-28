@@ -9,9 +9,9 @@ let
 in {
   options.modules.programs.alacritty = {
     enable = mkBoolOpt false;
-    fontFamily = mkOpt str "JetBrains Mono Nerd Font";
+    fontFamily = mkOpt str "JetBrainsMono Nerd Font";
     fontStyle = mkOpt str "Medium";
-    fontSize = mkOpt str "12";
+    fontSize = mkOpt str "11";
     fontSizeLarge = mkOpt str "13";
     fontSizeHuge = mkOpt str "15";
     opacity = mkOpt str "0.85";
