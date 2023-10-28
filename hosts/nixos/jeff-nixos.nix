@@ -109,7 +109,7 @@
         depends = [ "/" "/mnt/arch" ];
         neededForBoot = true;
         fsType = "none";
-        options = "bind";
+        options = [ "bind" ];
       };
       "/mnt/huge" = {
         device = "jeff@jeff-home:/mnt/huge";
