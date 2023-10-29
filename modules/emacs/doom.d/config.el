@@ -44,15 +44,6 @@
         find-function-C-source-directory
         "/Users/jeff/Library/Caches/Homebrew/emacs-plus@28--git/src/"))
 
-(--defun-native --relative-file-path (&optional path) projectile
-  "Return path of current buffer file relative to project root"
-  (let ((root (projectile-project-root))
-        (path (or path (buffer-file-name))))
-    (when path
-      (if root
-          (f-relative path root)
-        path))))
-
 (setq! user-full-name "Jeff Workman"
        user-mail-address "jeff.workman@gmail.com"
        doom-leader-key "SPC"
@@ -127,7 +118,7 @@
   ;; running doom/reload-font after focusing frame also fixes this
   (remove-function after-focus-change-function #'doom-modeline-focus-change))
 
-(--defun-native --sync-fonts (&optional frame) ()
+(defun --sync-fonts (&optional frame)
   (interactive)
   (--configure-fonts)
   (when (and (graphical?) (null frame))
@@ -599,7 +590,7 @@
 (use-package! elsa-lsp
   :commands elsa-lsp-register)
 
-(--defun-native --set-flycheck-eslint () (flycheck lsp-mode)
+(defun --set-flycheck-eslint ()
   (lsp-diagnostics-lsp-checker-if-needed)
   (setq-local flycheck-checker 'javascript-eslint)
   (flycheck-add-next-checker 'javascript-eslint 'lsp)
@@ -607,7 +598,9 @@
   (lsp-mode 1)
   (flycheck-select-checker 'javascript-eslint))
 
-(--defun-native +syntax-init-popups-h () (flycheck lsp-mode lsp-ui-sideline)
+(defun +syntax-init-popups-h ()
+  (require 'flycheck)
+  (require 'lsp-ui-sideline)
   (unless (and (bound-and-true-p lsp-ui-mode)
                lsp-ui-sideline-enable)
     (if (and (fboundp 'flycheck-pos-tip-mode)
@@ -639,7 +632,7 @@
   (global-flycheck-mode 1))
 
 (after! lsp-semgrep
-  (setq! lsp-semgrep-languages (-remove (fn! (-contains? '("docker" "dockerfile") %1))
+  (setq! lsp-semgrep-languages (-remove (fn! (-contains? '("docker" "dockerfile" "python" "python2" "python3") %1))
                                         lsp-semgrep-languages)))
 
 (use-package! paren-face
@@ -856,7 +849,7 @@
 (after! editorconfig
   (setq! editorconfig-lisp-use-default-indent t))
 
-(--defun-native --lsp-ui-doc-glance-toggle () (lsp-mode lsp-ui lsp-ui-doc)
+(defun --lsp-ui-doc-glance-toggle ()
   (interactive)
   (if (lsp-ui-doc--frame-visible-p)
       (lsp-ui-doc-hide)
@@ -1220,13 +1213,13 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   (after! ace-window
     (add-to-list 'aw-ignored-buffers "*MINIMAP*")))
 
-(--defun-native --ensure-treemacs-hl-line-mode (&rest _) (treemacs hl-line)
+(defun --ensure-treemacs-hl-line-mode (&rest _)
   (-when-let (window (treemacs-get-local-window))
     (with-current-buffer (window-buffer window)
       (unless (buffer-local-value 'hl-line-mode (window-buffer))
         (hl-line-mode 1)))))
 
-(--defun-native --treemacs-variable-pitch (&rest _) (treemacs)
+(defun --treemacs-variable-pitch (&rest _)
   (dolist (face '(treemacs-root-face
                   treemacs-git-unmodified-face
                   treemacs-git-modified-face
@@ -1245,7 +1238,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
        `(variable-pitch
          ,@(delq 'unspecified (if (listp faces) faces (list faces))))))))
 
-(--defun-native --treemacs-hide-fringes (&rest _) (treemacs)
+(defun --treemacs-hide-fringes (&rest _)
   (-when-let (window (treemacs-get-local-window))
     (with-current-buffer (window-buffer window)
       ;; ensure fringe-indicator-mode is enabled
@@ -1375,7 +1368,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   :config
   (add-hook! json-ts-mode 'lsp-mode))
 
-(--defun-native --web-mode-hook () (web-mode lsp-mode)
+(defun --web-mode-hook ()
   (lsp-mode +1)
   (when (equal web-mode-engine "svelte")
     (setq-local +format-with 'prettier-svelte)))

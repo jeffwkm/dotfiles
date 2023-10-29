@@ -362,6 +362,15 @@ interactively for spacing value."
        (defun ,@`(,name ,args ,@(-non-nil `(,docstring ,decl ,interactive)))
            ,@body))))
 
+(defun --relative-file-path (&optional path)
+  "Return path of current buffer file relative to project root"
+  (let ((root (projectile-project-root))
+        (path (or path (buffer-file-name))))
+    (when path
+      (if root
+          (f-relative path root)
+        path))))
+
 (with-eval-after-load 'commands
   (native-compile-async `(,(file!)) nil t))
 
