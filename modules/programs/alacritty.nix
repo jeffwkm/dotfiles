@@ -11,9 +11,9 @@ in {
     enable = mkBoolOpt false;
     fontFamily = mkOpt str "JetBrainsMono Nerd Font";
     fontStyle = mkOpt str "Medium";
-    fontSize = mkOpt str "11";
-    fontSizeLarge = mkOpt str "13";
-    fontSizeHuge = mkOpt str "15";
+    fontSize = mkOpt str "10";
+    fontSizeLarge = mkOpt str "12";
+    fontSizeHuge = mkOpt str "14";
     opacity = mkOpt str "0.85";
     padding = mkOpt str "4";
     offset.x = mkOpt str "0";

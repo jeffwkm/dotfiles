@@ -5,13 +5,14 @@ let inherit (config) user host;
 in {
   config = {
     home-manager.users.${user.name} = {
-      home.packages = with pkgs; [ gh ];
+      home.packages = with pkgs; [ gh git-lfs ];
 
       programs.git = {
         enable = true;
         package = optimize config pkgs.git;
         userName = "${config.user.full-name}";
         userEmail = "${config.user.email}";
+        lfs.enable = true;
         extraConfig = {
           push.default = "current";
           pull.rebase = true;

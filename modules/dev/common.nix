@@ -16,8 +16,6 @@ in {
       (final: prev: {
         clang = prev.clang.overrideAttrs
           (attrs: { meta.priority = prev.gcc.meta.priority + 1; });
-      })
-      (final: prev: {
         nix-direnv = prev.nix-direnv.override { enableFlakes = true; };
       })
       inputs.nil-server.overlays.nil
@@ -40,15 +38,13 @@ in {
           gnumake
           nil
           nixfmt
-          nodePackages.pnpm
           nodePackages.stylelint
-          nodejs
+          nodejs_20
           openai
           python310Packages.grip
           rbenv
           reg
           regctl
-          rnix-lsp
           semgrep
           shellcheck
           shfmt

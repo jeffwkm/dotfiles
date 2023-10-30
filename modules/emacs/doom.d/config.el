@@ -478,8 +478,8 @@
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
   (setq! copilot-idle-delay (* 1000 1000)
-         copilot-max-char 100000)
-  ;; (remove-hook! (prog-mode conf-mode) 'copilot-mode)
+         copilot-max-char 100000
+         copilot-indent-warning-suppress t)
   (map! :mode copilot-mode
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept
@@ -864,7 +864,9 @@
          lsp-ui-doc-max-width 100
          lsp-ui-doc-max-height 13
          lsp-ui-doc-use-childframe t
-         lsp-ui-doc-use-webkit nil)
+         lsp-ui-doc-use-webkit nil
+         lsp-keep-workspace-alive t)
+  (pushnew! lsp-disabled-clients 'lsp-semgrep)
   (use-package! lsp-ui)
   (use-package! lsp-ui-doc)
   (after! rustic
