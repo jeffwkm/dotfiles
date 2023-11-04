@@ -24,8 +24,6 @@
     emacs-overlay.inputs.flake-utils.follows = "flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
-    doom-emacs.url = "github:doomemacs/doomemacs";
-    doom-emacs.flake = false;
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     rust-overlay.inputs.flake-utils.follows = "flake-utils";
