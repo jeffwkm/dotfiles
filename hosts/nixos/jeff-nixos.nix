@@ -181,6 +181,9 @@
       ];
     };
 
+    nix.settings.max-jobs = 32;
+    nix.settings.cores = 16;
+
     system.stateVersion = "22.11";
   };
 }
