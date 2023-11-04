@@ -22,6 +22,22 @@
       programs.vscode.enable = true;
     };
 
+    services.nginx = {
+      enable = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
+      virtualHosts."localhost" = {
+        listen = [{
+          addr = "localhost";
+          port = 80;
+        }];
+        locations."/" = {
+          proxyPass = "http://localhost:8199";
+          proxyWebsockets = true;
+        };
+      };
+    };
+
     # services.printing.enable = true;
 
     environment.systemPackages = with pkgs; [
