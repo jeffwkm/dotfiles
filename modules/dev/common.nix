@@ -16,7 +16,7 @@ in {
       (final: prev: {
         clang = prev.clang.overrideAttrs
           (attrs: { meta.priority = prev.gcc.meta.priority + 1; });
-        nix-direnv = prev.nix-direnv.override { enableFlakes = true; };
+        # nix-direnv = prev.nix-direnv.override { enableFlakes = true; };
       })
       inputs.nil-server.overlays.nil
     ];

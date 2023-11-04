@@ -20,7 +20,6 @@ in {
         lsprotocol
         nose
         openai
-        openaiauth
         openai-whisper
         pandas
         pip
@@ -34,7 +33,7 @@ in {
       ] ++ optionals (!host.darwin) [ pulsectl vapoursynth mpv ]);
     python3-custom = pkgs.python3.withPackages python3-packages;
   in {
-    environment.systemPackages = with pkgs; [ python2 python3-custom ];
+    environment.systemPackages = with pkgs; [ python3-custom ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.packages = with pkgs; [ pipenv poetry virtualenv black ];
