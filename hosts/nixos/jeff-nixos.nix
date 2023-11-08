@@ -17,6 +17,7 @@
       programs.spotify.enable = true;
       programs.spotify.spotifyd.enable = true;
       programs.chromium.enable = true;
+      programs.firefox.enable = true;
       services.mpd.enable = true;
       services.mpd.musicDirectory = "/mnt/huge/Music";
       programs.vscode.enable = true;
