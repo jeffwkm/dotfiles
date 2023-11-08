@@ -408,7 +408,8 @@
 (defun --sh-mode-hook ()
   (add-hook! 'after-save-hook :local
              'executable-make-buffer-file-executable-if-script-p)
-  (company-shell-rebuild-cache))
+  (company-shell-rebuild-cache)
+  (setq-local +format-with 'shfmt))
 
 (after! sh-script
   (set-mode-name sh-mode "Sh")
@@ -449,9 +450,9 @@
          company-tooltip-maximum-width 80
          company-tooltip-width-grow-only t
          company-tooltip-offset-display 'scrollbar ; 'lines
-         company-box-doc-delay 0.5
-         company-box-enable-icon t
-         company-box-icons-alist 'company-box-icons-all-the-icons)
+         )
+  ;; (when (modulep! :completion company +childframe)
+  ;;   (after! company-box))
   (set-company-backend! 'text-mode
     'company-capf)
   (set-company-backend! 'prog-mode
@@ -469,10 +470,11 @@
     'company-dabbrev-code
     'company-files)
   (use-package! company-statistics
-    :disabled t
     :config
     (company-statistics-mode 1))
-  (global-company-mode 1))
+  (global-company-mode 1)
+  (unless (modulep! :completion company +childframe)
+    (company-quickhelp-mode +1)))
 
 (use-package! copilot
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
@@ -632,7 +634,8 @@
   (global-flycheck-mode 1))
 
 (after! lsp-semgrep
-  (setq! lsp-semgrep-languages (-remove (fn! (-contains? '("docker" "dockerfile" "python" "python2" "python3") %1))
+  (setq! lsp-semgrep-languages (-remove (fn! (-contains? '("docker" "dockerfile" "python" "python2" "python3"
+                                                           "js" "javascript" "ts" "typescript") %1))
                                         lsp-semgrep-languages)))
 
 (use-package! paren-face
@@ -836,15 +839,16 @@
                                          try-complete-lisp-symbol))
 
 (after! apheleia
-  (setq +format-with-lsp t
-        +format-on-save-disabled-modes '(sql-mode
-                                         tex-mode
-                                         latex-mode
-                                         org-msg-edit-mode
-                                         clojure-mode
-                                         clojurescript-mode
-                                         clojurec-mode
-                                         )))
+  (setq-default +format-with nil)
+  (setq! +format-with-lsp t
+         +format-on-save-disabled-modes '(sql-mode
+                                          tex-mode
+                                          latex-mode
+                                          org-msg-edit-mode
+                                          clojure-mode
+                                          clojurescript-mode
+                                          clojurec-mode
+                                          )))
 
 (after! editorconfig
   (setq! editorconfig-lisp-use-default-indent t))
@@ -866,7 +870,7 @@
          lsp-ui-doc-use-childframe t
          lsp-ui-doc-use-webkit nil
          lsp-keep-workspace-alive t)
-  (pushnew! lsp-disabled-clients 'lsp-semgrep)
+  (pushnew! lsp-disabled-clients 'semgrep-ls)
   (use-package! lsp-ui)
   (use-package! lsp-ui-doc)
   (after! rustic
@@ -1383,7 +1387,8 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 
 (use-package! lsp-tailwindcss
   :init
-  (setq! lsp-tailwindcss-add-on-mode t)
+  (setq! lsp-tailwindcss-add-on-mode t
+         lsp-tailwindcss-server-version "0.10.2")
   :config
   (--each '(web-mode
             css-mode
