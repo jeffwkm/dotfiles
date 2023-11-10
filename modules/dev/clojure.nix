@@ -22,6 +22,7 @@ in {
         clojure
         clojure-lsp
         leiningen
+        zprint
       ];
     };
   };

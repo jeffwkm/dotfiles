@@ -340,6 +340,7 @@
       :g "C-s-j"            '+default/newline-below
       "<tab>" nil
       "TAB" nil
+      :m "/" '+default/search-buffer
       "M-," 'pop-tag-mark
       "M-." '+lookup/definition
       "C-o" 'ace-select-window
@@ -479,7 +480,7 @@
 (use-package! copilot
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
-  (setq! copilot-idle-delay (* 1000 1000)
+  (setq! copilot-idle-delay 100
          copilot-max-char 100000
          copilot-indent-warning-suppress t)
   (map! :mode copilot-mode
@@ -497,13 +498,6 @@
   (map! :i "C-TAB" nil
         :i "C-<tab>" nil
         :i "<backtab>" nil)
-  ;; (add-hook! (lisp-mode emacs-lisp-mode clojure-mode clojurec-mode clojurescript-mode cider-repl-mode)
-  ;;   (defun --copilot-disable-auto-complete ()
-  ;;     (setq-local copilot-idle-delay 10000)))
-  (--each '(--copilot-complete-or-next
-            --copilot-show-or-accept)
-    (add-to-list 'copilot-clear-overlay-ignore-commands it))
-  ;; (setq copilot-clear-overlay-ignore-commands nil)
   (after! company
     (map! :map company-active-map
           "TAB" nil
@@ -514,8 +508,7 @@
 
 (after! projectile
   (setq projectile-indexing-method 'hybrid
-        projectile-enable-caching nil
-        projectile-completion-system 'auto))
+        projectile-enable-caching nil))
 
 (after! swiper
   (setq swiper-action-recenter t)
@@ -730,31 +723,37 @@
 
 (use-package! yaml-mode :mode "\\.yml\\'")
 
-(after! cider
+(after! clojure-mode
   (require 'tramp)
+  (use-package! cider)
   (setq clojure-use-backtracking-indent t
-        clojure-indent-style 'align-arguments  ;; 'always-align
+        clojure-indent-style 'align-arguments ;; 'always-align
         cider-repl-use-pretty-printing t
         cider-auto-select-error-buffer t
         cider-prompt-for-symbol nil
         cider-save-file-on-load t
         nrepl-use-ssh-fallback-for-remote-hosts t
-        cider-preferred-build-tool 'shadow-cljs
-        cider-default-cljs-repl 'shadow-select
+        ;; cider-preferred-build-tool 'shadow-cljs
+        ;; cider-default-cljs-repl 'shadow-select
         cider-shadow-default-options ":dev"
         clojure-docstring-fill-column 80
-        clojure-align-forms-automatically t)
+        clojure-align-forms-automatically nil)
   (--each '((cider-clojure-cli-global-options . "-A:dev:test:+default")
             (clojure-indent-style quote always-align)
             (cider-test-defining-forms . ("deftest" "defspec" "deftest-browser" "deftest-etaoin")))
     (add-to-list 'safe-local-variable-values it))
+  (map! :mode cider-mode
+        "C-c ," 'flycheck-previous-error)
+  (after! apheleia
+    (pushnew! apheleia-formatters '(zprint "zprint" "{:search-config? true}"))
+    (setq-hook! (clojure-mode clojurescript-mode clojurec-mode)
+      +format-with-lsp nil
+      +format-with 'zprint))
   (set-mode-name clojure-mode "CLJ")
   (set-mode-name clojurescript-mode "CLJS")
   (set-mode-name clojurec-mode "CLJC")
-  (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode)
-             'cider-mode)
-  (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode cider-repl-mode-hook)
-             'lispy-mode)
+  (add-hook! (clojure-mode clojurescript-mode clojurec-mode) 'cider-mode 'apheleia-mode)
+  (add-hook! (clojure-mode clojurescript-mode clojurec-mode cider-repl-mode) 'lispy-mode)
   (define-key! 'cider-mode-map
     "M-." nil ;; 'cider-find-var
     "C-c C-k" 'cider-load-buffer
@@ -767,15 +766,7 @@
   (use-package! clj-refactor
     :config
     (setq cljr-warn-on-eval nil
-          cljr-suppress-middleware-warnings t)
-    (defun clj-refactor-clojure-mode-hook ()
-      (clj-refactor-mode 1)
-      (yas-minor-mode 1)
-      (cljr-add-keybindings-with-prefix "C-'"))
-    (bind-keys* :map clojure-mode-map
-                ("C-<return>" . hydra-cljr-help-menu/body))
-    (add-hook! '(clojure-mode-hook clojurescript-mode-hook clojurec-mode)
-               'clj-refactor-clojure-mode-hook))
+          cljr-suppress-middleware-warnings t))
   (defun --cider-reload-repl-ns ()
     (let ((ns (buffer-local-value 'cider-buffer-ns (car (cider-repls)))))
       (when ns
