@@ -202,8 +202,10 @@ in {
       "fs.inotify.max_user_watches" = 1164444;
     };
 
-    networking.firewall.allowedTCPPorts = [ 445 139 ];
-    networking.firewall.allowedUDPPorts = [ 137 138 ];
+    networking.firewall.allowedTCPPorts = [ 445 139 ]
+      ++ (if options.modules.programs.spotify then [ 57621 ] else [ ]);
+    networking.firewall.allowedUDPPorts = [ 137 138 ]
+      ++ (if options.modules.programs.spotify then [ 5353 ] else [ ]);
 
     boot.loader = mkIf cfg.systemd-boot {
       efi = {

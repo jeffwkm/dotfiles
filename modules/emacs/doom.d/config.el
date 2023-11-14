@@ -80,7 +80,7 @@
 (defvar --font-family "JetBrains Mono")
 ;; (defvar --font-family "JetBrainsMono Nerd Font")
 ;; (defvar --font-family "FiraCode Nerd Font")
-(defvar --font-weight 'semibold)
+(defvar --font-weight (if (mac?) 'semibold 'semibold))
 (defvar --font-size 14)
 (defvar --font-size-mac-offset -1)
 (defvar --font-family-variable "Inter")
@@ -99,17 +99,24 @@
 
 (defun --configure-fonts ()
   (setq doom-font (--get-font-spec)
-        --modeline-font (--get-font-spec nil :size (- (--get-font-size) 1))
+        --modeline-font (if (mac?) nil (--get-font-spec nil :size (- (--get-font-size) 1)))
         doom-big-font nil
         doom-big-font-increment 2
         doom-font-increment 1
         doom-variable-pitch-font (--get-font-spec t))
   (custom-theme-set-faces! nil
-    `(doom-modeline :font ,--modeline-font)
-    `(mode-line :font ,--modeline-font)
-    `(mode-line-active :font ,--modeline-font)
-    `(mode-line-inactive :font ,--modeline-font)
-    `(font-lock-comment-face :foreground "#7a7b7b")))
+    `(font-lock-comment-face :foreground "#7a7b7b"))
+  (if --modeline-font
+      (custom-theme-set-faces! nil
+        `(doom-modeline :font ,--modeline-font)
+        `(mode-line :font ,--modeline-font)
+        `(mode-line-active :font ,--modeline-font)
+        `(mode-line-inactive :font ,--modeline-font))
+    (custom-theme-set-faces! nil
+      `(doom-modeline )
+      `(mode-line )
+      `(mode-line-active)
+      `(mode-line-inactive))))
 
 (--configure-fonts)
 

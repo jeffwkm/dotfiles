@@ -11,9 +11,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    networking.firewall.allowedTCPPorts = [ 57621 ];
-    networking.firewall.allowedUDPPorts = [ 5353 ];
-
     home-manager.users.${user.name} = {
       home.packages = with pkgs;
         [ spotify-player sptlrx ]

@@ -58,11 +58,8 @@ in {
 
       xdg.configFile = let
         mpvExtra = (if darwin then ''
-          profile=gpu-hq
-          no-native-fs
           input-ipc-server=/tmp/mpvsocket
         '' else ''
-          profile=gpu-hq
           gpu-context=wayland
           vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
         '');

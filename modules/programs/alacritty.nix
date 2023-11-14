@@ -14,7 +14,7 @@ in {
     fontSize = mkOpt str "10";
     fontSizeLarge = mkOpt str "12";
     fontSizeHuge = mkOpt str "14";
-    opacity = mkOpt str "0.85";
+    opacity = mkOpt str "0.865";
     padding = mkOpt str "4";
     offset.x = mkOpt str "0";
     offset.y = mkOpt str "0";

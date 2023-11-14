@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }: {
   config = {
+    host.darwin = true;
+
     modules = {
       dev.enable = true;
       dev.rust.enable = true;
@@ -14,13 +16,15 @@
       programs.vscode.enable = true;
       programs.alacritty = {
         enable = true;
-        fontSize = "14";
-        fontSizeLarge = "16";
-        fontSizeHuge = "18";
+        # fontSize = "14";
+        # fontSizeLarge = "16";
+        # fontSizeHuge = "18";
+        fontSize = "16";
+        fontSizeLarge = "18";
+        fontSizeHuge = "20";
         decorations = "buttonless";
         fontFamily = "JetBrainsMono Nerd Font";
         fontStyle = "Medium";
-        # opacity = "0.9";
       };
     };
 
