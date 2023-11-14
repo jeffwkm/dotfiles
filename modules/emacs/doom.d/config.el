@@ -39,10 +39,10 @@
 (menu-bar-mode -1)
 
 (when (mac?)
-  (setq mac-command-modifier 'meta
-        mac-option-modifier 'super
-        find-function-C-source-directory
-        "/Users/jeff/Library/Caches/Homebrew/emacs-plus@28--git/src/"))
+  (setq! mac-command-modifier 'meta
+         mac-right-command-modifier 'left
+         mac-option-modifier 'super
+         mac-right-option-modifier 'left))
 
 (setq! user-full-name "Jeff Workman"
        user-mail-address "jeff.workman@gmail.com"
@@ -105,7 +105,8 @@
         doom-font-increment 1
         doom-variable-pitch-font (--get-font-spec t))
   (custom-theme-set-faces! nil
-    `(font-lock-comment-face :foreground "#7a7b7b"))
+    `(font-lock-comment-face :foreground "#8d8e8e")
+    `(font-lock-doc-face :foreground "#8d8e8e"))
   (if --modeline-font
       (custom-theme-set-faces! nil
         `(doom-modeline :font ,--modeline-font)
@@ -113,8 +114,8 @@
         `(mode-line-active :font ,--modeline-font)
         `(mode-line-inactive :font ,--modeline-font))
     (custom-theme-set-faces! nil
-      `(doom-modeline )
-      `(mode-line )
+      `(doom-modeline)
+      `(mode-line)
       `(mode-line-active)
       `(mode-line-inactive))))
 
@@ -464,7 +465,7 @@
       (require 'icons-in-terminal)
       (setq! company-box-doc-enable t
              company-box-doc-delay 0.5
-             company-box-enable-icon nil)))
+             company-box-enable-icon (mac?))))
   (set-company-backend! 'text-mode
     'company-capf)
   (set-company-backend! 'prog-mode
@@ -873,7 +874,9 @@
          lsp-ui-doc-max-height 13
          lsp-ui-doc-use-childframe t
          lsp-ui-doc-use-webkit nil
-         lsp-keep-workspace-alive t)
+         lsp-keep-workspace-alive nil
+         lsp-auto-guess-root t
+         lsp-guess-root-without-session t)
   (pushnew! lsp-disabled-clients 'semgrep-ls)
   (use-package! lsp-ui)
   (use-package! lsp-ui-doc)
