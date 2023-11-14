@@ -25,6 +25,8 @@
 (package! flycheck-pos-tip)
 (package! gh-md)
 (package! groovy-mode)
+(package! icons-in-terminal :recipe
+  (:host github :repo "seagle0128/icons-in-terminal.el"))
 (package! ligature)
 (package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
 (package! nginx-mode)

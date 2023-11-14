@@ -15,7 +15,6 @@
       programs.alacritty.fontStyle = "Semibold";
       programs.mpv.enable = true;
       programs.spotify.enable = true;
-      programs.spotify.spotifyd.enable = true;
       programs.chromium.enable = true;
       programs.firefox.enable = true;
       services.mpd.enable = true;
@@ -97,7 +96,7 @@
     systemd.services.br0-netdev.wantedBy = [ "multi-user.target" ];
 
     systemd.services.keyd = {
-      enable = false;
+      enable = true;
       after = [ "systemd-udevd.service" "persistent-evdev.service" ];
       requires = [ "systemd-udevd.service" "persistent-evdev.service" ];
       wantedBy = [ "default.target" ];

@@ -445,15 +445,19 @@
   (global-aggressive-indent-mode 0))
 
 (after! company
-  (setq! company-minimum-prefix-length 1
-         company-idle-delay 0.2
+  (setq! company-minimum-prefix-length 2
+         company-idle-delay 0.5
          company-tooltip-minimum-width 50
          company-tooltip-maximum-width 80
          company-tooltip-width-grow-only t
          company-tooltip-offset-display 'scrollbar ; 'lines
          )
-  ;; (when (modulep! :completion company +childframe)
-  ;;   (after! company-box))
+  (when (modulep! :completion company +childframe)
+    (after! company-box
+      (require 'icons-in-terminal)
+      (setq! company-box-doc-enable t
+             company-box-doc-delay 0.5
+             company-box-enable-icon nil)))
   (set-company-backend! 'text-mode
     'company-capf)
   (set-company-backend! 'prog-mode
@@ -480,9 +484,11 @@
 (use-package! copilot
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
-  (setq! copilot-idle-delay 100
+  (setq! copilot-idle-delay 0.25
          copilot-max-char 100000
          copilot-indent-warning-suppress t)
+  (pushnew! copilot-clear-overlay-ignore-commands '--copilot-show-or-accept)
+  (pushnew! copilot-clear-overlay-ignore-commands '--copilot-complete-or-next)
   (map! :mode copilot-mode
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept

@@ -11,9 +11,13 @@ in {
   };
 
   config = mkIf cfg.enable {
+    networking.firewall.allowedTCPPorts = [ 57621 ];
+    networking.firewall.allowedUDPPorts = [ 5353 ];
+
     home-manager.users.${user.name} = {
       home.packages = with pkgs;
-        [ ncspot spotify-tui ] ++ optionals modules.desktop.enable [ spotify ];
+        [ spotify-player sptlrx ]
+        ++ optionals modules.desktop.enable [ spotify ];
 
       services.spotifyd = mkIf cfg.spotifyd.enable {
         enable = true;
