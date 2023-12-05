@@ -3,15 +3,15 @@
 
 (package! aggressive-indent :built-in 'prefer)
 (package! alert :built-in 'prefer)
-(package! cider
-  :recipe (:host github :repo "clojure-emacs/cider")
-  :pin "6e5294624959736c486f7a466bd5e78ce6183ab9")
-(package! clj-refactor
-  :recipe (:host github :repo "clojure-emacs/clj-refactor.el")
-  :pin "b476345c580ae7cbc6b356ba0157db782684c47f")
-(package! clojure-mode
-  :recipe (:host github :repo "clojure-emacs/clojure-mode")
-  :pin "481ca480e8b7b6c90881f8bd8434addab1d33778")
+;; (package! cider
+;;   :recipe (:host github :repo "clojure-emacs/cider")
+;;   :pin "6e5294624959736c486f7a466bd5e78ce6183ab9")
+;; (package! clj-refactor
+;;   :recipe (:host github :repo "clojure-emacs/clj-refactor.el")
+;;   :pin "b476345c580ae7cbc6b356ba0157db782684c47f")
+;; (package! clojure-mode
+;;   :recipe (:host github :repo "clojure-emacs/clojure-mode")
+;;   :pin "481ca480e8b7b6c90881f8bd8434addab1d33778")
 (package! company-quickhelp :built-in 'prefer)
 (package! company-statistics :built-in 'prefer)
 (package! copilot :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
@@ -25,8 +25,8 @@
 (package! flycheck-pos-tip)
 (package! gh-md)
 (package! groovy-mode)
-(package! icons-in-terminal :recipe
-  (:host github :repo "seagle0128/icons-in-terminal.el"))
+;;(package! icons-in-terminal :recipe
+;; (:host github :repo "seagle0128/icons-in-terminal.el"))
 (package! ligature)
 (package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
 (package! nginx-mode)

@@ -96,9 +96,10 @@
     systemd.services.br0-netdev.wantedBy = [ "multi-user.target" ];
 
     systemd.services.keyd = {
-      enable = true;
-      after = [ "systemd-udevd.service" "persistent-evdev.service" ];
-      requires = [ "systemd-udevd.service" "persistent-evdev.service" ];
+      enable = false;
+      # after = [ "systemd-udevd.service" "persistent-evdev.service" ];
+      after = [ "systemd-udevd.service" ];
+      requires = [ "systemd-udevd.service" ];
       wantedBy = [ "default.target" ];
       serviceConfig = {
         Type = "simple";

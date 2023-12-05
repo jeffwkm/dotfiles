@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, options, lib, pkgs, inputs, ... }:
 with lib;
 with lib.my;
 let
@@ -203,9 +203,9 @@ in {
     };
 
     networking.firewall.allowedTCPPorts = [ 445 139 ]
-      ++ (if options.modules.programs.spotify then [ 57621 ] else [ ]);
+      ++ (if config.modules.programs.spotify.enable then [ 57621 ] else [ ]);
     networking.firewall.allowedUDPPorts = [ 137 138 ]
-      ++ (if options.modules.programs.spotify then [ 5353 ] else [ ]);
+      ++ (if config.modules.programs.spotify.enable then [ 5353 ] else [ ]);
 
     boot.loader = mkIf cfg.systemd-boot {
       efi = {

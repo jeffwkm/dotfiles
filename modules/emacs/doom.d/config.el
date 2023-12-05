@@ -283,6 +283,8 @@
       "{" 'sp-wrap-curly
       :desc "Recenter buffer"
       "l" 'recenter-top-bottom
+      :desc "Format buffer"
+      "C-f" '+format/buffer
       :desc "Mark sexp"
       "RET" 'lispy-mark
       :desc "Mark defun"
@@ -462,7 +464,6 @@
          )
   (when (modulep! :completion company +childframe)
     (after! company-box
-      (require 'icons-in-terminal)
       (setq! company-box-doc-enable t
              company-box-doc-delay 0.5
              company-box-enable-icon (mac?))))
@@ -787,6 +788,10 @@
         (cider-nrepl-request:eval (format "(require '%s :reload)" ns)
                                   (lambda (_response) nil)))))
   (add-hook 'cider-file-loaded-hook '--cider-reload-repl-ns))
+
+(after! tree-sitter
+  (setq! +tree-sitter-hl-enabled-modes
+         '(not web-mode typescript-tsx-mode clojure-mode clojurescript-mode clojurec-mode cider-mode)))
 
 (use-package! less-css-mode
   :mode ("\\.less\\'"
