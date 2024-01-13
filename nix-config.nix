@@ -9,14 +9,15 @@
     "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
   ];
-
   nix.settings.experimental-features = [ "nix-command" "flakes" "repl-flake" ];
   nix.settings.auto-optimise-store = true;
   nix.settings.keep-outputs = true;
   nix.settings.keep-derivations = true;
-  nix.settings.extra-platforms =
-    lib.optionals (pkgs.system == "aarch64-darwin") [
-      "aarch64-darwin"
-      "x86_64-darwin"
-    ];
+  # nix.settings.extra-platforms = if (pkgs.system == "aarch64-darwin") then [
+  #   "aarch64-darwin"
+  #   "x86_64-darwin"
+  # ] else [
+  #   "x86_64-linux"
+  #   "i686-linux"
+  # ];
 }
