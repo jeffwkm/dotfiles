@@ -41,7 +41,8 @@ in {
                     "sha256-PC6deDra8Gd91CpF5RJSlVrvkmXgrUmfqR29B7DRRUk=";
                 };
               });
-          mpv-unwrapped = (withVS (fromGit prev.mpv-unwrapped));
+          # mpv-unwrapped = (withVS (fromGit prev.mpv-unwrapped));
+          mpv-unwrapped = (withVS prev.mpv-unwrapped);
           mpv = (prev.wrapMpv mpv-unwrapped mpvOpts);
         in { mpv = optimize config mpv; })
     ];
