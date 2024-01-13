@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 with lib;
 with lib.my;
 let
@@ -65,6 +65,11 @@ in {
       # gtkUsePortal = true;
     };
 
+    programs.steam = {
+      enable = true;
+      # package = inputs.nixpkgs-stable.steam;
+    };
+
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let
         gnomePackages = with pkgs;
@@ -113,7 +118,13 @@ in {
             pciutils
             smartmontools
           ];
-        gui = with pkgs; [ pinentry-gtk2 pavucontrol snes9x-gtk ];
+        gui = with pkgs; [
+          pinentry-gtk2
+          pavucontrol
+          snes9x-gtk
+          steamcmd
+          steam-tui
+        ];
       in {
         home.packages = gnomePackages ++ qtPackages ++ cli ++ gui;
 
