@@ -4,6 +4,8 @@ with lib.my;
 let inherit (config) user host modules;
 in {
   config = {
+    services.pcscd.enable = true;
+
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       systemd.user.services.ssh-agent = {
         Unit = { Description = "SSH key agent"; };
@@ -54,6 +56,7 @@ in {
         enable = true;
         defaultCacheTtl = 3600;
         enableSshSupport = false;
+        pinentryFlavor = "qt";
       };
     };
   };

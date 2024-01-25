@@ -138,7 +138,6 @@ in {
       nix-index
       openssh
       openssl
-      pinentry
       pinentry-curses
       pkg-config
       psmisc

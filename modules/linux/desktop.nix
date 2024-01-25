@@ -119,7 +119,7 @@ in {
             smartmontools
           ];
         gui = with pkgs; [
-          pinentry-gtk2
+          pinentry-qt
           pavucontrol
           snes9x-gtk
           steamcmd
