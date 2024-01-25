@@ -201,6 +201,12 @@
     nix.settings.max-jobs = 32;
     nix.settings.cores = 16;
 
+    networking.extraHosts = ''
+      127.0.0.1       localhost
+      127.0.0.1       report.localhost
+      127.0.0.1       search.localhost
+    '';
+
     system.stateVersion = "22.11";
   };
 }
