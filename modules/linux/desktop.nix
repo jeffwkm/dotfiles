@@ -84,7 +84,7 @@ in {
             gnome.eog
             gnome.evince
             gnome.file-roller
-            gnome.gedit
+            gedit
             gnome.nautilus
             gnome.sushi
             gobject-introspection
@@ -118,13 +118,7 @@ in {
             pciutils
             smartmontools
           ];
-        gui = with pkgs; [
-          pinentry-qt
-          pavucontrol
-          snes9x-gtk
-          steamcmd
-          steam-tui
-        ];
+        gui = with pkgs; [ pinentry-qt pavucontrol steamcmd steam-tui ];
       in {
         home.packages = gnomePackages ++ qtPackages ++ cli ++ gui;
 

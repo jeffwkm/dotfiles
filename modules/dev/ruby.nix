@@ -14,6 +14,10 @@ let
       native-package-installer
       pango
       curses
+      rexml
+      terminal-table
+      gtk3
+      sequel
     ]);
   rubyCustom = pkgs.ruby_3_2.withPackages rubyPackages;
   cfg = config.modules.dev.ruby;

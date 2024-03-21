@@ -5,7 +5,7 @@ let
   inherit (config) user host modules;
   cfg = config.modules.wayland.hyprland;
 in {
-  options.modules.wayland.hyprland = { enable = mkBoolOpt false; };
+  options.modules.wayland.hyprland = { enable = mkBoolOpt true; };
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ hyprland ];
