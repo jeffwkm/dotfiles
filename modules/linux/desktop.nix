@@ -37,11 +37,7 @@ in {
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-    };
-
-    environment.etc."pipewire/pipewire-pulse.d/92-low-latency.conf".source =
-      let json = pkgs.formats.json { };
-      in json.generate "92-low-latency.conf" {
+      extraConfig.pipewire."92-low-latency.conf" = {
         context.modules = [{
           name = "libpipewire-module-protocol-pulse";
           args = {
@@ -57,6 +53,7 @@ in {
           resample.quality = 1;
         };
       };
+    };
 
     xdg.portal = {
       enable = true;

@@ -12,7 +12,6 @@ in {
     home-manager.users.${user.name} = {
       home.packages = with pkgs; [
         go
-        gocode
         golangci-lint
         golangci-lint-langserver
         gomodifytags

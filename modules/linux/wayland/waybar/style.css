@@ -92,7 +92,7 @@ window#waybar.chromium {
 #mpd {
   border-bottom-width: 1.5px;
   padding-left: 0.85em;
-  padding-right: 0.95em;
+  padding-right: 0.85em;
   padding-top: 2px;
   padding-bottom: 3px;
   margin: 0 0;
@@ -165,6 +165,7 @@ label:focus {
   /* background-color: #f1c40f; */
   /* background-color: #f8cf1f; */
   color: #ffffff;
+  padding-right: 1em;
 }
 
 #pulseaudio.muted {

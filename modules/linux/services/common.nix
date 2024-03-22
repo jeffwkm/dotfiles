@@ -56,7 +56,7 @@ in {
         enable = true;
         defaultCacheTtl = 3600;
         enableSshSupport = false;
-        pinentryFlavor = "qt";
+        pinentryPackage = pkgs.pinentry-all;
       };
     };
   };

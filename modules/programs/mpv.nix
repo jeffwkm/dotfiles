@@ -61,7 +61,7 @@ in {
         mpvExtra = (if darwin then ''
           input-ipc-server=/tmp/mpvsocket
         '' else ''
-          gpu-context=x11egl
+          gpu-context=wayland
           vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
         '');
         inputExtra = (if darwin then

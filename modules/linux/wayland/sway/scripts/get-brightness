@@ -25,7 +25,7 @@ function run_get () {
   # ddc_wait
   value=$(sudo ddcutil --less-sleep --maxtries 3,3,3 --noudf --nousb \
                --sleep-multiplier=0.166 -b "$model" -t \
-               getvcp $ddc_param |
+               getvcp $ddc_param | tail -n1 |
             sed s/'.*C '// | sed s/' .*'//)
   echo "$value" > "$value_path" &
   echo "$value"

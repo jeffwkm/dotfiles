@@ -9,7 +9,17 @@
   "modules-center": ["sway/window"],
   // "modules-right": ["mpd", "idle_inhibitor", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "battery", "battery#bat2", "clock", "tray"],
   // "modules-right": ["idle_inhibitor", "network", "cpu", "temperature", "memory", "pulseaudio", "clock", "tray"],
-  "modules-right": ["idle_inhibitor", "tray", "cpu", "custom/cpufreq", "temperature", "memory", "pulseaudio", "clock", "clock#date"],
+  "modules-right": [
+    "idle_inhibitor",
+    "tray",
+    "cpu",
+    "custom/cpufreq",
+    "temperature",
+    "memory",
+    "pulseaudio",
+    "clock",
+    "clock#date"
+  ],
   // Modules configuration
   "sway/workspaces": {
     // "disable-scroll": true,
@@ -102,7 +112,7 @@
     "interval": 1,
     // "format": "{usage}% ",
     "format": "{usage}% ",
-    "tooltip": true,
+    "tooltip": true
   },
   "memory": {
     "interval": 2,
@@ -113,12 +123,13 @@
     "interval": 1,
     // "thermal-zone": 2,
     "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
-    // "warning-threshold": 70,
+    "warning-threshold": 80,
     "critical-threshold": 90,
     // "format-critical": "{temperatureC}°C {icon}",
-    "format": "{temperatureC}°C {icon}",
-    // "format-icons": ["", "", ""]
-    "format-icons": ["", "", ""]
+    // "format": "{temperatureC}℃ {icon}",
+    "format": "{temperatureC}℃",
+    "format-icons": ["", "", ""]
+    // "format-icons": ["", "", ""]
   },
   "backlight": {
     // "device": "acpi_video1",
@@ -176,12 +187,13 @@
     "on-click": "pavucontrol"
   },
   "custom/cpufreq": {
+    // "format": "{} ㎒",
     "format": "{} MHz",
     "max-length": 12,
     "interval": 1,
     // "escape": true,
     // "return-type": "json",
-    "exec": "__CPUFREQ_PY__ | grep kernel | sed -Ee 's/[^0-9]+//g'"
+    "exec": "__CPUFREQ_PY__ | grep avg | sed -Ee 's/[^0-9]+//g'"
   },
   "custom/media": {
     "format": "{icon} {}",
@@ -197,7 +209,7 @@
   },
   "custom/qemu": {
     "format": "{icon} {}",
-      // "return-type": "json",
+    // "return-type": "json",
     "max-length": 40,
     "format-icons": {
       "enabled": "",
