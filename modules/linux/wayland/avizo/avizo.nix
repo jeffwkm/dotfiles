@@ -11,6 +11,9 @@ in {
   };
 
   config = mkIf cfg.enable {
+    nixpkgs.overlays =
+      [ (final: prev: { avizo = optimizeDefault prev.avizo; }) ];
+
     environment.systemPackages = with pkgs; [ avizo brightnessctl ddcutil ];
 
     # need "ddcci" kernel module for brightnessctl

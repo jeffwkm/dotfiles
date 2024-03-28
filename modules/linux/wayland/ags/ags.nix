@@ -10,6 +10,8 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ ags ];
 
+    nixpkgs.overlays = [ (final: prev: { ags = optimizeDefault prev.ags; }) ];
+
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       imports = [ inputs.ags.homeManagerModules.default ];
 

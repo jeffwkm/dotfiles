@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, inputs, ... }:
 with lib;
 with lib.my;
 let
@@ -11,6 +11,19 @@ in {
   };
 
   config = mkIf cfg.enable {
+    nixpkgs.overlays = [
+      inputs.hyprland.overlays.default
+      inputs.hyprland.overlays.wlroots-hyprland
+      (final: prev: {
+        wlroots-hyprland = optimizeDefault prev.wlroots-hyprland;
+        hyprland-unwrapped = optimizeDefault (prev.hyprland-unwrapped.override {
+          wlroots = final.wlroots-hyprland;
+        });
+        hyprland = optimizeDefault
+          (prev.hyprland.override { wlroots = final.wlroots-hyprland; });
+      })
+    ];
+
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       imports = [ inputs.hyprland.homeManagerModules.default ];
 
