@@ -5,8 +5,8 @@
   // "width": 1280, // Waybar width
   // "margin": 8,
   // Choose the order of the modules
-  "modules-left": ["sway/workspaces", "sway/mode", "custom/media"],
-  "modules-center": ["sway/window"],
+  "modules-left": ["hyprland/workspaces", "hyprland/mode", "custom/media"],
+  "modules-center": ["hyprland/window"],
   // "modules-right": ["mpd", "idle_inhibitor", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "battery", "battery#bat2", "clock", "tray"],
   // "modules-right": ["idle_inhibitor", "network", "cpu", "temperature", "memory", "pulseaudio", "clock", "tray"],
   "modules-right": [
@@ -21,45 +21,17 @@
     "clock#date"
   ],
   // Modules configuration
-  "sway/workspaces": {
-    // "disable-scroll": true,
+  "hyprland/workspaces": {
     "all-outputs": false,
-    // "numeric-first": true,
-    "format": "{name}: {icon}",
-    "enable-bar-scroll": true,
-    // "format": "{name}",
-    "format-icons": {
-      // "0": "",
-      // "0": "",
-      // "%": "",
-      // "`": "",
-      "1": "",
-      "2": "",
-      "3": "",
-      "4": "",
-      "5": "",
-      "7": "",
-      "8": "",
-      // "8": "x",
-      // "9": "n",
-      // "10": "s",
-      "^1": "",
-      "^2": "",
-      "^3": "",
-      "^4": "",
-      "^5": "",
-      // "^8": "",
-      // "^10": "",
-      // "urgent": "",
-      // "focused": "",
-      "default": ""
-    },
-    "persistent_workspaces": {
-      // "0": ["DP-3"]
-    }
+    "format": "{name}",
+    "enable-bar-scroll": true
   },
-  "sway/mode": {
+  "hyprland/mode": {
     "format": "<span style=\"italic\">{}</span>"
+  },
+  "hyprland/window": {
+    "max-length": 100,
+    "separate-outputs": true
   },
   "mpd": {
     "format": "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S}) ",

@@ -3,7 +3,7 @@ with builtins;
 with lib;
 with lib.my;
 let
-  inherit (config) user host modules;
+  inherit (config) user modules;
   cfg = config.modules.wayland.waybar;
   cpufreqPy = pkgs.writeTextFile {
     name = "cpufreq.py";
@@ -12,7 +12,7 @@ let
   };
 in {
   options.modules.wayland.waybar = {
-    enable = mkBoolOpt modules.wayland.sway.enable;
+    enable = mkBoolOpt modules.wayland.enable;
   };
 
   config = mkIf cfg.enable {
@@ -30,9 +30,7 @@ in {
         Unit = {
           Description = "Wayland bar for Sway and Wlroots based compositors";
           PartOf = [ "graphical-session.target" ];
-          After = [ "sway.target" ];
         };
-        Install = { WantedBy = [ "sway.target" ]; };
         Service = {
           Type = "simple";
           ExecCondition =

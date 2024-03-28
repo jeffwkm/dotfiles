@@ -14,7 +14,8 @@
 ;;   :pin "481ca480e8b7b6c90881f8bd8434addab1d33778")
 (package! company-quickhelp :built-in 'prefer)
 (package! company-statistics :built-in 'prefer)
-(package! copilot :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+(package! copilot :recipe
+  (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 (package! deferred)
 (package! elsa :recipe (:host github :repo "emacs-elsa/Elsa"))
 (package! elisp-slime-nav :built-in 'prefer)

@@ -1,0 +1,41 @@
+window.bar {
+  background-color: rgba(50, 50, 50, 0.5);
+  color: rgba(255, 255, 255, 0.975);
+  font-family: "Inter", sans;
+}
+
+button {
+  min-width: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: transparent;
+}
+
+button:active {
+  background-color: rgba(70, 70, 70, 0.6);
+}
+
+button:hover {
+  border-bottom: 3px solid rgba(128, 128, 128, 0.5);
+}
+
+label {
+  font-weight: bold;
+}
+
+.workspaces button.focused {
+  border-bottom: 3px solid rgba(30, 60, 255, 0.6);
+}
+
+.client-title {
+  /* color: @theme_selected_bg_color; */
+}
+
+.notification {
+  color: rgba(255, 230, 50, 0.9);
+}
+
+levelbar block,
+highlight {
+  min-height: 10px;
+}

@@ -6,11 +6,12 @@
     modules = {
       linux.systemd-boot = true;
       desktop.enable = true;
+      desktop.amdgpu-fan.enable = true;
       emacs.enable = true;
       dev.enable-all = true;
       vfio.enable = true;
       wayland.enable = true;
-      wayland.gammastep.enable = true;
+      wayland.gammastep.enable = false;
       programs.alacritty.enable = true;
       programs.alacritty.fontStyle = "Semibold";
       programs.mpv.enable = true;
@@ -148,13 +149,11 @@
       };
     };
 
-    boot.kernelPackages = pkgs.linuxPackages_latest;
+    # boot.kernelPackages = pkgs.linuxPackages_latest;
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
       [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
-    # boot.initrd.kernelModules =
-    #   [ "vfio" "vfio_iommu_type1" "vfio_pci" "vfio_virqfd" "amdgpu" ];
     boot.initrd.kernelModules = [
       "vfio"
       "vfio_iommu_type1"
@@ -198,13 +197,11 @@
       ];
     };
 
-    nix.settings.max-jobs = 32;
-    nix.settings.cores = 16;
+    # nix.settings.max-jobs = 32;
+    # nix.settings.cores = 16;
 
     networking.extraHosts = ''
       127.0.0.1       localhost
-      127.0.0.1       report.localhost
-      127.0.0.1       search.localhost
     '';
 
     system.stateVersion = "22.11";

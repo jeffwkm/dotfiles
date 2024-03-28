@@ -19,9 +19,7 @@ in {
         Unit = {
           Description = "Mako notification daemon";
           PartOf = [ "graphical-session.target" ];
-          After = [ "sway.target" ];
         };
-        Install = { WantedBy = [ "sway.target" ]; };
         Service = {
           Type = "dbus";
           BusName = "org.freedesktop.Notifications";

@@ -6,12 +6,11 @@ let
   cfg = config.modules.wayland;
 in {
   options.modules.wayland = { enable = mkBoolOpt modules.desktop.enable; };
+  options.modules.wayland.gammastep = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      (final: prev: {
-        pass = prev.pass-wayland;
-      })
+      (final: prev: { pass = prev.pass-wayland; })
       (final: prev: {
         wl-clipboard-x11 = prev.stdenv.mkDerivation rec {
           pname = "wl-clipboard-x11";
@@ -48,6 +47,15 @@ in {
     };
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
+      services.gammastep = mkIf cfg.gammastep.enable {
+        enable = true;
+        provider = "manual";
+        latitude = 39.02588;
+        longitude = -77.15228;
+        temperature.day = 6250; # 5800 6000 6200
+        temperature.night = 6000; # 4800 5000 5200
+      };
+
       home.packages = with pkgs; [
         grim
         egl-wayland

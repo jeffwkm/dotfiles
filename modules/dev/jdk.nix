@@ -2,7 +2,7 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user host modules;
+  inherit (config) user modules;
   inherit (modules) dev;
   cfg = config.modules.dev.jdk;
 in {
@@ -11,9 +11,13 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       (final: prev: {
-        jdk = prev.openjdk8;
-        oraclejdk8 = final.jdk;
-        jdk8 = final.jdk;
+        jdk8 = prev.openjdk8;
+        jdk11 = prev.openjdk11;
+        openjdk = prev.openjdk21;
+        jdk = final.openjdk;
+        oraclejdk8 = final.jdk8;
+        oraclejdk11 = final.jdk11;
+        oraclejdk = final.oraclejdk8;
       })
     ];
 

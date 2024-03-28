@@ -11,10 +11,22 @@ in {
     enable = mkBoolOpt false;
     gnome = { enable = mkBoolOpt cfg.enable; };
     qt.enable = mkBoolOpt false;
+    amdgpu-fan.enable = mkBoolOpt false;
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ amdgpu-fan ];
+    environment.systemPackages = optionals cfg.amdgpu-fan.enable [ amdgpu-fan ];
+
+    systemd.services.amdgpu-fan = mkIf cfg.amdgpu-fan.enable {
+      enable = true;
+      wantedBy = [ "default.target" ];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${amdgpu-fan}/bin/amdgpu-fan";
+        Restart = "always";
+        RestartSec = 60;
+      };
+    };
 
     i18n.defaultLocale = "en_US.UTF-8";
     time.timeZone = "America/New_York";
@@ -57,9 +69,14 @@ in {
 
     xdg.portal = {
       enable = true;
-      # wlr.enable = modules.wayland.enable;
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-      # gtkUsePortal = true;
+      wlr.enable = config.modules.wayland.enable;
+      xdgOpenUsePortal = true;
+      extraPortals = with pkgs;
+        [ xdg-desktop-portal-gtk xdg-desktop-portal-wlr ]
+        ++ (if config.modules.wayland.hyprland.enable then
+          [ xdg-desktop-portal-hyprland ]
+        else
+          [ ]);
     };
 
     programs.steam = {

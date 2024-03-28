@@ -13,7 +13,7 @@
 }
 
 window#waybar {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.6);
   /*  border-bottom: 1.5px solid rgba(100, 114, 125, 0.5); */
   border-bottom: 1.5px solid rgba(105, 105, 105, 0.75);
   color: #ffffff;
