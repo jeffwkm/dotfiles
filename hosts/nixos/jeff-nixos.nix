@@ -198,7 +198,7 @@
     };
 
     # nix.settings.max-jobs = 32;
-    # nix.settings.cores = 16;
+    nix.settings.cores = 16;
 
     networking.extraHosts = ''
       127.0.0.1       localhost
