@@ -57,9 +57,23 @@ in {
         temperature.night = 6000; # 4800 5000 5200
       };
 
+      systemd.user.services.lxqt-policykit-agent = {
+        Unit = {
+          Description = "polkit agent from lxqt";
+          PartOf = [ "graphical-session.target" ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent";
+          Restart = "always";
+          RestartSec = 5;
+        };
+      };
+
       home.packages = with pkgs; [
         grim
         egl-wayland
+        lxqt.lxqt-policykit
         swappy
         sway-contrib.grimshot
         wayland

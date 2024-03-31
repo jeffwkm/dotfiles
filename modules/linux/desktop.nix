@@ -41,6 +41,7 @@ in {
     sound.enable = true;
 
     security.rtkit.enable = true;
+    security.polkit.enable = true;
     services.pipewire = {
       enable = true;
       alsa.enable = true;
@@ -97,7 +98,6 @@ in {
             gnome.sushi
             gobject-introspection
             gthumb
-            polkit_gnome
           ];
         qtPackages = with pkgs; optionals cfg.qt [ qt5.full qt5.qtwayland ];
         cli = with pkgs;

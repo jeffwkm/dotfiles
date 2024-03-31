@@ -62,6 +62,9 @@ in {
       systemd.user.services.avizo.Install.WantedBy =
         mkIf modules.wayland.avizo.enable [ "hyprland-session.target" ];
 
+      systemd.user.services.lxqt-policykit-agent.Install.WantedBy =
+        mkIf modules.wayland.enable [ "hyprland-session.target" ];
+
       systemd.user.services.hypridle = {
         Unit = {
           Description = "Idle manager for Hyprland compositor";
