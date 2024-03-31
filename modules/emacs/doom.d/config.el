@@ -881,7 +881,8 @@
          lsp-ui-doc-use-webkit nil
          lsp-keep-workspace-alive nil
          lsp-auto-guess-root t
-         lsp-guess-root-without-session t)
+         lsp-guess-root-without-session t
+         lsp-warn-no-matched-clients nil)
   (pushnew! lsp-disabled-clients 'semgrep-ls)
   (use-package! lsp-ui)
   (use-package! lsp-ui-doc)
