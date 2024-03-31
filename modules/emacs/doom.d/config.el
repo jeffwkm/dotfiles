@@ -495,7 +495,7 @@
   :config
   (setq! copilot-idle-delay 0.25
          copilot-max-char 100000
-         copilot-indent-warning-suppress t)
+         copilot-indent-offset-warning-disable t)
   (pushnew! copilot-clear-overlay-ignore-commands '--copilot-show-or-accept)
   (pushnew! copilot-clear-overlay-ignore-commands '--copilot-complete-or-next)
   (map! :mode copilot-mode

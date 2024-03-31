@@ -83,7 +83,8 @@ in {
           sqlite
           editorconfig-core-c
           eask
-        ] ++ optional cfg.install-in-home emacs;
+        ] ++ optional cfg.install-in-home emacs
+        ++ optional (!modules.wayland.enable) xclip;
 
       xdg.configFile = {
         "doom-config/".source =

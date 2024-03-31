@@ -214,7 +214,11 @@ interactively for spacing value."
               (--window-system-available)
               (--have-shell-command "xsel"))
          (setq! interprogram-cut-function 'xsel-copy
-                interprogram-paste-function 'xsel-paste))))
+                interprogram-paste-function 'xsel-paste))
+        ((and (null window-system)
+              (not (--window-system-available)))
+         (setq! interprogram-cut-function nil
+                interprogram-paste-function nil))))
 
 ;; List all file buffers whose path matches list of prefixes
 ;; Use functional programming from 'dash package to filter buffers
