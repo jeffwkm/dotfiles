@@ -5,6 +5,7 @@ let
   inherit (config) user host modules;
   cfg = modules.wayland.hyprland;
   pwd = "${host.config-dir}/modules/linux/wayland/hyprland";
+  optimize' = optimize config;
 in {
   options.modules.wayland.hyprland = {
     enable = mkBoolOpt modules.wayland.enable;
@@ -15,11 +16,11 @@ in {
       inputs.hyprland.overlays.default
       inputs.hyprland.overlays.wlroots-hyprland
       (final: prev: {
-        wlroots-hyprland = optimizeDefault prev.wlroots-hyprland;
-        hyprland-unwrapped = optimizeDefault (prev.hyprland-unwrapped.override {
+        wlroots-hyprland = optimize' prev.wlroots-hyprland;
+        hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
           wlroots = final.wlroots-hyprland;
         });
-        hyprland = optimizeDefault
+        hyprland = optimize'
           (prev.hyprland.override { wlroots = final.wlroots-hyprland; });
       })
     ];

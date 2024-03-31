@@ -45,12 +45,12 @@ in {
           rbenv
           reg
           regctl
-          semgrep
           shellcheck
           shfmt
           skopeo
           subversion
-        ] ++ optionals (!darwin) [ gcc ];
+        ] ++ optionals (!darwin) [ gcc ]
+        ++ optionals (pkgs.system != "aarch64-linux") [ semgrep ];
     };
   };
 }

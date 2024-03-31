@@ -2,8 +2,8 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user host modules;
-  enable = (modules.desktop.enable);
+  inherit (config) user modules;
+  enable = modules.desktop.enable;
 in {
   config = mkIf enable {
     home-manager.users.${user.name} = { config, pkgs, ... }: {
@@ -30,7 +30,7 @@ in {
           theme-vertex
           ubuntu-themes
           venta
-        ] ++ optionals modules.desktop.qt.enable [
+        ] ++ optionals modules.desktop.qt [
           plasma5Packages.qtstyleplugin-kvantum
           adwaita-qt
         ];

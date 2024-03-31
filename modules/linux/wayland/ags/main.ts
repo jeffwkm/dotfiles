@@ -11,23 +11,33 @@ const date = Variable("", {
   poll: [1000, 'date "+%H:%M:%S %b %e."'],
 });
 
+const bindWs = hyprland.bind("workspaces");
+const bindMon = hyprland.bind("monitors");
+
 // widgets can be only assigned as a child in one container
 // so to make a reuseable widget, make it a function
 // then you can simply instantiate one by calling it
 
 const Workspaces = (monitor: number) => {
-  const activeId = hyprland.active.workspace.bind("id");
-  const workspaces = hyprland.bind("workspaces").as((ws) => {
+  const bindAid = hyprland.active.workspace.bind("id");
+
+  const binds = Utils.merge([bindWs, bindMon, bindAid], (w, m, aid) => [w, m, aid]);
+
+  const workspaces = binds.as(([ws, monitors, aid]) => {
+    const activeId = monitors[monitor]?.activeWorkspace.id;
+    // const activeId = hyprland.getMonitor(monitor)?.activeWorkspace.id;
     ws = ws.filter((w) => w.monitorID === monitor);
     ws.sort((a, b) => a.id - b.id);
     ws.sort((a, b) => a.monitorID - b.monitorID);
-    return ws.map(({ id, monitorID }: Workspace) =>
-      Widget.Button({
+    const first = ws[0];
+    const last = ws[ws.length - 1];
+    return ws.map(({ id, monitorID }: Workspace) => {
+      return Widget.Button({
         on_clicked: () => hyprland.messageAsync(`dispatch workspace ${id}`),
         child: Widget.Label({ label: `${id}` }),
-        class_name: activeId.as((i) => `${i === id ? "focused" : ""}`),
-      }),
-    );
+        class_name: `${id === first.id ? "first" : ""} ${id === last.id ? "last" : ""} ${id === activeId ? "focused" : ""}`,
+      });
+    });
   });
 
   return Widget.Box({
@@ -36,11 +46,12 @@ const Workspaces = (monitor: number) => {
   });
 };
 
-const ClientTitle = (monitor: number) =>
-  Widget.Label({
+const ClientTitle = (monitor: number) => {
+  return Widget.Label({
     class_name: "client-title",
     label: hyprland.active.client.bind("title"),
   });
+};
 
 const Clock = () =>
   Widget.Label({
@@ -181,8 +192,11 @@ const Right = (monitor: number) =>
     children: [SysTray(), Volume(), Clock()],
   });
 
-const Bar = (monitor: number) =>
-  Widget.Window({
+const Bar = (monitor: number) => {
+  const box_css = hyprland.active
+    .bind("monitor")
+    .as((mon) => `outer ${monitor === mon.id ? "active" : ""}`);
+  return Widget.Window({
     name: `ags-${monitor}`, // name has to be unique
     class_name: "bar",
     monitor,
@@ -190,11 +204,12 @@ const Bar = (monitor: number) =>
     exclusivity: "exclusive",
     child: Widget.CenterBox({
       start_widget: Left(monitor),
-      center_widget: Center(monitor),
+      // center_widget: Center(monitor),
       end_widget: Right(monitor),
-      class_name: "outer",
+      class_name: box_css,
     }),
   });
+};
 
 App.config({
   gtkTheme: "Adwaita-dark",

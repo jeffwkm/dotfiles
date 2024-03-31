@@ -11,8 +11,6 @@ in {
 
   config = mkIf enable {
     home-manager.users.${user.name} = { config, pkgs, ... }: {
-      home.sessionVariables =
-        mkIf modules.wayland.enable { NIXOS_OZONE_WL = "1"; };
       programs.vscode = {
         enable = true;
         package = pkgs.vscode.fhsWithPackages (ps:

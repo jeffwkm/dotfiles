@@ -10,7 +10,6 @@
 
     ec2.hvm = true;
     networking.useDHCP = true;
-    networking.hostName = "jeff-cloud";
 
     system.stateVersion = "22.11";
   };

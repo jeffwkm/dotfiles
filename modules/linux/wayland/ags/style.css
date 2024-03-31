@@ -1,19 +1,15 @@
 window.bar {
-  background-color: transparent;
-  /* background-color: rgba(128, 128, 128, 0.3); */
-  color: rgba(255, 255, 255, 0.975);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.95);
   font-family: "Inter", sans;
 }
 
 box.outer {
-  margin-left: 4px;
-  margin-right: 4px;
-  margin-top: 8px;
-  padding: 2px 4px;
+  margin: 10px;
+  margin-bottom: 0;
+  padding: 3px;
   border-radius: 9999px;
-  /* border: 2px solid rgba(128, 128, 128, 0.5); */
-  background-color: rgba(128, 128, 128, 0.45);
-  /* border: 0px solid transparent; */
+  background: rgba(75, 75, 75, 0.75);
 }
 
 scale {
@@ -23,58 +19,66 @@ scale {
 button {
   min-height: 0;
   min-width: 0;
-  margin: 0;
-  padding-top: 0;
-  padding-bottom: 0;
   border-radius: 0;
-  /* background-color: transparent; */
-}
-
-button:active {
-  background-color: rgba(128, 128, 128, 0.15);
+  background: rgba(0, 0, 0, 0.85);
 }
 
 button:hover {
-  /* border-bottom: 3px solid rgba(128, 128, 128, 0.5); */
-  background-color: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.35);
 }
 
-label {
-  font-weight: bold;
-  padding: 0;
-  margin: 0;
+button:active {
+  background: rgba(0, 0, 0, 0.275);
+}
+
+box.workspaces label {
+  font-weight: 700;
 }
 
 box.workspaces {
-  /* background-color: rgba(128, 128, 128, 0.5); */
   border-radius: 9999px;
-  padding: 2px;
-  margin: 0;
+  background: rgba(0, 0, 0, 0.85);
 }
 
 box.workspaces button {
-  padding: 4px 8px;
+  padding: 4px 12px;
+  border-radius: 0px;
+  border: 1px solid transparent;
+  border-right: 1px solid rgba(128, 128, 128, 0.3);
+  border-left: 1px solid rgba(128, 128, 128, 0.3);
+  background: transparent;
 }
 
-box.workspaces button:first-child {
+box.workspaces button.first {
   border-top-left-radius: 9999px;
   border-bottom-left-radius: 9999px;
-  padding-left: 12px;
+  padding-left: 14px;
+  border-left: 1px solid transparent;
 }
 
-box.workspaces button:last-child {
+box.workspaces button.last {
   border-top-right-radius: 9999px;
   border-bottom-right-radius: 9999px;
-  padding-right: 12px;
+  padding-right: 14px;
+  border-right: 1px solid transparent;
+}
+
+box.workspaces button {
+  background: transparent;
 }
 
 box.workspaces button.focused {
-  background-color: rgba(30, 70, 255, 0.75);
-  /* border-bottom: 3px solid rgba(30, 60, 255, 0.6); */
+  background: rgba(70, 90, 255, 0.375);
 }
 
-.client-title {
-  /* color: @theme_selected_bg_color; */
+.outer.active box.workspaces button.focused {
+  background: rgba(40, 70, 255, 0.75);
+}
+
+label.client-title {
+  font-weight: 700;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.55);
+  margin: 2px 2px;
 }
 
 .notification {

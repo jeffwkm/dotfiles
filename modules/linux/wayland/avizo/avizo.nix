@@ -12,7 +12,7 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays =
-      [ (final: prev: { avizo = optimizeDefault prev.avizo; }) ];
+      [ (final: prev: { avizo = optimize config prev.avizo; }) ];
 
     environment.systemPackages = with pkgs; [ avizo brightnessctl ddcutil ];
 

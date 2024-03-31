@@ -44,6 +44,7 @@ in {
       ECORE_EVAS_ENGINE = "wayland-egl";
       ELM_ENGINE = "wayland_egl";
       SDL_VIDEODRIVER = "wayland";
+      NIXOS_OZONE_WL = "1";
     };
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {

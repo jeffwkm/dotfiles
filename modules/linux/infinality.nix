@@ -12,7 +12,7 @@ in {
       (final: prev:
         let
           base =
-            (inputs.nixpkgs-2305.legacyPackages.x86_64-linux.freetype.override {
+            (inputs.nixpkgs-2305.legacyPackages."${pkgs.system}".freetype.override {
               useEncumberedCode = true;
             });
         in {

@@ -24,6 +24,10 @@
         device = "/dev/disk/by-uuid/08BB-C318";
         fsType = "vfat";
       };
+      "/mnt/huge" = {
+        device = "/dev/md127";
+        fsType = "ext4";
+      };
     };
 
     boot.initrd.availableKernelModules =

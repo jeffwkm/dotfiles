@@ -10,7 +10,7 @@ in {
   options.modules.programs.alacritty = {
     enable = mkBoolOpt false;
     fontFamily = mkOpt str "JetBrainsMono Nerd Font";
-    fontStyle = mkOpt str "Medium";
+    fontStyle = mkOpt str "Semibold";
     fontSize = mkOpt str "10";
     fontSizeLarge = mkOpt str "12";
     fontSizeHuge = mkOpt str "14";

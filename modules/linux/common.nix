@@ -8,6 +8,9 @@ in {
   options.modules.linux = { systemd-boot = mkBoolOpt false; };
 
   config = {
+    i18n.defaultLocale = mkDefault "en_US.UTF-8";
+    time.timeZone = mkDefault "America/New_York";
+
     nixpkgs.config.permittedInsecurePackages =
       [ "nodejs-10.24.1" "nodejs-12.22.12" "python-2.7.18.6" ];
 
@@ -190,6 +193,25 @@ in {
       enable = true;
       ports = [ 22 ];
       settings.X11Forwarding = true;
+    };
+
+    fileSystems."/mnt/huge" = mkDefault {
+      device = "jeff@jeff-home:/mnt/huge";
+      fsType = "fuse.sshfs";
+      options = [
+        "user"
+        "noauto"
+        "nodev"
+        "suid"
+        "exec"
+        "allow_other"
+        "idmap=user"
+        "transform_symlinks"
+        "IdentityFile=/home/jeff/.ssh/id_rsa"
+        "reconnect"
+        "noatime"
+      ];
+      noCheck = true;
     };
 
     services.dbus.enable = true;

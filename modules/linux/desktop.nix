@@ -2,22 +2,22 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user host;
-  inherit (host) darwin;
+  inherit (config) user;
   cfg = config.modules.desktop;
   amdgpu-fan = pkgs.python3Packages.callPackage ./_amdgpu-fan.nix { };
 in {
   options.modules.desktop = {
     enable = mkBoolOpt false;
-    gnome = { enable = mkBoolOpt cfg.enable; };
-    qt.enable = mkBoolOpt false;
-    amdgpu-fan.enable = mkBoolOpt false;
+    gnome = mkBoolOpt cfg.enable;
+    qt = mkBoolOpt false;
+    amdgpu-fan = mkBoolOpt false;
+    steam = mkBoolOpt (pkgs.system != "aarch64-linux");
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = optionals cfg.amdgpu-fan.enable [ amdgpu-fan ];
+    environment.systemPackages = optionals cfg.amdgpu-fan [ amdgpu-fan ];
 
-    systemd.services.amdgpu-fan = mkIf cfg.amdgpu-fan.enable {
+    systemd.services.amdgpu-fan = mkIf cfg.amdgpu-fan {
       enable = true;
       wantedBy = [ "default.target" ];
       serviceConfig = {
@@ -27,9 +27,6 @@ in {
         RestartSec = 60;
       };
     };
-
-    i18n.defaultLocale = "en_US.UTF-8";
-    time.timeZone = "America/New_York";
 
     console = {
       earlySetup = false;
@@ -47,7 +44,7 @@ in {
     services.pipewire = {
       enable = true;
       alsa.enable = true;
-      alsa.support32Bit = true;
+      alsa.support32Bit = mkDefault true;
       pulse.enable = true;
       extraConfig.pipewire."92-low-latency.conf" = {
         context.modules = [{
@@ -79,15 +76,12 @@ in {
           [ ]);
     };
 
-    programs.steam = {
-      enable = true;
-      # package = inputs.nixpkgs-stable.steam;
-    };
+    programs.steam.enable = cfg.steam;
 
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let
         gnomePackages = with pkgs;
-          optionals cfg.gnome.enable [
+          optionals cfg.gnome [
             baobab
             gtk3
             gtkperf
@@ -105,8 +99,7 @@ in {
             gthumb
             polkit_gnome
           ];
-        qtPackages = with pkgs;
-          optionals cfg.qt.enable [ qt5.full qt5.qtwayland ];
+        qtPackages = with pkgs; optionals cfg.qt [ qt5.full qt5.qtwayland ];
         cli = with pkgs;
           [
             caerbannog
@@ -132,7 +125,9 @@ in {
             pciutils
             smartmontools
           ];
-        gui = with pkgs; [ pinentry-qt pavucontrol steamcmd steam-tui ];
+        gui = with pkgs;
+          [ pinentry-qt pavucontrol ]
+          ++ optionals cfg.steam [ steamcmd steam-tui ];
       in {
         home.packages = gnomePackages ++ qtPackages ++ cli ++ gui;
 
@@ -142,7 +137,7 @@ in {
 
         qt = {
           enable = true;
-        } // mkIf cfg.gnome.enable {
+        } // mkIf cfg.gnome {
           platformTheme = "gnome";
           style.name = "adwaita-dark";
           style.package = pkgs.adwaita-qt;

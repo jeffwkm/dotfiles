@@ -101,12 +101,17 @@
         };
       };
 
-      nixosConfigurations = lib.my.mapHosts ./hosts/nixos rec {
+      nixosConfigurations = (lib.my.mapHosts ./hosts/nixos rec {
         inherit nixpkgsConfig;
         system = "x86_64-linux";
         nixpkgs = pkgsForSystem system;
         darwin = false;
-      };
+      }) // (lib.my.mapHosts ./hosts/apple rec {
+        inherit nixpkgsConfig;
+        system = "aarch64-linux";
+        nixpkgs = pkgsForSystem system;
+        darwin = false;
+      });
 
       darwinConfigurations = lib.my.mapHosts ./hosts/darwin rec {
         inherit nixpkgsConfig;

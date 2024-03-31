@@ -78,8 +78,12 @@ in {
       };
 
       home.packages = with pkgs;
-        [ (ripgrep.override { withPCRE2 = true; }) sqlite editorconfig-core-c ]
-        ++ optional cfg.install-in-home emacs;
+        [
+          (ripgrep.override { withPCRE2 = true; })
+          sqlite
+          editorconfig-core-c
+          eask
+        ] ++ optional cfg.install-in-home emacs;
 
       xdg.configFile = {
         "doom-config/".source =

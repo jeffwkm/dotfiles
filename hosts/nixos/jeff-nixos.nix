@@ -6,14 +6,13 @@
     modules = {
       linux.systemd-boot = true;
       desktop.enable = true;
-      desktop.amdgpu-fan.enable = true;
+      desktop.amdgpu-fan = true;
       emacs.enable = true;
       dev.enable-all = true;
       vfio.enable = true;
       wayland.enable = true;
       wayland.gammastep.enable = false;
       programs.alacritty.enable = true;
-      programs.alacritty.fontStyle = "Semibold";
       programs.mpv.enable = true;
       programs.spotify.enable = true;
       programs.chromium.enable = true;
@@ -128,24 +127,6 @@
         neededForBoot = true;
         fsType = "none";
         options = [ "bind" ];
-      };
-      "/mnt/huge" = {
-        device = "jeff@jeff-home:/mnt/huge";
-        fsType = "fuse.sshfs";
-        options = [
-          "user"
-          "noauto"
-          "nodev"
-          "suid"
-          "exec"
-          "allow_other"
-          "idmap=user"
-          "transform_symlinks"
-          "IdentityFile=/home/jeff/.ssh/id_rsa"
-          "reconnect"
-          "noatime"
-        ];
-        noCheck = true;
       };
     };
 

@@ -30,10 +30,12 @@ in {
         requests
         setuptools
         todoist
-      ] ++ optionals (!host.darwin) [ pulsectl vapoursynth mpv ]);
-    python3-custom = pkgs.python3.withPackages python3-packages;
+      ] ++ optionals (!host.darwin) [ pulsectl mpv ]
+      ++ optionals (!host.darwin && pkgs.system != "aarch64-linux")
+      [ vapoursynth ]);
+    python3' = pkgs.python3.withPackages python3-packages;
   in {
-    environment.systemPackages = with pkgs; [ python3-custom ];
+    environment.systemPackages = [ python3' ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.packages = with pkgs; [ pipenv poetry virtualenv black ];

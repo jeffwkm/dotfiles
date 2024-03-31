@@ -29,7 +29,11 @@ in {
     environment.systemPackages = [ chromiumSh ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
-      home.packages = with pkgs; [ chromium chromedriver google-chrome ];
+      home.packages = with pkgs;
+        [ chromium ] ++ optionals (pkgs.system != "aarch64-linux") [
+          chromedriver
+          google-chrome
+        ];
 
       home.sessionVariables = {
         BROWSER = "${chromiumSh}/bin/chromium.sh";
