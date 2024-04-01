@@ -22,4 +22,6 @@ in rec {
     addFlags pkg [ "-march=native" "-Ofast" "-fno-finite-math-only" ] rustFlags;
   optimize = config: pkg:
     if config.host.optimize then optimizeDefault pkg else pkg;
+  wrapOptimize = config: pkgname:
+    (final: prev: { final.pkgname = optimize config prev.pkgname; });
 }

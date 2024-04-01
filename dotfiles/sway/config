@@ -113,10 +113,10 @@ bindsym XF86AudioStop          exec bash -c "$playerctl stop"
 ### program launch bindings
 ######################################################################
 bindsym $M+Return            exec alacritty
-bindsym $CM+e                exec emacs.sh
+bindsym $CM+e                exec emacsclient -c
 bindsym $CM+p                exec (killall pavucontrol || true) && pavucontrol
-bindsym $M+p                 exec wofi --show run   # program launcher
-bindsym $CMS+p               exec caerbannog        # password lookup
+bindsym $M+p                 exec rofi -show run    # program launcher
+bindsym $CMS+p               exec rofi-pass         # password lookup
 ######################################################################
 
 ######################################################################

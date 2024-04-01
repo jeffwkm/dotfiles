@@ -56,7 +56,7 @@ in {
         enable = true;
         defaultCacheTtl = 3600;
         enableSshSupport = false;
-        pinentryPackage = pkgs.pinentry-all;
+        pinentryPackage = pkgs.pinentry-rofi;
       };
     };
   };

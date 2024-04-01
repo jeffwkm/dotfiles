@@ -2,7 +2,8 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user;
+  inherit (config) user modules;
+  inherit (modules) wayland;
   cfg = config.modules.desktop;
   amdgpu-fan = pkgs.python3Packages.callPackage ./_amdgpu-fan.nix { };
 in {
@@ -15,7 +16,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = optionals cfg.amdgpu-fan [ amdgpu-fan ];
+    environment.systemPackages = with pkgs;
+      [ gparted ] ++ optional cfg.amdgpu-fan amdgpu-fan;
 
     systemd.services.amdgpu-fan = mkIf cfg.amdgpu-fan {
       enable = true;
@@ -42,6 +44,10 @@ in {
 
     security.rtkit.enable = true;
     security.polkit.enable = true;
+
+    services.udisks2 = { enable = true; };
+    programs.gnome-disks.enable = true;
+
     services.pipewire = {
       enable = true;
       alsa.enable = true;
@@ -67,14 +73,12 @@ in {
 
     xdg.portal = {
       enable = true;
-      wlr.enable = config.modules.wayland.enable;
+      wlr.enable = wayland.enable;
       xdgOpenUsePortal = true;
       extraPortals = with pkgs;
-        [ xdg-desktop-portal-gtk xdg-desktop-portal-wlr ]
-        ++ (if config.modules.wayland.hyprland.enable then
-          [ xdg-desktop-portal-hyprland ]
-        else
-          [ ]);
+        [ xdg-desktop-portal-gtk ]
+        ++ optional wayland.enable xdg-desktop-portal-wlr
+        ++ optional wayland.hyprland.enable xdg-desktop-portal-hyprland;
     };
 
     programs.steam.enable = cfg.steam;
@@ -126,7 +130,7 @@ in {
             smartmontools
           ];
         gui = with pkgs;
-          [ pinentry-qt pavucontrol ]
+          [ pinentry-rofi pavucontrol ]
           ++ optionals cfg.steam [ steamcmd steam-tui ];
       in {
         home.packages = gnomePackages ++ qtPackages ++ cli ++ gui;
@@ -134,6 +138,8 @@ in {
         services.easyeffects = { enable = true; };
 
         services.pass-secret-service.enable = true;
+
+        services.udiskie.enable = true;
 
         qt = {
           enable = true;

@@ -44,7 +44,7 @@ move_ws "4:4"
 sleep 0.5
 
 move_ws "3:3"
-emacs.sh &
+emacsclient -c &
 sleep 1
 
 end_time=$(date +%s)

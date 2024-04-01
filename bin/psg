@@ -2,4 +2,4 @@
 p=$1
 out=$(ps -o user,pid,ppid,stime,command -e)
 echo "$out" | head -n1
-echo "$out" | tail -n+2 | grep "[${p:0:1}]${p:1}" | grep -v "psg $1"
+echo "$out" | tail -n+2 | grep -v "psg $1" | grep --color=always "[${p:0:1}]${p:1}"

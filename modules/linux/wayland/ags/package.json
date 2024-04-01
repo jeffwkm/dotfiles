@@ -1,15 +1,18 @@
 {
-  "name": "local-ags",
+  "name": "ags-config",
   "version": "1.0.0",
   "description": "statusbar config",
+  "type": "module",
   "main": "config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
+    "ags-ts": "^1.0.6",
     "tslib": "^2.6.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "vite": "^5.2.7"
   }
 }

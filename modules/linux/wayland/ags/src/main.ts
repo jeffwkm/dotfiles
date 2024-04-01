@@ -1,27 +1,34 @@
-import { Workspace } from "types/service/hyprland";
+import type { Workspace } from "types/service/hyprland";
 
-const hyprland = await Service.import("hyprland");
-const notifications = await Service.import("notifications");
-const mpris = await Service.import("mpris");
-const audio = await Service.import("audio");
-const battery = await Service.import("battery");
-const systemtray = await Service.import("systemtray");
+import { merge, derive, watch, monitorFile } from "ags-ts";
 
-const date = Variable("", {
-  poll: [1000, 'date "+%H:%M:%S %b %e."'],
+import {
+  Hyprland,
+  Notifications,
+  Mpris,
+  Audio,
+  Battery,
+  SystemTray,
+  App,
+  Widget,
+  Service,
+} from "ags-ts";
+
+const timeNow = Variable("", {
+  poll: [1000, 'date +"%l:%M %p"'],
 });
 
-const bindWs = hyprland.bind("workspaces");
-const bindMon = hyprland.bind("monitors");
+const dateNow = Variable("", {
+  poll: [1000, 'date +"%b %e"'],
+});
 
-// widgets can be only assigned as a child in one container
-// so to make a reuseable widget, make it a function
-// then you can simply instantiate one by calling it
+const bindWs = Hyprland.bind("workspaces");
+const bindMon = Hyprland.bind("monitors");
 
 const Workspaces = (monitor: number) => {
-  const bindAid = hyprland.active.workspace.bind("id");
+  const bindAid = Hyprland.active.workspace.bind("id");
 
-  const binds = Utils.merge([bindWs, bindMon, bindAid], (w, m, aid) => [w, m, aid]);
+  const binds = merge([bindWs, bindMon, bindAid], (w, m, aid) => [w, m, aid]);
 
   const workspaces = binds.as(([ws, monitors, aid]) => {
     const activeId = monitors[monitor]?.activeWorkspace.id;
@@ -33,7 +40,7 @@ const Workspaces = (monitor: number) => {
     const last = ws[ws.length - 1];
     return ws.map(({ id, monitorID }: Workspace) => {
       return Widget.Button({
-        on_clicked: () => hyprland.messageAsync(`dispatch workspace ${id}`),
+        on_clicked: () => Hyprland.messageAsync(`dispatch workspace ${id}`),
         child: Widget.Label({ label: `${id}` }),
         class_name: `${id === first.id ? "first" : ""} ${id === last.id ? "last" : ""} ${id === activeId ? "focused" : ""}`,
       });
@@ -49,20 +56,30 @@ const Workspaces = (monitor: number) => {
 const ClientTitle = (monitor: number) => {
   return Widget.Label({
     class_name: "client-title",
-    label: hyprland.active.client.bind("title"),
+    label: Hyprland.active.client.bind("title"),
   });
 };
 
-const Clock = () =>
-  Widget.Label({
-    class_name: "clock",
-    label: date.bind(),
+const Clock = () => {
+  return Widget.Box({
+    class_name: "datetime",
+    children: [
+      Widget.Label({
+        class_name: "date",
+        label: dateNow.bind(),
+      }),
+      Widget.Label({
+        class_name: "time",
+        label: timeNow.bind(),
+      }),
+    ],
   });
+};
 
 // we don't need dunst or any other notification daemon
 // because the Notifications module is a notification daemon itself
 const Notification = () => {
-  const popups = notifications.bind("popups");
+  const popups = Notifications.bind("popups");
   return Widget.Box({
     class_name: "notification",
     visible: popups.as((p) => p.length > 0),
@@ -78,9 +95,9 @@ const Notification = () => {
 };
 
 const Media = () => {
-  const label = Utils.watch("", mpris, "player-changed", () => {
-    if (mpris.players[0]) {
-      const { track_artists, track_title } = mpris.players[0];
+  const label = watch("", Mpris, "player-changed", () => {
+    if (Mpris.players[0]) {
+      const { track_artists, track_title } = Mpris.players[0];
       return `${track_artists.join(", ")} - ${track_title}`;
     } else {
       return "Nothing is playing";
@@ -89,9 +106,9 @@ const Media = () => {
 
   return Widget.Button({
     class_name: "media",
-    on_primary_click: () => mpris.getPlayer("")?.playPause(),
-    on_scroll_up: () => mpris.getPlayer("")?.next(),
-    on_scroll_down: () => mpris.getPlayer("")?.previous(),
+    on_primary_click: () => Mpris.getPlayer("")?.playPause(),
+    on_scroll_up: () => Mpris.getPlayer("")?.next(),
+    on_scroll_down: () => Mpris.getPlayer("")?.previous(),
     child: Widget.Label({ label }),
   });
 };
@@ -106,43 +123,38 @@ const Volume = () => {
   };
 
   const getIcon = () => {
-    const icon = audio.speaker.is_muted
+    const icon = Audio.speaker.is_muted
       ? 0
-      : [101, 67, 34, 1, 0].find((threshold) => threshold <= audio.speaker.volume * 100);
+      : [101, 67, 34, 1, 0].find((threshold) => threshold <= Audio.speaker.volume * 100);
 
     return `audio-volume-${icons[icon]}-symbolic`;
   };
 
   const icon = Widget.Icon({
-    icon: Utils.watch(getIcon(), audio.speaker, getIcon),
+    class_name: "icon",
+    icon: watch(getIcon(), Audio.speaker, getIcon),
   });
 
-  const slider = Widget.Slider({
-    hexpand: true,
-    draw_value: false,
-    on_change: ({ value }) => (audio.speaker.volume = value),
-    setup: (self) =>
-      self.hook(audio.speaker, () => {
-        self.value = audio.speaker.volume || 0;
-      }),
+  const status = Widget.CircularProgress({
+    class_name: "circular",
+    value: Audio.speaker.bind("volume").as((v) => v || 0),
   });
 
   return Widget.Box({
     class_name: "volume",
-    css: "min-width: 180px",
-    children: [icon, slider],
+    children: [icon, status],
   });
 };
 
 const BatteryLabel = () => {
-  const value = battery.bind("percent").as((p) => (p > 0 ? p / 100 : 0));
-  const icon = battery
-    .bind("percent")
-    .as((p) => `battery-level-${Math.floor(p / 10) * 10}-symbolic`);
+  const value = Battery.bind("percent").as((p) => (p > 0 ? p / 100 : 0));
+  const icon = Battery.bind("percent").as(
+    (p) => `battery-level-${Math.floor(p / 10) * 10}-symbolic`,
+  );
 
   return Widget.Box({
     class_name: "battery",
-    visible: battery.bind("available"),
+    visible: Battery.bind("available"),
     children: [
       Widget.Icon({ icon }),
       Widget.LevelBar({
@@ -155,7 +167,7 @@ const BatteryLabel = () => {
 };
 
 const SysTray = () => {
-  const items = systemtray.bind("items").as((items) =>
+  const items = SystemTray.bind("items").as((items) =>
     items.map((item) =>
       Widget.Button({
         child: Widget.Icon({ icon: item.bind("icon") }),
@@ -167,14 +179,14 @@ const SysTray = () => {
   );
 
   return Widget.Box({
+    class_name: "systray",
     children: items,
   });
 };
 
-// layout of the bar
 const Left = (monitor: number) =>
   Widget.Box({
-    spacing: 8,
+    spacing: 6,
     children: [Workspaces(monitor), ClientTitle(monitor)],
   });
 
@@ -187,13 +199,12 @@ const Center = (monitor: number) =>
 const Right = (monitor: number) =>
   Widget.Box({
     hpack: "end",
-    spacing: 8,
-    // children: [Volume(), BatteryLabel(), Clock(), SysTray()],
-    children: [SysTray(), Volume(), Clock()],
+    spacing: 4,
+    children: [SysTray(), Volume(), BatteryLabel(), Clock()],
   });
 
 const Bar = (monitor: number) => {
-  const box_css = hyprland.active
+  const box_css = Hyprland.active
     .bind("monitor")
     .as((mon) => `outer ${monitor === mon.id ? "active" : ""}`);
   return Widget.Window({
@@ -204,20 +215,21 @@ const Bar = (monitor: number) => {
     exclusivity: "exclusive",
     child: Widget.CenterBox({
       start_widget: Left(monitor),
-      // center_widget: Center(monitor),
+      center_widget: Center(monitor),
       end_widget: Right(monitor),
       class_name: box_css,
     }),
   });
 };
 
+const cssOut = `${App.configDir}/src/style.css`;
 App.config({
   gtkTheme: "Adwaita-dark",
-  style: `${App.configDir}/style.css`,
+  style: cssOut,
   windows: [Bar(0), Bar(1)],
 });
 
-Utils.monitorFile(`${App.configDir}/style.css`, function () {
+monitorFile(cssOut, () => {
   App.resetCss();
-  App.applyCss(App.configDir + "/style.css");
+  App.applyCss(cssOut);
 });
