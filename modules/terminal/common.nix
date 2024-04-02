@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 with lib;
 with lib.my;
 let
@@ -32,38 +32,42 @@ in {
       xdg.configFile."nvim/".source =
         config.lib.file.mkOutOfStoreSymlink "${host.config-dir}/dotfiles/nvim";
 
-      home.packages = with pkgs; [
-        (optimize config fd)
-        (optimize config lsd)
-        (optimize config pls)
-        autossh
-        curl
-        entr
-        expect
-        glow
-        inetutils
-        inxi
-        jc
-        jq
-        mods
-        ncdu
-        neofetch
-        pass
-        p7zip
-        procs
-        pueue
-        ripgrep
-        screenfetch
-        tgpt
-        tmux
-        tree
-        unrar
-        unzip
-        w3m
-        wget
-        zip
-        xz
-      ];
+      home.packages = with pkgs;
+        [
+          (optimize config fd)
+          (optimize config lsd)
+          (optimize config pls)
+          autossh
+          curl
+          entr
+          expect
+          glow
+          inetutils
+          inxi
+          jc
+          jq
+          mods
+          ncdu
+          neofetch
+          pass
+          p7zip
+          procs
+          pueue
+          ripgrep
+          screenfetch
+          tgpt
+          tmux
+          tree
+          unrar
+          unzip
+          w3m
+          wget
+          zip
+          xz
+        ] ++ (with inputs.rippkgs.packages."${pkgs.system}"; [
+          rippkgs
+          rippkgs-index
+        ]);
     };
   };
 }

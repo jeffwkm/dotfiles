@@ -3,6 +3,8 @@ with lib;
 with lib.my;
 let inherit (config) user host;
 in {
+  environment.systemPackages = with pkgs; [ home-manager ];
+
   home-manager.users.${user.name} = { config, pkgs, ... }: {
     home.file = {
       ## create symlink to git repo (instead of nix store) for quicker editing
@@ -16,34 +18,6 @@ in {
       "${config.user.home}/.cargo/bin"
       "${config.user.home}/.npm-global/bin"
     ];
-
-    # programs.ssh = {
-    #   enable = true;
-    #   matchBlocks = {
-    #     "jeff-aws" = {
-    #       match = "host jeff-aws,jeff-aws.ddns.net";
-    #       hostname = "jeff-aws.ddns.net";
-    #       user = "jeff";
-    #     };
-    #     "sysrev" = {
-    #       match = "host sysrev,sysrev.com";
-    #       hostname = "sysrev.com";
-    #       user = "ubuntu";
-    #     };
-    #     "staging" = {
-    #       match = "host staging,staging.sysrev.com";
-    #       hostname = "staging.sysrev.com";
-    #       user = "ubuntu";
-    #     };
-    #   };
-    #   forwardAgent = true;
-    #   compression = true;
-    #   serverAliveInterval = 30;
-    #   serverAliveCountMax = 3;
-    #   extraConfig = ''
-    #     ExitOnForwardFailure yes
-    #   '';
-    # };
 
     home.packages = with pkgs; [
       asciinema
