@@ -18,6 +18,7 @@ in {
         mono
         pandoc
         sbcl
+        roswell
       ];
     };
   };

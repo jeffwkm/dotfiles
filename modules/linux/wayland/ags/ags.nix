@@ -8,9 +8,9 @@ in {
   options.modules.wayland.ags = { enable = mkBoolOpt modules.wayland.enable; };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ ags ];
+    nixpkgs.overlays = [ (wrapOptimize config "ags") ];
 
-    nixpkgs.overlays = [ (final: prev: { ags = optimize config prev.ags; }) ];
+    services.gvfs.enable = true;
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       imports = [ inputs.ags.homeManagerModules.default ];
@@ -18,7 +18,7 @@ in {
       programs.ags = {
         enable = true;
         configDir = null;
-        extraPackages = with pkgs; [ webkitgtk ];
+        extraPackages = with pkgs; [ ];
       };
     };
   };

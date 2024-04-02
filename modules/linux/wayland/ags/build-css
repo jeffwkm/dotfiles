@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -eu
+
+bunx postcss src/css/main.css -o style.css "$@"

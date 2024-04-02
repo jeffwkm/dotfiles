@@ -222,11 +222,13 @@ const Bar = (monitor: number) => {
   });
 };
 
-const cssOut = `${App.configDir}/src/style.css`;
+const cssOut = `${App.configDir}/style.css`;
+
 App.config({
   gtkTheme: "Adwaita-dark",
   style: cssOut,
-  windows: [Bar(0), Bar(1)],
+  // windows: [Bar(0), Bar(1)],
+  windows: [Bar(0)],
 });
 
 monitorFile(cssOut, () => {

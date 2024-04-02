@@ -1,0 +1,128 @@
+@tailwind components;
+
+@layer components {
+  .status-entry {
+    border-radius: 9999px;
+    border: 1.5px solid rgba(0, 0, 0, 0.24);
+    background: rgba(0, 0, 0, 0.22);
+  }
+}
+
+window.bar {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.88);
+  font-family: "Inter", sans;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+box.outer {
+  padding: 4px;
+  border-bottom: 2px solid rgba(100, 100, 100, 0.6);
+  background: rgba(90, 90, 90, 0.6);
+}
+
+scale {
+  padding: 0px 6px;
+}
+
+button {
+  min-height: 0;
+  min-width: 0;
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.85);
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.35);
+  }
+  &:active {
+    background: rgba(0, 0, 0, 0.275);
+  }
+}
+
+box.workspaces {
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.85);
+
+  label {
+    font-weight: 600;
+  }
+
+  button {
+    padding: 4px 12px;
+    border-radius: 0px;
+    border: 1px solid transparent;
+    border-right: 1px solid rgba(128, 128, 128, 0.3);
+    border-left: 1px solid rgba(128, 128, 128, 0.3);
+    background: transparent;
+
+    &.first {
+      border-top-left-radius: 9999px;
+      border-bottom-left-radius: 9999px;
+      padding-left: 14px;
+      border-left-color: transparent;
+    }
+    &.last {
+      border-top-right-radius: 9999px;
+      border-bottom-right-radius: 9999px;
+      padding-right: 14px;
+      border-right-color: transparent;
+    }
+    &.focused {
+      background: rgba(70, 90, 255, 0.375);
+
+      .outer.active & {
+        background: rgba(40, 70, 255, 0.75);
+      }
+    }
+  }
+}
+
+.notification {
+  color: rgba(255, 230, 50, 0.9);
+}
+
+label.client-title {
+  padding: 0 10px;
+  background: rgba(255, 255, 255, 0.51);
+  margin: 1px 0;
+  border-radius: 9999px;
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: 600;
+  min-width: 30px;
+}
+
+.datetime {
+  @apply status-entry;
+  label {
+    padding: 0 8px;
+    &:not(:last-child) {
+      border-right: 1.5px solid rgba(0, 0, 0, 0.24);
+    }
+  }
+}
+
+.systray button {
+  border-radius: 9999px;
+  font-size: 14px;
+}
+
+.circular {
+  font-size: 4.5px;
+  min-width: 15px;
+  min-height: 15px;
+}
+
+.volume {
+  @apply status-entry;
+  padding: 0 6px;
+  font-size: 14px;
+}
+
+.volume .icon {
+  padding-right: 6px;
+}
+
+.volume .circular {
+  color: rgba(40, 70, 255, 0.85);
+}

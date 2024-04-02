@@ -82,14 +82,14 @@
 ;; (defvar --font-family "FiraCode Nerd Font")
 (defvar --font-weight (if (mac?) 'semibold 'semibold))
 (defvar --font-size 14)
-(defvar --font-size-mac-offset -1)
 (defvar --font-family-variable "Inter")
 (defvar --font-size-variable 13)
 (defvar --font-weight-variable 'medium)
 (defun --get-font-size (&optional variable?)
   (+ (if variable? --font-size-variable --font-size)
-     (if (mac?) --font-size-mac-offset 0)))
-
+     (cond ((mac?) -1)
+           ;; ((equal (system-name) "jeff-asahi") 1)
+           (t 0))))
 (defun --get-font-spec (&optional variable? &rest args)
   (apply 'font-spec
          :family (if variable? --font-family-variable --font-family)

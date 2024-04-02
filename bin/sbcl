@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+for path in $NIX_PROFILES; do
+  _system_path_="$path/bin${_system_path_:+:}$_system_path_"
+  export LD_LIBRARY_PATH="$path/lib${LD_LIBRARY_PATH:+:}$LD_LIBRARY_PATH"
+  export CPATH="$path/include${CPATH:+:}$CPATH"
+done
+
+$(PATH="$_system_path_" env which sbcl) "$@"

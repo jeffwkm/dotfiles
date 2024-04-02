@@ -31,6 +31,7 @@ in {
       home.packages = with pkgs; [
         hypridle
         hyprlock
+        hyprpaper
         hyprland-autoname-workspaces
       ];
 

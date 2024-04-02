@@ -72,6 +72,7 @@ in {
 
       home.packages = with pkgs; [
         grim
+        gtk4
         egl-wayland
         lxqt.lxqt-policykit
         swappy
@@ -85,7 +86,6 @@ in {
         wl-clipboard
         wlr-randr
         wtype
-        sov
       ];
     };
   };
