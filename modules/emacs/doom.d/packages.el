@@ -12,6 +12,10 @@
 ;; (package! clojure-mode
 ;;   :recipe (:host github :repo "clojure-emacs/clojure-mode")
 ;;   :pin "481ca480e8b7b6c90881f8bd8434addab1d33778")
+(package! shell-maker :recipe
+  (:host github :repo "xenodium/chatgpt-shell" :files ("shell-maker.el")))
+(package! chatgpt-shell :recipe
+  (:host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell.el")))
 (package! company-quickhelp :built-in 'prefer)
 (package! company-statistics :built-in 'prefer)
 (package! copilot :recipe

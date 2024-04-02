@@ -490,6 +490,18 @@
   (unless (modulep! :completion company +childframe)
     (company-quickhelp-mode +1)))
 
+(defvar --pass-get-cache (make-hash-table :test 'equal :size 10))
+(defun --pass-get (name)
+  (with-memoization (gethash name --pass-get-cache)
+    (nth 0 (process-lines "pass" name))))
+
+(use-package! shell-maker)
+(use-package! chatgpt-shell
+  :init (use-package! shell-maker)
+  :config
+  (defvar --openai-key-cache nil)
+  (setq! chatgpt-shell-openai-key (fn! (--pass-get "keys/openai"))))
+
 (use-package! copilot
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
