@@ -2,6 +2,7 @@
 
 (require 'cl-lib)
 (require 'dash)
+(require 's)
 (require 'ht)
 (require 'doom-lib)
 (require 'doom)
@@ -14,6 +15,7 @@
 (defun --wayland-available () (< 0 (length (getenv "WAYLAND_DISPLAY"))))
 (defun graphical? () (cl-some #'display-graphic-p (frame-list)))
 (defun mac? () (eql system-type 'darwin))
+(defun asahi? () (s-matches? "aarch64.*linux" system-configuration))
 (defun gui-mac-std? () (eql window-system 'ns))
 (defun gui-emacs-mac? () (eql window-system 'mac))
 (defun gui-mac? () (or (gui-mac-std?) (gui-emacs-mac?)))

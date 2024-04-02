@@ -38,6 +38,43 @@
 
 (menu-bar-mode -1)
 
+;;disable trackpad input
+(when (asahi?)
+  (map! :nvieomrg
+        "<mouse-1>" 'ignore
+        "<mouse-2>" 'ignore
+        "<mouse-3>" 'ignore
+        "<down-mouse-1>" 'ignore
+        "<down-mouse-2>" 'ignore
+        "<down-mouse-3>" 'ignore
+        "C-<mouse-1>" 'ignore
+        "C-<mouse-2>" 'ignore
+        "C-<mouse-3>" 'ignore
+        "C-<down-mouse-1>" 'ignore
+        "C-<down-mouse-2>" 'ignore
+        "C-<down-mouse-3>" 'ignore
+        "C-M-<mouse-1>" 'ignore
+        "C-M-<mouse-2>" 'ignore
+        "C-M-<mouse-3>" 'ignore
+        "C-M-<down-mouse-1>" 'ignore
+        "C-M-<down-mouse-2>" 'ignore
+        "C-M-<down-mouse-3>" 'ignore
+        "<drag-mouse-1>" 'ignore
+        "<double-mouse-1>" 'ignore
+        "<double-drag-mouse-1>" 'ignore
+        "<triple-mouse-1>" 'ignore
+        "<triple-drag-mouse-1>" 'ignore
+        "<touch-start>" 'ignore
+        "<touch-end>" 'ignore
+        "C-<touch-start>" 'ignore
+        "C-<touch-end>" 'ignore
+        "C-M-<touch-start>" 'ignore
+        "C-M-<touch-end>" 'ignore
+        "C-<wheel-down>" 'ignore
+        "C-<wheel-up>" 'ignore
+        "C-M-<wheel-down>" 'ignore
+        "C-M-<wheel-up>" 'ignore))
+
 (when (mac?)
   (setq! mac-command-modifier 'meta
          mac-right-command-modifier 'left
@@ -88,7 +125,7 @@
 (defun --get-font-size (&optional variable?)
   (+ (if variable? --font-size-variable --font-size)
      (cond ((mac?) -1)
-           ;; ((equal (system-name) "jeff-asahi") 1)
+           ;; ((asahi?) 1)
            (t 0))))
 (defun --get-font-spec (&optional variable? &rest args)
   (apply 'font-spec
