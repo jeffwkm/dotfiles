@@ -193,7 +193,8 @@ const Left = (monitor: number) =>
 const Center = (monitor: number) =>
   Widget.Box({
     spacing: 8,
-    children: [Media(), Notification()],
+    // children: [Media(), Notification()],
+    children: [Notification()],
   });
 
 const Right = (monitor: number) =>
