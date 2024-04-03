@@ -86,6 +86,20 @@ let
       gwS = "git status --ignore-submodules=$_git_status_ignore_submodules";
       gws = "gwS --untracked-files=no";
       gwsa = "gws --short";
+      ### github (gh)
+      ghs = "gh search";
+      ghsr = "gh search repos";
+      ghS = "gh status";
+      ghr = "gh repo";
+      ghrl = "gh repo list";
+      ghrc = "gh repo clone";
+      ghrC = "gh repo create";
+      ghrf = "gh repo fork";
+      ghrv = "gh repo view";
+      ghrb = "gh repo view --web";
+      ghb = "gh browse";
+      gho = "gh org list";
+
       ### mpv
       mpvf = "mpv --input-ipc-server=";
       mpv-hlg =
