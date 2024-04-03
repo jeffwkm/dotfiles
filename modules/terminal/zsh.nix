@@ -5,6 +5,19 @@ let
   inherit (config) host user;
   inherit (config.host) darwin;
 
+  nix-flake-search = pkgs.writeShellScript "nix-flake-search" ''
+    nix="${pkgs.nix}/bin/nix"
+    cd "${config.host.config-dir}"
+    nixpkgs_flake="$($nix eval --raw '.#inputs.nixpkgs')"
+    $nix search -I nixpkgs="$nixpkgs_flake" nixpkgs $@
+  '';
+
+  nix-package-store-path = pkgs.writeShellScript "nix-package-store-path" ''
+    nix="${pkgs.nix}/bin/nix"
+    pkg="$1"
+    nix-instantiate --eval -E '(with import <nixpkgs> {}; "$\{$1\}")' --json | tr -d '"'
+  '';
+
   lsd_completion =
     builtins.toFile "_lsd" (builtins.readFile ../../dotfiles/_lsd);
 
@@ -56,8 +69,9 @@ let
       ee = "emacs -nw";
       v = "vim";
       ### nix
-      ss = "rippkgs";
+      ss = "${nix-flake-search}";
       ns = "nix search nixpkgs";
+      nps = "${nix-package-store-path}";
       ### tmux
       tmux = "tmux -2";
       tn = "tmux new-session -s";

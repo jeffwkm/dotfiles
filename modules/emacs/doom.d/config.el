@@ -114,33 +114,26 @@
               lisp-indent-offset nil)
 
 (defvar --modeline-font nil)
-(defvar --font-family "JetBrains Mono")
-;; (defvar --font-family "JetBrainsMono Nerd Font")
-;; (defvar --font-family "FiraCode Nerd Font")
-(defvar --font-weight (if (mac?) 'semibold 'semibold))
-(defvar --font-size 14)
-(defvar --font-family-variable "Inter")
-(defvar --font-size-variable 13)
-(defvar --font-weight-variable 'medium)
-(defun --get-font-size (&optional variable?)
-  (+ (if variable? --font-size-variable --font-size)
-     (cond ((mac?) -1)
-           ;; ((asahi?) 1)
-           (t 0))))
-(defun --get-font-spec (&optional variable? &rest args)
-  (apply 'font-spec
-         :family (if variable? --font-family-variable --font-family)
-         :size (--get-font-size variable?)
-         :weight (if variable? --font-weight-variable --font-weight)
-         args))
+
+(defun --get-font-spec (&optional variable? modeline?)
+  (if (and modeline? (mac?))
+      nil
+    (apply 'font-spec
+           :family (if variable? "Inter" "JetBrains Mono")
+           :size (if variable?
+                     13
+                   (+ (if (equal (system-name) "jeff-nixos") 13 14)
+                      (if modeline? -1 0)))
+           :weight (if variable? 'medium 'semibold)
+           nil)))
 
 (defun --configure-fonts ()
-  (setq doom-font (--get-font-spec)
-        --modeline-font (if (mac?) nil (--get-font-spec nil :size (- (--get-font-size) 1)))
-        doom-big-font nil
-        doom-big-font-increment 2
-        doom-font-increment 1
-        doom-variable-pitch-font (--get-font-spec t))
+  (setq! doom-font (--get-font-spec)
+         --modeline-font (--get-font-spec nil t)
+         doom-big-font nil
+         doom-big-font-increment 2
+         doom-font-increment 1
+         doom-variable-pitch-font (--get-font-spec t))
   (custom-theme-set-faces! nil
     `(font-lock-comment-face :foreground "#8d8e8e")
     `(font-lock-doc-face :foreground "#8d8e8e"))
@@ -154,7 +147,8 @@
       `(doom-modeline)
       `(mode-line)
       `(mode-line-active)
-      `(mode-line-inactive))))
+      `(mode-line-inactive)))
+  nil)
 
 (--configure-fonts)
 

@@ -56,6 +56,7 @@ in {
           ripgrep
           screenfetch
           tgpt
+          # github-copilot-cli
           tmux
           tree
           unrar

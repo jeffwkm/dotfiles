@@ -155,13 +155,18 @@ configuration {
   }
 }
 
-@theme "rounded-blue-dark"
-// @theme "spotlight-dark"
+// @theme "rounded-blue-dark"
+@theme "spotlight-dark"
 
 * {
   font: "Inter Medium 12";
   bg0:      #292929A6;
   border0:  #686868A6;
+
+  fg0:    #E6E6E6;
+  fg1:    #FFFFFF;
+  fg2:    #969696;
+  fg3:    #5D5D5D;
 }
 
 window {
@@ -173,9 +178,23 @@ window {
 }
 
 inputbar {
+  padding: 10 12;
   font: "Inter Medium 18";
+
+  children: [ prompt, entry ];
+}
+
+prompt {
+  text-color: @fg2;
+  vertical-align: 0.5;
+}
+
+entry {
+  placeholder: 'Search...';
+  placeholder-color: @fg3;
 }
 
 listview {
+  lines: 8;
   fixed-height: true;
 }

@@ -1,0 +1,17 @@
+#+title: Notes
+
+* todo
+** misc
+*** split into multiple flake.nix repos
+*** nixpkgs search script
+#+begin_src bash
+nix search nixpkgs chatgpt | sed 's/legacyPackages.[^.]*.//' | grep -v "evaluating '" | grep -Ee '.+' | sed 's/\* //' | less
+#+end_src
+*** automate reload of .zshrc after changes
+** ags
+*** use forWindows for bars
+*** finish adding statusbar widgets
+** rofi
+*** show modes list as tab bar
+** emacs
+*** automate creating tree-sitter .so files for aarch64-linux
