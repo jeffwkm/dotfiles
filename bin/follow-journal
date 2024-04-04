@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+
+import sys, re, json, subprocess, time
+
+
+def filter_entry(entry):
+    if "SYSLOG_IDENTIFIER" in entry and entry["SYSLOG_IDENTIFIER"] == "sudo":
+        return False
+    if "PRIORITY" in entry and entry["PRIORITY"] == "7":  # "debug"
+        return False
+    if "MESSAGE" not in entry or not isinstance(entry["MESSAGE"], str):
+        return False
+    if "refused connection" in entry["MESSAGE"]:
+        return False
+    return True
+
+
+def format_entry(entry):
+    is_user_entry = False
+    if (
+        ("USER_ID" in entry and entry["USER_ID"] == "1000")
+        or ("_UID" in entry and entry["_UID"] == "1000")
+        or "_SYSTEMD_USER_UNIT" in entry
+    ):
+        is_user_entry = True
+
+    message = entry["MESSAGE"].strip()  # remove leading/trailing whitespace
+
+    source = "unknown"
+    if "USER_UNIT" in entry:
+        source = entry["USER_UNIT"]
+    elif "UNIT" in entry:
+        source = entry["UNIT"]
+    elif "_SYSTEMD_USER_UNIT" in entry:
+        source = entry["_SYSTEMD_USER_UNIT"]
+    elif "_SYSTEMD_UNIT" in entry:
+        source = entry["_SYSTEMD_UNIT"]
+    # elif "_COMM" in entry:
+    #    source = entry["_COMM"]
+    elif "SYSLOG_IDENTIFIER" in entry:
+        source = entry["SYSLOG_IDENTIFIER"]
+    source = re.sub(r"\..*", "", source)  # remove everything after first dot
+    source = "[%s]" % source
+    source = source.ljust(20)  # pad source to 20 characters
+    source = "\033[1m%s\033[22m" % source  # set bold text
+
+    # colorize text based on priority and user entry
+    priority = entry.get("PRIORITY", "6")  # default to "info"
+    start_fg = ""
+    start_bg = ""
+    reset_colors = ""
+    if is_user_entry:
+        start_fg = "\033[34m"  # fg blue
+    if priority == "5":  # "notice"
+        start_fg = "\033[32m"  # fg green
+    if priority == "4":  # "warning"
+        start_fg = "\033[33m"  # fg yellow
+    if priority == "3":  # "error"
+        start_fg = "\033[31m"  # fg red
+    if priority in ["0", "1", "2"]:  # "emergency", "alert", "critical"
+        start_bg = "\033[41m"  # bg red
+    if start_fg != "" or start_bg != "":
+        reset_colors = "\033[0m\033[49m"  # reset fg/bg colors
+
+    ts = ""
+    if "__REALTIME_TIMESTAMP" in entry:
+        ts = int(entry["__REALTIME_TIMESTAMP"]) / 1_000_000
+        ts = time.strftime("%l:%M %p", time.localtime(ts))
+        ts = "\033[1m%s\033[22m" % ts  # set bold text
+
+    return "%s%s%s %s %s%s" % (ts, start_fg, start_bg, source, message, reset_colors)
+
+
+def follow_journal():
+    process = subprocess.Popen(
+        ["journalctl", "--all", "--boot", "--follow", "--no-tail", "--output=json"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+    for line in process.stdout:
+        try:
+            entry = json.loads(line)
+            if not filter_entry(entry):
+                continue
+            print("%s" % format_entry(entry))
+        except json.JSONDecodeError:
+            print("Error: JSONDecodeError")
+            continue
+
+
+if __name__ == "__main__":
+    follow_journal()
