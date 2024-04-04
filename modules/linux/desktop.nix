@@ -10,7 +10,7 @@ in {
   options.modules.desktop = {
     enable = mkBoolOpt false;
     gnome = mkBoolOpt true;
-    qt = mkBoolOpt true;
+    qt = mkBoolOpt false;
     amdgpu-fan = mkBoolOpt false;
     steam = mkBoolOpt (pkgs.system != "aarch64-linux");
   };
@@ -72,7 +72,7 @@ in {
       tracker.enable = true;
       tracker-miners.enable = true;
       sushi.enable = true;
-    }
+    };
 
     services.pipewire = {
       enable = true;
@@ -131,7 +131,7 @@ in {
             gedit
             gobject-introspection
             gthumb
-          ] ++(with gnome; [
+          ] ++ (with gnome; [
             dconf-editor
             eog
             evince

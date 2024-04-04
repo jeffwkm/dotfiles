@@ -505,7 +505,10 @@
          corfu-popupinfo-delay 0.5)
   (map! :mode corfu-mode
         "C-." 'complete-symbol
-        "C-x C-o" 'complete-symbol)
+        "C-x C-o" 'complete-symbol
+        :nmig
+        "C-SPC" nil
+        "C-<space>" nil)
   nil)
 
 (after! company
