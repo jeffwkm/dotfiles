@@ -38,14 +38,19 @@ in {
     };
 
     systemd.services.libvirt-guests.after = [ "vm-define.service" ];
+    systemd.services.libvirt-guests.requires = [ "vm-define.service" ];
+    systemd.services.libvirt-guests.environment = { SHUTDOWN_TIMEOUT = "45"; };
 
     systemd.user.services.scream = {
       enable = true;
       description = "Scream IVSHMEM";
       serviceConfig = {
         Type = "exec";
+        ExecStartPre =
+          "${pkgs.bash}/bin/sh -c 'while [ ! -e /dev/shm/scream ]; do sleep 15 ; done'";
         ExecStart =
           "${pkgs.scream}/bin/scream -m /dev/shm/scream -o pulse -t 16 -v";
+        TimeoutStartSec = "infinity";
         Restart = "always";
         RestartSec = 60;
       };
@@ -54,7 +59,7 @@ in {
         StartLimitBurst = 10;
       };
       wantedBy = [ "multi-user.target" ];
-      after = [ "pipewire-pulse.service" ];
+      after = [ "pipewire-pulse.service" "libvirt-guests.service" ];
       bindsTo = [ "pipewire-pulse.service" ];
     };
 

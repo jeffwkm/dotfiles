@@ -60,7 +60,14 @@ in {
         };
         Service = {
           Type = "simple";
-          ExecStart = "${pkgs.avizo}/bin/avizo-service";
+          ExecStart =
+            "${pkgs.bash}/bin/bash -c '${pkgs.avizo}/bin/avizo-service | ${pkgs.gnugrep}/bin/grep -v Fade'";
+          SyslogLevel = "debug";
+          # LogRateLimitIntervalSec = "5s";
+          # LogRateLimitBurst = "3";
+          # LogFilterPatterns = "~.*Fade.*";
+          # StandardError = "null";
+          # StandardOutput = "null";
           Restart = "always";
           RestartSec = 5;
         };

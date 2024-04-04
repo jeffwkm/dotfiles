@@ -173,7 +173,11 @@ in {
 
     # Increase open file limits
     # Fixes various "too many open files" errors
-    systemd.extraConfig = "DefaultLimitNOFILE=1048576";
+    systemd.extraConfig = ''
+      DefaultLimitNOFILE=1048576
+      DefaultTimeoutStopSec=45
+      DefaultIOAccounting=yes
+    '';
     security.pam.loginLimits = [{
       domain = "*";
       type = "hard";
