@@ -11,6 +11,7 @@ in {
         [ vivid base16-builder base16-shell-preview ] ++ [
           arc-icon-theme
           arc-theme
+          adw-gtk3
           beauty-line-icon-theme
           capitaine-cursors
           gnome.adwaita-icon-theme
@@ -30,10 +31,8 @@ in {
           theme-vertex
           ubuntu-themes
           venta
-        ] ++ optionals modules.desktop.qt [
-          plasma5Packages.qtstyleplugin-kvantum
-          adwaita-qt
-        ];
+        ] ++ optionals modules.desktop.qt
+        [ plasma5Packages.qtstyleplugin-kvantum ];
     };
   };
 }

@@ -377,7 +377,8 @@ interactively for spacing value."
           (f-relative path root)
         path))))
 
-(with-eval-after-load 'commands
-  (native-compile-async `(,(file!)) nil t))
+(unless (featurep 'commands)
+  (with-eval-after-load 'commands
+    (native-compile-async `(,(file!)) nil t)))
 
 (provide 'commands)

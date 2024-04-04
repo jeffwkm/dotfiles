@@ -122,7 +122,7 @@
            :family (if variable? "Inter" "JetBrains Mono")
            :size (if variable?
                      13
-                   (+ (if (equal (system-name) "jeff-nixos") 13 14)
+                   (+ (if (equal (system-name) "jeff-nixos") 14 14)
                       (if modeline? -1 0)))
            :weight (if variable? 'medium 'semibold)
            nil)))
@@ -165,15 +165,20 @@
 
 (add-hook! 'doom-after-reload-hook :append '--sync-fonts)
 
-(setq doom-modeline-buffer-file-name-style 'truncate-with-project
-      doom-modeline-persp-name t
-      doom-modeline-persp-icon t
-      doom-modeline-buffer-encoding 'nondefault
-      doom-modeline-default-eol-type 0
-      doom-modeline-indent-info t
-      doom-modeline-modal-icon t
-      ;; doom-modeline-height 21
-      )
+(use-package! doom-modeline
+  :init
+  (setq! doom-modeline-buffer-file-name-style 'truncate-with-project
+         doom-modeline-persp-name t
+         doom-modeline-persp-icon t
+         doom-modeline-buffer-encoding 'nondefault
+         doom-modeline-default-eol-type 0
+         doom-modeline-indent-info t
+         doom-modeline-height 24
+         doom-modeline-major-mode-icon t)
+  :config
+  (size-indication-mode -1)
+  (add-hook! 'doom-modeline-mode-hook :append (size-indication-mode -1)))
+;; (doom-modeline-format--main)
 
 (use-package! hl-line)
 
@@ -450,14 +455,14 @@
 (defun --sh-mode-hook ()
   (add-hook! 'after-save-hook :local
              'executable-make-buffer-file-executable-if-script-p)
-  (company-shell-rebuild-cache)
+  (after! company (company-shell-rebuild-cache))
   (setq-local +format-with 'shfmt))
 
 (after! sh-script
   (set-mode-name sh-mode "Sh")
   (add-hook! sh-mode '--sh-mode-hook)
   (add-hook! (sh-mode shell-mode) 'rainbow-mode)
-  (use-package! company-shell))
+  (after! company (use-package! company-shell)))
 
 (after! rainbow-mode
   (setq! rainbow-html-colors t
@@ -485,35 +490,46 @@
   ;; conflicts with apheleia-mode
   (global-aggressive-indent-mode 0))
 
+(after! corfu
+  (corfu-popupinfo-mode 1)
+  (corfu-echo-mode 1)
+  (corfu-history-mode 1)
+  (setq! corfu-separator ?\&
+         corfu-min-width 30
+         corfu-max-width 80
+         corfu-preview-current nil
+         corfu-auto t
+         corfu-auto-delay 0.1
+         corfu-auto-prefix 2
+         corfu-echo-delay 0.5
+         corfu-popupinfo-delay 0.5)
+  (map! :mode corfu-mode
+        "C-." 'complete-symbol
+        "C-x C-o" 'complete-symbol)
+  nil)
+
 (after! company
   (setq! company-minimum-prefix-length 2
          company-idle-delay 0.5
-         company-tooltip-minimum-width 50
-         company-tooltip-maximum-width 80
+         company-tooltip-minimum-width 40
+         company-tooltip-maximum-width 70
          company-tooltip-width-grow-only t
-         company-tooltip-offset-display 'scrollbar ; 'lines
-         )
+         company-tooltip-scrollbar-width 1
+         company-async-redisplay-delay 0.03)
   (when (modulep! :completion company +childframe)
     (after! company-box
       (setq! company-box-doc-enable t
              company-box-doc-delay 0.5
              company-box-enable-icon (mac?))))
   (set-company-backend! 'text-mode
-    'company-capf)
+                        'company-capf)
   (set-company-backend! 'prog-mode
-    'company-capf
-    'company-dabbrev-code
-    'company-files)
+                        'company-capf 'company-dabbrev-code 'company-files)
   (set-company-backend! 'conf-mode
-    'company-capf
-    'company-dabbrev-code
-    'company-files)
+                        'company-capf 'company-dabbrev-code 'company-files)
   (set-company-backend! 'sh-mode
-    'company-capf
-    'company-shell
-    'company-shell-env
-    'company-dabbrev-code
-    'company-files)
+                        'company-capf 'company-shell 'company-shell-env
+                        'company-dabbrev-code 'company-files)
   (use-package! company-statistics
     :config
     (company-statistics-mode 1))
@@ -530,17 +546,24 @@
 (use-package! chatgpt-shell
   :init (use-package! shell-maker)
   :config
-  (defvar --openai-key-cache nil)
   (setq! chatgpt-shell-openai-key (fn! (--pass-get "keys/openai"))))
 
 (use-package! copilot
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
-  (setq! copilot-idle-delay 0.25
+  (setq! copilot-idle-delay 0
          copilot-max-char 100000
          copilot-indent-offset-warning-disable t)
-  (pushnew! copilot-clear-overlay-ignore-commands '--copilot-show-or-accept)
-  (pushnew! copilot-clear-overlay-ignore-commands '--copilot-complete-or-next)
+  (pushnew! copilot-clear-overlay-ignore-commands
+            '--copilot-show-or-accept
+            '--copilot-complete-or-next
+            'corfu-next
+            'corfu-previous
+            'corfu-scroll-down
+            'corfu-scroll-up
+            'corfu-first
+            'corfu-last
+            'corfu-insert-separator)
   (map! :mode copilot-mode
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept
@@ -556,6 +579,10 @@
   (map! :i "C-TAB" nil
         :i "C-<tab>" nil
         :i "<backtab>" nil)
+  (after! corfu-mode
+    (map! :map corfu-map
+          "TAB" nil
+          "<tab>" nil))
   (after! company
     (map! :map company-active-map
           "TAB" nil

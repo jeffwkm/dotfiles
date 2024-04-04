@@ -20,7 +20,8 @@
        ;; layout           ; auie,ctsrnm is the superior home row
 
        :completion
-       (company +childframe) ; the ultimate code completion backend
+       ;; (company +childframe) ; the ultimate code completion backend
+       (corfu +orderless +icons +dabbrev)  ; complete with cap(f), cape and a flying feather!
        ;; helm             ; the *other* search engine for love and life
        ;; ido              ; the other *other* search engine...
        ;; (ivy +icons +prescient) ; a search engine for love and life
@@ -33,7 +34,7 @@
        ;; doom-quit           ; DOOM quit-message prompts when you quit Emacs
        (emoji +unicode)    ; 🙂
        hl-todo             ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-       hydra
+       ;; hydra
        ;; indent-guides    ; highlighted indent columns
        ligatures        ; ligatures and symbols to make your code pretty again
        minimap             ; show a map of the code on the side
@@ -80,7 +81,7 @@
 
        :checkers
        syntax               ; tasing you for every semicolon you forget
-       ;; spell             ; tasing you for misspelling mispelling
+       ;; (spell +flyspell) ; tasing you for misspelling mispelling
        ;; grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -106,13 +107,13 @@
        upload           ; map local to remote projects via ssh/ftp
 
        :os
-       (:if IS-MAC macos)  ; improve compatibility with macOS
+       (:if (featurep :system 'macos) macos)  ; improve compatibility with macOS
        tty                 ; improve the terminal Emacs experience
 
        :lang
        ;; agda             ; types of types of types of types...
        ;; beancount        ; mind the GAAP
-       (cc +tree-sitter)   ; C > C++ == 1
+       (cc +tree-sitter +lsp)   ; C > C++ == 1
        (clojure +lsp +tree-sitter) ; java with a lisp
        common-lisp         ; if you've seen one lisp, you've seen them all
        ;; coq              ; proofs-as-programs

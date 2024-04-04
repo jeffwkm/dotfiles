@@ -146,6 +146,7 @@ in {
       psmisc
       readline
       sshfs
+      tomb
       tmux
       wget
       xdg-utils

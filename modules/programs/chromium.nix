@@ -32,7 +32,7 @@ in {
       home.packages = with pkgs;
         [ chromium ] ++ optionals (pkgs.system != "aarch64-linux") [
           chromedriver
-          google-chrome
+          # google-chrome
         ];
 
       home.sessionVariables = {

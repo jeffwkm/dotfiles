@@ -10,8 +10,6 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [ (wrapOptimize config "ags") ];
 
-    services.gvfs.enable = true;
-
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       imports = [ inputs.ags.homeManagerModules.default ];
 

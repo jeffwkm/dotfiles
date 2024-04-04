@@ -38,6 +38,7 @@ in {
           (optimize config lsd)
           (optimize config pls)
           autossh
+          comma
           curl
           entr
           expect

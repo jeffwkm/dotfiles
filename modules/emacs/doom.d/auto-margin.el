@@ -108,7 +108,8 @@
 (require 'doom-lib)
 (require 'doom)
 
-(with-eval-after-load 'auto-margin
-  (native-compile-async `(,(file!)) nil t))
+(unless (featurep 'auto-margin)
+  (with-eval-after-load 'auto-margin
+    (native-compile-async `(,(file!)) nil t)))
 
 (provide 'auto-margin)

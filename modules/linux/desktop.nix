@@ -9,13 +9,27 @@ let
 in {
   options.modules.desktop = {
     enable = mkBoolOpt false;
-    gnome = mkBoolOpt cfg.enable;
-    qt = mkBoolOpt false;
+    gnome = mkBoolOpt true;
+    qt = mkBoolOpt true;
     amdgpu-fan = mkBoolOpt false;
     steam = mkBoolOpt (pkgs.system != "aarch64-linux");
   };
 
   config = mkIf cfg.enable {
+    nixpkgs.overlays = optional cfg.gnome (final: prev: {
+      gnome = prev.gnome.overrideScope (gfinal: gprev: {
+        nautilus = gprev.nautilus.overrideAttrs (old: {
+          buildInputs = old.buildInputs ++ (with prev.gst_all_1; [
+            gst-plugins-good
+            gst-plugins-bad
+            gst-plugins-ugly
+            gst-libav
+            prev.ffmpegthumbnailer
+          ]);
+        });
+      });
+    });
+
     environment.systemPackages = with pkgs;
       [ gparted ] ++ optional cfg.amdgpu-fan amdgpu-fan;
 
@@ -46,7 +60,19 @@ in {
     security.polkit.enable = true;
 
     services.udisks2 = { enable = true; };
-    programs.gnome-disks.enable = true;
+    programs.gnome-disks.enable = cfg.gnome;
+
+    services.gvfs.enable = true;
+    # services.tumbler.enable = true; # thumbnailer
+
+    # programs.thunar.enable = true; # xfce file manager
+    # programs.xfconf.enable = true; # xfce settings
+
+    services.gnome = mkIf cfg.gnome {
+      tracker.enable = true;
+      tracker-miners.enable = true;
+      sushi.enable = true;
+    }
 
     services.pipewire = {
       enable = true;
@@ -74,7 +100,7 @@ in {
     xdg.portal = {
       enable = true;
       wlr.enable = wayland.enable;
-      xdgOpenUsePortal = true;
+      # xdgOpenUsePortal = true;
       extraPortals = with pkgs;
         [ xdg-desktop-portal-gtk ]
         ++ optional wayland.enable xdg-desktop-portal-wlr
@@ -83,32 +109,41 @@ in {
 
     programs.steam.enable = cfg.steam;
 
+    environment.sessionVariables.GST_PLUGIN_SYSTEM_PATH_1_0 =
+      lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with pkgs.gst_all_1; [
+        gst-plugins-good
+        gst-plugins-bad
+        gst-plugins-ugly
+        gst-libav
+      ]);
+
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let
         gnomePackages = with pkgs;
-          optionals cfg.gnome [
+          optionals cfg.gnome ([
             baobab
+            ffmpegthumbnailer
             gtk3
-            gtkperf
-            lxappearance-gtk2
+            gtk4
+            themechanger
             gnome-podcasts
             gnome-usage
-            gnome.dconf-editor
-            gnome.eog
-            gnome.evince
-            gnome.file-roller
             gedit
-            gnome.nautilus
-            gnome.sushi
             gobject-introspection
             gthumb
-          ];
-        qtPackages = with pkgs; optionals cfg.qt [ qt5.full qt5.qtwayland ];
+          ] ++(with gnome; [
+            dconf-editor
+            eog
+            evince
+            file-roller
+            nautilus
+            totem
+          ]));
+        qtPackages = with pkgs;
+          optionals cfg.qt [ qt5.full qt5.qtwayland qt5ct adwaita-qt ];
         cli = with pkgs;
           [
-            caerbannog
             ddcutil
-            ffmpegthumbnailer
             keyd
             latencytop
             libinput
@@ -116,7 +151,6 @@ in {
             ncpamixer
             pamixer
             playerctl
-            podgrab
             usbutils
             xdg-user-dirs
           ] ++ [
