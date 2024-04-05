@@ -3,10 +3,14 @@
 * todo
 ** misc
 *** split into multiple flake.nix repos
+*** fix corfu mode in terminal
 *** nixpkgs search script
 #+begin_src bash
 nix search nixpkgs chatgpt | sed 's/legacyPackages.[^.]*.//' | grep -v "evaluating '" | grep -Ee '.+' | sed 's/\* //' | less
 #+end_src
+*** config for hyprpaper, hypridle, hyprlock
+*** README.org for github
+*** enable copilot in magit commit buffers
 *** automate reload of .zshrc after changes
 ** ags
 *** use forWindows for bars
