@@ -131,6 +131,8 @@ in {
             gedit
             gobject-introspection
             gthumb
+            libadwaita
+            gradience
           ] ++ (with gnome; [
             dconf-editor
             eog

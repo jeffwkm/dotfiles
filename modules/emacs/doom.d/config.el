@@ -957,6 +957,7 @@
          lsp-auto-guess-root t
          lsp-guess-root-without-session t
          lsp-warn-no-matched-clients nil)
+  (pushnew! lsp-file-watch-ignored-directories "/home/jeff/repos/nixpkgs")
   (pushnew! lsp-disabled-clients 'semgrep-ls)
   (use-package! lsp-ui)
   (use-package! lsp-ui-doc)

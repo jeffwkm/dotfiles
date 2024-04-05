@@ -1,9 +1,9 @@
-{ lib, modulesPath, ... }:
+{ lib, inputs, modulesPath, ... }:
 with lib;
 with lib.my; {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    ./apple-silicon-support
+    inputs.nixos-apple-silicon.nixosModules.default
   ];
 
   config = {

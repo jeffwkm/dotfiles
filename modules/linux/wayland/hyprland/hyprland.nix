@@ -54,12 +54,6 @@ in {
         };
       };
 
-      systemd.user.services.mako.Install.WantedBy =
-        mkIf modules.wayland.mako.enable [ "hyprland-session.target" ];
-
-      # systemd.user.services.waybar.Install.WantedBy =
-      #   mkIf modules.wayland.waybar.enable [ "hyprland-session.target" ];
-
       systemd.user.services.ags.Install.WantedBy =
         mkIf modules.wayland.ags.enable [ "hyprland-session.target" ];
 
@@ -78,6 +72,20 @@ in {
         Service = {
           Type = "simple";
           ExecStart = "${pkgs.hypridle}/bin/hypridle";
+          Restart = "always";
+          RestartSec = 5;
+        };
+      };
+
+      systemd.user.services.hyprpaper = {
+        Unit = {
+          Description = "Wallpaper service for Hyprland";
+          PartOf = [ "graphical-session.target" ];
+        };
+        Install = { WantedBy = [ "hyprland-session.target" ]; };
+        Service = {
+          Type = "simple";
+          ExecStart = "${pkgs.hyprpaper}/bin/hyprpaper";
           Restart = "always";
           RestartSec = 5;
         };
