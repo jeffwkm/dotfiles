@@ -57,8 +57,11 @@ in {
       systemd.user.services.mako.Install.WantedBy =
         mkIf modules.wayland.mako.enable [ "hyprland-session.target" ];
 
-      systemd.user.services.waybar.Install.WantedBy =
-        mkIf modules.wayland.waybar.enable [ "hyprland-session.target" ];
+      # systemd.user.services.waybar.Install.WantedBy =
+      #   mkIf modules.wayland.waybar.enable [ "hyprland-session.target" ];
+
+      systemd.user.services.ags.Install.WantedBy =
+        mkIf modules.wayland.ags.enable [ "hyprland-session.target" ];
 
       systemd.user.services.avizo.Install.WantedBy =
         mkIf modules.wayland.avizo.enable [ "hyprland-session.target" ];

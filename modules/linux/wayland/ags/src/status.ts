@@ -1,13 +1,26 @@
 import { Widget, Audio, Battery, SystemTray } from "ags-ts";
 const { LevelBar, Icon, Box, Button, Label, CircularProgress } = Widget;
-import { watch } from "resource:///com/github/Aylur/ags/utils.js";
+import { merge, watch, readFile } from "resource:///com/github/Aylur/ags/utils.js";
 
 const timeNow = Variable("", {
   poll: [1000, 'date +"%l:%M %p"'],
 });
 
 const dateNow = Variable("", {
-  poll: [1000, 'date +"%b %e"'],
+  poll: [5000, 'date +"%b %e"'],
+});
+
+const cpuTemp = Variable(0, {
+  poll: [
+    1500,
+    (_) => {
+      const temp = readFile("/sys/class/hwmon/hwmon4/temp1_input");
+      if (!temp) {
+        return 0;
+      }
+      return parseInt(temp) / 1000;
+    },
+  ],
 });
 
 export const Clock = () => {
@@ -23,6 +36,36 @@ export const Clock = () => {
         label: timeNow.bind(),
       }),
     ],
+  });
+};
+
+export const CpuTemp = () => {
+  const levels = {
+    90: "critical",
+    80: "high",
+    65: "medium",
+    0: "low",
+  };
+
+  const getLevel = (t) => {
+    const threshold = [90, 80, 65, 0].find((threshold) => threshold <= t);
+    return levels[threshold];
+  };
+
+  const icon = Icon({
+    class_name: "icon",
+    icon: "sensors-temperature-symbolic",
+  });
+
+  const label = Label({
+    label: cpuTemp.bind().as((t) => `${Math.floor(t)}°`),
+    halign: "end",
+  });
+
+  return Box({
+    class_name: cpuTemp.bind().as((t) => `cputemp ${getLevel(t)}`),
+    visible: cpuTemp.bind().as((t) => t > 0),
+    children: [icon, label],
   });
 };
 
@@ -55,44 +98,59 @@ export const Volume = () => {
 
   return Box({
     class_name: "volume",
-    children: [icon, status],
+    children: [icon, Box({ children: [status] })],
   });
 };
 
 export const BatteryLabel = () => {
-  const icons = {
-    98: "full",
-    50: "good",
-    20: "low",
-    1: "caution",
-    0: "empty",
-  };
+  const available = Battery.bind("available");
+  const percent = Battery.bind("percent").as((p) => (p > 0 ? p / 100 : 0));
+  const charging = Battery.bind("charging").as((c) => (c ? "-charging" : ""));
+  const icon = merge([available, percent, charging], (a, p, c) =>
+    available ? `battery-level-${Math.floor(p * 10) * 10}-symbolic${c}` : "battery-missing",
+  );
 
-  const getIcon = () => {
-    if (!Battery.available) {
-      return "battery-missing";
-    }
-    const level = [98, 50, 20, 1, 0].find((threshold) => threshold <= Battery.percent);
-    const charging = Battery.charging && Battery.percent >= 1 ? "-charging" : "";
-    return `battery-${icons[level]}${charging}`;
-  };
-
-  return Box({
+  return Widget.Box({
     class_name: "battery",
-    visible: Battery.bind("available"),
-    children: [
-      Icon({
-        class_name: "icon",
-        icon: watch(getIcon(), Battery, getIcon),
-      }),
-      LevelBar({
-        widthRequest: 140,
-        vpack: "center",
-        value: Battery.bind("percent").as((p) => (p && p > 0 ? p : 0)),
-      }),
-    ],
+    visible: available,
+    children: [Widget.Icon({ icon, class_name: "icon" })],
   });
 };
+
+// export const BatteryLabel = () => {
+//   const icons = {
+//     98: "full",
+//     50: "good",
+//     20: "low",
+//     1: "caution",
+//     0: "empty",
+//   };
+
+//   const getIcon = () => {
+//     if (!Battery.available) {
+//       return "battery-missing";
+//     }
+//     const level = [98, 50, 20, 1, 0].find((threshold) => threshold <= Battery.percent);
+//     const charging = Battery.charging && Battery.percent >= 1 ? "-charging" : "";
+//     return `battery-${icons[level]}${charging}`;
+//   };
+
+//   return Box({
+//     class_name: "battery",
+//     visible: Battery.bind("available"),
+//     children: [
+//       Icon({
+//         class_name: "icon",
+//         icon: watch(getIcon(), Battery, getIcon),
+//       }),
+//       LevelBar({
+//         widthRequest: 140,
+//         vpack: "center",
+//         value: Battery.bind("percent").as((p) => (p && p > 0 ? p : 0)),
+//       }),
+//     ],
+//   });
+// };
 
 export const SysTray = () => {
   const items = SystemTray.bind("items").as((items) =>

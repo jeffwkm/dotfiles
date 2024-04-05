@@ -13,10 +13,26 @@ in {
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       imports = [ inputs.ags.homeManagerModules.default ];
 
+      systemd.user.services.ags = {
+        Unit = {
+          Description = "AGS status bar for Wayland";
+          PartOf = [ "graphical-session.target" ];
+        };
+        Service = {
+          Type = "simple";
+          ExecCondition =
+            ''${pkgs.bash}/bin/sh -c '[ -n "$WAYLAND_DISPLAY" ]' '';
+          WorkingDirectory = "${user.home}/.config/ags";
+          ExecStart = "${pkgs.bash}/bin/bash -c './dev.sh'";
+          Restart = "always";
+          RestartSec = 3;
+        };
+      };
+
       programs.ags = {
         enable = true;
         configDir = null;
-        extraPackages = with pkgs; [ ];
+        extraPackages = [ ];
       };
     };
   };

@@ -1,7 +1,7 @@
 import { Hyprland, Widget } from "ags-ts";
 const { Box, CenterBox, Window } = Widget;
 
-import { SysTray, Volume, BatteryLabel, Clock } from "./status";
+import { SysTray, CpuTemp, Volume, BatteryLabel, Clock } from "./status";
 import { Workspaces, ClientTitle } from "./workspaces";
 import { Notification } from "./notification";
 
@@ -22,7 +22,7 @@ const Right = (monitor: number) =>
   Box({
     hpack: "end",
     spacing: 4,
-    children: [SysTray(), Volume(), BatteryLabel(), Clock()],
+    children: [SysTray(), CpuTemp(), Volume(), BatteryLabel(), Clock()],
   });
 
 export const Bar = (monitor: number) => {

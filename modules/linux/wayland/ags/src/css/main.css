@@ -1,10 +1,32 @@
 @tailwind components;
 
 @layer components {
+  .warning {
+    color: rgba(255, 190, 60, 0.8);
+  }
+  .error {
+    color: rgba(255, 90, 90, 0.8);
+  }
+  .success {
+    color: rgba(130, 255, 50, 0.8);
+  }
   .status-entry {
     border-radius: 9999px;
-    border: 1.5px solid rgba(0, 0, 0, 0.24);
-    background: rgba(0, 0, 0, 0.22);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.2);
+    & > *:not(:last-child) {
+      border-right: 2px solid rgba(0, 0, 0, 0.15);
+    }
+    & > * {
+      padding: 0 5px;
+    }
+  }
+  .icon {
+    font-size: 14px;
+    -gtk-icon-palette:
+      success rgb(130, 255, 50),
+      warning rgb(255, 190, 60),
+      error rgb(255, 90, 90);
   }
 }
 
@@ -18,7 +40,7 @@ window.bar {
 
 box.outer {
   padding: 4px;
-  border-bottom: 2px solid rgba(100, 100, 100, 0.6);
+  border-bottom: 2.5px solid rgba(124, 124, 124, 0.5);
   background: rgba(90, 90, 90, 0.6);
 }
 
@@ -70,7 +92,6 @@ box.workspaces {
     }
     &.focused {
       background: rgba(70, 90, 255, 0.375);
-
       .outer.active & {
         background: rgba(40, 70, 255, 0.75);
       }
@@ -79,26 +100,24 @@ box.workspaces {
 }
 
 .notification {
-  color: rgba(255, 230, 50, 0.9);
+  color: rgba(255, 220, 60, 0.9);
 }
 
 label.client-title {
   padding: 0 10px;
-  background: rgba(255, 255, 255, 0.51);
+  background: rgba(255, 255, 255, 0.52);
   margin: 1px 0;
   border-radius: 9999px;
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(0, 0, 0, 0.95);
   font-weight: 600;
   min-width: 30px;
 }
 
 .datetime {
   @apply status-entry;
+  padding: 0 1px;
   label {
-    padding: 0 8px;
-    &:not(:last-child) {
-      border-right: 1.5px solid rgba(0, 0, 0, 0.24);
-    }
+    padding: 0 5px;
   }
 }
 
@@ -113,16 +132,36 @@ label.client-title {
   min-height: 15px;
 }
 
+.battery {
+  @apply status-entry;
+}
+
 .volume {
   @apply status-entry;
-  padding: 0 6px;
-  font-size: 14px;
+  & .circular {
+    color: rgba(40, 70, 255, 0.85);
+  }
 }
 
-.volume .icon {
-  padding-right: 6px;
-}
+.cputemp {
+  @apply status-entry;
 
-.volume .circular {
-  color: rgba(40, 70, 255, 0.85);
+  & label {
+    font-family: "monospace";
+    font-size: 12px;
+    font-weight: 700;
+  }
+  &.critical .icon {
+    @apply error;
+  }
+  &.high .icon {
+    @apply warning;
+    /* color: rgba(255, 190, 60, 0.8); */
+  }
+  &.medium .icon {
+    color: rgba(255, 220, 100, 0.8);
+  }
+  &.low .icon {
+    color: rgba(230, 255, 100, 0.8);
+  }
 }
