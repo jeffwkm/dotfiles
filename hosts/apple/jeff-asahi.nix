@@ -14,7 +14,12 @@ with lib.my; {
       dev.enable-all = true;
       wayland.enable = true;
       wayland.hyprland.enable = true;
-      wayland.hyprland.extraConf = "";
+      wayland.hyprland.extraConf = ''
+        input {
+            sensitivity = 0.0
+            kb_options = ctrl:nocaps,altwin:swap_alt_win
+        }
+      '';
       programs.alacritty.enable = true;
       programs.mpv.enable = true;
       programs.chromium.enable = true;

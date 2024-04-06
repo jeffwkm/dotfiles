@@ -20,32 +20,27 @@ in {
     boot.extraModulePackages = with config.boot.kernelPackages;
       [ ddcci-driver ];
 
-    boot.kernelModules = [ "i2c-dev" "ddcci_backlight" ];
+    boot.kernelModules = [ "i2c-dev" ];
 
-    services.udev.extraRules = ''
-      SUBSYSTEM=="i2c-dev", ACTION=="add",\
-        ATTR{name}=="AMDGPU*",\
-        TAG+="ddcci",\
-        TAG+="systemd",\
-        ENV{SYSTEMD_WANTS}+="ddcci@$kernel.service"
-    '';
-
-    systemd.services."ddcci@" = {
-      scriptArgs = "%i";
-      script = ''
-        echo Trying to attach ddcci to $1
-        id=$(echo $1 | cut -d "-" -f 2)
-        counter=10
-        while [ $counter -gt 0 ]; do
-          if ${pkgs.ddcutil}/bin/ddcutil getvcp 10 -b $id; then
-            echo ddcci 0x37 > /sys/bus/i2c/devices/$1/new_device
-            break
-          fi
-          sleep 2
-          counter=$((counter - 1))
-        done
+    systemd.services.ddcci = let
+      loadMod = "${pkgs.kmod}/bin/modprobe ddcci";
+      unloadMod = ''
+        if (${pkgs.kmod}/bin/lsmod | ${pkgs.gnugrep}/bin/grep ddcci > /dev/null); then
+          ${pkgs.kmod}/bin/rmmod ddcci_backlight ddcci || true;
+          sleep 1.5 # wait to ensure hardware is ready for reload
+        fi
       '';
-      serviceConfig.Type = "oneshot";
+      script = load: (unloadMod + optionalString load loadMod);
+      ddcci-start = pkgs.writeShellScript "ddcci-start" (script true);
+      ddcci-stop = pkgs.writeShellScript "ddcci-stop" (script false);
+    in {
+      enable = true;
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${ddcci-start}";
+        ExecStop = "${ddcci-stop}";
+        RemainAfterExit = "yes";
+      };
     };
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
@@ -57,6 +52,7 @@ in {
         Unit = {
           Description = "avizo-service (volume/brightness OSD for Wayland)";
           PartOf = [ "graphical-session.target" ];
+          Wants = [ "ddcci.service" ];
         };
         Service = {
           Type = "simple";

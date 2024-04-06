@@ -12,6 +12,16 @@
       vfio.enable = true;
       wayland.enable = true;
       wayland.gammastep.enable = false;
+      wayland.hyprland.enable = true;
+      wayland.hyprland.extraConf = ''
+        # enable brightness controls for external monitors
+        exec-once = zsh -ic '([ -e /sys/class/backlight/ddcci5 ] && [ -e /sys/class/backlight/ddcci6 ]) || sdr ddcci'
+
+        input {
+            sensitivity = -0.5
+            kb_options = ctrl:nocaps
+        }
+      '';
       programs.alacritty.enable = true;
       programs.mpv.enable = true;
       programs.spotify.enable = true;
