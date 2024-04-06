@@ -42,6 +42,8 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     vscode-server.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.inputs.flake-utils.follows = "flake-utils";
+    spicetify-nix.url = "github:the-argus/spicetify-nix";
+    spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
