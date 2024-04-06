@@ -15,7 +15,7 @@
       wayland.hyprland.enable = true;
       wayland.hyprland.extraConf = ''
         # enable brightness controls for external monitors
-        exec-once = zsh -ic '([ -e /sys/class/backlight/ddcci5 ] && [ -e /sys/class/backlight/ddcci6 ]) || sdr ddcci'
+        exec-once = bash -c "sleep 5 && ([ -e /sys/class/backlight/ddcci5 ] && [ -e /sys/class/backlight/ddcci6 ]) || sudo systemctl restart ddcci.service"
 
         input {
             sensitivity = -0.5

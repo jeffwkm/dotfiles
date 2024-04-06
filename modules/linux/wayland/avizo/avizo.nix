@@ -52,7 +52,6 @@ in {
         Unit = {
           Description = "avizo-service (volume/brightness OSD for Wayland)";
           PartOf = [ "graphical-session.target" ];
-          Wants = [ "ddcci.service" ];
         };
         Service = {
           Type = "simple";

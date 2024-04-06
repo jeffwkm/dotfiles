@@ -20,7 +20,9 @@ while ! have_ssh_id; do
 done
 
 # load user environment
-systemctl --user import-environment
+# systemctl --user import-environment
+
+(mount | grep /mnt/huge 2>/dev/null) || mount /mnt/huge
 
 # run hyprland with systemd logging
 # systemd-cat --identifier=hyprland Hyprland
