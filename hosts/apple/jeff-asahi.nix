@@ -14,6 +14,7 @@ with lib.my; {
       dev.enable-all = true;
       wayland.enable = true;
       wayland.hyprland.enable = true;
+      wayland.hyprland.extraConf = "";
       programs.alacritty.enable = true;
       programs.mpv.enable = true;
       programs.chromium.enable = true;

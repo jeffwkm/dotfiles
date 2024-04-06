@@ -9,6 +9,7 @@ let
 in {
   options.modules.wayland.hyprland = {
     enable = mkBoolOpt modules.wayland.enable;
+    extraConf = mkOpt types.str "";
   };
 
   config = mkIf cfg.enable {
@@ -38,13 +39,23 @@ in {
       xdg.configFile."hypr/hyprland.conf".source =
         config.lib.file.mkOutOfStoreSymlink "${pwd}/hyprland.conf";
 
+      xdg.configFile."hypr/hyprpaper.conf".source =
+        config.lib.file.mkOutOfStoreSymlink "${pwd}/hyprpaper.conf";
+
+      xdg.configFile."hypr/hyprlock.conf".source =
+        config.lib.file.mkOutOfStoreSymlink "${pwd}/hyprlock.conf";
+
+      xdg.configFile."hypr/wallpapers/".source =
+        config.lib.file.mkOutOfStoreSymlink "${pwd}/wallpapers";
+
+      xdg.configFile."hypr/hyprland.extra.conf".text = cfg.extraConf;
+
       xdg.configFile."hyprland-autoname-workspaces/config.toml".source =
         config.lib.file.mkOutOfStoreSymlink "${pwd}/_autoname_config.toml";
 
       wayland.windowManager.hyprland = {
         enable = true;
         systemd.enable = false;
-        # extraConfig = builtins.readFile ./hyprland.conf;
       };
 
       systemd.user.targets.hyprland-session = {
