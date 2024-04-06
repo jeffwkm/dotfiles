@@ -165,3 +165,31 @@ label.client-title {
     color: rgba(230, 255, 100, 0.8);
   }
 }
+
+.media {
+  /* font-size: 12px; */
+  color: rgba(255, 255, 255, 0.84);
+  & > box {
+    padding: 3px 1px;
+    border-radius: 9999px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.24);
+    & > * {
+      padding: 0 6px;
+      /* margin: 0 2px; */
+      border: none;
+    }
+    & > *:not(:last-child) {
+      border-right: 2px solid rgba(0, 0, 0, 0.15);
+      border-right: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0;
+    }
+    & label {
+      font-weight: 600;
+    }
+  }
+  &:hover > box {
+    background: rgba(0, 0, 0, 0.14);
+  }
+}

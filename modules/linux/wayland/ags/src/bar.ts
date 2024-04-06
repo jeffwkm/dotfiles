@@ -4,6 +4,7 @@ const { Box, CenterBox, Window } = Widget;
 import { SysTray, CpuTemp, Volume, BatteryLabel, Clock } from "./status";
 import { Workspaces, ClientTitle } from "./workspaces";
 import { Notification } from "./notification";
+import { Media } from "./media";
 
 const Left = (monitor: number) =>
   Box({
@@ -14,8 +15,7 @@ const Left = (monitor: number) =>
 const Center = (monitor: number) =>
   Box({
     spacing: 8,
-    // children: [Media(), Notification()],
-    children: [Notification()],
+    children: [Media(), Notification()],
   });
 
 const Right = (monitor: number) =>
