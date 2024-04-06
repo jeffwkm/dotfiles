@@ -65,8 +65,6 @@ in {
         Service = {
           Type = "simple";
           ExecStart = "${pkgs.lxqt.lxqt-policykit}/bin/lxqt-policykit-agent";
-          Restart = "always";
-          RestartSec = 5;
         };
       };
 

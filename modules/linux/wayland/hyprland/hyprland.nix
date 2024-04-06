@@ -84,7 +84,7 @@ in {
           Type = "simple";
           ExecStart = "${pkgs.hypridle}/bin/hypridle";
           Restart = "always";
-          RestartSec = 5;
+          RestartSec = 60;
         };
       };
 
@@ -97,8 +97,6 @@ in {
         Service = {
           Type = "simple";
           ExecStart = "${pkgs.hyprpaper}/bin/hyprpaper";
-          Restart = "always";
-          RestartSec = 5;
         };
       };
 
@@ -112,8 +110,6 @@ in {
           Type = "simple";
           ExecStart =
             "${pkgs.hyprland-autoname-workspaces}/bin/hyprland-autoname-workspaces";
-          Restart = "always";
-          RestartSec = 5;
         };
       };
     };

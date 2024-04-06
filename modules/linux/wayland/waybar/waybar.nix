@@ -36,8 +36,6 @@ in {
           ExecCondition =
             ''${pkgs.bash}/bin/sh -c '[ -n "$WAYLAND_DISPLAY" ]' '';
           ExecStart = "${pkgs.waybar}/bin/waybar";
-          Restart = "always";
-          RestartSec = 3;
         };
       };
 

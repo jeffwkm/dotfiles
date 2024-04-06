@@ -27,8 +27,6 @@ in {
             ''${pkgs.bash}/bin/sh -c '[ -n "$WAYLAND_DISPLAY" ]' '';
           ExecStart = "${pkgs.mako}/bin/mako";
           ExecReload = "${pkgs.mako}/bin/makoctl reload";
-          Restart = "always";
-          RestartSec = 3;
         };
       };
     };

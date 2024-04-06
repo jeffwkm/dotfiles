@@ -94,7 +94,7 @@ in {
                   before-sleep   'swaylock -f -c 000000' \
           '';
           Restart = "always";
-          RestartSec = 5;
+          RestartSec = 60;
         };
       };
     };

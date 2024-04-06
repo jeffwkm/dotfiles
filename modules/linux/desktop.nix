@@ -39,8 +39,6 @@ in {
       serviceConfig = {
         Type = "simple";
         ExecStart = "${amdgpu-fan}/bin/amdgpu-fan";
-        Restart = "always";
-        RestartSec = 60;
       };
     };
 

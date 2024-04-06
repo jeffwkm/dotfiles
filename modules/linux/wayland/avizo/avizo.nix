@@ -64,8 +64,6 @@ in {
           # LogFilterPatterns = "~.*Fade.*";
           # StandardError = "null";
           # StandardOutput = "null";
-          Restart = "always";
-          RestartSec = 5;
         };
       };
     };
