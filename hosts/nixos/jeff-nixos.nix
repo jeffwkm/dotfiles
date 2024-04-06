@@ -24,6 +24,9 @@
       '';
       programs.alacritty.enable = true;
       programs.mpv.enable = true;
+      programs.mpv.extraConf = ''
+        autofit=1080 # fix for mpv+hyprland multi-monitor bug
+      '';
       programs.spotify.enable = true;
       programs.chromium.enable = true;
       programs.firefox.enable = true;

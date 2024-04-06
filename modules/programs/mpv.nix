@@ -14,6 +14,7 @@ in {
     vapoursynth =
       mkBoolOpt (cfg.enable && !darwin && pkgs.system != "aarch64-linux");
     git = mkBoolOpt false;
+    extraConf = mkOpt types.str "";
   };
 
   config = mkIf cfg.enable {
@@ -81,7 +82,8 @@ in {
         '' else
           "");
       in {
-        "mpv/mpv.conf".text = (readFile ./mpv/mpv.conf) + mpvExtra;
+        "mpv/mpv.conf".text = (readFile ./mpv/mpv.conf) + mpvExtra
+          + cfg.extraConf;
         "mpv/input.conf".text = (readFile ./mpv/input.conf) + inputExtra;
         "mpv/script-opts/stats.conf".text =
           readFile ./mpv/script-opts/stats.conf;
