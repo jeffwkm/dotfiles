@@ -37,7 +37,7 @@ in {
           editorconfig-core-c
           gnumake
           nil
-          nixfmt
+          nixfmt-classic
           nodePackages.stylelint
           nodejs_20
           openai
