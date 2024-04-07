@@ -5,7 +5,7 @@ let
   inherit (config) user host modules;
   cfg = modules.wayland.hyprland;
   pwd = "${host.config-dir}/modules/linux/wayland/hyprland";
-  wrapOptimize' = wrapOptimize config;
+  optimize' = optimizeNative config;
 in {
   options.modules.wayland.hyprland = {
     enable = mkBoolOpt modules.wayland.enable;
@@ -14,11 +14,18 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      # inputs.hyprland.overlays.default
-      # inputs.hyprland.overlays.wlroots-hyprland
-      (wrapOptimize' "wlroots")
-      (wrapOptimize' "hyprland")
-      (wrapOptimize' "hyprpaper")
+      inputs.hyprland.overlays.default
+      inputs.hyprland.overlays.wlroots-hyprland
+      (final: prev: {
+        wlroots = optimize' prev.wlroots;
+        wlroots-hyprland = optimize' prev.wlroots-hyprland;
+        hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
+          wlroots = final.wlroots-hyprland;
+        });
+        hyprland = optimize'
+          (prev.hyprland.override { wlroots = final.wlroots-hyprland; });
+        hyprpaper = optimize' prev.hyprpaper;
+      })
     ];
 
     programs.hyprland.enable = true;

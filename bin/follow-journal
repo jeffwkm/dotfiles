@@ -65,7 +65,7 @@ def format_entry(entry):
     ts = ""
     if "__REALTIME_TIMESTAMP" in entry:
         ts = int(entry["__REALTIME_TIMESTAMP"]) / 1_000_000
-        ts = time.strftime("%l:%M %p", time.localtime(ts))
+        ts = time.strftime("%l:%M:%S %p", time.localtime(ts))
         ts = "\033[1m%s\033[22m" % ts  # set bold text
 
     return "%s%s%s %s %s%s" % (ts, start_fg, start_bg, source, message, reset_colors)

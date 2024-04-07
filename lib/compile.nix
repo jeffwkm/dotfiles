@@ -13,15 +13,32 @@ let
   addFlagsRust = pkg: flags: foldl' (pkg: flag: addFlagRust pkg flag) pkg flags;
   addFlags = pkg: flagsC: flagsRust:
     addFlagsRust (addFlagsC pkg flagsC) flagsRust;
-  rustFlags = [ "-C" "opt-level=3" "-C" "target-cpu=native" ];
-  cFlags = [ "-O3" "-march=native" ];
 in rec {
-  optimizeC = addFlagsC;
-  optimizeDefault = pkg: addFlags pkg cFlags rustFlags;
-  optimizeFast = pkg:
-    addFlags pkg [ "-march=native" "-Ofast" "-fno-finite-math-only" ] rustFlags;
   optimize = config: pkg:
-    if config.host.optimize then optimizeDefault pkg else pkg;
+    if config.host.optimize then
+      (addFlags pkg [ "-O3" "-march=native" ] [
+        "-C"
+        "opt-level=3"
+        "-C"
+        "target-cpu=native"
+      ])
+    else
+      pkg;
+  optimizeNative = config: pkg:
+    if config.host.optimize then
+      (addFlags pkg [ "-march=native" ] [ "-C" "target-cpu=native" ])
+    else
+      pkg;
+  optimizeFast = config: pkg:
+    if config.host.optimize then
+      (addFlags pkg [ "-march=native" "-Ofast" "-fno-finite-math-only" ] [
+        "-C"
+        "opt-level=3"
+        "-C"
+        "target-cpu=native"
+      ])
+    else
+      pkg;
   wrapOptimize = config: pkgname:
     (final: prev: { final.pkgname = optimize config prev.pkgname; });
 }
