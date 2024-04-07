@@ -23,7 +23,7 @@ in {
           ExecCondition =
             ''${pkgs.bash}/bin/sh -c '[ -n "$WAYLAND_DISPLAY" ]' '';
           WorkingDirectory = "${user.home}/.config/ags";
-          ExecStart = "${pkgs.bash}/bin/bash -c './dev.sh'";
+          ExecStart = "${pkgs.bash}/bin/bash ./dev";
         };
       };
 

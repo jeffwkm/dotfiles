@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -eu
 
-bun install
+cd ~/.config/ags
+
+bun install --no-summary
 ./build-css
-bunx vite build
+bunx vite build 2>&1 | grep -v 'No name was provided for external module'

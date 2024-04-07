@@ -12,6 +12,11 @@ def filter_entry(entry):
         return False
     if "refused connection" in entry["MESSAGE"]:
         return False
+    if (
+        "g_settings_new_full: assertion 'path == NULL || path_is_valid"
+        in entry["MESSAGE"]
+    ):
+        return False
     return True
 
 

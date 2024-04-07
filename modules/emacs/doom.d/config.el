@@ -36,7 +36,8 @@
 ;;                 after-setting-font-hook))
 ;;   (add-hook hook 'autoset-frame-margins))
 
-(setf (alist-get 'alpha-background default-frame-alist) 0.865)
+(setf (alist-get 'alpha-background default-frame-alist) 0.88)
+
 (menu-bar-mode -1)
 
 ;;disable trackpad input

@@ -1,9 +1,5 @@
 import Gdk from "gi://Gdk";
-
-import { App } from "ags-ts";
-import { monitorFile } from "resource:///com/github/Aylur/ags/utils.js";
-
-import { Bar } from "./bar";
+import Bar from "./bar";
 
 const range = (length, start = 1) => Array.from({ length }, (_, i) => i + start);
 function forMonitors(widget) {
@@ -19,7 +15,7 @@ App.config({
   windows: forMonitors(Bar),
 });
 
-monitorFile(cssOut, () => {
+Utils.monitorFile(cssOut, () => {
   App.resetCss();
   App.applyCss(cssOut);
 });

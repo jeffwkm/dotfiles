@@ -1,6 +1,6 @@
-import { Widget, Audio, Battery, SystemTray } from "ags-ts";
-const { LevelBar, Icon, Box, Button, Label, CircularProgress } = Widget;
-import { merge, watch, readFile } from "resource:///com/github/Aylur/ags/utils.js";
+import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
+import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
+import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 
 const timeNow = Variable("", {
   poll: [1000, 'date +"%l:%M %p"'],
@@ -14,7 +14,7 @@ const cpuTemp = Variable(0, {
   poll: [
     1500,
     (_) => {
-      const temp = readFile("/sys/class/hwmon/hwmon4/temp1_input");
+      const temp = Utils.readFile("/sys/class/hwmon/hwmon4/temp1_input");
       if (!temp) {
         return 0;
       }
@@ -24,14 +24,14 @@ const cpuTemp = Variable(0, {
 });
 
 export const Clock = () => {
-  return Box({
+  return Widget.Box({
     class_name: "datetime",
     children: [
-      Label({
+      Widget.Label({
         class_name: "date",
         label: dateNow.bind(),
       }),
-      Label({
+      Widget.Label({
         class_name: "time",
         label: timeNow.bind(),
       }),
@@ -52,17 +52,17 @@ export const CpuTemp = () => {
     return levels[threshold];
   };
 
-  const icon = Icon({
+  const icon = Widget.Icon({
     class_name: "icon",
     icon: "sensors-temperature-symbolic",
   });
 
-  const label = Label({
+  const label = Widget.Label({
     label: cpuTemp.bind().as((t) => `${Math.floor(t)}°`),
     halign: "end",
   });
 
-  return Box({
+  return Widget.Box({
     class_name: cpuTemp.bind().as((t) => `cputemp ${getLevel(t)}`),
     visible: cpuTemp.bind().as((t) => t > 0),
     children: [icon, label],
@@ -86,19 +86,19 @@ export const Volume = () => {
     return `audio-volume-${icons[icon]}-symbolic`;
   };
 
-  const icon = Icon({
+  const icon = Widget.Icon({
     class_name: "icon",
-    icon: watch(getIcon(), Audio.speaker, getIcon),
+    icon: Utils.watch(getIcon(), Audio.speaker, getIcon),
   });
 
-  const status = CircularProgress({
+  const status = Widget.CircularProgress({
     class_name: "circular",
     value: Audio.speaker.bind("volume").as((v) => v || 0),
   });
 
-  return Box({
+  return Widget.Box({
     class_name: "volume",
-    children: [icon, Box({ children: [status] })],
+    children: [icon, Widget.Box({ children: [status] })],
   });
 };
 
@@ -106,7 +106,7 @@ export const BatteryLabel = () => {
   const available = Battery.bind("available");
   const percent = Battery.bind("percent").as((p) => (p > 0 ? p / 100 : 0));
   const charging = Battery.bind("charging").as((c) => (c ? "-charging" : ""));
-  const icon = merge([available, percent, charging], (a, p, c) =>
+  const icon = Utils.merge([available, percent, charging], (a, p, c) =>
     available ? `battery-level-${Math.floor(p * 10) * 10}-symbolic${c}` : "battery-missing",
   );
 
@@ -141,7 +141,7 @@ export const BatteryLabel = () => {
 //     children: [
 //       Icon({
 //         class_name: "icon",
-//         icon: watch(getIcon(), Battery, getIcon),
+//         icon: Utils.watch(getIcon(), Battery, getIcon),
 //       }),
 //       LevelBar({
 //         widthRequest: 140,
@@ -155,8 +155,9 @@ export const BatteryLabel = () => {
 export const SysTray = () => {
   const items = SystemTray.bind("items").as((items) =>
     items.map((item) =>
-      Button({
-        child: Icon({ icon: item.bind("icon") }),
+      Widget.Button({
+        child: Widget.Icon({ icon: item.bind("icon") }),
+
         on_primary_click: (_, event) => item.activate(event),
         on_secondary_click: (_, event) => item.openMenu(event),
         tooltip_markup: item.bind("tooltip_markup"),
@@ -164,7 +165,7 @@ export const SysTray = () => {
     ),
   );
 
-  return Box({
+  return Widget.Box({
     class_name: "systray",
     children: items,
   });

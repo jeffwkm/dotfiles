@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -eu
+
+cd ~/.config/ags
+
+bun install --no-summary
+
+./build-css -w &
+
+fd . -e .ts src/ | entr -nrs "
+  bun install --no-summary
+  bunx vite build --logLevel warn 2>&1 | grep -v 'No name was provided for external module'
+  ags $*
+"

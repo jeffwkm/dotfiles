@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   build: {
     target: "node20",
+    minify: false,
     lib: {
       entry: resolve(__dirname, "src/main.ts"),
       name: "ags-config",

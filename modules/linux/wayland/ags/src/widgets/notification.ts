@@ -1,18 +1,21 @@
-import { Notifications, Widget } from "ags-ts";
-const { Box, Icon, Label } = Widget;
+import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
+
+Notifications.popupTimeout = 3000;
 
 export const Notification = () => {
   const popups = Notifications.bind("popups");
-  return Box({
+  return Widget.Box({
     class_name: "notification",
     visible: popups.as((p) => p.length > 0),
     children: [
-      Icon({
+      Widget.Icon({
         icon: "preferences-system-notifications-symbolic",
       }),
-      Label({
+      Widget.Label({
         label: popups.as((p) => p[0]?.summary || ""),
       }),
     ],
   });
 };
+
+export default Notification;

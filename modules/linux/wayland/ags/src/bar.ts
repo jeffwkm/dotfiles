@@ -1,45 +1,54 @@
-import { Hyprland, Widget } from "ags-ts";
-const { Box, CenterBox, Window } = Widget;
+import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
+import {
+  SysTray,
+  CpuTemp,
+  Volume,
+  BatteryLabel,
+  Clock,
+  Workspaces,
+  ClientTitle,
+  Notification,
+  Media,
+} from "./widgets";
 
-import { SysTray, CpuTemp, Volume, BatteryLabel, Clock } from "./status";
-import { Workspaces, ClientTitle } from "./workspaces";
-import { Notification } from "./notification";
-import { Media } from "./media";
-
-const Left = (monitor: number) =>
-  Box({
-    spacing: 6,
-    children: [Workspaces(monitor), ClientTitle(monitor)],
+const Left = (monitorId: number) =>
+  Widget.Box({
+    class_name: "bar-left",
+    children: [Workspaces(monitorId), ClientTitle(monitorId)],
   });
 
-const Center = (monitor: number) =>
-  Box({
-    spacing: 8,
+const Center = (monitorId: number) =>
+  Widget.Box({
+    class_name: "bar-center",
     children: [Media(), Notification()],
   });
 
-const Right = (monitor: number) =>
-  Box({
+const Right = (monitorId: number) =>
+  Widget.Box({
+    class_name: "bar-right",
     hpack: "end",
-    spacing: 4,
     children: [SysTray(), CpuTemp(), Volume(), BatteryLabel(), Clock()],
   });
 
-export const Bar = (monitor: number) => {
-  const box_css = Hyprland.active
-    .bind("monitor")
-    .as((mon) => `outer ${monitor === mon.id ? "active" : ""}`);
-  return Window({
-    name: `ags-${monitor}`, // name has to be unique
+export const Bar = (monitorId: number) =>
+  Widget.Window({
+    name: `ags-${monitorId}`, // name has to be unique
     class_name: "bar",
-    monitor,
+    monitor: monitorId,
     anchor: ["top", "left", "right"],
     exclusivity: "exclusive",
-    child: CenterBox({
-      start_widget: Left(monitor),
-      center_widget: Center(monitor),
-      end_widget: Right(monitor),
-      class_name: box_css,
+    child: Widget.CenterBox({
+      start_widget: Left(monitorId),
+      center_widget: Center(monitorId),
+      end_widget: Right(monitorId),
+      class_name: "outer",
+      setup: (self) => {
+        self.hook(Hyprland.active.monitor, (self) => {
+          const isActive = monitorId === Hyprland.active.monitor.id;
+          self.class_name = `outer ${isActive ? "active" : ""}`;
+        });
+      },
     }),
   });
-};
+
+export default Bar;
