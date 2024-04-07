@@ -1,11 +1,11 @@
-{ config, lib, inputs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 with lib;
 with lib.my;
 let
   inherit (config) user host modules;
   cfg = modules.wayland.hyprland;
   pwd = "${host.config-dir}/modules/linux/wayland/hyprland";
-  optimize' = optimize config;
+  wrapOptimize' = wrapOptimize config;
 in {
   options.modules.wayland.hyprland = {
     enable = mkBoolOpt modules.wayland.enable;
@@ -14,28 +14,24 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      inputs.hyprland.overlays.default
-      inputs.hyprland.overlays.wlroots-hyprland
-      (final: prev: {
-        wlroots-hyprland = optimize' prev.wlroots-hyprland;
-        hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
-          wlroots = final.wlroots-hyprland;
-        });
-        hyprland = optimize'
-          (prev.hyprland.override { wlroots = final.wlroots-hyprland; });
-      })
+      # inputs.hyprland.overlays.default
+      # inputs.hyprland.overlays.wlroots-hyprland
+      (wrapOptimize' "wlroots")
+      (wrapOptimize' "hyprland")
+      (wrapOptimize' "hyprpaper")
+    ];
+
+    programs.hyprland.enable = true;
+
+    environment.systemPackages = with pkgs; [
+      hypridle
+      hyprlock
+      hyprpaper
+      hyprland-autoname-workspaces
+      hyprkeys
     ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
-      imports = [ inputs.hyprland.homeManagerModules.default ];
-
-      home.packages = with pkgs; [
-        hypridle
-        hyprlock
-        hyprpaper
-        hyprland-autoname-workspaces
-      ];
-
       xdg.configFile."hypr/hyprland.conf".source =
         config.lib.file.mkOutOfStoreSymlink "${pwd}/hyprland.conf";
 
@@ -52,11 +48,6 @@ in {
 
       xdg.configFile."hyprland-autoname-workspaces/config.toml".source =
         config.lib.file.mkOutOfStoreSymlink "${pwd}/_autoname_config.toml";
-
-      wayland.windowManager.hyprland = {
-        enable = true;
-        systemd.enable = false;
-      };
 
       systemd.user.targets.hyprland-session = {
         Unit = {
