@@ -15,7 +15,7 @@ let
       treesit-grammars.with-all-grammars
     ]);
 
-  emacs-base = optimize config (if darwin then
+  emacs-base = optimizeFast config (if darwin then
     pkgs.emacs-git.overrideAttrs (old: {
       patches = (old.patches or [ ]) ++ [
         # Fix OS window role so that yabai can pick up emacs
