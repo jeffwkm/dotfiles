@@ -22,6 +22,7 @@ in {
           "gtk-2.0/gtkfilechooser.ini".source =
             mkOutOfStoreSymlink "${pwd}/gtkfilechooser.ini";
           "gtk-3.0/".source = mkOutOfStoreSymlink "${pwd}/gtk-3.0";
+          "gtk-4.0/".source = mkOutOfStoreSymlink "${pwd}/gtk-4.0";
         };
         home.file = mkIf modules.desktop.enable {
           ".Xdefaults".source = mkOutOfStoreSymlink "${pwd}/Xdefaults";
