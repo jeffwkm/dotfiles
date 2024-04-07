@@ -8,6 +8,7 @@
 (require 'doom)
 (require 'deferred)
 (require 'shut-up)
+(require 'nerd-icons)
 
 (cl-declaim doom-active-minor-modes)
 
@@ -376,6 +377,12 @@ interactively for spacing value."
       (if root
           (f-relative path root)
         path))))
+
+(defun --remind-message (message &optional icon face)
+  (let ((icon (or icon "nf-fa-info_circle"))
+        (face (or face 'warning)))
+    (message (propertize (concat (nerd-icons-faicon icon) " " message)
+                         'face face 'font-lock-face face))))
 
 (unless (featurep 'commands)
   (with-eval-after-load 'commands

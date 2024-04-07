@@ -297,10 +297,13 @@
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :config
   (use-package! tree-sitter)
-  (add-hook! (emacs-lisp-mode ielm-mode) 'elisp-slime-nav-mode)
-  ;; (add-hook! emacs-lisp-mode 'tree-sitter-mode)
+  (add-hook! (emacs-lisp-mode lisp-interaction-mode) 'elisp-slime-nav-mode)
   (map! :mode elisp-slime-nav-mode
-        "M-." nil))
+        "M-." nil)
+  (map! :mode (emacs-lisp-mode lisp-interaction-mode)
+        :localleader
+        "e p" 'eval-print-last-sexp)
+  nil)
 
 (use-package! magit
   :defer-incrementally t
@@ -494,24 +497,34 @@
 
 (after! corfu
   (corfu-popupinfo-mode 1)
-  (corfu-echo-mode 1)
+  ;; (corfu-echo-mode -1)
   (corfu-history-mode 1)
-  (setq! corfu-separator ?\&
+  (setq! corfu-separator ?\s
          corfu-min-width 30
          corfu-max-width 80
-         corfu-preview-current nil
-         corfu-auto t
-         corfu-auto-delay 0.1
-         corfu-auto-prefix 2
-         corfu-echo-delay 0.5
-         corfu-popupinfo-delay 0.5)
+         corfu-preview-current t
+         corfu-preselect 'prompt
+         ;; corfu-auto-delay 0.18
+         ;; corfu-auto-prefix 2
+         ;; corfu-echo-delay nil
+         ;; corfu-popupinfo-delay '(2.0 . 1.0)
+         )
   (map! :mode corfu-mode
         "C-." 'complete-symbol
         "C-x C-o" 'complete-symbol
         :nmig
         "C-SPC" nil
-        "C-<space>" nil)
+        "C-<space>" nil
+        :map corfu-map
+        :nmig "M-SPC" 'corfu-insert-separator
+        :nmig "C-SPC" 'corfu-insert-separator
+        :nmig "RET" 'corfu-complete)
   nil)
+
+(+global-word-wrap-mode 1)
+;; (pushnew! +word-wrap-disabled-modes 'cider-repl-mode)
+
+(use-package! helpful :defer-incrementally t)
 
 (after! company
   (setq! company-minimum-prefix-length 2
@@ -568,7 +581,8 @@
             'corfu-scroll-up
             'corfu-first
             'corfu-last
-            'corfu-insert-separator)
+            'corfu-insert-separator
+            'corfu-complete)
   (map! :mode copilot-mode
         :nmi "TAB" '--copilot-show-or-accept
         :nmi "<tab>" '--copilot-show-or-accept
@@ -597,7 +611,7 @@
           "<return>" 'company-complete-selection)))
 
 (after! projectile
-  (setq projectile-indexing-method 'hybrid
+  (setq projectile-indexing-method 'alien
         projectile-enable-caching nil))
 
 (after! swiper
@@ -605,33 +619,27 @@
   (map! "C-s" 'swiper
         "C-r" 'swiper
         "C-S-S" 'swiper-all
-        :m "/" 'counsel-grep-or-swiper))
+        :m "/" '+default/search-buffer))
 
 (use-package! ligature
   :config
-  ;; ";;" "~-" "~@" "~~" "-~"
-  (->> '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
-         ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
-         "-<" "-<<"  "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
-         "#_(" ".-" ".=" ".." "..<" "..." "?=" "??"  "/*" "/**"
-         "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
-         "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
-         "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
-         "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
-         "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
-         "<~" "<~~" "</" "</>" "~>" "~~>" "%%"
-         ";;" ";;;")
-       ;; (ligature-set-ligatures 'prog-mode)
-       (ligature-set-ligatures t))
-  (--each '(org-mode
-            magit-status-mode
-            magit-diff-mode
-            magit-log-mode
-            magit-stash-mode
-            magit-revision-mode
-            magit-section-mode)
-    (add-to-list 'ligature-ignored-major-modes it))
-  (global-ligature-mode 1))
+  ;; (->> '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
+  ;;        ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
+  ;;        "-<" "-<<"  "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
+  ;;        "#_(" ".-" ".=" ".." "..<" "..." "?=" "??"  "/*" "/**"
+  ;;        "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
+  ;;        "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
+  ;;        "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
+  ;;        "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
+  ;;        "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
+  ;;        "<~" "<~~" "</" "</>" "~>" "~~>" "%%"
+  ;;        ";;" ";;;" "~@")
+  ;;      (ligature-set-ligatures 'prog-mode))
+
+  ;; +ligatures-prog-mode-list
+  ;; +ligatures-all-modes-list
+  ;; +ligatures-extra-alist
+  )
 
 (use-package! hl-todo
   :defer-incrementally t
