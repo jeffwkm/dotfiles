@@ -23,6 +23,7 @@
 (package! deferred)
 (package! elsa :recipe (:host github :repo "emacs-elsa/Elsa"))
 (package! elisp-slime-nav :built-in 'prefer)
+(package! eterm-256color)
 (package! evil-lisp-state)
 (package! evil-matchit)
 (package! evil-smartparens)

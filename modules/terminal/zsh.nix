@@ -5,21 +5,25 @@ let
   inherit (config) host user;
   inherit (config.host) darwin;
 
-  nix-flake-search = pkgs.writeShellScript "nix-flake-search" ''
-    nix="${pkgs.nix}/bin/nix"
-    cd "${config.host.config-dir}"
-    nixpkgs_flake="$($nix eval --raw '.#inputs.nixpkgs')"
-    $nix search -I nixpkgs="$nixpkgs_flake" nixpkgs $@
-  '';
-
-  nix-package-store-path = pkgs.writeShellScript "nix-package-store-path" ''
-    nix="${pkgs.nix}/bin/nix"
-    pkg="$1"
-    nix-instantiate --eval -E '(with import <nixpkgs> {}; "$\{$1\}")' --json | tr -d '"'
-  '';
+  scripts = {
+    nix-search = pkgs.writeShellScript "nix-search" ''
+      nix search nixpkgs $* | sed 's/legacyPackages.[^.]*.//' | grep -v "evaluating '" | grep -Ee '.+' | sed 's/\* //'
+    '';
+    nix-package-store-path = pkgs.writeShellScript "nix-package-store-path" ''
+      nix="${pkgs.nix}/bin/nix"
+      pkg="$1"
+      nix-instantiate --eval -E '(with import <nixpkgs> {}; "$\{$1\}")' --json | tr -d '"'
+    '';
+    which-realpath = pkgs.writeShellScript "which-realpath" ''
+      realpath "$(which $1)"
+    '';
+  };
 
   lsd_completion =
     builtins.toFile "_lsd" (builtins.readFile ../../dotfiles/_lsd);
+
+  emacs_vterm_zsh = builtins.toFile "emacs-vterm-zsh.sh"
+    (builtins.readFile ./emacs-vterm-zsh.sh);
 
   makeUserConfig = extra: {
     enable = true;
@@ -69,9 +73,10 @@ let
       ee = "emacs -nw";
       v = "vim";
       ### nix
-      ss = "${nix-flake-search}";
+      ss = "${scripts.nix-search}";
       ns = "nix search nixpkgs";
-      nps = "${nix-package-store-path}";
+      nps = "${scripts.nix-package-store-path}";
+      wr = "${scripts.which-realpath}";
       ### tmux
       tmux = "tmux -2";
       tn = "tmux new-session -s";
@@ -180,8 +185,6 @@ let
 
       export _ZSH_NIX_PROFILES="$(_zsh_nix_profiles)"
 
-      source ${lsd_completion} 2> /dev/null
-
       if [[ "$USING_P10K" -ne 1 ]] ; then
         setopt PROMPT_CR
       fi
@@ -193,6 +196,9 @@ let
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
         p10k finalize
       fi
+
+      source ${lsd_completion} 2> /dev/null
+      source ${emacs_vterm_zsh} 2> /dev/null
 
       ${extra.initExtra or ""}
     '';

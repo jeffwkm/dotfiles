@@ -95,11 +95,14 @@
        org-directory "~/org/"
        confirm-kill-processes nil
        frame-title-format
-       '((:eval (if (doom-project-name)
-                    (format! "[%s]:%s"
-                             (doom-project-name)
-                             (or (--relative-file-path) "|%b|"))
-                  (or (-some-> (buffer-file-name) abbreviate-file-name) "<%b>"))))
+       '((:eval (with-current-buffer (if (minibufferp)
+                                         minibuffer--original-buffer
+                                       (current-buffer))
+                  (let* ((buffer-name (substring-no-properties (doom-modeline--buffer-name)))
+                         (buffer-name (if (equal buffer-name "%b") (buffer-name) buffer-name)))
+                    (concat
+                     (-some-> (nerd-icons-icon-for-buffer) (concat "  "))
+                     (string-trim buffer-name "[ \\\t\\\r\\\n\\*]+" "[ \\\t\\\r\\\n\\*]+"))))))
        require-final-newline t
        large-file-warning-threshold (* 100 1000 1000)
 
@@ -509,6 +512,12 @@
          ;; corfu-echo-delay nil
          ;; corfu-popupinfo-delay '(2.0 . 1.0)
          )
+
+  (defun --corfu-set-faces (&optional frame)
+    (set-face-background 'corfu-current "#2c2e2f" frame))
+  (add-hook! 'after-make-frame-functions :append '--corfu-set-faces)
+  (--corfu-set-faces)
+
   (map! :mode corfu-mode
         "C-." 'complete-symbol
         "C-x C-o" 'complete-symbol
@@ -790,16 +799,19 @@
     (setq org-notify-interval 600
           org-notify-fade-time 7)))
 
-(require 'doom-themes-ext-org)
+(after! org
+  (require 'doom-themes-ext-org))
+
+(after! vterm
+  (setq! vterm-disable-inverse-video t
+         vterm-term-environment-variable "xterm-256color"
+         ;; vterm-term-environment-variable "eterm-color"
+         ))
 
 (after! org
-  (setq org-log-done 'time
-        org-agenda-files '("~/todo.org"
-                           "~/org/now.org"
-                           "~/org/planning.org"
-                           "~/org/self.org"
-                           "~/org/sysrev.org")
-        org-agenda-timegrid-use-ampm t)
+  (setq! org-log-done 'time
+         org-agenda-files '("~/org/agenda")
+         org-agenda-timegrid-use-ampm t)
   (map! :mode org-mode
         "C-<tab>"        nil
         "C-k"            nil
