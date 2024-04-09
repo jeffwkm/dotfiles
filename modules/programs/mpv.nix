@@ -10,7 +10,7 @@ let
   pwd = "${host.config-dir}/modules/programs";
 in {
   options.modules.programs.mpv = {
-    enable = mkBoolOpt false;
+    enable = mkBoolOpt ((modules ? desktop) && modules.desktop.enable);
     vapoursynth =
       mkBoolOpt (cfg.enable && !darwin && pkgs.system != "aarch64-linux");
     git = mkBoolOpt false;

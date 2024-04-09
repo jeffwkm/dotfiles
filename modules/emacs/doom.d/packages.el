@@ -21,6 +21,7 @@
 (package! copilot :recipe
   (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
 (package! deferred)
+(package! disable-mouse)
 (package! elsa :recipe (:host github :repo "emacs-elsa/Elsa"))
 (package! elisp-slime-nav :built-in 'prefer)
 (package! eterm-256color)

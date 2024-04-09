@@ -21,8 +21,6 @@ with lib.my; {
         }
       '';
       programs.alacritty.enable = true;
-      programs.mpv.enable = true;
-      programs.chromium.enable = true;
     };
     host.optimize = false;
     # asahi system

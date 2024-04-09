@@ -7,7 +7,6 @@
       desktop.enable = false;
       emacs.enable = true;
       dev.enable-all = true;
-      programs.chromium.enable = true;
       programs.mpv.enable = true;
     };
 

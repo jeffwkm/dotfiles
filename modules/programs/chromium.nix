@@ -23,7 +23,9 @@ let
     exec ${pkgs.chromium}/bin/chromium $opts "$@" 2>&1
   '';
 in {
-  options.modules.programs.chromium = { enable = mkBoolOpt false; };
+  options.modules.programs.chromium = {
+    enable = mkBoolOpt modules.desktop.enable;
+  };
 
   config = mkIf cfg.enable {
     environment.systemPackages = [ chromiumSh ];

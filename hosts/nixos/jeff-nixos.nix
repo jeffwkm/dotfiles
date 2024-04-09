@@ -11,7 +11,6 @@
       dev.enable-all = true;
       vfio.enable = true;
       wayland.enable = true;
-      wayland.gammastep.enable = false;
       wayland.hyprland.enable = true;
       wayland.hyprland.extraConf = ''
         # enable brightness controls for external monitors
@@ -23,12 +22,10 @@
         }
       '';
       programs.alacritty.enable = true;
-      programs.mpv.enable = true;
       programs.mpv.extraConf = ''
         autofit=1080 # fix for mpv+hyprland multi-monitor bug
       '';
       programs.spotify.enable = true;
-      programs.chromium.enable = true;
       programs.firefox.enable = true;
       services.mpd.enable = true;
       services.mpd.musicDirectory = "/mnt/huge/Music";
@@ -108,6 +105,7 @@
     networking.dhcpcd.allowInterfaces = [ "br0" ];
     systemd.services.br0-netdev.wantedBy = [ "multi-user.target" ];
 
+    # disabled because conflicts with persistent-evdev
     systemd.services.keyd = {
       enable = false;
       # after = [ "systemd-udevd.service" "persistent-evdev.service" ];
