@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+nix search nixpkgs "$@" | sed 's/legacyPackages.[^.]*.//' | grep -v "evaluating '" | grep -Ee '.+' | sed 's/\* //'

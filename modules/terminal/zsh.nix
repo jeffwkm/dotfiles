@@ -5,20 +5,6 @@ let
   inherit (config) host user;
   inherit (config.host) darwin;
 
-  scripts = {
-    nix-search = pkgs.writeShellScript "nix-search" ''
-      nix search nixpkgs $* | sed 's/legacyPackages.[^.]*.//' | grep -v "evaluating '" | grep -Ee '.+' | sed 's/\* //'
-    '';
-    nix-package-store-path = pkgs.writeShellScript "nix-package-store-path" ''
-      nix="${pkgs.nix}/bin/nix"
-      pkg="$1"
-      nix-instantiate --eval -E '(with import <nixpkgs> {}; "$\{$1\}")' --json | tr -d '"'
-    '';
-    which-realpath = pkgs.writeShellScript "which-realpath" ''
-      realpath "$(which $1)"
-    '';
-  };
-
   lsd_completion =
     builtins.toFile "_lsd" (builtins.readFile ../../dotfiles/_lsd);
 
@@ -73,10 +59,12 @@ let
       ee = "emacs -nw";
       v = "vim";
       ### nix
-      ss = "${scripts.nix-search}";
+      ss = "nix-search";
       ns = "nix search nixpkgs";
-      nps = "${scripts.nix-package-store-path}";
-      wr = "${scripts.which-realpath}";
+      nl = "nix-locate";
+      wr = "which-realpath";
+      wrd = "which-realpath-dir";
+      wp = "which-package";
       ### tmux
       tmux = "tmux -2";
       tn = "tmux new-session -s";

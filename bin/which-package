@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+pkg="$1"
+nix-instantiate --eval -E "with import <nixpkgs> {}; $pkg.outPath" --json | tr -d '"'

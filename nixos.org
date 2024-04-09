@@ -1,12 +1,22 @@
 #+title: Notes
 
 * todo
-** misc
-*** [ ] split into multiple flake.nix repos
-*** [ ] automate reload of .zshrc after changes
-*** README.org for github
 ** ags
+*** TODO mpris: change active player upon play
+*** TODO mpris: ui for switching players
+*** TODO workspaces: handle scroll events
+*** TODO workspaces: add widget for special workspaces
+*** TODO status: show day of week
+*** TODO status: cpu usage
+*** TODO status: mem usage
+*** TODO status: cpu freq
+*** TODO status: fix battery widget
 ** rofi
-*** show modes list as tab bar
+*** TODO show modes list as tab bar
 ** emacs
-*** automate creating tree-sitter .so files for aarch64-linux
+*** TODO automate creating tree-sitter .so files for aarch64-linux
+** misc
+*** TODO wondershaper + service
+*** TODO split into multiple flake.nix repos
+*** TODO automate reload of .zshrc after changes
+*** TODO README.org for github

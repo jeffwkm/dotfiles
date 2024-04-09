@@ -13,7 +13,6 @@ lem="$dir/lem"
   cd "$dir"
   source "$env"
   make sdl2-ncurses
-  $lem "$args"
 )
 cd "$pwd"
 source "$env"

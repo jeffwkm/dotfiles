@@ -96,17 +96,21 @@
 
 (defvar --modeline-font nil)
 
-(defun --get-font-spec (&optional variable? modeline?)
-  (if (and modeline? (mac?))
-      nil
-    (apply 'font-spec
-           :family (if variable? "Inter" "JetBrains Mono")
-           :size (if variable?
-                     13
-                   (+ (if (equal (system-name) "jeff-nixos") 14 14)
-                      (if modeline? -1 0)))
-           :weight (if variable? 'medium 'semibold)
-           nil)))
+(progn
+  (defun --get-font-spec (&optional variable? modeline?)
+    (if (and modeline? (mac?))
+        nil
+      (apply 'font-spec
+             :family (if variable? "Inter" "JetBrainsMono Nerd Font")
+             :size (if variable?
+                       13
+                     (+ (if (equal (system-name) "jeff-nixos") 14 14)
+                        (if modeline? -1 0)))
+             :weight (if variable? 'medium (if modeline? 'bold 'semibold))
+             nil)))
+  ;; apply changes when loaded with interactive `eval-defun' etc
+  (cl-eval-when 'eval
+    (-some-> (symbol-function '--sync-fonts) funcall)))
 
 (defun --configure-fonts ()
   (setq! doom-font (--get-font-spec)

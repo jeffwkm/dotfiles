@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -eu
+
+wr="$(which-realpath "$@")"
+pathlines=$(echo "$wr" | tr '/' '\n' | grep -Ee .)
+storepath="/$(echo "$pathlines" | head -n 3 | tr '\n' '/' | sed s/'\/$'/'\n'/)"
+(echo "$storepath" | grep -Ee '^/nix/store/.+'> /dev/null 2>&1) || (
+  echo "$(basename $0): $wr is not a nix store path"
+  exit 1
+)
+echo "$storepath"
