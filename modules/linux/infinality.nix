@@ -12,9 +12,7 @@ in {
       (final: prev:
         let
           base =
-            (inputs.nixpkgs-2305.legacyPackages."${pkgs.system}".freetype.override {
-              useEncumberedCode = true;
-            });
+            (pkgs.pkgs-2305.freetype.override { useEncumberedCode = true; });
         in {
           freetype_subpixel = optimize config (base.overrideAttrs (attrs: {
             patches = attrs.patches ++ [

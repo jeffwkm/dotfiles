@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -eu
+
+args=$*
+
+mkenv() {
+  mk-ld-library-path 'openssl' 'libcrypto'
+}
+
+install_qlot() {
+  eval "$(mkenv)"
+  curl -L https://qlot.tech/installer | sh
+}
+
+[ -e "$HOME/.qlot/bin/qlot" ] || (install_qlot && true)
+
+qlot="$HOME/.qlot/bin/qlot"
+
+$qlot $args

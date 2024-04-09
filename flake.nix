@@ -2,19 +2,19 @@
   description = "Personal system config for nixos, nix-darwin";
 
   inputs = {
-    ## Package sets
-    nixos-apple-silicon.url = "github:tpwrules/nixos-apple-silicon";
-    # nixos-apple-silicon.inputs.nixpkgs.follows = "nixpkgs";
+    ## System
     # nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs.follows = "nixos-apple-silicon/nixpkgs";
+    nixos-apple-silicon.url = "github:tpwrules/nixos-apple-silicon";
+    # nixos-apple-silicon.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
     nixpkgs-2305.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
-    ## Environment/system management
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     ## Nix helpers
+    flake-parts.url = "github:hercules-ci/flake-parts";
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
     flake-utils.url = "github:numtide/flake-utils";
@@ -82,23 +82,21 @@
             inherit (prev.stdenv) system;
             inherit (nixpkgsConfig) config;
           };
-          # inherit (final.pkgs-stable) steam;
         };
         pkgs-2305 = final: prev: {
+          # needed for freetype version compatible with infinality patches
           pkgs-2305 = import inputs.nixpkgs-2305 {
             inherit (prev.stdenv) system;
             inherit (nixpkgsConfig) config;
           };
-          # inherit (final.pkgs-2305) steam;
         };
-        apple-silicon = final: prev:
+        pkgs-x86 = final: prev:
           lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
             # Add access to x86 packages system is running Apple Silicon
             final.pkgs-x86 = import nixpkgs {
               system = "x86_64-darwin";
               inherit (nixpkgsConfig) config;
             };
-            # inherit (final.pkgs-x86) firefox;
           };
         # Overlay to include node packages listed in `./pkgs/node-packages/package.json`
         # Run `nix run my#nodePackages.node2nix -- -14` to update packages.

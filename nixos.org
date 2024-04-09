@@ -3,10 +3,6 @@
 * todo
 ** misc
 *** [ ] split into multiple flake.nix repos
-*** [ ] nixpkgs search script
-#+begin_src bash
-nix search nixpkgs chatgpt | sed 's/legacyPackages.[^.]*.//' | grep -v "evaluating '" | grep -Ee '.+' | sed 's/\* //' | less
-#+end_src
 *** [ ] automate reload of .zshrc after changes
 *** README.org for github
 ** ags

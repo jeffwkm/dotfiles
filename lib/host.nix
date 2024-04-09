@@ -16,7 +16,6 @@ in rec {
       else
         home-manager.nixosModules.home-manager);
       hm-config = ({ config, ... }: {
-        nixpkgs = nixpkgsConfig;
         nix.nixPath = mkIf (darwin) {
           "darwin-config" = "${config.host.config-dir}";
           # "darwin-config" = "${configDir}";
@@ -55,6 +54,7 @@ in rec {
           config.host.name = hostname;
         })
         { config = { networking.hostName = mkDefault hostname; }; }
+        { nixpkgs = nixpkgsConfig; }
       ] ++ [ path ../nix-config.nix ] ++ (lib.attrValues
         (systemHomeManagerModules {
           inherit system nixpkgs nixpkgsConfig darwin;

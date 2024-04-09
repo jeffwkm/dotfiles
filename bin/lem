@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -eu
+
+args="$@"
+pwd="$PWD"
+dir="$HOME/repos/lem"
+env="$dir/env"
+lem="$dir/lem"
+
+[ -e "$env" ] || "$dir/mkenv.sh"
+[ -e "$lem" ] || (
+  set -eu
+  cd "$dir"
+  source "$env"
+  make sdl2-ncurses
+  $lem "$args"
+)
+cd "$pwd"
+source "$env"
+$lem $args

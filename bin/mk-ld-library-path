@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -e
+
+pkgs="$1"
+libs="$2"
+for path in $NIX_PROFILES; do
+  _system_path_="$path/bin${_system_path_:+:}$_system_path_"
+  LD_LIBRARY_PATH="$path/lib${LD_LIBRARY_PATH:+:}$LD_LIBRARY_PATH"
+  CPATH="$path/include${CPATH:+:}$CPATH"
+done
+
+get_pkg_config_libs() {
+  local ldflags ldpath
+  ldflags="$(nix-shell -p pkg-config $pkgs --run "
+    pkg-config --libs-only-L $libs
+  ")"
+  ldpath="$(echo "$ldflags" | sed 's/ -L/:/g' | sed 's/-L//g')"
+  echo "$ldpath"
+}
+
+get_pkg_config_includes() {
+  local cflags cpath
+  cflags="$(nix-shell -p pkg-config $pkgs --run "
+    pkg-config --cflags-only-I $libs
+  ")"
+  cpath="$(echo "$cflags" | sed 's/ -I/:/g' | sed 's/-I//g')"
+  echo "$cpath"
+}
+
+if [ -n "$pkgs" ]; then
+  if [ -n "$libs" ]; then
+    LD_LIBRARY_PATH="$(get_pkg_config_libs)${LD_LIBRARY_PATH:+:}$LD_LIBRARY_PATH"
+    CPATH="$(get_pkg_config_includes)${CPATH:+:}$CPATH"
+  else
+    echo "usage: $0 <pkgs> <libs>"
+  fi
+fi
+
+echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+echo "export CPATH=$CPATH"

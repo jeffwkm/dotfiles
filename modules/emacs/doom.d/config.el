@@ -40,6 +40,9 @@
 
 (menu-bar-mode -1)
 
+(when (featurep 'pgtk)
+  (setq! use-system-tooltips nil))
+
 ;;disable trackpad input
 (when (asahi?)
   (map! :nvieomrg
@@ -500,23 +503,21 @@
 
 (after! corfu
   (corfu-popupinfo-mode 1)
-  ;; (corfu-echo-mode -1)
   (corfu-history-mode 1)
   (setq! corfu-separator ?\s
          corfu-min-width 30
          corfu-max-width 80
          corfu-preview-current t
          corfu-preselect 'prompt
-         ;; corfu-auto-delay 0.18
-         ;; corfu-auto-prefix 2
-         ;; corfu-echo-delay nil
-         ;; corfu-popupinfo-delay '(2.0 . 1.0)
-         )
+         corfu-popupinfo-delay 0.75
+         corfu-auto-delay 0.18
+         corfu-auto-prefix 2)
 
   (defun --corfu-set-faces (&optional frame)
     (set-face-background 'corfu-current "#2c2e2f" frame))
   (add-hook! 'after-make-frame-functions :append '--corfu-set-faces)
   (--corfu-set-faces)
+  ;; pgtk-preedit-overlay
 
   (map! :mode corfu-mode
         "C-." 'complete-symbol
