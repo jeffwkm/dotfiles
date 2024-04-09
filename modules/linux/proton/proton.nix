@@ -22,6 +22,33 @@ in {
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.packages = [ ];
+
+      systemd.user.services = {
+        protonmail-bridge = mkIf cfg.mail.enable {
+          Unit = {
+            Description = "ProtonMail Bridge";
+            After = [ "network.target" "graphical-session.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart =
+              "${pkgs.protonmail-bridge}/bin/protonmail-bridge --grpc";
+          };
+          Install = { WantedBy = [ "graphical-session.target" ]; };
+        };
+        protonvpn = mkIf cfg.vpn.enable {
+          Unit = {
+            Description = "ProtonVPN";
+            After = [ "network.target" ];
+          };
+          Service = {
+            Type = "simple";
+            ExecStart = "${pkgs.protonvpn-cli}/bin/protonvpn-cli connect";
+            ExecStop = "${pkgs.protonvpn-cli}/bin/protonvpn-cli disconnect";
+            RemainAfterExit = true;
+          };
+        };
+      };
     };
   };
 }
