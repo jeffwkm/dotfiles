@@ -39,6 +39,7 @@ in {
           nil
           nixfmt-classic
           nodePackages.stylelint
+          nodePackages.prettier
           nodejs_20
           openai
           python3Packages.grip

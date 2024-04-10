@@ -70,8 +70,8 @@ in {
         };
       };
 
-      systemd.user.services.mako.Install.WantedBy =
-        mkIf modules.wayland.mako.enable [ "sway-session.target" ];
+      # systemd.user.services.mako.Install.WantedBy =
+      #   mkIf modules.wayland.mako.enable [ "sway-session.target" ];
 
       systemd.user.services.waybar.Install.WantedBy =
         mkIf modules.wayland.waybar.enable [ "sway-session.target" ];

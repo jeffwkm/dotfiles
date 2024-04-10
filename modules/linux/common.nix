@@ -22,14 +22,6 @@ in {
       _GLOBAL_ENV_LOADED = "1";
     };
 
-    xdg.mime.defaultApplications = mkIf modules.programs.chromium.enable {
-      "text/html" = "chromium.desktop";
-      "x-scheme-handler/http" = "chromium.desktop";
-      "x-scheme-handler/https" = "chromium.desktop";
-      "x-scheme-handler/about" = "chromium.desktop";
-      "x-scheme-handler/unknown" = "chromium.desktop";
-    };
-
     services.vscode-server.enable = modules.programs.vscode.enable;
 
     users.defaultUserShell = mkIf modules.zsh.enable pkgs.zsh;
@@ -192,7 +184,6 @@ in {
     xdg.mime.enable = true;
 
     programs.fuse = { userAllowOther = true; };
-    programs.dconf.enable = true;
 
     services.openssh = {
       enable = true;

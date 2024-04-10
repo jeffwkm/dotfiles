@@ -19,6 +19,7 @@ in {
         pandoc
         sbcl
         roswell
+        pueue
       ];
     };
   };

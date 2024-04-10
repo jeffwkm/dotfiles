@@ -2,10 +2,10 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user host modules;
-  cfg = config.modules.aws;
+  inherit (config) user modules;
+  cfg = modules.dev.aws;
 in {
-  options.modules.aws = { enable = mkBoolOpt modules.dev.enable-all; };
+  options.modules.dev.aws = { enable = mkBoolOpt modules.dev.enable-all; };
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = {
       home.sessionVariables = {

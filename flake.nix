@@ -14,7 +14,6 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     ## Nix helpers
-    flake-parts.url = "github:hercules-ci/flake-parts";
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
     flake-utils.url = "github:numtide/flake-utils";
@@ -84,7 +83,6 @@
           };
         };
         pkgs-2305 = final: prev: {
-          # needed for freetype version compatible with infinality patches
           pkgs-2305 = import inputs.nixpkgs-2305 {
             inherit (prev.stdenv) system;
             inherit (nixpkgsConfig) config;
@@ -92,18 +90,11 @@
         };
         pkgs-x86 = final: prev:
           lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-            # Add access to x86 packages system is running Apple Silicon
-            final.pkgs-x86 = import nixpkgs {
+            pkgs-x86 = import nixpkgs {
               system = "x86_64-darwin";
               inherit (nixpkgsConfig) config;
             };
           };
-        # Overlay to include node packages listed in `./pkgs/node-packages/package.json`
-        # Run `nix run my#nodePackages.node2nix -- -14` to update packages.
-        nodePackages = _: prev: {
-          nodePackages = prev.nodePackages
-            // import ./pkgs/node-packages { pkgs = prev; };
-        };
       };
 
       nixosConfigurations = (lib.my.mapHosts ./hosts/nixos rec {

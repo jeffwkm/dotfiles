@@ -7,28 +7,31 @@ let
   cfg = config.modules.programs.chromium;
   chromiumSh = pkgs.writeScriptBin "chromium.sh" ''
     #!${pkgs.bash}/bin/bash
+    source ~/.config/chromium_dev_keys.sh
 
     opts=(
-        # "--force-device-scale-factor=1.6875"
-        "--force-dark-mode"
-        "--enable-features=UseOzonePlatform"
-        "--ozone-platform=wayland"
-        "--ignore-gpu-blocklist"
-        "--enable-zero-copy"
-        "--enable-gpu-rasterization"
-        "--disable-partial-raster"
+      "--force-dark-mode"
+      "--ignore-gpu-blocklist"
+      "--enable-zero-copy"
+      "--enable-gpu-rasterization"
+      "--disable-partial-raster"
     )
 
-    source "${host.config-dir}/dotfiles/chromium_dev_keys.sh"
-    exec ${pkgs.chromium}/bin/chromium $opts "$@" 2>&1
+    exec ${pkgs.chromium}/bin/chromium "$''''{opts[@]}" "$@" 2>&1
   '';
 in {
-  options.modules.programs.chromium = {
-    enable = mkBoolOpt modules.desktop.enable;
-  };
+  options.modules.programs.chromium.enable = mkBoolOpt modules.desktop.enable;
 
   config = mkIf cfg.enable {
     environment.systemPackages = [ chromiumSh ];
+
+    xdg.mime.defaultApplications = mkIf (!darwin) {
+      "text/html" = "chromium.desktop";
+      "x-scheme-handler/http" = "chromium.desktop";
+      "x-scheme-handler/https" = "chromium.desktop";
+      "x-scheme-handler/about" = "chromium.desktop";
+      "x-scheme-handler/unknown" = "chromium.desktop";
+    };
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.packages = with pkgs;

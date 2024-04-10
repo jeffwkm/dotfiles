@@ -1,76 +1,78 @@
 { config, lib, pkgs, inputs, ... }:
 with lib;
 with lib.my;
-let
-  inherit (config) user host;
-  inherit (host) darwin;
-  cfg = config.modules.terminal;
+let inherit (config) user host;
 in {
-  options.modules.terminal = { enable = mkBoolOpt true; };
+  config = {
+    environment.systemPackages = with pkgs; [
+      cachix
+      home-manager
+      ruby
+      python3
+    ];
 
-  config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ cachix ];
     home-manager.users.${user.name} = { config, pkgs, ... }: {
-      xdg.configFile = {
-        "htop/htoprc".source = config.lib.file.mkOutOfStoreSymlink
-          "${config.host.config-dir}/dotfiles/htop/htoprc";
-      };
+      home.file."bin/".source =
+        config.lib.file.mkOutOfStoreSymlink "${host.config-dir}/bin";
 
-      home.file = { ".tmux.conf".source = ../../dotfiles/tmux.conf; };
+      home.file.".tmux.conf".source = ../../dotfiles/tmux.conf;
+      xdg.configFile."htop/htoprc".source = config.lib.file.mkOutOfStoreSymlink
+        "${host.config-dir}/dotfiles/htop/htoprc";
 
-      programs.htop = {
-        enable = true;
-        package = optimize config pkgs.htop;
-      };
+      home.sessionPath = [
+        "${user.home}/bin.local"
+        "${user.home}/bin"
+        "${user.home}/.cargo/bin"
+        "${user.home}/.npm-global/bin"
+      ];
 
-      programs.neovim = {
-        enable = true;
-        viAlias = true;
-        vimAlias = true;
-      };
-
-      xdg.configFile."nvim/".source =
-        config.lib.file.mkOutOfStoreSymlink "${host.config-dir}/dotfiles/nvim";
+      programs.htop.enable = true;
+      programs.htop.package = optimize config pkgs.htop;
+      programs.gpg.enable = true;
 
       home.packages = with pkgs;
         [
           (optimize config fd)
           (optimize config lsd)
+          asciinema
+          asciinema-agg
           autossh
           comma
           curl
           entr
           expect
           glow
+          gpg-tui
+          greg
           inetutils
           inxi
           jc
           jq
+          mediainfo
           mods
           ncdu
           neofetch
+          nushell
+          nethack
           pass
-          python3
           p7zip
           procs
-          pueue
           ripgrep
-          ruby
           screenfetch
+          speedtest-rs
+          termtosvg
           tgpt
-          # github-copilot-cli
           tmux
           tree
           unrar
           unzip
           w3m
           wget
-          zip
           xz
-        ] ++ (with inputs.rippkgs.packages."${pkgs.system}"; [
-          rippkgs
-          rippkgs-index
-        ]);
+          yt-dlp
+          zip
+        ] ++ (with inputs.rippkgs.packages."${pkgs.system}";
+          [ rippkgs rippkgs-index ] ++ [ cmatrix tmatrix unimatrix ]);
     };
   };
 }

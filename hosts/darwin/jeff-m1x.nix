@@ -8,18 +8,15 @@
       dev.jdk.enable = true;
       dev.clojure.enable = true;
       dev.extra.enable = true;
-      aws.enable = true;
+      dev.aws.enable = true;
       fonts.enable = true;
       programs.mpv.enable = true;
       programs.spotify.enable = true;
       programs.vscode.enable = true;
       programs.alacritty = {
         enable = true;
-        fontSize = "14";
-        fontSizeLarge = "16";
-        fontSizeHuge = "18";
+        fontSize = 14;
         decorations = "buttonless";
-        fontFamily = "JetBrainsMono Nerd Font";
         fontStyle = "Medium";
       };
     };

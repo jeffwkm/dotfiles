@@ -66,6 +66,8 @@ in {
     # programs.thunar.enable = true; # xfce file manager
     # programs.xfconf.enable = true; # xfce settings
 
+    programs.dconf.enable = true;
+
     services.gnome = mkIf cfg.gnome {
       tracker.enable = true;
       tracker-miners.enable = true;

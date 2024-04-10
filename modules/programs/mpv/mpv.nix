@@ -4,13 +4,13 @@ with lib.my;
 let
   inherit (builtins) readFile;
   inherit (lib.trivial) pipe;
-  inherit (config) user host;
+  inherit (config) user host modules;
   inherit (host) darwin;
-  cfg = config.modules.programs.mpv;
-  pwd = "${host.config-dir}/modules/programs";
+  cfg = modules.programs.mpv;
+  pwd = "${host.config-dir}/modules/programs/mpv";
 in {
   options.modules.programs.mpv = {
-    enable = mkBoolOpt ((modules ? desktop) && modules.desktop.enable);
+    enable = mkBoolOpt modules.desktop.enable;
     vapoursynth =
       mkBoolOpt (cfg.enable && !darwin && pkgs.system != "aarch64-linux");
     git = mkBoolOpt false;
@@ -82,14 +82,11 @@ in {
         '' else
           "");
       in {
-        "mpv/mpv.conf".text = (readFile ./mpv/mpv.conf) + mpvExtra
-          + cfg.extraConf;
-        "mpv/input.conf".text = (readFile ./mpv/input.conf) + inputExtra;
-        "mpv/script-opts/stats.conf".text =
-          readFile ./mpv/script-opts/stats.conf;
+        "mpv/mpv.conf".text = (readFile ./mpv.conf) + mpvExtra + cfg.extraConf;
+        "mpv/input.conf".text = (readFile ./input.conf) + inputExtra;
+        "mpv/script-opts/stats.conf".text = readFile ./script-opts/stats.conf;
         "mpv/motioninterpolation.vpy".source =
-          config.lib.file.mkOutOfStoreSymlink
-          "${pwd}/mpv/motioninterpolation.vpy";
+          config.lib.file.mkOutOfStoreSymlink "${pwd}/motioninterpolation.vpy";
       };
     };
   };

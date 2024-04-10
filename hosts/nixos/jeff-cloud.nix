@@ -7,7 +7,7 @@
     ec2.hvm = true;
 
     modules = {
-      aws.enable = true;
+      dev.aws.enable = true;
       programs.emacs.enable = true;
     };
 
