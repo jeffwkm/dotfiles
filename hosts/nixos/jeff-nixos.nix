@@ -11,6 +11,9 @@
       dev.enable-all = true;
       vfio.enable = true;
       wayland.enable = true;
+      services.protonmail.enable = true;
+      services.protonvpn.configFile =
+        "/private/wg-quick/protonvpn-1-US-VA-14.conf";
       wayland.hyprland.enable = true;
       wayland.hyprland.extraConf = ''
         # enable brightness controls for external monitors

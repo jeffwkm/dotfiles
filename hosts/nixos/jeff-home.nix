@@ -8,6 +8,8 @@
       emacs.enable = true;
       dev.enable-all = true;
       programs.mpv.enable = true;
+      services.protonvpn.configFile =
+        "/private/wg-quick/protonvpn-1-US-VA-14.conf";
     };
 
     environment.systemPackages = with pkgs; [ firmwareLinuxNonfree rtorrent ];
