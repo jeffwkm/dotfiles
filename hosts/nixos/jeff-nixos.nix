@@ -7,7 +7,6 @@
       linux.systemd-boot = true;
       desktop.enable = true;
       desktop.amdgpu-fan = true;
-      emacs.enable = true;
       dev.enable-all = true;
       vfio.enable = true;
       wayland.enable = true;

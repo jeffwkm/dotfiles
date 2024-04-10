@@ -1,0 +1,58 @@
+# Global settings
+Sync All
+# This will synchronize everything on both sides
+Create Both
+# This will create folders that don't exist on both sides
+CopyArrivalDate yes
+# This will preserve the original arrival date of messages
+Expunge None # see manpage for how to configure this
+#Expunge Both
+# This will expunge (permanently delete) messages marked for deletion on both sides
+
+# IMAP account configuration
+IMAPAccount protonmail-bridge
+# The name of the account - this is arbitrary and used in the rest of this file to refer to this account
+Host 127.0.0.1
+# The address of the IMAP server, e.g., imap.gmail.com
+User jeff.workman@protonmail.com
+# Your full email address
+PassCmd "cat /private/protonmail-bridge-password.txt"
+# Use SSL
+SSLType STARTTLS
+# Optionally, specify a particular port (default is 993 for IMAPS)
+Port 1143
+# Certificate file to verify the server. Leave commented out to use system defaults.
+CertificateFile /private/protonmail-bridge.cert.pem
+# End of account configuration
+
+# Mailbox configuration
+IMAPStore protonmail-bridge-remote
+# This links to the IMAP account defined above
+Account protonmail-bridge
+
+MaildirStore protonmail-bridge-local
+# This defines the local storage format and location
+Path ~/.mail/protonmail-bridge/
+# The directory where your mail will be stored locally. Ensure it exists.
+Inbox ~/mail/protonmail-bridge/Inbox
+# Local path for the Inbox. Adjust as necessary.
+SubFolders Verbatim
+
+# Channel configuration
+Channel protonmain-bridge
+# This defines a synchronization channel between the remote IMAP store and the local maildir store
+Far :protonmail-bridge-remote:
+# The remote IMAP store defined above
+Near :protonmail-bridge-local:
+# The local maildir store defined above
+# Synchronization patterns
+# Patterns are used to specify which folders to synchronize
+#Patterns * !Trash !Junk
+# This example syncs all folders except Trash and Junk
+Patterns *
+# Various sync options
+SyncState *
+# Where to store the synchronization state files (* = default)
+# End of channel configuration
+
+# You can define additional channels if you have more folders to sync differently

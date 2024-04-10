@@ -183,6 +183,29 @@
   (doom/reload-font)
   (message "--large-font %s" (if --large-font "enabled" "disabled")))
 
+(use-package! mu4e
+  :defer t
+  :config
+  (setq! mu4e-get-mail-command "mbsync -a"
+         mu4e-update-interval 60)
+  (set-email-account!
+   "protonmail" '((user-full-name . "Jeff Workman")
+                  (user-mail-address . "jeff.workman@protonmail.com")
+                  (mu4e-sent-folder . "/Sent")
+                  (mu4e-drafts-folder . "/Drafts")
+                  (mu4e-trash-folder . "/Trash")
+                  (mu4e-refile-folder . "/Archive")
+                  (smtpmail-smtp-user . "jeff.workman")
+                  (smtpmail-smtp-server . "127.0.0.1")
+                  (smtpmail-smtp-service . 1025)
+                  (smtpmail-stream-type . starttls))
+   t)
+  (eval-when-compile (require 'mu4e-alert))
+  (use-package! mu4e-alert
+    :config
+    (mu4e-alert-enable-notifications)
+    (mu4e-alert-enable-mode-line-display)))
+
 (use-package! smartparens
   :defer t
   :init
@@ -194,9 +217,8 @@
                                    ("C-M-w"       . nil)
                                    ("C-<left>"    . nil)
                                    ("C-<right>"   . nil))
-        sp-navigate-interactive-always-progress-point t))
-
-(after! smartparens
+        sp-navigate-interactive-always-progress-point t)
+  :config
   (add-hook! smartparens-mode 'evil-smartparens-mode))
 
 (use-package evil-easymotion

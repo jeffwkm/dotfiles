@@ -34,7 +34,7 @@ in {
         };
       };
 
-      systemd.user.services.emacs = mkIf modules.emacs.enable {
+      systemd.user.services.emacs = mkIf modules.programs.emacs.enable {
         Unit = {
           Description = "Emacs daemon";
           After = [ "default.target" ];

@@ -10,7 +10,6 @@ with lib.my; {
     # host options
     modules = {
       desktop.enable = true;
-      emacs.enable = true;
       dev.enable-all = true;
       wayland.enable = true;
       wayland.hyprland.enable = true;

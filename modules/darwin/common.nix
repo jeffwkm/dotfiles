@@ -30,7 +30,7 @@ in {
       ++ optional firefox.enable "firefox"
       ++ optional alacritty.enable "alacritty";
     homebrew.extraConfig = concatStringsSep "\n"
-      (optional modules.emacs.enable ''
+      (optional modules.programs.emacs.enable ''
         # brew "railwaycat/emacsmacport/emacs-mac", args: ["with-native-compilation", "with-emacs-big-sur-icon", "with-librsvg", "with-mac-metal"]
         # brew "railwaycat/emacsmacport/emacs-mac", args: ["with-native-compilation", "with-emacs-big-sur-icon", "with-librsvg", "with-no-title-bars", "with-mac-metal"]
         # brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-native-comp", "with-modern-paper-icon", "with-no-titlebar-and-round-corners"]

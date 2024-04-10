@@ -19,7 +19,7 @@ in {
       enable = true;
       settings = {
         server = [ "10.2.0.1" ];
-        no-resolv = true;
+        # no-resolv = true;
       };
     };
     environment.systemPackages = with pkgs; [

@@ -5,14 +5,17 @@ let
   inherit (config) user host modules;
   inherit (host) darwin;
   inherit (pkgs) fetchpatch;
-  cfg = config.modules.emacs;
-  pwd = "${host.config-dir}/modules/emacs";
+  cfg = config.modules.programs.emacs;
+  pwd = "${host.config-dir}/modules/programs/emacs";
 
   emacsPkgs = (epkgs:
     with epkgs; [
       vterm
       all-the-icons
       treesit-grammars.with-all-grammars
+      mu4e
+      mu4e-alert
+      mu4e-crypto
     ]);
 
   emacs-base = optimizeFast config (if darwin then
@@ -51,21 +54,20 @@ let
   else
     pkgs.emacs29-nox);
 in {
-  options.modules.emacs = {
-    enable = mkBoolOpt false;
-    install = mkBoolOpt cfg.enable;
-    install-in-home = mkBoolOpt false;
-  };
+  options = { modules.programs.emacs = { enable = mkBoolOpt true; }; };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       inputs.emacs-overlay.overlay
       (final: prev: {
+        ## * emacsWithPackages [ mu4e ] -> mu.mu4e -> emacs -> emacsWithPackages ...
+        ## * build mu with original emacs package to avoid the infinite recursion
+        mu = prev.mu.override { emacs = prev.emacs; };
         emacs = (prev.emacsPackagesFor emacs-base).emacsWithPackages emacsPkgs;
       })
     ];
 
-    environment.systemPackages = optional cfg.install pkgs.emacs;
+    environment.systemPackages = with pkgs; [ emacs xclip ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
@@ -77,14 +79,15 @@ in {
         VISUAL = "emacsclient -t -a emacs";
       };
 
-      home.packages = with pkgs;
-        [
-          (ripgrep.override { withPCRE2 = true; })
-          sqlite
-          editorconfig-core-c
-          eask
-        ] ++ optional cfg.install-in-home emacs
-        ++ optional (!modules.wayland.enable) xclip;
+      home.packages = with pkgs; [
+        (ripgrep.override { withPCRE2 = true; })
+        sqlite
+        editorconfig-core-c
+        eask
+        mu
+        isync
+        gnutls
+      ];
 
       xdg.configFile = {
         "doom-config/".source =

@@ -86,7 +86,7 @@
 
        :tools
        ;; ansible
-       ;; (debugger +lsp)     ; FIXME stepping through code, to help you add bugs
+       (debugger +lsp)     ; FIXME stepping through code, to help you add bugs
        direnv
        (docker +lsp)
        editorconfig        ; let someone else argue about tabs vs spaces
@@ -160,7 +160,7 @@
        ;; rst              ; ReST in peace
        ruby                ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust +lsp +tree-sitter) ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       ;;scala               ; java, but good
+       ;; scala               ; java, but good
        ;; (scheme +guile)  ; a fully conniving family of lisps
        (sh +lsp +tree-sitter) ; she sells {ba,z,fi}sh shells on the C xor
        ;; sml
@@ -172,13 +172,13 @@
        ;; zig              ; C, but simpler
 
        :email
-       ;; (mu4e +gmail)
+       (mu4e +gmail +org)
        ;; notmuch
        ;; (wanderlust +gmail)
 
        :app
-       ;; calendar
-       ;; emms
+       calendar
+       emms
        ;; everywhere       ; *leave* Emacs!? You must be joking
        ;; irc              ; how neckbeards socialize
        ;; (rss +org)       ; emacs as an RSS reader

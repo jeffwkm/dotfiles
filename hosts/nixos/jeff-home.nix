@@ -5,7 +5,6 @@
     modules = {
       linux.systemd-boot = true;
       desktop.enable = false;
-      emacs.enable = true;
       dev.enable-all = true;
       programs.mpv.enable = true;
       services.protonvpn.configFile =

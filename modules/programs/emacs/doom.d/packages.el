@@ -36,6 +36,7 @@
 ;; (:host github :repo "seagle0128/icons-in-terminal.el"))
 (package! ligature)
 (package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
+(package! mu4e-views)
 (package! nginx-mode)
 (package! nix-buffer :built-in 'prefer)
 (package! nix-sandbox :built-in 'prefer)
