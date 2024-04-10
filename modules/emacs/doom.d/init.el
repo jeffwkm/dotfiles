@@ -37,7 +37,7 @@
        ;; hydra
        ;; indent-guides    ; highlighted indent columns
        ligatures        ; ligatures and symbols to make your code pretty again
-       minimap             ; show a map of the code on the side
+       ;; minimap             ; show a map of the code on the side
        modeline            ; snazzy, Atom-inspired modeline, plus API
        nav-flash           ; blink cursor line after big motions
        ;; neotree          ; a project drawer, like NERDTree for vim
@@ -160,7 +160,7 @@
        ;; rst              ; ReST in peace
        ruby                ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust +lsp +tree-sitter) ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       scala               ; java, but good
+       ;;scala               ; java, but good
        ;; (scheme +guile)  ; a fully conniving family of lisps
        (sh +lsp +tree-sitter) ; she sells {ba,z,fi}sh shells on the C xor
        ;; sml
@@ -177,12 +177,12 @@
        ;; (wanderlust +gmail)
 
        :app
-       calendar
+       ;; calendar
        ;; emms
        ;; everywhere       ; *leave* Emacs!? You must be joking
        ;; irc              ; how neckbeards socialize
        ;; (rss +org)       ; emacs as an RSS reader
-       twitter             ; twitter client https://twitter.com/vnought
+       ;; twitter             ; twitter client https://twitter.com/vnought
 
        :config
        ;; literate

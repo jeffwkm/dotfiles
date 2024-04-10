@@ -41,7 +41,7 @@ in {
           nodePackages.stylelint
           nodejs_20
           openai
-          python310Packages.grip
+          python3Packages.grip
           rbenv
           reg
           regctl

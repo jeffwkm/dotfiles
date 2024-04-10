@@ -36,7 +36,6 @@ in {
         [
           (optimize config fd)
           (optimize config lsd)
-          (optimize config pls)
           autossh
           comma
           curl
@@ -51,10 +50,12 @@ in {
           ncdu
           neofetch
           pass
+          python3
           p7zip
           procs
           pueue
           ripgrep
+          ruby
           screenfetch
           tgpt
           # github-copilot-cli
