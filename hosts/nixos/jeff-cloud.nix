@@ -1,4 +1,6 @@
-{ modulesPath, ... }: {
+{ lib, modulesPath, ... }:
+with lib;
+{
   imports = [ "${modulesPath}/virtualisation/amazon-image.nix" ];
 
   config = {
