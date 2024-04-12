@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -eu
+
+options=()
+options+=("--provider" "openai")
+options+=("--model" "gpt-4-turbo-preview")
+options+=("--temperature" "0.0")
+# options+=("--max_length" "1000")
+
+print_options=("${options[@]}")
+
+help=0
+[[ "$*" == *"--help"* ]] && help=1
+[[ "$*" == *"-h"* ]] && help=1
+if [[ "$help" -eq 0 ]]; then
+  key="$(pass keys/openai)"
+  options+=("--key" "$key")
+  print_options+=("--key" "...")
+fi
+
+[[ "$#" -eq 0 ]] && options+=("--interactive") && print_options+=("--interactive")
+
+echo -ne "\033[1;32m" >&2
+echo -n "tgpt" "${print_options[@]}" "$@" >&2
+echo -e "\033[0m" >&2
+
+tgpt "${options[@]}" "$@"
