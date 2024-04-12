@@ -10,7 +10,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    virtualisation.docker = { enable = true; };
+    # virtualisation.docker = { enable = true; };
 
     nixpkgs.overlays = [ (final: prev: { docker = prev.docker_24; }) ];
 
