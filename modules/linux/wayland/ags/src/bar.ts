@@ -20,14 +20,14 @@ const Left = (monitorId: number) =>
 const Center = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-center",
-    children: [Media(), Notification()],
+    children: [Media()],
   });
 
 const Right = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-right",
     hpack: "end",
-    children: [SysTray(), CpuTemp(), Volume(), BatteryLabel(), Clock()],
+    children: [Notification(), SysTray(), CpuTemp(), Volume(), BatteryLabel(), Clock()],
   });
 
 export const Bar = (monitorId: number) =>

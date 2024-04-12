@@ -1,4 +1,5 @@
 import Hyprland from "resource:///com/github/Aylur/ags/service/hyprland.js";
+import Widget from "resource:///com/github/Aylur/ags/widget.js";
 
 const toGroupId = (wsId: number) => ((wsId - 1) / 10) >> 0;
 const toGroupWsId = (wsId: number) => wsId - toGroupId(wsId) * 10;
@@ -7,16 +8,14 @@ export const ClientTitle = (monitorId: number) => {
   const title = Variable("");
   return Widget.Box({
     class_name: "client-title",
-    halign: "start",
     visible: title.bind().as((t) => t !== ""),
     children: [
       Widget.Label({
-        halign: "start",
-        justification: "left",
-        truncate: "end",
+        maxWidthChars: 60,
+        ellipsize: 3,
         label: title.bind(),
         setup: (self) => {
-          self.hook(Hyprland.active.client, (self: Widget.Label) => {
+          self.hook(Hyprland.active.client, (self) => {
             const mon = Hyprland.monitors[monitorId];
             const ws = mon?.activeWorkspace;
             title.setValue(Hyprland.active.client.title || "");

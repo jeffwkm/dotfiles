@@ -12,7 +12,7 @@ const cssOut = `${App.configDir}/style.css`;
 App.config({
   gtkTheme: "adw-gtk3-dark",
   style: cssOut,
-  windows: forMonitors(Bar),
+  windows: () => forMonitors(Bar),
 });
 
 Utils.monitorFile(cssOut, () => {

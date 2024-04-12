@@ -1,13 +1,14 @@
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
+// import Align from "gi://Gtk";
 
 const timeNow = Variable("", {
   poll: [1000, 'date +"%l:%M %p"'],
 });
 
 const dateNow = Variable("", {
-  poll: [5000, 'date +"%b %e"'],
+  poll: [5000, 'date +"%a %b %e"'],
 });
 
 const cpuTemp = Variable(0, {
@@ -47,8 +48,8 @@ export const CpuTemp = () => {
     0: "low",
   };
 
-  const getLevel = (t) => {
-    const threshold = [90, 80, 65, 0].find((threshold) => threshold <= t);
+  const getLevel = (t: number) => {
+    const threshold = [90, 80, 65, 0].find((threshold) => threshold <= t) || 0;
     return levels[threshold];
   };
 
@@ -59,7 +60,6 @@ export const CpuTemp = () => {
 
   const label = Widget.Label({
     label: cpuTemp.bind().as((t) => `${Math.floor(t)}°`),
-    halign: "end",
   });
 
   return Widget.Box({
@@ -81,7 +81,7 @@ export const Volume = () => {
   const getIcon = () => {
     const icon = Audio.speaker.is_muted
       ? 0
-      : [101, 67, 34, 1, 0].find((threshold) => threshold <= Audio.speaker.volume * 100);
+      : [101, 67, 34, 1, 0].find((threshold) => threshold <= Audio.speaker.volume * 100) || 0;
 
     return `audio-volume-${icons[icon]}-symbolic`;
   };
@@ -157,10 +157,9 @@ export const SysTray = () => {
     items.map((item) =>
       Widget.Button({
         child: Widget.Icon({ icon: item.bind("icon") }),
-
         on_primary_click: (_, event) => item.activate(event),
         on_secondary_click: (_, event) => item.openMenu(event),
-        tooltip_markup: item.bind("tooltip_markup"),
+        tooltipMarkup: item.bind("tooltip_markup"),
       }),
     ),
   );
