@@ -57,6 +57,10 @@
       libguestfs
       darktable
       # pgadmin
+      amdgpu_top
+      vdpauinfo
+      libva-utils
+      vulkan-tools
     ];
 
     # create machine definitions in /etc/machines
@@ -182,10 +186,19 @@
       extraPackages = with pkgs; [
         vaapiVdpau
         libvdpau-va-gl
+        libva
         amdvlk
         rocm-opencl-icd
         rocm-opencl-runtime
-        amdgpu_top
+        libvdpau
+        vdpauinfo
+        libva-utils
+      ];
+      extraPackages32 = with pkgs.pkgsi686Linux; [
+        vaapiVdpau
+        libvdpau-va-gl
+        libva
+        amdvlk
         vdpauinfo
         libva-utils
       ];

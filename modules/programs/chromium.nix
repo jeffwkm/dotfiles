@@ -5,20 +5,12 @@ let
   inherit (config) user host modules;
   inherit (host) darwin;
   cfg = config.modules.programs.chromium;
-  chromiumSh = pkgs.writeScriptBin "chromium.sh" ''
+  chromiumSh = pkgs.writeScriptBin "chromium.sh" (''
     #!${pkgs.bash}/bin/bash
+
     source ~/.config/chromium_dev_keys.sh
 
-    opts=(
-      "--force-dark-mode"
-      "--ignore-gpu-blocklist"
-      "--enable-zero-copy"
-      "--enable-gpu-rasterization"
-      "--disable-partial-raster"
-    )
-
-    exec ${pkgs.chromium}/bin/chromium "$''''{opts[@]}" "$@" 2>&1
-  '';
+    exec ${pkgs.chromium}/bin/chromium "$'' + ''{opts[@]}" "$@" 2>&1'');
 in {
   options.modules.programs.chromium.enable = mkBoolOpt modules.desktop.enable;
 

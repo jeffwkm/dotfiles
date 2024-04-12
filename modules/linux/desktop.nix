@@ -107,7 +107,12 @@ in {
         ++ optional wayland.hyprland.enable xdg-desktop-portal-hyprland;
     };
 
-    programs.steam.enable = cfg.steam;
+    programs.steam = {
+      enable = cfg.steam;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+      gamescopeSession.enable = true;
+    };
 
     environment.sessionVariables.GST_PLUGIN_SYSTEM_PATH_1_0 =
       lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (with pkgs.gst_all_1; [

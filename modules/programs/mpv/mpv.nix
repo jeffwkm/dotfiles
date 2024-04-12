@@ -72,7 +72,7 @@ in {
           input-ipc-server=/tmp/mpvsocket
         '' else
           ''
-            gpu-context=wayland
+            gpu-context=waylandvk
           '' + (if cfg.vapoursynth then ''
             vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
           '' else

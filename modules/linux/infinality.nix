@@ -25,11 +25,8 @@ in {
 
     ## Use LD_LIBRARY_PATH to make programs use custom freetype package,
     ## avoiding need to rebuild all packages that depend on freetype
-    environment.variables = {
-      LD_LIBRARY_PATH = [ "${pkgs.freetype_subpixel}/lib" ];
-    };
-
     environment.sessionVariables = {
+      LD_LIBRARY_PATH = [ "${pkgs.freetype_subpixel}/lib" ];
       FREETYPE_PROPERTIES = "truetype:interpreter-version=40";
       # FREETYPE_PROPERTIES = "truetype:interpreter-version=38";
       INFINALITY_FT = "osx";
