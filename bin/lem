@@ -3,7 +3,7 @@ set -eu
 
 args="$@"
 pwd="$PWD"
-dir="$HOME/repos/lem"
+dir="$HOME/repos/lisp/lem"
 env="$dir/env"
 lem="$dir/lem"
 

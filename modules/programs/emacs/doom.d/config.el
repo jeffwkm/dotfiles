@@ -187,7 +187,7 @@
   :defer t
   :config
   (setq! mu4e-get-mail-command "mbsync -a"
-         mu4e-update-interval 60)
+         mu4e-update-interval 300)
   (set-email-account!
    "protonmail" '((user-full-name . "Jeff Workman")
                   (user-mail-address . "jeff.workman@protonmail.com")

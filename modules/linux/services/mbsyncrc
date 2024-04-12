@@ -34,7 +34,8 @@ MaildirStore protonmail-bridge-local
 # This defines the local storage format and location
 Path ~/.mail/protonmail-bridge/
 # The directory where your mail will be stored locally. Ensure it exists.
-Inbox ~/mail/protonmail-bridge/Inbox
+# MapInbox Inbox
+# Inbox ~/mail/protonmail-bridge/Inbox
 # Local path for the Inbox. Adjust as necessary.
 SubFolders Verbatim
 

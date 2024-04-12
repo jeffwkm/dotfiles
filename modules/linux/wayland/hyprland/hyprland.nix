@@ -83,6 +83,7 @@ in {
           ExecStart = "${pkgs.hypridle}/bin/hypridle";
           Restart = "always";
           RestartSec = 60;
+          SyslogLevel = "debug";
         };
       };
 
@@ -95,6 +96,7 @@ in {
         Service = {
           Type = "simple";
           ExecStart = "${pkgs.hyprpaper}/bin/hyprpaper";
+          SyslogLevel = "debug";
         };
       };
 
