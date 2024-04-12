@@ -49,9 +49,15 @@ const playing = () => {
 };
 
 const showArtist = (player: MprisPlayer) => {
-  const ignored = ["Chromium"];
+  const ignoredPlayers = ["Chromium"];
+  const ignoredArtists = ["various artists", "unknown artist"];
   if (!player) return false;
-  if (ignored.find((x) => player.identity?.startsWith(x))) return false;
+  if (
+    player.track_artists?.length === 1 &&
+    ignoredArtists.includes(player.track_artists[0].toLowerCase())
+  )
+    return false;
+  if (ignoredPlayers.find((x) => player.identity?.startsWith(x))) return false;
   return true;
 };
 

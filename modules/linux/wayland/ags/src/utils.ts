@@ -31,7 +31,9 @@ export const Icons = {
   SPOTIFY: "",
   CHROMIUM: "",
   CHROME: "",
-  MPV: "",
+  MEDIA: "",
+  SHELL: "",
+  EDITOR: "",
   DEFAULT: "",
 };
 
@@ -39,7 +41,11 @@ export const playerToIcon = (identity: string | null) => {
   if (!identity) return Icons.DEFAULT;
   if (identity == "Chromium") return Icons.CHROMIUM;
   else if (identity == "Chrome") return Icons.CHROME;
-  else if (identity.startsWith("mpv")) return Icons.MPV;
+  else if (identity.startsWith("mpv")) return Icons.MEDIA;
   else if (identity == "Spotify") return Icons.SPOTIFY;
   else return Icons.DEFAULT;
+};
+
+export const windowToIcon = (className: string | null) => {
+  return Icons.DEFAULT;
 };

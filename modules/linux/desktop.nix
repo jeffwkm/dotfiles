@@ -123,16 +123,19 @@ in {
           optionals cfg.gnome ([
             baobab
             ffmpegthumbnailer
-            gtk3
-            gtk4
-            themechanger
+            gedit
+            glib
+            gjs
             gnome-podcasts
             gnome-usage
-            gedit
             gobject-introspection
-            gthumb
-            libadwaita
             gradience
+            gthumb
+            gtk3
+            gtk4
+            libadwaita
+            libpulseaudio
+            themechanger
           ] ++ (with gnome; [
             dconf-editor
             eog
