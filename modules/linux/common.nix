@@ -138,6 +138,7 @@ in {
       psmisc
       readline
       sshfs
+      tcpdump
       tomb
       tmux
       wget

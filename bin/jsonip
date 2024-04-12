@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-import json
-import urllib
-import urllib.request
+import json, urllib, urllib.request, sys, os
 
-# URL to fetch the IP address from
-# url = 'http://jsonip.com'
+for url, field in [
+    ("http://jsonip.com", "ip"),
+    ("http://httpbin.org/ip", "origin"),
+    ("http://ip.jsontest.com", "ip"),
+]:
+    try:
+        response = urllib.request.urlopen(url, timeout=0.333)
+        data = json.loads(response.read())
+        ip = data[field]
+        print(ip)
+        sys.exit(0)
+    except Exception as e:
+        pass
 
-# Best URL to fetch IP address from
-url = "http://httpbin.org/ip"
-
-# Fetch the internet IP address for this machine
-response = urllib.request.urlopen(url)
-data = json.loads(response.read())
-ip = data["origin"]
-print(ip)
+sys.exit(1)
