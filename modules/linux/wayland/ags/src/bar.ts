@@ -21,15 +21,14 @@ const Left = (monitorId: number) =>
 const Center = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-center",
-    // children: [Pomodoro()],
-    children: [],
+    children: [Pomodoro()],
   });
 
 const Right = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-right",
     hpack: "end",
-    children: [Media(), Notification(), SysTray(), CpuTemp(), Volume(), BatteryLabel(), Clock()],
+    children: [Notification(), Media(), SysTray(), CpuTemp(), Volume(), BatteryLabel(), Clock()],
   });
 
 export const Bar = (monitorId: number) =>

@@ -1,59 +1,89 @@
-@tailwind components;
+:root {
+  --white-rgb: rgb(255, 255, 255);
+  --white: 255 255 255;
+  --text-rgb: rgb(255, 255, 255);
+  --text: 255 255 255;
+  --primary-rgb: rgb(40, 70, 255);
+  --primary: 40 70 255;
+  --active-rgb: rgb(110, 255, 70);
+  --active: 130 255 70;
+  --success-rgb: rgb(40, 255, 40);
+  --success: 40 255 40;
+  --warning-rgb: rgb(255, 190, 60);
+  --warning: 255 190 60;
+  --error-rgb: rgb(255, 90, 90);
+  --error: 255 90 90;
 
-@layer components {
-  .warning {
-    color: rgba(255, 190, 60, 0.8);
-  }
-  .error {
-    color: rgba(255, 90, 90, 0.8);
-  }
-  .success {
-    color: rgba(130, 255, 50, 0.8);
-  }
-  .status-entry {
+  --dark-rgb: rgb(20, 20, 20);
+  --dark: 50 50 50;
+
+  --status-entry-border-color: black(0.9);
+  --status-entry-border: 1px solid var(--status-entry-border-color);
+  --status-entry-internal-border-color: black(0.55);
+  --status-entry-internal-border: 1px solid var(--status-entry-internal-border-color);
+  --status-entry-background: rgb(var(--dark) / 0.8);
+  --status-entry-padding: 0 4px;
+
+  --status-entry {
     border-radius: 9999px;
-    border: 2px solid rgba(0, 0, 0, 0.15);
-    background: rgba(0, 0, 0, 0.2);
-    & > *:not(:last-child) {
-      border-right: 2px solid rgba(0, 0, 0, 0.15);
+    border: var(--status-entry-border);
+    background: var(--status-entry-background);
+    padding: 1px 0;
+    > * {
+      padding: var(--status-entry-padding);
     }
-    & > * {
-      padding: 0 5px;
+    > *:not(:last-child) {
+      border-right: var(--status-entry-internal-border);
     }
   }
-  .icon {
-    font-size: 14px;
-    -gtk-icon-palette:
-      success rgb(130, 255, 50),
-      warning rgb(255, 190, 60),
-      error rgb(255, 90, 90);
+
+  --sans {
+    font-family: "Symbols Nerd Font Mono", "Inter", sans;
+  }
+  --mono {
+    font-family: "Symbols Nerd Font Mono", "JetBrains Mono", monospace;
   }
 }
 
+.icon {
+  font-size: 14px;
+  -gtk-icon-palette:
+    success rgb(var(--success) / 0.8),
+    warning rgb(var(--warning) / 0.8),
+    error rgb(var(--error) / 0.8);
+}
+
+.icon-material {
+  font-family: "Material Symbols Sharp", "Material Symbols Rounded", "Material Symbols Outlined";
+  font-size: 18px;
+  margin: -1px;
+  font-weight: 700;
+}
+
 .bar {
+  @apply --sans;
   background: transparent;
-  color: rgba(255, 255, 255, 0.88);
-  font-family: "Symbols Nerd Font Mono", "Inter", sans;
-  font-size: 13px;
-  font-weight: 500;
-  & .bar-left {
-    & > * {
+  color: white(0.8);
+  font-size: 12px;
+  font-weight: 600;
+  .bar-left {
+    > * {
       margin-right: 6px;
     }
-    & > *:last-child {
+    > *:last-child {
       margin-right: 6px;
     }
   }
-  & .bar-center {
+  .bar-center {
     & > * {
       margin: 0 6px;
     }
   }
-  & .bar-right {
-    & > * {
+  .bar-right {
+    > * {
       margin-left: 6px;
     }
-    & > *:first-child {
+    > *:first-child {
       margin-left: 0px;
     }
   }
@@ -61,67 +91,76 @@
 
 .outer {
   padding: 4px;
-  border-bottom: 2.5px solid rgba(124, 124, 124, 0.5);
-  background: rgba(90, 90, 90, 0.6);
-  background: rgba(86, 86, 86, 0.65);
-}
-
-scale {
-  padding: 0px 6px;
+  border-bottom: 2px solid rgba(127, 128, 129, 0.51);
+  /* background: rgba(86, 86, 86, 0.65); */
+  background: hwb(200 42% 55% / 0.6);
+  &:not(.active) {
+  }
 }
 
 button {
   min-height: 0;
   min-width: 0;
   border-radius: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgb(var(--dark) / 0.6);
+  font-weight: 700;
+  color: white(0.925);
 
   &:hover {
-    background: rgba(0, 0, 0, 0.35);
+    background: rgb(var(--dark) / 0.3);
   }
   &:active {
-    background: rgba(0, 0, 0, 0.275);
+    background: rgb(var(--dark) / 0.15);
   }
 }
 
+.circular {
+  font-size: 4.5px;
+  min-width: 15px;
+  min-height: 15px;
+}
+
 .workspaces {
-  & > * {
+  /* margin: 1px 0; */
+  > * {
     margin-right: 6px;
   }
-  & > *:last-child {
+  > *:last-child {
     margin-right: 0px;
   }
 }
 
 .workspaces-group {
   border-radius: 9999px;
-
-  label {
-    font-weight: 600;
-  }
+  background: var(--status-entry-background);
 
   button {
-    padding: 4px 12px;
-    border-radius: 0px;
-    border: 1px solid transparent;
-    border-right: 1px solid rgba(128, 128, 128, 0.3);
-    border-left: 1px solid rgba(128, 128, 128, 0.3);
+    @apply --mono;
+    padding: 0 2px;
+    min-width: 2.2em;
+    background: transparent;
+    border: var(--status-entry-border);
+    border-left: var(--status-entry-internal-border);
+    border-right: var(--status-entry-internal-border);
     &.first {
+      border-left: var(--status-entry-border);
       border-top-left-radius: 9999px;
       border-bottom-left-radius: 9999px;
-      padding-left: 14px;
-      border-left-color: transparent;
+      padding: 0;
+      padding-left: 3px;
     }
     &.last {
+      border-right: var(--status-entry-border);
       border-top-right-radius: 9999px;
       border-bottom-right-radius: 9999px;
-      padding-right: 14px;
-      border-right-color: transparent;
+      padding: 0;
+      padding-right: 3px;
     }
     &.focused {
-      background: rgba(70, 90, 255, 0.375);
+      border-color: transparent;
+      background: rgb(var(--primary) / 0.5);
       .outer.active & {
-        background: rgba(40, 70, 255, 0.75);
+        background: rgb(var(--primary) / 0.85);
       }
     }
   }
@@ -136,58 +175,82 @@ button {
   font-size: 12px;
   & > label {
     padding: 0 10px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 2px solid rgba(0, 0, 0, 0.15);
+    background: var(--status-entry-background);
+    border: var(--status-entry-border);
     border-radius: 9999px;
-    font-weight: 600;
     min-width: 2em;
   }
 }
 
 .datetime {
-  @apply status-entry;
-  padding: 0 1px;
-  label {
-    padding: 0 5px;
+  @apply --status-entry;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+.systray {
+  @apply --status-entry;
+  background: transparent;
+  button {
+    border-radius: 9999px;
+    padding: 2px 6px;
+    margin: -2px;
+
+    .icon {
+      font-size: 16px;
+    }
   }
 }
 
-.systray button {
-  border-radius: 9999px;
-  font-size: 14px;
+menu {
+  @apply --sans;
+  padding: 2px;
+  background: rgba(30, 30, 30, 0.875);
+  border: 2px solid rgba(0, 0, 0, 1);
+  font-size: 13px;
+  color: #d8d8d8;
+  button,
+  label {
+    font-weight: 600;
+  }
+  button,
+  item {
+    padding: 6px;
+    margin: 0;
+  }
 }
 
-.circular {
-  font-size: 4.5px;
-  min-width: 15px;
-  min-height: 15px;
-}
 
 .battery {
-  @apply status-entry;
+  @apply --status-entry;
 }
 
 .volume {
-  @apply status-entry;
-  & .circular {
-    color: rgba(40, 70, 255, 0.85);
+  @apply --status-entry;
+
+  .status {
+    > box {
+      margin-top: -1px;
+      .circular {
+        color: rgba(40, 70, 255, 0.85);
+      }
+    }
   }
 }
 
 .cputemp {
-  @apply status-entry;
+  @apply --status-entry;
 
-  & label {
-    font-family: "monospace";
+  label {
+    @apply --mono;
     font-size: 12px;
     font-weight: 700;
   }
   &.critical .icon {
-    @apply error;
+    color: rgb(var(--error) / 0.8);
   }
   &.high .icon {
-    @apply warning;
-    /* color: rgba(255, 190, 60, 0.8); */
+    color: rgb(var(--warning) / 0.8);
   }
   &.medium .icon {
     color: rgba(255, 220, 100, 0.8);
@@ -197,33 +260,27 @@ button {
   }
 }
 
-.media {
-  /* font-size: 12px; */
-  color: rgba(255, 255, 255, 0.84);
-  & > box {
-    padding: 3px 1px;
-    border-radius: 9999px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 2px solid rgba(0, 0, 0, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.24);
-    & > * {
-      padding: 0 6px;
-      /* margin: 0 2px; */
-      border: none;
+.media-event-box {
+  .media {
+    @apply --status-entry;
+    .icon.player {
+      font-size: 15px;
     }
-    & > label.player {
-      padding-right: 0;
-    }
-    /* & > label.title {} */
-    & label {
-      font-weight: 600;
-      font-size: 12px;
-      &.player {
-        font-size: 13px;
+    .icon.status {
+      &.paused {
+        color: #c8c8c8;
       }
     }
   }
-  &:hover > box {
-    background: rgba(0, 0, 0, 0.14);
+  &:hover {
+    background: white(0.05);
+  }
+}
+
+.tasks {
+  @apply --status-entry;
+  label.task {
+    font-size: 13px;
+    padding-right: 7px;
   }
 }

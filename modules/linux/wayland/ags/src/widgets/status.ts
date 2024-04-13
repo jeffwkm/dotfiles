@@ -1,17 +1,6 @@
 import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
-// import Align from "gi://Gtk";
-
-interface PomodoroResult {
-  state: string;
-  timer: string;
-  seconds: int;
-}
-
-// const pomodoroResult = Variable("", {
-//   poll: [2000, "emacsclient -e '(--org-pomodoro-status-json)'"],
-// });
 
 const timeNow = Variable("", {
   poll: [1000, 'date +"%l:%M %p"'],
@@ -33,32 +22,6 @@ const cpuTemp = Variable(0, {
     },
   ],
 });
-
-export const Pomodoro = () => {
-  return Widget.Box({
-    class_name: "pomodoro",
-    children: [
-      Widget.Label({
-        class_name: "timer",
-        label: "?",
-        setup: (self) => {
-          self.hook(pomodoroResult, (self) => {
-            const result: PomodoroResult = new Map();
-            const response = JSON.parse(pomodoroResult.value) as PomodoroResult;
-            if (result) {
-              if (result.timer) {
-                self.label = result.timer;
-              } else {
-                console.log(result);
-              }
-            }
-            // console.log(result);
-          });
-        },
-      }),
-    ],
-  });
-};
 
 export const Clock = () => {
   return Widget.Box({
@@ -105,38 +68,44 @@ export const CpuTemp = () => {
   });
 };
 
-export const Volume = () => {
-  const icons = {
-    101: "overamplified",
-    67: "high",
-    34: "medium",
-    1: "low",
-    0: "muted",
-  };
-
-  const getIcon = () => {
-    const icon = Audio.speaker.is_muted
-      ? 0
-      : [101, 67, 34, 1, 0].find((threshold) => threshold <= Audio.speaker.volume * 100) || 0;
-
-    return `audio-volume-${icons[icon]}-symbolic`;
-  };
-
-  const icon = Widget.Icon({
-    class_name: "icon",
-    icon: Utils.watch(getIcon(), Audio.speaker, getIcon),
-  });
-
-  const status = Widget.CircularProgress({
-    class_name: "circular",
-    value: Audio.speaker.bind("volume").as((v) => v || 0),
-  });
-
-  return Widget.Box({
-    class_name: "volume",
-    children: [icon, Widget.Box({ children: [status] })],
-  });
+const volumeIcons = {
+  101: "overamplified",
+  67: "high",
+  34: "medium",
+  1: "low",
+  0: "muted",
 };
+
+const getVolumeIcon = () => {
+  const threshold = Audio.speaker.is_muted
+    ? 0
+    : [101, 67, 34, 1, 0].find((t) => t <= Audio.speaker.volume * 100) || 0;
+  return `audio-volume-${volumeIcons[threshold]}-symbolic`;
+};
+
+export const Volume = () =>
+  Widget.Box({
+    class_name: "volume",
+    children: [
+      Widget.Icon({
+        class_name: "icon",
+        setup: (self) => {
+          self.hook(Audio.speaker, (self) => {
+            self.icon = getVolumeIcon();
+          });
+        },
+      }),
+      Widget.Box({
+        class_name: "status",
+        child: Widget.Box({
+          child: Widget.CircularProgress({
+            class_name: "circular",
+            value: Audio.speaker.bind("volume").as((v) => v || 0),
+          }),
+        }),
+      }),
+    ],
+  });
 
 export const BatteryLabel = () => {
   const available = Battery.bind("available");
@@ -188,20 +157,17 @@ export const BatteryLabel = () => {
 //   });
 // };
 
-export const SysTray = () => {
-  const items = SystemTray.bind("items").as((items) =>
-    items.map((item) =>
-      Widget.Button({
-        child: Widget.Icon({ icon: item.bind("icon") }),
-        on_primary_click: (_, event) => item.activate(event),
-        on_secondary_click: (_, event) => item.openMenu(event),
-        tooltipMarkup: item.bind("tooltip_markup"),
-      }),
-    ),
-  );
-
-  return Widget.Box({
+export const SysTray = () =>
+  Widget.Box({
     class_name: "systray",
-    children: items,
+    children: SystemTray.bind("items").as((items) =>
+      items.map((item) =>
+        Widget.Button({
+          child: Widget.Icon({ class_name: "icon", icon: item.bind("icon") }),
+          on_primary_click: (_, event) => item.activate(event),
+          on_secondary_click: (_, event) => item.openMenu(event),
+          tooltipMarkup: item.bind("tooltip_markup"),
+        }),
+      ),
+    ),
   });
-};

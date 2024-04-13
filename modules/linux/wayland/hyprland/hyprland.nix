@@ -16,17 +16,17 @@ in {
     nixpkgs.overlays = [
       inputs.hyprland.overlays.default
       inputs.hyprland.overlays.wlroots-hyprland
-      (final: prev: {
-        wlroots = optimize' prev.wlroots;
-        wlroots-hyprland = optimize' prev.wlroots-hyprland;
-        hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
-          wlroots-hyprland = final.wlroots-hyprland;
-        });
-        hyprland = optimize' (prev.hyprland.override {
-          wlroots-hyprland = final.wlroots-hyprland;
-        });
-        hyprpaper = optimize' prev.hyprpaper;
-      })
+      # (final: prev: {
+      #   wlroots = optimize' prev.wlroots;
+      #   wlroots-hyprland = optimize' prev.wlroots-hyprland;
+      #   hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
+      #     wlroots-hyprland = final.wlroots-hyprland;
+      #   });
+      #   hyprland = optimize' (prev.hyprland.override {
+      #     wlroots-hyprland = final.wlroots-hyprland;
+      #   });
+      #   hyprpaper = optimize' prev.hyprpaper;
+      # })
     ];
 
     programs.hyprland.enable = true;

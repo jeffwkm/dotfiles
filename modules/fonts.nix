@@ -17,6 +17,7 @@ let
     font-awesome_5
     input-fonts
     jetbrains-mono
+    material-symbols
     (nerdfonts.override {
       fonts = [ "FiraCode" "Inconsolata" "JetBrainsMono" "Meslo" "Monoid" ];
     })

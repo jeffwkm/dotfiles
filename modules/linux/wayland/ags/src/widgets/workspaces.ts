@@ -45,9 +45,9 @@ const workspacesGroup = (monitorId: number, groupId: number) => {
         self.visible = ws.length > 0;
         self.children = ws.map(({ id }) =>
           Widget.Button({
-            on_clicked: () => Hyprland.messageAsync(`dispatch workspace ${id}`),
-            child: Widget.Label({ label: `${groupSyms[toGroupId(id)]}${toGroupWsId(id)}` }),
             class_name: `${id === first.id ? "first" : ""} ${id === last.id ? "last" : ""} ${id === activeId ? "focused" : ""}`,
+            label: `${groupSyms[toGroupId(id)]}${toGroupWsId(id) % 10}`,
+            on_clicked: () => Hyprland.messageAsync(`dispatch workspace ${id}`),
           }),
         );
       });

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 
 (require 'dash)
 (require 's)
@@ -26,7 +27,9 @@
 (setq! debug-on-message ".*Selecting deleted buffer.*")
 (setq! backtrace-on-redisplay-error t)
 
-(after! copilot (pushnew! copilot-disable-predicates '--byte-compiling-p))
+(after! copilot
+  (pushnew! copilot-disable-predicates '--byte-compiling-p)
+  (pushnew! warning-suppress-types '(copilot copilot-exceeds-max-char)))
 
 (setq! user-full-name "Jeff Workman"
        user-mail-address "jeff.workman@gmail.com"
@@ -514,18 +517,11 @@
          corfu-popupinfo-max-height 15
          corfu-popupinfo-min-width 30
          corfu-popupinfo-max-width 80)
-  (after! cape
-    (pushnew! dabbrev-ignored-buffer-modes
-              'cider-repl-mode
-              'fundamental-mode
-              'special-mode
-              'native-comp-limple-mode))
 
   (defun --corfu-set-faces (&optional frame)
     (set-face-background 'corfu-current "#3a3c3d" frame))
   (add-hook! 'after-make-frame-functions :append '--corfu-set-faces)
   (--corfu-set-faces)
-  ;; pgtk-preedit-overlay
 
   (map! :mode corfu-mode
         "C-." 'complete-symbol
@@ -875,17 +871,6 @@
   (when (null server-process)
     (server-start t t)))
 
-;; (setq hippie-expand-try-functions-list '(try-expand-dabbrev
-;;                                          try-expand-dabbrev-all-buffers
-;;                                          try-expand-dabbrev-from-kill
-;;                                          try-complete-file-name-partially
-;;                                          try-complete-file-name
-;;                                          try-expand-all-abbrevs
-;;                                          try-expand-list
-;;                                          try-expand-line
-;;                                          try-complete-lisp-symbol-partially
-;;                                          try-complete-lisp-symbol))
-
 (after! apheleia
   (setq-default +format-with nil)
   (setq! +format-with-lsp t
@@ -895,8 +880,7 @@
                                           org-msg-edit-mode
                                           clojure-mode
                                           clojurescript-mode
-                                          clojurec-mode
-                                          )))
+                                          clojurec-mode)))
 
 (after! editorconfig
   (setq! editorconfig-lisp-use-default-indent t))
@@ -905,23 +889,24 @@
 (defun --lsp-ui-doc-glance-toggle ()
   (interactive)
   (if (lsp-ui-doc--frame-visible-p)
-      (lsp-ui-doc-hide)
+      (lsp-ui-doc--delete-frame)
     (lsp-ui-doc-glance)))
 
-
-
+;; TODO: delete lsp-ui-doc frame instead of hiding it
+;; (define-advice )
 (after! lsp-mode
   (setq! lsp-idle-delay 0.5
          ;; lsp-response-timeout 10
          ;; lsp-enable-dap-auto-configure nil
-         ;; lsp-ui-doc-max-width 80
+         lsp-ui-doc-max-width 80
          ;; lsp-ui-doc-max-height 20
          ;; lsp-ui-doc-use-childframe t
          lsp-ui-doc-use-webkit nil
          ;; lsp-keep-workspace-alive nil
-         ;; lsp-auto-guess-root t
-         ;; lsp-guess-root-without-session t
-         lsp-warn-no-matched-clients nil)
+         lsp-auto-guess-root t
+         lsp-guess-root-without-session t
+         lsp-warn-no-matched-clients nil
+         lsp-ui-doc-include-signature t)
   (pushnew! lsp-file-watch-ignored-directories "/home/jeff/repos/nix/nixpkgs")
   (pushnew! lsp-disabled-clients 'semgrep-ls)
   (use-package! lsp-ui)
@@ -970,9 +955,12 @@
            lsp-nix-nil-auto-archive t
            lsp-nix-nil-auto-eval-inputs nil
            lsp-nix-nil-nixpkgs-input-name "nixpkgs"))
+  (after! lsp-treemacs
+    (setq! lsp-treemacs-error-list-current-project-only t
+           treemacs-show-cursor t))
   (map! :mode lsp-mode
-        "s-l" 'lsp-ui-doc-show
-        ;; "s-l" '--lsp-ui-doc-glance-toggle
+        ;; "s-l" 'lsp-ui-doc-show
+        "s-l" '--lsp-ui-doc-glance-toggle
         ;; "s-L" (cmd! (lsp-ui-doc--delete-frame) (command-execute 'lsp-ui-doc-glance))
         "s-;" 'lsp-ui-doc-focus-frame
         :mode lsp-ui-doc-frame-mode
@@ -1324,23 +1312,23 @@
 ;;   (solaire-global-mode 1))
 
 (after! treemacs
-  ;; (setq-hook! treemacs-mode mode-line-format nil)
-  ;; (setq-hook! treemacs-mode tab-width 1)
+  (require 'hide-mode-line)
+  (setq-hook! treemacs-mode mode-line-format nil)
+  (setq-hook! treemacs-mode tab-width 1)
+  (add-hook! treemacs-mode 'hide-mode-line-mode)
   (--treemacs-variable-pitch)
   (add-hook! 'doom-load-theme-hook :append '--treemacs-variable-pitch)
-  ;; (after! solaire-mode
-  ;;   (pushnew! solaire-mode-remap-alist
-  ;;               '(treemacs-window-background-face . solaire-default-face))
-  ;;   (pushnew! solaire-mode-remap-alist
-  ;;               '(treemacs-hl-line-face . solaire-hl-line-face))
-  ;;   (add-hook! lsp-treemacs-error-list-mode 'solaire-mode)
-  ;;   (solaire-global-mode 1))
+  (after! (lsp-treemacs solaire-mode)
+    (pushnew! solaire-mode-remap-alist
+              '(treemacs-window-background-face . solaire-default-face))
+    (pushnew! solaire-mode-remap-alist
+              '(treemacs-hl-line-face . solaire-hl-line-face))
+    (add-hook! lsp-treemacs-error-list-mode 'solaire-mode))
   (treemacs-git-mode 1)
-  ;; (treemacs-follow-mode 1)
-  ;; (treemacs-project-follow-mode 1)
-  ;; (treemacs-filewatch-mode 1)
+  (treemacs-follow-mode 1)
+  (treemacs-project-follow-mode 1)
+  (treemacs-filewatch-mode 1)
   (treemacs-hide-gitignored-files-mode 1)
-  ;; (after! (lsp-mode lsp-treemacs) (lsp-treemacs-sync-mode 1))
   ;; (add-hook! 'treemacs-select-functions  ;; TODO: run this?
   ;;            '--ensure-treemacs-hl-line-mode
   ;;            '--treemacs-hide-fringes)
@@ -1383,7 +1371,7 @@
   :mode "\\.postcss\\'" "\\.css\\'"
   :config
   (add-hook! css-mode 'css-ts-mode)
-  (add-hook! css-ts-mode 'lsp-mode)
+  ;; (add-hook! css-ts-mode 'lsp-mode)
   (setq-hook! css-ts-mode +format-with 'prettier-css))
 
 (use-package! typescript-ts-mode
@@ -1410,11 +1398,12 @@
   (add-hook! web-mode '--web-mode-hook))
 
 (use-package! lsp-tailwindcss
-  :defer-incrementally t
+  :after lsp-mode
   :init
   (setq! lsp-tailwindcss-add-on-mode t
          lsp-tailwindcss-server-version "0.10.2")
   :config
+  (pushnew! lsp-disabled-clients 'tailwindcss)
   (--each '(web-mode
             css-mode
             css-ts-mode
@@ -1426,8 +1415,8 @@
     (pushnew! lsp-tailwindcss-major-modes it)))
 
 (after! lsp-css
-  (setq! lsp-css-lint-unknown-at-rules "ignore")
-  (setq! lsp-svelte-plugin-css-diagnostics-enable nil))
+  (setq! lsp-css-lint-unknown-at-rules "ignore"
+         lsp-svelte-plugin-css-diagnostics-enable nil))
 
 (defvar --default-server-name "server")
 
@@ -1462,7 +1451,8 @@
 ;; upon opening a graphical frame.
 (add-hook! 'server-after-make-frame-hook '--fix-git-gutter-buffers)
 
+;;;; no-byte-compile: t
+
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars constants mutate-constant docstrings)
-;; no-byte-compile: t
 ;; End:

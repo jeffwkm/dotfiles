@@ -392,7 +392,8 @@ interactively for spacing value."
          (timer . ,(org-pomodoro-format-seconds))
          (seconds . ,(if (eq org-pomodoro-state :overtime)
                          (- (org-pomodoro-remaining-seconds))
-                       (truncate (org-pomodoro-remaining-seconds)))))
+                       (truncate (org-pomodoro-remaining-seconds))))
+         (heading . ,org-clock-heading))
        (json-encode-alist)))
 
 (defun --min-margin-left (&optional window)
