@@ -3,6 +3,16 @@ import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 // import Align from "gi://Gtk";
 
+interface PomodoroResult {
+  state: string;
+  timer: string;
+  seconds: int;
+}
+
+// const pomodoroResult = Variable("", {
+//   poll: [2000, "emacsclient -e '(--org-pomodoro-status-json)'"],
+// });
+
 const timeNow = Variable("", {
   poll: [1000, 'date +"%l:%M %p"'],
 });
@@ -23,6 +33,32 @@ const cpuTemp = Variable(0, {
     },
   ],
 });
+
+export const Pomodoro = () => {
+  return Widget.Box({
+    class_name: "pomodoro",
+    children: [
+      Widget.Label({
+        class_name: "timer",
+        label: "?",
+        setup: (self) => {
+          self.hook(pomodoroResult, (self) => {
+            const result: PomodoroResult = new Map();
+            const response = JSON.parse(pomodoroResult.value) as PomodoroResult;
+            if (result) {
+              if (result.timer) {
+                self.label = result.timer;
+              } else {
+                console.log(result);
+              }
+            }
+            // console.log(result);
+          });
+        },
+      }),
+    ],
+  });
+};
 
 export const Clock = () => {
   return Widget.Box({

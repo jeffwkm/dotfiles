@@ -139,6 +139,7 @@ in {
       readline
       sshfs
       tcpdump
+      mtr
       tomb
       tmux
       wget

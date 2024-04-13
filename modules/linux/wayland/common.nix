@@ -72,6 +72,7 @@ in {
         grim
         egl-wayland
         lxqt.lxqt-policykit
+        mtr-gui
         swappy
         sway-contrib.grimshot
         wayland

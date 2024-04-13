@@ -43,7 +43,8 @@
                   (-if-let (buffer (or (-some-> (minibuffer-selected-window) (window-buffer))
                                        (current-buffer)))
                       (with-current-buffer buffer
-                        (let* ((buffer-name (if (and (featurep 'doom-modeline) (not hide-mode-line-mode))
+                        (let* ((buffer-name (if (and (featurep 'doom-modeline)
+                                                     (not (and (featurep 'hide-mode-line) hide-mode-line-mode)))
                                                 (substring-no-properties (or (doom-modeline--buffer-name) ""))
                                               "%b"))
                                (buffer-name (if (equal buffer-name "%b") (buffer-name) buffer-name))

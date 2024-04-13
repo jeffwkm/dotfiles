@@ -9,6 +9,7 @@ import {
   ClientTitle,
   Notification,
   Media,
+  Pomodoro,
 } from "./widgets";
 
 const Left = (monitorId: number) =>
@@ -20,14 +21,15 @@ const Left = (monitorId: number) =>
 const Center = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-center",
-    children: [Media()],
+    // children: [Pomodoro()],
+    children: [],
   });
 
 const Right = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-right",
     hpack: "end",
-    children: [Notification(), SysTray(), CpuTemp(), Volume(), BatteryLabel(), Clock()],
+    children: [Media(), Notification(), SysTray(), CpuTemp(), Volume(), BatteryLabel(), Clock()],
   });
 
 export const Bar = (monitorId: number) =>
