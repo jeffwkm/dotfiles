@@ -9,6 +9,8 @@
 (require 'deferred)
 (require 'shut-up)
 (require 'nerd-icons)
+(require 'org-pomodoro)
+(require 'f)
 
 (cl-declaim doom-active-minor-modes)
 
@@ -384,8 +386,75 @@ interactively for spacing value."
     (message (propertize (concat (nerd-icons-faicon icon) " " message)
                          'face face 'font-lock-face face))))
 
-(unless (featurep 'commands)
-  (with-eval-after-load 'commands
-    (native-compile-async `(,(file!)) nil t)))
+(defun --org-pomodoro-status-json ()
+  (interactive)
+  (->> `((state . ,org-pomodoro-state)
+         (timer . ,(org-pomodoro-format-seconds))
+         (seconds . ,(if (eq org-pomodoro-state :overtime)
+                         (- (org-pomodoro-remaining-seconds))
+                       (truncate (org-pomodoro-remaining-seconds)))))
+       (json-encode-alist)))
+
+(defun --min-margin-left (&optional window)
+  (let ((current (-> (window-margins window) car (or 0))))
+    (if (and (> current 0)
+             (not (display-graphic-p (window-frame window))))
+        1 0)))
+
+(defun split-window-prefer-horizontal (&optional window)
+  "Modified version of `split-window-sensibly' that splits horizontally
+   by default when allowed."
+  (interactive)
+  (let ((window (or window (selected-window))))
+    (if (< (frame-width (window-frame window))
+           split-width-threshold)
+        ;; use the default behavior if the frame isn't wide enough to
+        ;; support two full-size horizontal windows
+        (split-window-sensibly window)
+      (set-window-margins window (--min-margin-left window) 0)
+      (or (and (window-splittable-p window t)
+               ;; Split window horizontally.
+               (with-selected-window window
+                 (split-window-right)))
+          (and (window-splittable-p window)
+               ;; Split window vertically.
+               (with-selected-window window
+                 (split-window-below)))
+          (and
+           ;; If WINDOW is the only usable window on its frame (it is
+           ;; the only one or, not being the only one, all the other
+           ;; ones are dedicated) and is not the minibuffer window, try
+           ;; to split it vertically disregarding the value of
+           ;; `split-height-threshold'.
+           (let ((frame (window-frame window)))
+             (or
+              (eq window (frame-root-window frame))
+              (catch 'done
+                (walk-window-tree (lambda (w)
+                                    (unless (or (eq w window)
+                                                (window-dedicated-p w))
+                                      (throw 'done nil)))
+                                  frame nil 'nomini)
+                t)))
+           (not (window-minibuffer-p window))
+           (let ((split-height-threshold 0))
+             (when (window-splittable-p window)
+               (with-selected-window window
+                 (split-window-below)))))))))
+
+(defun split-window-auto ()
+  (interactive)
+  (let ((split-height-threshold 40))
+    (let ((new-window (split-window-prefer-horizontal)))
+      (unless (null new-window)
+        (select-window new-window))
+      new-window)))
+
+(defun --byte-compiling-p ()
+  (> byte-compile-depth 0))
+
+;; (unless (featurep 'commands)
+;;   (with-eval-after-load 'commands
+;;     (native-compile-async `(,(file!)) nil t)))
 
 (provide 'commands)

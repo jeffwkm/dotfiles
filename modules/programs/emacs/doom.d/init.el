@@ -74,9 +74,9 @@
        vc                  ; version-control and Emacs, sitting in a tree
 
        :term
-       ;; eshell           ; the elisp shell that works everywhere
+       eshell           ; the elisp shell that works everywhere
        shell               ; simple shell REPL for Emacs
-       ;; term             ; basic terminal emulator for Emacs
+       term             ; basic terminal emulator for Emacs
        vterm               ; the best terminal emulation in Emacs
 
        :checkers
@@ -86,7 +86,7 @@
 
        :tools
        ;; ansible
-       (debugger +lsp)     ; FIXME stepping through code, to help you add bugs
+       ;; (debugger +lsp)     ; FIXME stepping through code, to help you add bugs
        direnv
        (docker +lsp)
        editorconfig        ; let someone else argue about tabs vs spaces
@@ -98,13 +98,13 @@
        magit               ; a git porcelain for Emacs
        ;; make             ; run make tasks from Emacs
        pass                ; password manager for nerds
-       ;; pdf                 ; pdf enhancements
+       pdf                 ; pdf enhancements
        ;; prodigy          ; FIXME managing external services & code builders
        rgb                 ; creating color strings
        ;; terraform        ; infrastructure as code
        ;; tmux             ; an API for interacting with tmux
        tree-sitter
-       upload           ; map local to remote projects via ssh/ftp
+       ;; upload           ; map local to remote projects via ssh/ftp
 
        :os
        (:if (featurep :system 'macos) macos)  ; improve compatibility with macOS
@@ -148,7 +148,7 @@
        ;; nim              ; python + lisp at the speed of c
        (nix +lsp +tree-sitter) ; I hereby declare "nix geht mehr!"
        ;; ocaml            ; an objective camel
-       (org +pomodoro +pretty) ; organize your plain life in plain text
+       (org +pomodoro +pretty +roam2) ; organize your plain life in plain text
        ;; php              ; perl's insecure younger brother
        ;; plantuml         ; diagrams for confusing people more
        ;; purescript       ; javascript, but functional

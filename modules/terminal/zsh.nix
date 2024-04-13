@@ -188,6 +188,11 @@ let
       source ${lsd_completion} 2> /dev/null
       source ${emacs_vterm_zsh} 2> /dev/null
 
+      if [[ -n "$INSIDE_EMACS" ]] ; then
+        prompt restore
+        prompt clint
+      fi
+
       ${extra.initExtra or ""}
     '';
   };

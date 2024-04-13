@@ -1,21 +1,3 @@
-;; -*- lexical-binding: t -*-
-
-;; Here are some additional functions/macros that could help you configure Doom:
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package!' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
-;; This will open documentation for it, including demos of how they are used.
-;;
-;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
-;; they are implemented.
 
 (require 'dash)
 (require 's)
@@ -25,23 +7,94 @@
 (require 'doom)
 (require 'deferred)
 (require 'shut-up)
+(require 'bytecomp)
+(require 'server)
 
 (add-load-path! (dir!))
 
-(require 'commands)
-(require 'auto-margin)
-;; (dolist (hook '(window-setup-hook
-;;                 window-size-change-functions
-;;                 after-make-frame-functions
-;;                 after-setting-font-hook))
-;;   (add-hook hook 'autoset-frame-margins))
+(byte-recompile-file (concat (dir!) "commands.el") nil 0 t)
+(load! "commands")
+
+(setq! split-window-preferred-function 'split-window-prefer-horizontal)
+
+(setq! debug-on-error t)
+(pushnew! debug-ignored-errors
+          'scan-sexps
+          ".*debug-on-message.*"
+          "\.\*Selecting deleted buffer\.\*")
+;; (toggle-debug-on-error)
+(setq! debug-on-message ".*Selecting deleted buffer.*")
+(setq! backtrace-on-redisplay-error t)
+
+(after! copilot (pushnew! copilot-disable-predicates '--byte-compiling-p))
+
+(setq! user-full-name "Jeff Workman"
+       user-mail-address "jeff.workman@gmail.com"
+       doom-leader-key "SPC"
+       doom-leader-alt-key "C-SPC"
+       smie-indent-basic 2
+       +workspaces-on-switch-project-behavior 'non-empty
+       display-line-numbers-type nil
+       emojify-download-emojis-p t
+       org-directory "~/org/"
+       confirm-kill-processes t
+       frame-title-format
+       '((:eval (let ((lexical-binding t))
+                  (-if-let (buffer (or (-some-> (minibuffer-selected-window) (window-buffer))
+                                       (current-buffer)))
+                      (with-current-buffer buffer
+                        (let* ((buffer-name (if (and (featurep 'doom-modeline) (not hide-mode-line-mode))
+                                                (substring-no-properties (or (doom-modeline--buffer-name) ""))
+                                              "%b"))
+                               (buffer-name (if (equal buffer-name "%b") (buffer-name) buffer-name))
+                               (buffer-name (or buffer-name "")))
+                          (concat
+                           (-> (-some-> (nerd-icons-icon-for-buffer)
+                                 (substring-no-properties)
+                                 (concat "  "))
+                               (or ""))
+                           (string-trim buffer-name "[ \\\t\\\r\\\n\\*]+" "[ \\\t\\\r\\\n\\*]+"))))
+                    "Emacs"))))
+       require-final-newline t
+       large-file-warning-threshold (* 10 1000 1000)
+       ;; doom-theme 'doom-one
+       doom-theme 'doom-tomorrow-night
+       doom-one-brighter-comments t
+       doom-one-brighter-modeline nil
+       doom-themes-padded-modeline t
+       doom-gruvbox-dark-variant "soft")
 
 (setf (alist-get 'alpha-background default-frame-alist) 0.88)
+(setf (alist-get 'right-fringe default-frame-alist) 8)
+(setf (alist-get 'left-fringe default-frame-alist) 8)
+(setf (alist-get 'internal-border-width default-frame-alist) 4)
 
 (menu-bar-mode -1)
+(global-auto-revert-mode t)
+(transient-mark-mode t)
+(delete-selection-mode t)
+(windmove-default-keybindings '(control meta))
+(windmove-mode +1)
 
-(when (featurep 'pgtk)
-  (setq! use-system-tooltips nil))
+(setq-default tab-width 2
+              fill-column 100
+              byte-compile-warning-types '(not free-vars constants mutate-constant)
+              lisp-indent-offset nil)
+
+;; Swap () and [] keys
+(define-key! key-translation-map
+  "(" "["
+  ")" "]"
+  "[" "("
+  "]" ")")
+
+(when (mac?)
+  (setq! mac-command-modifier 'meta
+         mac-right-command-modifier 'left
+         mac-option-modifier 'super
+         mac-right-option-modifier 'left))
+
+(when (featurep 'pgtk) (setq! use-system-tooltips t))
 
 (use-package! disable-mouse
   :if (asahi?)
@@ -53,46 +106,12 @@
               evil-visual-state-map
               evil-insert-state-map)))
 
-(when (mac?)
-  (setq! mac-command-modifier 'meta
-         mac-right-command-modifier 'left
-         mac-option-modifier 'super
-         mac-right-option-modifier 'left))
-
-(setq! user-full-name "Jeff Workman"
-       user-mail-address "jeff.workman@gmail.com"
-       doom-leader-key "SPC"
-       doom-leader-alt-key "C-SPC"
-
-       smie-indent-basic 2
-       +workspaces-on-switch-project-behavior 'non-empty
-       display-line-numbers-type nil
-       emojify-download-emojis-p t
-       org-directory "~/org/"
-       confirm-kill-processes nil
-       frame-title-format
-       '((:eval (with-current-buffer (if (minibufferp)
-                                         minibuffer--original-buffer
-                                       (current-buffer))
-                  (let* ((buffer-name (substring-no-properties (doom-modeline--buffer-name)))
-                         (buffer-name (if (equal buffer-name "%b") (buffer-name) buffer-name)))
-                    (concat
-                     (-some-> (nerd-icons-icon-for-buffer) (concat "  "))
-                     (string-trim buffer-name "[ \\\t\\\r\\\n\\*]+" "[ \\\t\\\r\\\n\\*]+"))))))
-       require-final-newline t
-       large-file-warning-threshold (* 100 1000 1000)
-
-       doom-theme 'doom-one
-       doom-theme 'doom-tomorrow-night
-       doom-one-brighter-comments t
-       doom-one-brighter-modeline nil
-       doom-themes-padded-modeline t
-       doom-gruvbox-dark-variant "soft")
-
-(setq-default tab-width 2
-              fill-column 100
-              byte-compile-warning-types '(not free-vars constants mutate-constant)
-              lisp-indent-offset nil)
+(use-package! uniquify
+  :config
+  (setq uniquify-buffer-name-style 'post-forward
+        uniquify-separator "|"
+        uniquify-after-kill-buffer-p t
+        uniquify-ignore-buffers-re "^\\*"))
 
 (defvar --modeline-font nil)
 
@@ -137,10 +156,10 @@
 
 (--configure-fonts)
 
-(after! doom-modeline
-  ;; workaround for modeline focus bug
-  ;; running doom/reload-font after focusing frame also fixes this
-  (remove-function after-focus-change-function #'doom-modeline-focus-change))
+;; (after! doom-modeline ;; TODO: run this?
+;;   ;; workaround for modeline focus bug
+;;   ;; running doom/reload-font after focusing frame also fixes this
+;;   (remove-function after-focus-change-function #'doom-modeline-focus-change))
 
 (defun --sync-fonts (&optional frame)
   (interactive)
@@ -151,6 +170,7 @@
 (add-hook! 'doom-after-reload-hook :append '--sync-fonts)
 
 (use-package! doom-modeline
+  :defer t
   :init
   (setq! doom-modeline-buffer-file-name-style 'truncate-with-project
          doom-modeline-persp-name t
@@ -165,27 +185,14 @@
   (add-hook! 'doom-modeline-mode-hook :append (size-indication-mode -1)))
 ;; (doom-modeline-format--main)
 
-(use-package! hl-line)
-
-(use-package! fringe
-  :config
-  (pushnew! default-frame-alist '(right-fringe . 8) '(left-fringe . 8))
+(after! fringe
   (fringe-mode 8))
 
 (use-package! ruby-mode
   :mode (("\\.lic\\'" . ruby-mode)
          ("\\.rb\\'"  . ruby-mode)))
 
-(defun --toggle-large-font ()
-  (interactive)
-  (setq --large-font (not --large-font))
-  (--configure-fonts)
-  (doom/reload-font)
-  (message "--large-font %s" (if --large-font "enabled" "disabled")))
-
-(use-package! mu4e
-  :defer t
-  :config
+(after! mu4e
   (setq! mu4e-get-mail-command "mbsync -a"
          mu4e-update-interval 300)
   (set-email-account!
@@ -200,14 +207,12 @@
                   (smtpmail-smtp-service . 1025)
                   (smtpmail-stream-type . starttls))
    t)
-  (eval-when-compile (require 'mu4e-alert))
   (use-package! mu4e-alert
     :config
     (mu4e-alert-enable-notifications)
     (mu4e-alert-enable-mode-line-display)))
 
 (use-package! smartparens
-  :defer t
   :init
   (setq sp-base-key-bindings 'sp
         sp-override-key-bindings '(("C-M-<left>"  . nil)
@@ -291,13 +296,6 @@
   (map! :mode (evil-snipe-override-mode evil-snipe-override-local-mode)
         :m "F" nil))
 
-;; Swap () and [] keys
-(define-key! key-translation-map
-  "(" "["
-  ")" "]"
-  "[" "("
-  "]" ")")
-
 (use-package! elisp-mode
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :config
@@ -339,8 +337,6 @@
       "h r n" 'doom/nix-reload
       :desc "org-pomodoro"
       "C-p" 'org-pomodoro
-      :desc "Large font"
-      "t L" '--toggle-large-font
       :desc "Jump to cider-repl"
       "r" '--cider-goto-repl
       :desc "List workspaces"
@@ -442,11 +438,8 @@
 (defun --emacs-startup ()
   (auto-compression-mode 1)
   (--init-copy-paste)
-  (when (or (graphical?) server-process)
+  (when (or (graphical?) (and (featurep 'server) server-process))
     (--load-default-session))
-  (let ((w (if (mac?) 4 4)))
-    (pushnew! default-frame-alist `(internal-border-width . ,w))
-    (set-frame-parameter nil 'internal-border-width w))
   (--kill-external-source-buffers)
   (--projectile-remove-external-projects))
 (add-hook! 'emacs-startup-hook :depth 90 '--emacs-startup)
@@ -504,16 +497,31 @@
   (corfu-popupinfo-mode 1)
   (corfu-history-mode 1)
   (setq! corfu-separator ?\s
-         corfu-min-width 30
+         corfu-min-width 32
          corfu-max-width 80
+         corfu-bar-width 1.0
+         corfu-left-margin-width 1.0
+         corfu-right-margin-width 1.0
          corfu-preview-current t
-         corfu-preselect 'prompt
-         corfu-popupinfo-delay 0.75
+         corfu-preselect 'directory
          corfu-auto-delay 0.18
          corfu-auto-prefix 2)
+  (setq! corfu-popupinfo-delay '(0.75 . 0.25)
+         corfu-popupinfo-resize nil
+         corfu-popupinfo-hide t
+         corfu-popupinfo-min-height 4
+         corfu-popupinfo-max-height 15
+         corfu-popupinfo-min-width 30
+         corfu-popupinfo-max-width 80)
+  (after! cape
+    (pushnew! dabbrev-ignored-buffer-modes
+              'cider-repl-mode
+              'fundamental-mode
+              'special-mode
+              'native-comp-limple-mode))
 
   (defun --corfu-set-faces (&optional frame)
-    (set-face-background 'corfu-current "#2c2e2f" frame))
+    (set-face-background 'corfu-current "#3a3c3d" frame))
   (add-hook! 'after-make-frame-functions :append '--corfu-set-faces)
   (--corfu-set-faces)
   ;; pgtk-preedit-overlay
@@ -535,35 +543,6 @@
 
 (use-package! helpful :defer-incrementally t)
 
-(after! company
-  (setq! company-minimum-prefix-length 2
-         company-idle-delay 0.5
-         company-tooltip-minimum-width 40
-         company-tooltip-maximum-width 70
-         company-tooltip-width-grow-only t
-         company-tooltip-scrollbar-width 1
-         company-async-redisplay-delay 0.03)
-  (when (modulep! :completion company +childframe)
-    (after! company-box
-      (setq! company-box-doc-enable t
-             company-box-doc-delay 0.5
-             company-box-enable-icon (mac?))))
-  (set-company-backend! 'text-mode
-                        'company-capf)
-  (set-company-backend! 'prog-mode
-                        'company-capf 'company-dabbrev-code 'company-files)
-  (set-company-backend! 'conf-mode
-                        'company-capf 'company-dabbrev-code 'company-files)
-  (set-company-backend! 'sh-mode
-                        'company-capf 'company-shell 'company-shell-env
-                        'company-dabbrev-code 'company-files)
-  (use-package! company-statistics
-    :config
-    (company-statistics-mode 1))
-  (global-company-mode 1)
-  (unless (modulep! :completion company +childframe)
-    (company-quickhelp-mode +1)))
-
 (defvar --pass-get-cache (make-hash-table :test 'equal :size 10))
 (defun --pass-get (name)
   (with-memoization (gethash name --pass-get-cache)
@@ -576,9 +555,11 @@
   (setq! chatgpt-shell-openai-key (fn! (--pass-get "keys/openai"))))
 
 (use-package! copilot
+  :defer 5.0
+  :commands copilot-mode
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
-  (setq! copilot-idle-delay 0
+  (setq! copilot-idle-delay 0.05
          copilot-max-char 100000
          copilot-indent-offset-warning-disable t)
   (pushnew! copilot-clear-overlay-ignore-commands
@@ -693,6 +674,8 @@
   :commands elsa-lsp-register)
 
 (defun --set-flycheck-eslint ()
+  (require 'flycheck)
+  (require 'lsp-mode)
   (lsp-diagnostics-lsp-checker-if-needed)
   (setq-local flycheck-checker 'javascript-eslint)
   (flycheck-add-next-checker 'javascript-eslint 'lsp)
@@ -738,40 +721,15 @@
                                                            "js" "javascript" "ts" "typescript") %1))
                                         lsp-semgrep-languages)))
 
-(use-package! paren-face
-  :disabled t
-  :config
-  (setq paren-face-regexp "[\\(\\)]")
-  (global-paren-face-mode)
-  (--set-paren-face-colors)
-  (defconst clojure-brackets-keywords
-    '(("\\[" 0 'square-brackets)
-      ("\\]" 0 'square-brackets)
-      ("[\\{\\}]" 0 'curly-brackets)))
-  (defun --custom-paren-face-mode-hook ()
-    (if paren-face-mode
-        (font-lock-add-keywords nil clojure-brackets-keywords t)
-      (font-lock-remove-keywords nil clojure-brackets-keywords))
-    (when (called-interactively-p 'any)
-      (font-lock-ensure)))
-  (add-hook! 'paren-face-mode-hook '--custom-paren-face-mode-hook))
-
-(use-package! paxedit
-  :disabled t
-  :config
-  (setq paxedit-alignment-cleanup t
-        paxedit-whitespace-cleanup t)
-  (add-to-list 'emacs-lisp-mode-hook 'paxedit-mode))
-
-(use-package! expand-region)
+(use-package! expand-region :defer-incrementally t)
 
 (use-package! whitespace
   :commands whitespace-mode
   :init
   (add-hook! (prog-mode text-mode conf-mode) 'whitespace-mode)
   :config
-  (setq whitespace-line-column nil)
-  (setq whitespace-style '(face tabs empty trailing indentation space-after-tab space-before-tab)))
+  (setq! whitespace-line-column nil)
+  (setq! whitespace-style '(face tabs empty trailing indentation space-after-tab space-before-tab)))
 
 (use-package! systemd
   :mode (("\\.service\\'" . systemd-mode)
@@ -803,10 +761,10 @@
   (require 'doom-themes-ext-org))
 
 (after! vterm
-  (setq! vterm-disable-inverse-video t
-         vterm-term-environment-variable "xterm-256color"
-         ;; vterm-term-environment-variable "eterm-color"
-         ))
+  (setq! ;; vterm-disable-inverse-video t
+   vterm-term-environment-variable "xterm-256color"
+   ;; vterm-term-environment-variable "eterm-color"
+   ))
 
 (after! org
   (setq! org-log-done 'time
@@ -821,13 +779,19 @@
         "C-S-<down>"     'org-metadown
         "C-S-<up>"       'org-metaup
         "C-S-<return>"   'org-meta-return)
-  (use-package! org-ql :disabled t)
-  (use-package! org-present :disabled t)
-  (use-package! org-projectile)
+  (use-package! org-ql)
+  ;; (use-package! org-present)
+  ;; (use-package! org-projectile)
   (use-package! org-super-agenda :config (org-super-agenda-mode 1))
   (use-package! org-fancy-priorities)
   (use-package! org-superstar :config (setq org-superstar-special-todo-items t))
-  (add-hook! org-mode '(org-superstar-mode org-fancy-priorities-mode)))
+  (add-hook! org-mode 'org-fancy-priorities-mode))
+
+(after! org-roam
+  nil)
+
+(use-package! org-pomodoro
+  :commands org-pomodoro --org-pomodoro-status-json)
 
 (use-package! pkgbuild-mode :mode "/PKGBUILD")
 
@@ -875,8 +839,8 @@
   (use-package! flycheck-clj-kondo)
   (use-package! clj-refactor
     :config
-    (setq cljr-warn-on-eval nil
-          cljr-suppress-middleware-warnings t))
+    (setq cljr-warn-on-eval t
+          cljr-suppress-middleware-warnings nil))
   (defun --cider-reload-repl-ns ()
     (let ((ns (buffer-local-value 'cider-buffer-ns (car (cider-repls)))))
       (when ns
@@ -897,20 +861,6 @@
 (use-package! jade-mode
   :mode "\\.jade\\'")
 
-(global-auto-revert-mode t)
-(transient-mark-mode t)
-(delete-selection-mode t)
-
-(windmove-default-keybindings '(control meta))
-(windmove-mode +1)
-
-(use-package! uniquify
-  :config
-  (setq uniquify-buffer-name-style 'post-forward
-        uniquify-separator "|"
-        uniquify-after-kill-buffer-p t
-        uniquify-ignore-buffers-re "^\\*"))
-
 ;; Make sure Emacs has the correct ssh-agent config,
 ;; in order to use tramp and git commands without requesting a password.
 (unless (mac?)
@@ -918,30 +868,22 @@
       (setenv "SSH_AUTH_SOCK" "/run/ssh-agent.socket")
     (setenv "SSH_AUTH_SOCK" (concat (getenv "XDG_RUNTIME_DIR") "/ssh-agent.socket"))))
 
-;; Need to make sure emacs server daemon and emacsclient
-;; are using the same path for the socket file.
-;; The path is set here, and the same is set in a script
-;; for starting emacsclient (/usr/local/bin/e).
-;;
-;; (unless (or (graphical?) (mac?))
-;;   (setq server-socket-dir (format "/tmp/%s/emacs%d" (user-login-name) (user-uid))))
-
-(require 'server)
-
 ;; Run server inside GUI process on MacOS
-(when (and (gui-mac?) (null server-process))
-  (server-start t t))
+(when (gui-mac?)
+  (require 'server)
+  (when (null server-process)
+    (server-start t t)))
 
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-dabbrev-from-kill
-                                         try-complete-file-name-partially
-                                         try-complete-file-name
-                                         try-expand-all-abbrevs
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-lisp-symbol-partially
-                                         try-complete-lisp-symbol))
+;; (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+;;                                          try-expand-dabbrev-all-buffers
+;;                                          try-expand-dabbrev-from-kill
+;;                                          try-complete-file-name-partially
+;;                                          try-complete-file-name
+;;                                          try-expand-all-abbrevs
+;;                                          try-expand-list
+;;                                          try-expand-line
+;;                                          try-complete-lisp-symbol-partially
+;;                                          try-complete-lisp-symbol))
 
 (after! apheleia
   (setq-default +format-with nil)
@@ -958,27 +900,28 @@
 (after! editorconfig
   (setq! editorconfig-lisp-use-default-indent t))
 
+;; workaround for buggy display of this
 (defun --lsp-ui-doc-glance-toggle ()
   (interactive)
   (if (lsp-ui-doc--frame-visible-p)
       (lsp-ui-doc-hide)
     (lsp-ui-doc-glance)))
 
-(use-package! lsp-mode
-  :defer-incrementally t
-  :config
+
+
+(after! lsp-mode
   (setq! lsp-idle-delay 0.5
-         lsp-response-timeout 10
-         lsp-enable-dap-auto-configure nil
-         lsp-ui-doc-max-width 100
-         lsp-ui-doc-max-height 13
-         lsp-ui-doc-use-childframe t
+         ;; lsp-response-timeout 10
+         ;; lsp-enable-dap-auto-configure nil
+         ;; lsp-ui-doc-max-width 80
+         ;; lsp-ui-doc-max-height 20
+         ;; lsp-ui-doc-use-childframe t
          lsp-ui-doc-use-webkit nil
-         lsp-keep-workspace-alive nil
-         lsp-auto-guess-root t
-         lsp-guess-root-without-session t
+         ;; lsp-keep-workspace-alive nil
+         ;; lsp-auto-guess-root t
+         ;; lsp-guess-root-without-session t
          lsp-warn-no-matched-clients nil)
-  (pushnew! lsp-file-watch-ignored-directories "/home/jeff/repos/nixpkgs")
+  (pushnew! lsp-file-watch-ignored-directories "/home/jeff/repos/nix/nixpkgs")
   (pushnew! lsp-disabled-clients 'semgrep-ls)
   (use-package! lsp-ui)
   (use-package! lsp-ui-doc)
@@ -1007,15 +950,15 @@
       :package-version '(lsp-mode . "8.0.1"))
     (defcustom-lsp lsp-nix-nil-auto-eval-inputs nil
       "Whether to auto-eval flake inputs.
-The evaluation result is used to improve completion, but may cost lots of time and/or memory."
+      The evaluation result is used to improve completion, but may cost lots of time and/or memory."
       :type 'boolean
       :group 'lsp-nix-nil
       :lsp-path "nil.nix.flake.autoEvalInputs"
       :package-version '(lsp-mode . "8.0.1"))
     (defcustom-lsp lsp-nix-nil-nixpkgs-input-name nil
       "The input name of nixpkgs for NixOS options evaluation.
-The options hierarchy is used to improve completion, but may cost lots of time and/or memory.
-If this value is `null` or is not found in the workspace flake's inputs, NixOS options are not evaluated."
+      The options hierarchy is used to improve completion, but may cost lots of time and/or memory.
+      If this value is `null` or is not found in the workspace flake's inputs, NixOS options are not evaluated."
       :type 'string
       :group 'lsp-nix-nil
       :lsp-path "nil.nix.flake.nixpkgsInputName"
@@ -1027,8 +970,9 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
            lsp-nix-nil-auto-eval-inputs nil
            lsp-nix-nil-nixpkgs-input-name "nixpkgs"))
   (map! :mode lsp-mode
-        "s-l" '--lsp-ui-doc-glance-toggle
-        "s-L" (cmd! (lsp-ui-doc--delete-frame) (command-execute 'lsp-ui-doc-glance))
+        "s-l" 'lsp-ui-doc-show
+        ;; "s-l" '--lsp-ui-doc-glance-toggle
+        ;; "s-L" (cmd! (lsp-ui-doc--delete-frame) (command-execute 'lsp-ui-doc-glance))
         "s-;" 'lsp-ui-doc-focus-frame
         :mode lsp-ui-doc-frame-mode
         "s-l" 'lsp-ui-doc-hide
@@ -1319,7 +1263,6 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
          (when-let ((b (--cider-next-repl (current-buffer))))
            (switch-to-buffer-other-window b)))))
 
-
 (after! minimap
   (setq minimap-update-delay 0.1
         minimap-minimum-width 20
@@ -1362,80 +1305,55 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
       ;; disable right fringe
       (set-window-fringes window nil 0))))
 
-(setq! +treemacs-git-mode 'deferred
-       treemacs-display-in-side-window t
-       treemacs-file-event-delay 500
-       treemacs-silent-filewatch t
-       treemacs-silent-refresh t
-       treemacs-deferred-git-apply-delay 0.5
-       treemacs-file-follow-delay 0.1
-       treemacs-recenter-after-file-follow 'on-distance
-       treemacs-recenter-distance 0.1
-       treemacs-is-never-other-window t
-       treemacs-show-cursor nil)
+(setq! ;; +treemacs-git-mode 'deferred
+ treemacs-display-in-side-window t
+ ;; treemacs-file-event-delay 1000
+ treemacs-silent-filewatch t
+ treemacs-silent-refresh t
+ ;; treemacs-deferred-git-apply-delay 1.0
+ ;; treemacs-file-follow-delay 0.5
+ ;; treemacs-recenter-after-file-follow 'on-distance
+ ;; treemacs-recenter-distance 0.2
+ treemacs-is-never-other-window t
+ ;; treemacs-show-cursor nil
+ )
+
+;; (after! solaire-mode
+;;   ;; (after! treemacs (add-hook! 'treemacs-mode 'solaire-mode))
+;;   (solaire-global-mode 1))
 
 (after! treemacs
-  (setq-hook! treemacs-mode mode-line-format nil)
-  (setq-hook! treemacs-mode tab-width 1)
+  ;; (setq-hook! treemacs-mode mode-line-format nil)
+  ;; (setq-hook! treemacs-mode tab-width 1)
   (--treemacs-variable-pitch)
   (add-hook! 'doom-load-theme-hook :append '--treemacs-variable-pitch)
-  (after! solaire-mode
-    (pushnew! solaire-mode-remap-alist
-              '(treemacs-window-background-face . solaire-default-face))
-    (pushnew! solaire-mode-remap-alist
-              '(treemacs-hl-line-face . solaire-hl-line-face))
-    (add-hook! lsp-treemacs-error-list-mode 'solaire-mode)
-    (solaire-global-mode +1))
+  ;; (after! solaire-mode
+  ;;   (pushnew! solaire-mode-remap-alist
+  ;;               '(treemacs-window-background-face . solaire-default-face))
+  ;;   (pushnew! solaire-mode-remap-alist
+  ;;               '(treemacs-hl-line-face . solaire-hl-line-face))
+  ;;   (add-hook! lsp-treemacs-error-list-mode 'solaire-mode)
+  ;;   (solaire-global-mode 1))
   (treemacs-git-mode 1)
-  (treemacs-follow-mode 1)
-  (treemacs-project-follow-mode 1)
-  (treemacs-filewatch-mode 1)
+  ;; (treemacs-follow-mode 1)
+  ;; (treemacs-project-follow-mode 1)
+  ;; (treemacs-filewatch-mode 1)
   (treemacs-hide-gitignored-files-mode 1)
-  (after! (lsp-mode lsp-treemacs)
-    (lsp-treemacs-sync-mode 1))
-  (add-hook! 'treemacs-select-functions
-             '--ensure-treemacs-hl-line-mode
-             '--treemacs-hide-fringes)
+  ;; (after! (lsp-mode lsp-treemacs) (lsp-treemacs-sync-mode 1))
+  ;; (add-hook! 'treemacs-select-functions  ;; TODO: run this?
+  ;;            '--ensure-treemacs-hl-line-mode
+  ;;            '--treemacs-hide-fringes)
   (map! :mode treemacs-mode
         "C-o" (cmd! (call-interactively 'other-window))))
 
-(defvar --ensure-treemacs-open nil)
+;; (after! emojify
+;;   :config
+;;   (global-emojify-mode -1)
+;;   (global-emojify-mode-line-mode -1)
 
-(defun --ensure-treemacs-open (arg)
-  (when (and (eq arg 'frame)
-             --ensure-treemacs-open
-             (display-graphic-p (selected-frame)))
-    (let* ((persp (get-current-persp))
-           (w (frame-selected-window))
-           (persp-name (persp-name persp))
-           (buf (->> (persp-buffers (get-current-persp))
-                     (-filter 'buffer-file-name)
-                     (-find (lambda (buf)
-                              (-some-> buf
-                                buffer-file-name
-                                file-name-directory
-                                projectile-project-root
-                                projectile-project-name
-                                (equal persp-name)))))))
-      (if buf
-          (progn
-            (switch-to-buffer buf)
-            (treemacs-add-and-display-current-project-exclusively))
-        (treemacs))
-      (select-window w))))
-
-(after! (persp-mode treemacs)
-  (add-hook! 'persp-activated-functions :append '--ensure-treemacs-open))
-
-(use-package! emojify
-  :defer t
-  :config
-  (global-emojify-mode -1)
-  (global-emojify-mode-line-mode -1)
-
-  (custom-set-variables
-   '(emojify-display-style 'image)
-   '(emojify-emoji-styles '(unicode))))
+;;   (custom-set-variables
+;;    '(emojify-display-style 'image)
+;;    '(emojify-emoji-styles '(unicode))))
 
 (defmacro --setup-js-prettier-modes (feature-modes extra-modes)
   "Configure modes that are auto-formatted by external `prettier` tool."
@@ -1484,17 +1402,14 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
   (add-hook! json-ts-mode 'lsp-mode))
 
 (defun --web-mode-hook ()
-  (lsp-mode +1)
   (when (equal web-mode-engine "svelte")
     (setq-local +format-with 'prettier-svelte)))
 
 (after! web-mode
   (add-hook! web-mode '--web-mode-hook))
 
-(after! python
-  (add-hook! (python-mode python-ts-mode) 'lsp-mode))
-
 (use-package! lsp-tailwindcss
+  :defer-incrementally t
   :init
   (setq! lsp-tailwindcss-add-on-mode t
          lsp-tailwindcss-server-version "0.10.2")
@@ -1525,15 +1440,6 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 (defun --restore-default-session (session-name)
   "Runs `doom/load-session' using default session file for `session-name'."
   (interactive)
-  ''(interactive
-     (list (intern
-            (let ((options (->> (list server-name --default-server-name)
-                                (-filter #'stringp)
-                                (-distinct)
-                                (-map (lambda (x)
-                                        (list x "extra 1"))))))
-              (ivy-read "Load session name: " options
-                        :initial-input (caar options))))))
   (doom/load-session (--default-session-file-path session-name)))
 
 (defvar --server-initialized nil)
@@ -1555,8 +1461,7 @@ If this value is `null` or is not found in the workspace flake's inputs, NixOS o
 ;; upon opening a graphical frame.
 (add-hook! 'server-after-make-frame-hook '--fix-git-gutter-buffers)
 
-;; byte-compile-warning-types
-
 ;; Local Variables:
 ;; byte-compile-warnings: (not free-vars constants mutate-constant docstrings)
+;; no-byte-compile: t
 ;; End:

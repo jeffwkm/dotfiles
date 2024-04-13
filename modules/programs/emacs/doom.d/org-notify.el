@@ -28,7 +28,7 @@
 ;; one-shot check call (org-notify-deadlines). To enable repeated
 ;; checking call (org-notify-enable) and to disable call
 ;; (org-notify-disable). You can set the checking interval by changing
-;; the org--interval variable to the number of seconds you'd
+;; the org-notify-interval variable to the number of seconds you'd
 ;; like.
 
 
