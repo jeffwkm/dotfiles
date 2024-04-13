@@ -1,8 +1,8 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 with lib.my;
 let
-  inherit (config) user host modules;
+  inherit (config) user modules;
   inherit (modules) dev;
   rubyPackages = (ps:
     with ps; [
@@ -22,10 +22,16 @@ let
   rubyCustom = pkgs.ruby_3_2.withPackages rubyPackages;
   cfg = config.modules.dev.ruby;
 in {
-  options.modules.dev.ruby = { enable = mkBoolOpt dev.enable-all; };
+  options.modules.dev.ruby.enable = mkBoolOpt dev.enable-all;
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ rubyCustom ];
+    environment.systemPackages = [
+      (rubyCustom.overrideAttrs (attrs: {
+        # make sure this package overrides others
+        # meta.priority = pkgs.ruby.meta.priority + 1;
+        meta.priority = 100;
+      }))
+    ];
     home-manager.users.${user.name} = { };
   };
 }

@@ -16,7 +16,6 @@ in {
       (final: prev: {
         clang = prev.clang.overrideAttrs
           (attrs: { meta.priority = prev.gcc.meta.priority + 1; });
-        # nix-direnv = prev.nix-direnv.override { enableFlakes = true; };
       })
       inputs.nil-server.overlays.nil
     ];
@@ -40,7 +39,7 @@ in {
           nixfmt-classic
           nodePackages.stylelint
           nodePackages.prettier
-          nodejs_20
+          nodejs_21
           openai
           python3Packages.grip
           rbenv

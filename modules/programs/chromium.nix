@@ -60,6 +60,7 @@ let
   });
 
   inherit (config) user host modules;
+  inherit (host) darwin;
   asahi = (pkgs.system == "aarch64-linux");
   cfg = config.modules.programs.chromium;
 

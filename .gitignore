@@ -16,5 +16,5 @@ flycheck_init.el
 chromium_dev_keys.sh
 **/doom.d/custom.el
 **/neovim/config/data
-
+**/nvim/data
 **/wallpapers/*
