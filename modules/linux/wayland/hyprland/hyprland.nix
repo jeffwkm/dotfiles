@@ -20,10 +20,11 @@ in {
         wlroots = optimize' prev.wlroots;
         wlroots-hyprland = optimize' prev.wlroots-hyprland;
         hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
-          wlroots = final.wlroots-hyprland;
+          wlroots-hyprland = final.wlroots-hyprland;
         });
-        hyprland = optimize'
-          (prev.hyprland.override { wlroots = final.wlroots-hyprland; });
+        hyprland = optimize' (prev.hyprland.override {
+          wlroots-hyprland = final.wlroots-hyprland;
+        });
         hyprpaper = optimize' prev.hyprpaper;
       })
     ];
