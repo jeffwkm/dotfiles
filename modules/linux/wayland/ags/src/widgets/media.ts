@@ -2,49 +2,59 @@ import Gtk from "gi://Gtk";
 import Gdk from "gi://Gdk";
 import Mpris, { MprisPlayer } from "resource:///com/github/Aylur/ags/service/mpris.js";
 import { withHover, playerToIcon } from "../utils";
+import { watch } from "resource:///com/github/Aylur/ags/utils.js";
 
 type Mpris = typeof Mpris;
 
 const selected = Variable(null as any);
 
-const getPlayerId = (mpris: Mpris, selected: MprisPlayer) => {
-  const match = mpris.players
+const allPlayers = Variable([] as MprisPlayer[]);
+
+const validPlayer = (p: MprisPlayer) =>
+  p.play_back_status !== "Stopped" && p.track_title.length > 0;
+
+watch(null, Mpris, () => {
+  allPlayers.setValue(Mpris.players.filter(validPlayer));
+});
+
+const getPlayerId = (selected: MprisPlayer) => {
+  const match = allPlayers.value
     .map((p, i) => [p, i])
     .find(([p]) => (p as MprisPlayer).identity === selected.identity);
   if (match) return match[1] as number;
 };
 
-const nextPlayerId = (mpris: Mpris, selected: MprisPlayer) => {
-  const id = getPlayerId(mpris, selected) || 0;
-  return (id + 1) % mpris.players.length;
+const nextPlayer = (selected: MprisPlayer) => {
+  const id = getPlayerId(selected) || 0;
+  const nextId = (id + 1) % allPlayers.value.length;
+  return allPlayers.value[nextId];
 };
 
 export const currentPlayer = () => {
-  if (!Mpris) return null;
-  if (!selected.value) {
-    for (const player of Mpris.players) {
-      if (player.play_back_status === "Playing") {
-        selected.setValue(player);
-      }
-    }
+  if (!Mpris || allPlayers.value.length === 0) {
+    selected.setValue(null);
+    return null;
   }
-  if (!selected.value) selected.setValue(Mpris.getPlayer(""));
+  if (selected.value) return selected.value;
+  for (const p of allPlayers.value) {
+    if (p.play_back_status === "Playing") selected.setValue(p);
+  }
+  if (!selected.value) selected.setValue(allPlayers.value[0]);
   return selected.value;
 };
 globalThis.currentPlayer = currentPlayer;
 
 export const selectNextPlayer = () => {
-  const id = getPlayerId(Mpris, selected.getValue());
-  const player = Mpris.players[nextPlayerId(Mpris, selected.getValue())];
+  const id = getPlayerId(selected.value);
+  const player = nextPlayer(selected.value);
   selected.setValue(player);
 };
 globalThis.selectNextPlayer = selectNextPlayer;
 
 const playing = () => {
-  for (const player of Mpris.players) {
-    if (player.play_back_status === "Playing") return player;
+  for (const p of allPlayers.value) {
+    if (p.play_back_status === "Playing") return p;
   }
-  return null;
 };
 
 const showArtist = (player: MprisPlayer) => {
@@ -72,11 +82,11 @@ const PlayerIcon = () =>
           self.visible = false;
         } else {
           self.label = selected ? playerToIcon(selected.value.identity) : "";
-          self.visible = selected ? true : false;
+          self.visible = !!selected;
         }
       };
-      self.hook(selected, onChange);
       self.hook(Mpris, onChange);
+      self.hook(selected, onChange);
     },
   });
 
@@ -93,8 +103,8 @@ const Status = () =>
         self.class_name = `icon icon-material status ${status?.toLowerCase()}`;
         self.visible = self.label !== "";
       };
-      self.hook(selected, onChange);
       self.hook(Mpris, onChange);
+      self.hook(selected, onChange);
     },
   });
 
@@ -103,8 +113,6 @@ const Artist = () =>
     class_name: "artist",
     maxWidthChars: 50,
     ellipsize: 3,
-    label: "",
-    visible: false,
     setup: (self) => {
       const onChange = (self) => {
         const player = currentPlayer() as MprisPlayer;
@@ -118,8 +126,8 @@ const Artist = () =>
           self.visible = false;
         }
       };
-      self.hook(selected, onChange);
       self.hook(Mpris, onChange);
+      self.hook(selected, onChange);
     },
   });
 
@@ -128,8 +136,6 @@ const Title = () =>
     class_name: "title",
     maxWidthChars: 50,
     ellipsize: 3,
-    label: "",
-    visible: false,
     setup: (self) => {
       const onChange = (self) => {
         const count = Mpris.players.length;
@@ -138,8 +144,8 @@ const Title = () =>
         self.label = `${title}`;
         self.visible = !!title;
       };
-      self.hook(selected, onChange);
       self.hook(Mpris, onChange);
+      self.hook(selected, onChange);
     },
   });
 
@@ -156,15 +162,17 @@ export const Media = () => {
     visible: Mpris.bind("players").as((ps) => ps.length > 0),
     setup: (self) => {
       hover.setup(self);
-      self.hook(Mpris, (self) => {
+      const doUpdate = (self) => {
         const player = currentPlayer();
-        const active = playing() || player;
-        if (!active) {
+        if (!player) {
           if (initialized) self.child = Widget.Box({ visible: false });
           initialized = false;
           return;
         }
-        if (active !== selected.value) selected.setValue(active);
+        if (player.play_back_status !== "Playing") {
+          const firstPlaying = playing();
+          if (firstPlaying) selected.setValue(firstPlaying);
+        }
         if (!initialized) {
           self.child = Widget.Box({
             class_name: "media",
@@ -172,7 +180,9 @@ export const Media = () => {
           });
           initialized = true;
         }
-      });
+      };
+      self.hook(Mpris, doUpdate);
+      self.hook(allPlayers, doUpdate);
     },
   });
 };

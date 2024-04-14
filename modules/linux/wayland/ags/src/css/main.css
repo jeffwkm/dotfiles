@@ -220,7 +220,6 @@ menu {
   }
 }
 
-
 .battery {
   @apply --status-entry;
 }
@@ -267,9 +266,6 @@ menu {
       font-size: 15px;
     }
     .icon.status {
-      &.paused {
-        color: #c8c8c8;
-      }
     }
   }
   &:hover {

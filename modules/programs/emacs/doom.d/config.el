@@ -26,6 +26,7 @@
 ;; (toggle-debug-on-error)
 (setq! debug-on-message ".*Selecting deleted buffer.*")
 (setq! backtrace-on-redisplay-error t)
+;; (setq backtrace-on-redisplay-error nil)
 
 (after! copilot
   (pushnew! copilot-disable-predicates '--byte-compiling-p)
@@ -508,7 +509,7 @@
          corfu-right-margin-width 1.0
          corfu-preview-current t
          corfu-preselect 'directory
-         corfu-auto-delay 0.18
+         corfu-auto-delay 0.1
          corfu-auto-prefix 2)
   (setq! corfu-popupinfo-delay '(0.75 . 0.25)
          corfu-popupinfo-resize nil
@@ -556,7 +557,7 @@
   :commands copilot-mode
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
-  (setq! copilot-idle-delay 0.05
+  (setq! copilot-idle-delay 0.025
          copilot-max-char 100000
          copilot-indent-offset-warning-disable t)
   (pushnew! copilot-clear-overlay-ignore-commands

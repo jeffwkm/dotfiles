@@ -13,11 +13,11 @@ export const pomodoroResult = Variable("", {
 
 const stateToIcon = (state: string) => {
   if (state === "pomodoro") {
-    return "radio_button_checked";
+    return "hourglass_top";
   } else if (state === "short-break") {
-    return "sync";
-  } else if (state === "none") {
     return "refresh";
+  } else if (state === "none") {
+    return "schedule";
   } else {
     return "";
   }
@@ -29,7 +29,7 @@ const stateToColor = (state: string) => {
   } else if (state === "short-break") {
     return "";
   } else if (state === "none") {
-    return "";
+    return "waiting";
   } else {
     return "";
   }
@@ -45,10 +45,15 @@ export const Pomodoro = () => {
     class_name: "tasks",
     visible: false,
     children: [
-      MaterialIcon(stateIcon.bind(), "state", {
+      Widget.Label({
+        class_name: "icon icon-material state",
+        icon: stateIcon.bind(),
         visible: stateIcon.bind().as((s) => s.length > 0),
         setup: (self) => {
-          self.hook(stateIcon, (self) => {});
+          self.hook(state, (self) => {
+            const color = stateToColor(state.value);
+            self.class_name = `icon icon-material state ${color}`;
+          });
         },
       }),
       Widget.Label({
