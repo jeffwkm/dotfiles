@@ -1,5 +1,14 @@
-{ config, options, pkgs, lib, modulesPath, ... }: {
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+{ config, options, pkgs, lib, inputs, modulesPath, ... }:
+with lib;
+with lib.my; {
+  imports = ([ (modulesPath + "/installer/scan/not-detected.nix") ]
+    ++ (with inputs.chaotic.nixosModules; [
+      nyx-cache
+      nyx-overlay
+      mesa-git
+      scx
+      # zfs-impermanence-on-shutdown
+    ]));
 
   config = {
     host.optimize = true;
@@ -34,6 +43,11 @@
       programs.vscode.enable = true;
     };
 
+    # nix.settings.system-features = [ "gccarch-znver3" ];
+
+    nixpkgs.overlays =
+      [ (final: prev: { alacritty = optimize config prev.alacritty_git; }) ];
+
     services.nginx = {
       enable = true;
       recommendedOptimisation = true;
@@ -61,6 +75,9 @@
       vdpauinfo
       libva-utils
       vulkan-tools
+      firefox_nightly
+      input-leap_git
+      waynergy_git
     ];
 
     # create machine definitions in /etc/machines
@@ -114,7 +131,6 @@
     # disabled because conflicts with persistent-evdev
     systemd.services.keyd = {
       enable = false;
-      # after = [ "systemd-udevd.service" "persistent-evdev.service" ];
       after = [ "systemd-udevd.service" ];
       requires = [ "systemd-udevd.service" ];
       wantedBy = [ "default.target" ];
@@ -148,6 +164,10 @@
     };
 
     # boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    chaotic.scx.enable = true;
+    systemd.services.scx.serviceConfig.SyslogLevel = "debug";
+    systemd.services.scx.serviceConfig.LogLevelMax = "info";
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
@@ -174,11 +194,41 @@
       "kvm.ignore_msrs=1"
       "kvm.report_ignored_msrs=0"
       "kvm_amd.nested=0"
-      "mitigations=off"
     ];
 
     hardware.cpu.amd.updateMicrocode = true;
     hardware.enableAllFirmware = true;
+
+    # chaotic.nyx.overlay.onTopOf = "flake-nixpkgs"; # default
+    # chaotic.nyx.overlay.onTopOf = "user-pkgs";
+
+    # chaotic.hdr.enable = true;
+    # chaotic.hdr.kernelPackages = pkgs.linuxPackages_cachyos;
+    # chaotic.hdr.kernelPackages = pkgs.linuxKernel.packages.linux_hdr
+
+    chaotic.mesa-git = {
+      enable = true;
+      #method = "GBM_BACKENDS_PATH"; # default
+      #method = "replaceRuntimeDependencies";
+      extraPackages = with pkgs; [
+        vaapiVdpau
+        libvdpau-va-gl
+        libva
+        amdvlk
+        rocm-opencl-icd
+        rocm-opencl-runtime
+        libvdpau
+      ];
+      extraPackages32 = with pkgs.pkgsi686Linux; [
+        vaapiVdpau
+        libvdpau-va-gl
+        libva
+        amdvlk
+        vdpauinfo
+        libva-utils
+      ];
+    };
+
     hardware.opengl = {
       enable = true;
       driSupport = true;
@@ -191,8 +241,6 @@
         rocm-opencl-icd
         rocm-opencl-runtime
         libvdpau
-        vdpauinfo
-        libva-utils
       ];
       extraPackages32 = with pkgs.pkgsi686Linux; [
         vaapiVdpau

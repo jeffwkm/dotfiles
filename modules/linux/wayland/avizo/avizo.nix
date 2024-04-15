@@ -17,8 +17,8 @@ in {
     environment.systemPackages = with pkgs; [ avizo brightnessctl ddcutil ];
 
     # need "ddcci" kernel module for brightnessctl
-    boot.extraModulePackages = with config.boot.kernelPackages;
-      [ ddcci-driver ];
+    # boot.extraModulePackages = with config.boot.kernelPackages;
+    #   [ ddcci-driver ];
 
     boot.kernelModules = [ "i2c-dev" ];
 

@@ -10,5 +10,5 @@ bun install --no-summary
 fd . -e .ts src/ | entr -nrs "
   bun install --no-summary
   bunx vite build --logLevel warn 2>&1 | grep -v 'No name was provided for external module'
-  ags $*
+  ags $* 2>&1 | grep -v 'CSS ERROR:' --line-buffered | sed '/^$/N;/\n$/D'
 "

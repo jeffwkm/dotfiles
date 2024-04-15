@@ -112,6 +112,7 @@ in {
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
       gamescopeSession.enable = true;
+      # gamescopeSession.package = pkgs.gamescope_git;
     };
 
     environment.sessionVariables.GST_PLUGIN_SYSTEM_PATH_1_0 =

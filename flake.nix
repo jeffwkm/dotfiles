@@ -13,6 +13,7 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     ## Nix helpers
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;

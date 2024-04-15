@@ -52,6 +52,7 @@ in {
           mods
           ncdu
           neofetch
+          nix-top
           nushell
           nethack
           pass

@@ -42,13 +42,13 @@ in {
           };
           Service = let
             mbsync-loop = pkgs.writeShellScript "mbsync-loop" ''
-              while true ; do mbsync -a ; sleep 30 ; done
+              while true ; do mbsync -a ; sleep 900 ; done
             '';
           in {
             Type = "simple";
             ExecStart = "${mbsync-loop}";
             Restart = "always";
-            RestartSec = 300;
+            RestartSec = 1800;
           };
           Install = { WantedBy = [ "graphical-session.target" ]; };
         };

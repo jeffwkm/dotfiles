@@ -786,7 +786,9 @@
   (add-hook! org-mode 'org-fancy-priorities-mode))
 
 (after! org-roam
-  nil)
+  (setq! org-roam-completion-everywhere t
+         ;; +org-roam-auto-backlinks-buffer t
+         ))
 
 (use-package! org-pomodoro
   :commands org-pomodoro --org-pomodoro-status-json)
