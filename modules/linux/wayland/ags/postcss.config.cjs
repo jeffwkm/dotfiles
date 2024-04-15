@@ -1,18 +1,27 @@
 module.exports = {
   plugins: {
     "postcss-import": {},
-    "postcss-color-alpha": {},
-    "postcss-color-functional-notation": {},
-    "@csstools/postcss-color-mix-function": {},
-    "@csstools/postcss-relative-color-syntax": {},
-    "postcss-custom-properties": {
-      preserve: false,
-    },
-    "postcss-nested": {},
+    "postcss-color-alpha": {}, // for white() black()
     "postcss-apply": {},
-    "@csstools/postcss-hwb-function": {},
+    "postcss-nested": {},
+    "postcss-preset-env": {
+      stage: false,
+      features: {
+        "color-function": true,
+        "color-functional-notation": true,
+        "color-mix": true,
+        "custom-properties": { preserve: false },
+        "oklab-function": {
+          preserve: false,
+          subFeatures: {
+            displayP3: false,
+          },
+        },
+        "relative-color-syntax": true,
+      },
+    },
     "postcss-discard": {
-      rule: ":root",
+      rule: [":root"],
     },
   },
 };

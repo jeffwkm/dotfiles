@@ -23,8 +23,8 @@ const cpuTemp = Variable(0, {
   ],
 });
 
-export const Clock = () => {
-  return Widget.Box({
+export const Clock = () =>
+  Widget.Box({
     class_name: "datetime",
     children: [
       Widget.Label({
@@ -37,7 +37,6 @@ export const Clock = () => {
       }),
     ],
   });
-};
 
 export const CpuTemp = () => {
   const levels = {
@@ -160,14 +159,21 @@ export const BatteryLabel = () => {
 export const SysTray = () =>
   Widget.Box({
     class_name: "systray",
-    children: SystemTray.bind("items").as((items) =>
-      items.map((item) =>
-        Widget.Button({
-          child: Widget.Icon({ class_name: "icon", icon: item.bind("icon") }),
-          on_primary_click: (_, event) => item.activate(event),
-          on_secondary_click: (_, event) => item.openMenu(event),
-          tooltipMarkup: item.bind("tooltip_markup"),
-        }),
-      ),
-    ),
+    visible: false,
+    setup: (self) => {
+      self.hook(SystemTray, (self) => {
+        self.visible = SystemTray.items.length > 0;
+        if (!self.visible) {
+          self.children = null;
+        } else {
+          self.children = SystemTray.items.map((item) =>
+            Widget.Button({
+              child: Widget.Icon({ class_name: "icon", icon: item.icon }),
+              on_primary_click: (_, event) => item.activate(event),
+              on_secondary_click: (_, event) => item.openMenu(event),
+            }),
+          );
+        }
+      });
+    },
   });

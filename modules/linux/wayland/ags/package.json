@@ -1,31 +1,25 @@
 {
   "name": "ags-config",
   "version": "1.0.0",
-  "description": "statusbar config",
-  "type": "module",
-  "main": "config.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "",
-  "license": "ISC",
+  "main": "config.js",
   "dependencies": {
-    "@csstools/postcss-color-mix-function": "^2.0.13",
-    "@csstools/postcss-hwb-function": "^3.0.12",
-    "@csstools/postcss-relative-color-syntax": "^2.0.13",
     "postcss": "^8.4.38",
     "postcss-apply": "^0.12.0",
     "postcss-cli": "^11.0.0",
     "postcss-color-alpha": "^2.0.0",
-    "postcss-color-functional-notation": "^6.0.8",
     "postcss-custom-properties": "^13.3.7",
     "postcss-discard": "^2.0.0",
     "postcss-import": "^16.1.0",
+    "postcss-preset-env": "^9.5.5",
     "tslib": "^2.6.2",
     "typescript": "^5.4.3",
     "vite": "^5.2.7"
   },
-  "devDependencies": {
-    "esbuild": "^0.20.2"
-  }
+  "description": "statusbar config",
+  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module"
 }

@@ -1,5 +1,3 @@
-import { MaterialIcon } from "./icon";
-
 export interface PomodoroResult {
   state: string;
   timer: string;
@@ -13,9 +11,11 @@ export const pomodoroResult = Variable("", {
 
 const stateToIcon = (state: string) => {
   if (state === "pomodoro") {
-    return "hourglass_top";
+    return "hourglass_empty";
   } else if (state === "short-break") {
     return "refresh";
+  } else if (state === "long-break") {
+    return "check_circle";
   } else if (state === "none") {
     return "schedule";
   } else {
@@ -23,11 +23,13 @@ const stateToIcon = (state: string) => {
   }
 };
 
-const stateToColor = (state: string) => {
+const stateToClass = (state: string) => {
   if (state === "pomodoro") {
     return "active";
   } else if (state === "short-break") {
-    return "";
+    return "short-break";
+  } else if (state === "long-break") {
+    return "long-break";
   } else if (state === "none") {
     return "waiting";
   } else {
@@ -40,26 +42,26 @@ export const Pomodoro = () => {
   const timer = Variable("?");
   const task = Variable("");
   const stateIcon = Variable("");
+  const stateClass = Variable("");
 
   return Widget.Box({
-    class_name: "tasks",
+    class_name: stateClass.bind().as((c) => `tasks ${c}`),
     visible: false,
     children: [
-      Widget.Label({
-        class_name: "icon icon-material state",
-        icon: stateIcon.bind(),
-        visible: stateIcon.bind().as((s) => s.length > 0),
-        setup: (self) => {
-          self.hook(state, (self) => {
-            const color = stateToColor(state.value);
-            self.class_name = `icon icon-material state ${color}`;
-          });
-        },
-      }),
-      Widget.Label({
-        class_name: "timer",
-        label: timer.bind(),
-        visible: state.bind().as((s) => s.length > 0 && s !== "none"),
+      Widget.Box({
+        class_name: "state-with-timer",
+        children: [
+          Widget.Label({
+            class_name: "icon icon-material state",
+            label: stateIcon.bind(),
+            visible: stateIcon.bind().as((s) => s.length > 0),
+          }),
+          Widget.Label({
+            class_name: "timer",
+            label: timer.bind(),
+            visible: state.bind().as((s) => s.length > 0 && s !== "none"),
+          }),
+        ],
       }),
       Widget.Label({
         class_name: "task",
@@ -76,6 +78,7 @@ export const Pomodoro = () => {
           task.value = result.heading;
           state.value = result.state;
           stateIcon.value = stateToIcon(result.state);
+          stateClass.value = stateToClass(result.state);
           self.visible = true;
         } else {
           console.warn("Invalid Pomodoro result:", json);

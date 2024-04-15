@@ -1,39 +1,68 @@
 :root {
-  --white-rgb: rgb(255, 255, 255);
   --white: 255 255 255;
-  --text-rgb: rgb(255, 255, 255);
   --text: 255 255 255;
-  --primary-rgb: rgb(40, 70, 255);
-  --primary: 40 70 255;
-  --active-rgb: rgb(110, 255, 70);
+  --primary: 50 110 255;
   --active: 130 255 70;
-  --success-rgb: rgb(40, 255, 40);
   --success: 40 255 40;
-  --warning-rgb: rgb(255, 190, 60);
-  --warning: 255 190 60;
-  --error-rgb: rgb(255, 90, 90);
+  --warning: 255 190 40;
   --error: 255 90 90;
+  --special: 120 45 255;
 
-  --dark-rgb: rgb(20, 20, 20);
   --dark: 50 50 50;
+  --primary-dark: 16 36 84;
+  --active-dark: 36 84 23;
+  --success-dark: 13 84 13;
+  --warning-dark: 84 62 13;
+  --error-dark: 84 29 29;
+  --special-dark: 39 14 84;
 
-  --status-entry-border-color: black(0.9);
+  --h-blue: 264;
+
+  --h-primary: 254;
+
+  --color-primary-01: oklch(64% 0.192 var(--h-primary));
+  --color-primary-02: oklch(70% 0.15 var(--h-primary));
+  --color-primary-03: oklch(69% 0.16 var(--h-primary));
+
+  --color-primary: var(--color-primary-03);
+  --border-opacity: 0.9;
+  --internal-border-opacity: 0.6;
+
+  --color-bar-background-01: oklch(44% 0.0195 var(--h-primary) / 0.65);
+  --color-bar-background-02: oklch(42.8% 0.0165 var(--h-blue) / 0.65);
+
+  --color-bar-background: var(--color-bar-background-02);
+
+  --status-entry-border-color: oklch(from var(--color-primary) l c h / var(--border-opacity));
   --status-entry-border: 1px solid var(--status-entry-border-color);
-  --status-entry-internal-border-color: black(0.55);
+  --status-entry-internal-border-color: var(--status-entry-border-color);
+  --status-entry-internal-border-color: oklch(
+    from var(--status-entry-border-color) calc(l - 0.06) calc(c * 0.5) h /
+      var(--internal-border-opacity)
+  );
   --status-entry-internal-border: 1px solid var(--status-entry-internal-border-color);
   --status-entry-background: rgb(var(--dark) / 0.8);
-  --status-entry-padding: 0 4px;
+  --status-entry-padding: 1px 5px;
 
   --status-entry {
     border-radius: 9999px;
     border: var(--status-entry-border);
     background: var(--status-entry-background);
-    padding: 1px 0;
+    padding: 0 0px;
     > * {
       padding: var(--status-entry-padding);
+      border-radius: 0;
     }
     > *:not(:last-child) {
       border-right: var(--status-entry-internal-border);
+    }
+    > *:first-child {
+      border-top-left-radius: 9999px;
+      border-bottom-left-radius: 9999px;
+    }
+    > *:last-child {
+      border-top-right-radius: 9999px;
+      border-bottom-right-radius: 9999px;
     }
   }
 
@@ -55,6 +84,7 @@
 
 .icon-material {
   font-family: "Material Symbols Sharp", "Material Symbols Rounded", "Material Symbols Outlined";
+  font-family: "Material Symbols Outlined", "Material Symbols Sharp", "Material Symbols Rounded";
   font-size: 18px;
   margin: -1px;
   font-weight: 700;
@@ -63,7 +93,7 @@
 .bar {
   @apply --sans;
   background: transparent;
-  color: white(0.8);
+  color: white(0.825);
   font-size: 12px;
   font-weight: 600;
   .bar-left {
@@ -92,10 +122,7 @@
 .outer {
   padding: 4px;
   border-bottom: 2px solid rgba(127, 128, 129, 0.51);
-  /* background: rgba(86, 86, 86, 0.65); */
-  background: hwb(200 42% 55% / 0.6);
-  &:not(.active) {
-  }
+  background: var(--color-bar-background);
 }
 
 button {
@@ -121,7 +148,6 @@ button {
 }
 
 .workspaces {
-  /* margin: 1px 0; */
   > * {
     margin-right: 6px;
   }
@@ -139,9 +165,10 @@ button {
     padding: 0 2px;
     min-width: 2.2em;
     background: transparent;
+
     border: var(--status-entry-border);
-    border-left: var(--status-entry-internal-border);
-    border-right: var(--status-entry-internal-border);
+    border-left: 0;
+    border-right: var(--status-entry-border);
     &.first {
       border-left: var(--status-entry-border);
       border-top-left-radius: 9999px;
@@ -150,7 +177,6 @@ button {
       padding-left: 3px;
     }
     &.last {
-      border-right: var(--status-entry-border);
       border-top-right-radius: 9999px;
       border-bottom-right-radius: 9999px;
       padding: 0;
@@ -158,9 +184,9 @@ button {
     }
     &.focused {
       border-color: transparent;
-      background: rgb(var(--primary) / 0.5);
+      background: oklch(from var(--color-primary) l c h / 0.35);
       .outer.active & {
-        background: rgb(var(--primary) / 0.85);
+        background: oklch(from var(--color-primary) l c h / 0.6);
       }
     }
   }
@@ -189,8 +215,7 @@ button {
 }
 
 .systray {
-  @apply --status-entry;
-  background: transparent;
+  margin: 0;
   button {
     border-radius: 9999px;
     padding: 2px 6px;
@@ -273,10 +298,66 @@ menu {
   }
 }
 
+.bar-center {
+}
+
 .tasks {
   @apply --status-entry;
+  border-width: 1px;
+  border-color: black(0.22);
+  padding: 0px 2px;
+  color: white(0.9);
+  > * {
+    padding: 0px 5px;
+  }
+  > *:not(:last-child) {
+    border-right-width: 2px;
+  }
+  &.active {
+    border-color: rgb(var(--active) / 0.55);
+    > *:not(:last-child) {
+      border-right-color: rgb(var(--active) / 0.55);
+    }
+  }
+  &.short-break {
+    border-color: rgb(var(--primary) / 0.9);
+    > *:not(:last-child) {
+      border-right-color: rgb(var(--primary) / 0.9);
+    }
+  }
+  &.long-break {
+    background-color: rgb(var(--special) / 1);
+    border-color: rgb(var(--special) / 1);
+    > *:not(:last-child) {
+      border-right-color: rgb(var(--special) / 1);
+    }
+  }
+  &.waiting {
+    > * {
+      background-color: rgb(var(--warning-dark) / 0.8);
+    }
+    border-color: rgb(var(--warning) / 0.6);
+    > *:not(:last-child) {
+      border-right-color: rgb(var(--warning) / 0.6);
+    }
+  }
+  box {
+    label.state {
+      padding-right: 1px;
+      margin-left: -3px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+  label.timer {
+    @apply --mono;
+  }
+  label.state {
+    font-size: 16px;
+    font-weight: 700;
+  }
   label.task {
-    font-size: 13px;
-    padding-right: 7px;
+    font-size: 12px;
+    font-weight: 600;
   }
 }

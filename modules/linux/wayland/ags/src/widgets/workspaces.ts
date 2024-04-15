@@ -37,8 +37,7 @@ const workspacesGroup = (monitorId: number, groupId: number) => {
         const ws = allWss
           .filter((w) => w.monitorID === monitorId)
           .filter((w) => toGroupId(w.id) === groupId)
-          .sort((a, b) => a.id - b.id)
-          .sort((a, b) => a.monitorID - b.monitorID);
+          .sort((a, b) => a.id - b.id);
         const first = ws[0];
         const last = ws[ws.length - 1];
         const groupSyms = ["", "+", "*"];
@@ -55,6 +54,7 @@ const workspacesGroup = (monitorId: number, groupId: number) => {
   });
 };
 
+// TODO: don't create workspacesGroup if there are no workspaces
 export const Workspaces = (monitorId: number) =>
   Widget.Box({
     class_name: "workspaces",

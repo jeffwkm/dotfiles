@@ -159,13 +159,13 @@ export const Media = () => {
     onSecondaryClick: selectNextPlayer,
     on_scroll_up: () => currentPlayer()?.next(),
     on_scroll_down: () => currentPlayer()?.previous(),
-    visible: Mpris.bind("players").as((ps) => ps.length > 0),
     setup: (self) => {
       hover.setup(self);
       const doUpdate = (self) => {
         const player = currentPlayer();
         if (!player) {
           if (initialized) self.child = Widget.Box({ visible: false });
+          self.visible = false;
           initialized = false;
           return;
         }
@@ -178,6 +178,7 @@ export const Media = () => {
             class_name: "media",
             children: [Status(), Artist(), Title(), PlayerIcon()],
           });
+          self.visible = true;
           initialized = true;
         }
       };
