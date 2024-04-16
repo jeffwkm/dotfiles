@@ -18,6 +18,7 @@
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
     flake-utils.url = "github:numtide/flake-utils";
+    flake-parts.url = "github:hercules-ci/flake-parts";
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
     agenix.inputs.darwin.follows = "darwin";
@@ -25,11 +26,13 @@
     ## Additional sources
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    emacs-overlay.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     emacs-overlay.inputs.flake-utils.follows = "flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
     rippkgs.url = "github:jeffwk/rippkgs";
     rippkgs.inputs.nixpkgs.follows = "nixpkgs";
+    rippkgs.inputs.flake-parts.follows = "flake-parts";
     ags.url = "github:Aylur/ags";
     ags.inputs.nixpkgs.follows = "nixpkgs";
     rust-overlay.url = "github:oxalica/rust-overlay";
@@ -44,6 +47,7 @@
     vscode-server.inputs.flake-utils.follows = "flake-utils";
     spicetify-nix.url = "github:the-argus/spicetify-nix";
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
+    spicetify-nix.inputs.flake-utils.follows = "flake-utils";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -52,69 +56,28 @@
       lib = nixpkgs.lib.extend (final: prev: {
         my = import ./lib {
           inherit inputs;
+          ## make nixpkgs.lib available and
+          ## allow for references between files in ./lib/*.nix
+          ## (as long as they don't create an infinite recursion)
           lib = final;
         };
       });
 
-      nixpkgsConfig = {
-        config = {
-          allowUnfree = true;
-          # allowBroken = true;
-        };
-        overlays = lib.attrValues self.overlays;
-      };
+      nixpkgsConfig = { allowUnfree = true; };
 
-      pkgsForSystem = system:
-        import nixpkgs {
-          inherit system;
-          inherit (nixpkgsConfig) config overlays;
-        };
+      overlays = import ./overlays.nix { inherit inputs nixpkgsConfig; };
 
+      mapHosts' = dir: system:
+        lib.my.mapHosts dir {
+          inherit system nixpkgsConfig;
+          overlays = lib.attrValues overlays;
+        };
     in {
       inherit inputs lib;
 
-      overlays = {
-        fastStdenv = final: prev: {
-          final.stdenv = prev.fastStdenv.mkDerivation { name = "env"; };
-        };
-        pkgs-stable = final: prev: {
-          pkgs-stable = import inputs.nixpkgs-stable {
-            inherit (prev.stdenv) system;
-            inherit (nixpkgsConfig) config;
-          };
-        };
-        pkgs-2305 = final: prev: {
-          pkgs-2305 = import inputs.nixpkgs-2305 {
-            inherit (prev.stdenv) system;
-            inherit (nixpkgsConfig) config;
-          };
-        };
-        pkgs-x86 = final: prev:
-          lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-            pkgs-x86 = import nixpkgs {
-              system = "x86_64-darwin";
-              inherit (nixpkgsConfig) config;
-            };
-          };
-      };
+      nixosConfigurations = (mapHosts' ./hosts/nixos "x86_64-linux")
+        // (mapHosts' ./hosts/apple "aarch64-linux");
 
-      nixosConfigurations = (lib.my.mapHosts ./hosts/nixos rec {
-        inherit nixpkgsConfig;
-        system = "x86_64-linux";
-        nixpkgs = pkgsForSystem system;
-        darwin = false;
-      }) // (lib.my.mapHosts ./hosts/apple rec {
-        inherit nixpkgsConfig;
-        system = "aarch64-linux";
-        nixpkgs = pkgsForSystem system;
-        darwin = false;
-      });
-
-      darwinConfigurations = lib.my.mapHosts ./hosts/darwin rec {
-        inherit nixpkgsConfig;
-        system = "aarch64-darwin";
-        nixpkgs = pkgsForSystem system;
-        darwin = true;
-      };
+      darwinConfigurations = mapHosts' ./hosts/darwin "aarch64-darwin";
     };
 }

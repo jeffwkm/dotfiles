@@ -6,66 +6,70 @@ let
   inherit (inputs) home-manager nixpkgs;
   inherit (nixpkgs.lib) nixosSystem;
   inherit (inputs.darwin.lib) darwinSystem;
-  # inherit (inputs.home-manager.lib) homeManagerConfiguration;
-  homeManagerStateVersion = "22.11";
-in rec {
-  systemHomeManagerModules =
-    ({ extraModules ? [ ], darwin, system, nixpkgs, nixpkgsConfig }: {
-      home-manager = (if darwin then
-        home-manager.darwinModules.home-manager
-      else
-        home-manager.nixosModules.home-manager);
-      hm-config = ({ config, ... }: {
-        nix.nixPath = mkIf (darwin) {
-          "darwin-config" = "${config.host.config-dir}";
-          # "darwin-config" = "${configDir}";
-          nixpkgs = "${inputs.nixpkgs}";
-        };
-        users.users.${config.user.name}.home = "${config.user.home}";
 
-        home-manager = {
-          useGlobalPkgs = true;
-          useUserPackages = true;
-          users.${config.user.name} = {
-            options =
-              (import ../hosts/options.nix { inherit lib config; }).options;
-            imports = importModules [ ../nix-config.nix ];
-            config = { home.stateVersion = homeManagerStateVersion; };
+  systemHomeManagerModules = darwin: [
+    (if darwin then
+      home-manager.darwinModules.home-manager
+    else
+      home-manager.nixosModules.home-manager)
+    ({ config, ... }: {
+      nix.nixPath = mkIf (darwin) {
+        "darwin-config" = "${config.host.config-dir}";
+        nixpkgs = "${inputs.nixpkgs}";
+      };
+      users.users.${config.user.name}.home = "${config.user.home}";
+
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        users.${config.user.name} = {
+          options =
+            (import ../hosts/options.nix { inherit lib config; }).options;
+          imports = importModules [ ../nix-config.nix ];
+          config = {
+            home.stateVersion = "22.11"; # TODO: set this individually per host
           };
         };
-      });
-    });
+      };
+    })
+  ];
 
-  mkHost = { system, nixpkgs, nixpkgsConfig, darwin }:
+  ## TODO: move vscode.nix into linux/
+  platformSpecificModules = darwin:
+    if darwin then [ ] else [ inputs.vscode-server.nixosModule ];
+in rec {
+  mkHost = { system, nixpkgsConfig, overlays }:
     path:
     let
+      darwin = lib.strings.hasSuffix "darwin" system;
+      hostname = (removeSuffix ".nix" (baseNameOf path));
       mkSystem = if darwin then darwinSystem else nixosSystem;
       ignore = if darwin then ignoreLinux else ignoreDarwin;
-      hostname = (removeSuffix ".nix" (baseNameOf path));
     in mkSystem {
       inherit system;
       specialArgs = { inherit lib inputs system; };
-      # pkgs = nixpkgs;
       modules = [
         ({ lib, config, ... }: {
           options =
             (import ../hosts/options.nix { inherit lib config; }).options;
-          config.host.darwin = darwin;
-          config.host.name = hostname;
+          config = {
+            host.darwin = darwin;
+            host.name = hostname;
+            networking.hostName = mkDefault hostname;
+          };
         })
-        { config = { networking.hostName = mkDefault hostname; }; }
-        { nixpkgs = nixpkgsConfig; }
-      ] ++ [ path ../nix-config.nix ] ++ (lib.attrValues
-        (systemHomeManagerModules {
-          inherit system nixpkgs nixpkgsConfig darwin;
-        })) ++ optionals (!darwin) [ inputs.vscode-server.nixosModule ]
+        {
+          nixpkgs = {
+            config = nixpkgsConfig;
+            overlays = overlays;
+          };
+        }
+      ] ++ [ path ../nix-config.nix ] ++ (systemHomeManagerModules darwin)
+        ++ (platformSpecificModules darwin)
         ++ (mapModulesRec' (toString ../modules) importModule ignore);
     };
 
   mapHosts = dir:
-    attrs@{ system, nixpkgs, nixpkgsConfig, darwin }:
+    attrs@{ system, nixpkgsConfig, overlays }:
     mapModules dir (hostPath: mkHost attrs hostPath);
-
-  mapHostsNixOS = mapHosts ../hosts/nixos;
-  mapHostsDarwin = mapHosts ../hosts/darwin;
 }

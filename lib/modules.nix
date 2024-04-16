@@ -16,7 +16,9 @@ in rec {
       && hasSuffix ".nix" n then
         nameValuePair (removeSuffix ".nix" n) (fn path)
       else
-        nameValuePair "" null) (readDir dir);
+        nameValuePair "" null)
+    ## list of files in dir
+    (readDir dir);
 
   mapModules' = dir: fn: attrValues (mapModules dir fn);
 

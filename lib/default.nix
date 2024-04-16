@@ -3,6 +3,7 @@ let
   inherit (lib) makeExtensible attrValues foldr;
   inherit (modules) mapModules;
 
+  # bootstrap modules.nix for loading the rest of the modules
   modules = import ./modules.nix {
     inherit lib;
     self.attrs = import ./attrs.nix {
