@@ -40,7 +40,8 @@ const workspacesGroup = (monitorId: number, groupId: number) => {
           .sort((a, b) => a.id - b.id);
         const first = ws[0];
         const last = ws[ws.length - 1];
-        const groupSyms = ["", "+", "*"];
+        // const groupSyms = ["", "+", "*"];
+        const groupSyms = ["", "", ""];
         self.visible = ws.length > 0;
         self.children = ws.map(({ id }) =>
           Widget.Button({

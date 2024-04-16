@@ -13,7 +13,8 @@ const allPlayers = Variable([] as MprisPlayer[]);
 const validPlayer = (p: MprisPlayer) =>
   p.play_back_status !== "Stopped" && p.track_title.length > 0;
 
-watch(null, Mpris, () => {
+// TODO: this seems to cause errors (when no mpris players)
+const _allPlayers = watch(null, Mpris, () => {
   allPlayers.setValue(Mpris.players.filter(validPlayer));
 });
 

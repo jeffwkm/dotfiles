@@ -18,15 +18,15 @@
 
 (setq! split-window-preferred-function 'split-window-prefer-horizontal)
 
-(setq! debug-on-error t)
+;; (setq! debug-on-error t)
 (pushnew! debug-ignored-errors
           'scan-sexps
           ".*debug-on-message.*"
           "\.\*Selecting deleted buffer\.\*")
 ;; (toggle-debug-on-error)
-(setq! debug-on-message ".*Selecting deleted buffer.*")
-(setq! backtrace-on-redisplay-error t)
-;; (setq backtrace-on-redisplay-error nil)
+;; (setq! debug-on-message ".*Selecting deleted buffer.*")
+;; (setq! backtrace-on-redisplay-error t)
+;; (setq! backtrace-on-redisplay-error nil)
 
 (after! copilot
   (pushnew! copilot-disable-predicates '--byte-compiling-p)
@@ -728,6 +728,9 @@
   :config
   (setq! whitespace-line-column nil)
   (setq! whitespace-style '(face tabs empty trailing indentation space-after-tab space-before-tab)))
+
+(after! python-mode
+  (setq-default python-indent-offset 4))
 
 (use-package! systemd
   :mode (("\\.service\\'" . systemd-mode)
