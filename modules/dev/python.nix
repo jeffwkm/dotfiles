@@ -29,16 +29,11 @@ in {
       [ vapoursynth ]);
     python3' = pkgs.python3.withPackages python3-packages;
   in {
-    environment.systemPackages = [
-      (python3'.overrideAttrs (attrs: {
-        # make sure this package overrides others
-        # meta.priority = pkgs.python3.meta.priority + 1;
-        meta.priority = 100;
-      }))
-    ];
+    environment.systemPackages =
+      if cfg.enable then [ python3' ] else pkgs.python3;
 
-    home-manager.users.${user.name} = { config, pkgs, ... }: {
+    home-manager.users.${user.name} = mkIf cfg.enable ({ config, pkgs, ... }: {
       home.packages = with pkgs; [ pipenv poetry virtualenv black ];
-    };
+    });
   });
 }

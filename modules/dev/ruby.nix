@@ -24,14 +24,9 @@ let
 in {
   options.modules.dev.ruby.enable = mkBoolOpt dev.enable-all;
 
-  config = mkIf cfg.enable {
-    environment.systemPackages = [
-      (rubyCustom.overrideAttrs (attrs: {
-        # make sure this package overrides others
-        # meta.priority = pkgs.ruby.meta.priority + 1;
-        meta.priority = 100;
-      }))
-    ];
+  config = {
+    environment.systemPackages =
+      if cfg.enable then [ rubyCustom ] else [ pkgs.ruby ];
     home-manager.users.${user.name} = { };
   };
 }

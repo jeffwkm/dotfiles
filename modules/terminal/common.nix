@@ -1,15 +1,10 @@
 { config, lib, pkgs, inputs, ... }:
 with lib;
 with lib.my;
-let inherit (config) user host;
+let inherit (config) user host modules;
 in {
   config = {
-    environment.systemPackages = with pkgs; [
-      cachix
-      home-manager
-      ruby
-      python3
-    ];
+    environment.systemPackages = with pkgs; [ cachix home-manager ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.file."bin/".source =
