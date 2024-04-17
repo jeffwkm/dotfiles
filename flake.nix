@@ -65,7 +65,7 @@
 
       nixpkgsConfig = { allowUnfree = true; };
 
-      overlays = import ./overlays.nix { inherit inputs nixpkgsConfig; };
+      overlays = import ./pkgsets.nix { inherit inputs nixpkgsConfig; };
 
       mapHosts' = dir: system:
         lib.my.mapHosts dir {
@@ -73,7 +73,7 @@
           overlays = lib.attrValues overlays;
         };
     in {
-      inherit inputs lib overlays;
+      inherit inputs lib;
 
       nixosConfigurations = (mapHosts' ./hosts/nixos "x86_64-linux")
         // (mapHosts' ./hosts/apple "aarch64-linux");
