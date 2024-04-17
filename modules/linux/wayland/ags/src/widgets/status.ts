@@ -121,41 +121,6 @@ export const BatteryLabel = () => {
   });
 };
 
-// export const BatteryLabel = () => {
-//   const icons = {
-//     98: "full",
-//     50: "good",
-//     20: "low",
-//     1: "caution",
-//     0: "empty",
-//   };
-
-//   const getIcon = () => {
-//     if (!Battery.available) {
-//       return "battery-missing";
-//     }
-//     const level = [98, 50, 20, 1, 0].find((threshold) => threshold <= Battery.percent);
-//     const charging = Battery.charging && Battery.percent >= 1 ? "-charging" : "";
-//     return `battery-${icons[level]}${charging}`;
-//   };
-
-//   return Box({
-//     class_name: "battery",
-//     visible: Battery.bind("available"),
-//     children: [
-//       Icon({
-//         class_name: "icon",
-//         icon: Utils.watch(getIcon(), Battery, getIcon),
-//       }),
-//       LevelBar({
-//         widthRequest: 140,
-//         vpack: "center",
-//         value: Battery.bind("percent").as((p) => (p && p > 0 ? p : 0)),
-//       }),
-//     ],
-//   });
-// };
-
 export const SysTray = () =>
   Widget.Box({
     class_name: "systray",
@@ -168,6 +133,7 @@ export const SysTray = () =>
         } else {
           self.children = SystemTray.items.map((item) =>
             Widget.Button({
+              class_name: "systray-item",
               child: Widget.Icon({ class_name: "icon", icon: item.icon }),
               on_primary_click: (_, event) => item.activate(event),
               on_secondary_click: (_, event) => item.openMenu(event),

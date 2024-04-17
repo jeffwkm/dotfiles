@@ -503,6 +503,12 @@
   (add-hook! (sh-mode shell-mode) 'rainbow-mode)
   (after! company (use-package! company-shell)))
 
+(after! hl-line
+  (setq! hl-line-overlay-priority -80))
+
+(after! paradox
+  (setq! paradox-github-token (--pass-get "keys/github/paradox")))
+
 (after! rainbow-mode
   (setq! rainbow-html-colors t
          rainbow-html-colors-alist nil
@@ -825,6 +831,10 @@
   (setq! org-roam-completion-everywhere t
          ;; +org-roam-auto-backlinks-buffer t
          ))
+
+(use-package! org-roam-timestamps
+  :after org-roam
+  :config (org-roam-timestamps-mode))
 
 (use-package! org-pomodoro
   :commands org-pomodoro --org-pomodoro-status-json)

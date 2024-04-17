@@ -1,5 +1,5 @@
 import Gdk from "gi://Gdk";
-import Bar from "./bar";
+import { TopBar, BottomBar } from "./bar";
 import Gio from "gi://Gio";
 import GLib from "gi://GLib?version=2.0";
 
@@ -22,7 +22,7 @@ const tryStartApp = () => {
       app = App.config({
         gtkTheme: "adw-gtk3-dark",
         style: cssOut,
-        windows: () => forMonitors(Bar),
+        windows: () => [forMonitors(TopBar), forMonitors(BottomBar)].flat(1),
         cacheCoverArt: false,
       });
       console.log("App started");

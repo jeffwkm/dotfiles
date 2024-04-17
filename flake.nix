@@ -30,7 +30,7 @@
     emacs-overlay.inputs.flake-utils.follows = "flake-utils";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
-    rippkgs.url = "github:jeffwk/rippkgs";
+    rippkgs.url = "github:replit/rippkgs";
     rippkgs.inputs.nixpkgs.follows = "nixpkgs";
     rippkgs.inputs.flake-parts.follows = "flake-parts";
     ags.url = "github:Aylur/ags";

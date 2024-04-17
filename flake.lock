@@ -882,15 +882,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1712096051,
-        "narHash": "sha256-9vFyd+2Y9QoskPDdeKMVL0Tou2sZyObj9bCIT/3YeYU=",
-        "owner": "jeffwk",
+        "lastModified": 1712153583,
+        "narHash": "sha256-R7RGuoU79ODW/hnlz1+bzCciPfjcgxk0sQh7vgbgIhI=",
+        "owner": "replit",
         "repo": "rippkgs",
-        "rev": "a89307224805a53237b8c79b03f268fbaae5c3bc",
+        "rev": "951a4e80183000659ab6b939e7ba37bf2cab55a6",
         "type": "github"
       },
       "original": {
-        "owner": "jeffwk",
+        "owner": "replit",
         "repo": "rippkgs",
         "type": "github"
       }
