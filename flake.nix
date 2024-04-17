@@ -73,7 +73,7 @@
           overlays = lib.attrValues overlays;
         };
     in {
-      inherit inputs lib;
+      inherit inputs lib overlays;
 
       nixosConfigurations = (mapHosts' ./hosts/nixos "x86_64-linux")
         // (mapHosts' ./hosts/apple "aarch64-linux");

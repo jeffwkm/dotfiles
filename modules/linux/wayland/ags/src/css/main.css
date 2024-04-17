@@ -17,12 +17,16 @@
   --special-dark: 39 14 84;
 
   --h-blue: 264;
-
   --h-primary: 254;
+  --h-special: 282;
 
   --color-primary-01: oklch(64% 0.192 var(--h-primary));
   --color-primary-02: oklch(70% 0.15 var(--h-primary));
   --color-primary-03: oklch(69% 0.16 var(--h-primary));
+
+  --color-special-01: oklch(67% 0.162 var(--h-special));
+
+  --color-special: var(--color-special-01);
 
   --color-primary: var(--color-primary-03);
   --border-opacity: 0.9;
@@ -34,7 +38,7 @@
   --color-bar-background: var(--color-bar-background-02);
 
   --status-entry-border-color: oklch(from var(--color-primary) l c h / var(--border-opacity));
-  --status-entry-border: 1px solid var(--status-entry-border-color);
+  --status-entry-border: 1.2px solid var(--status-entry-border-color);
   --status-entry-internal-border-color: var(--status-entry-border-color);
   --status-entry-internal-border-color: oklch(
     from var(--status-entry-border-color) calc(l - 0.06) calc(c * 0.5) h /
@@ -42,7 +46,7 @@
   );
   --status-entry-internal-border: 1px solid var(--status-entry-internal-border-color);
   --status-entry-background: rgb(var(--dark) / 0.8);
-  --status-entry-padding: 1px 5px;
+  --status-entry-padding: 1px 4px;
 
   --status-entry {
     border-radius: 9999px;
@@ -75,7 +79,7 @@
 }
 
 .icon {
-  font-size: 14px;
+  font-size: 13px;
   -gtk-icon-palette:
     success rgb(var(--success) / 0.8),
     warning rgb(var(--warning) / 0.8),
@@ -98,9 +102,6 @@
   font-weight: 600;
   .bar-left {
     > * {
-      margin-right: 6px;
-    }
-    > *:last-child {
       margin-right: 6px;
     }
   }
@@ -143,8 +144,8 @@ button {
 
 .circular {
   font-size: 4.5px;
-  min-width: 15px;
-  min-height: 15px;
+  min-width: 14px;
+  min-height: 14px;
 }
 
 .workspaces {
@@ -163,7 +164,7 @@ button {
   button {
     @apply --mono;
     padding: 0 2px;
-    min-width: 2.2em;
+    min-width: 2em;
     background: transparent;
 
     border: var(--status-entry-border);
@@ -174,13 +175,13 @@ button {
       border-top-left-radius: 9999px;
       border-bottom-left-radius: 9999px;
       padding: 0;
-      padding-left: 3px;
+      padding-left: 2px;
     }
     &.last {
       border-top-right-radius: 9999px;
       border-bottom-right-radius: 9999px;
       padding: 0;
-      padding-right: 3px;
+      padding-right: 2px;
     }
     &.focused {
       border-color: transparent;
@@ -252,6 +253,10 @@ menu {
 .volume {
   @apply --status-entry;
 
+  .icon {
+    font-size: 13px;
+  }
+
   .status {
     > box {
       margin-top: -1px;
@@ -267,8 +272,11 @@ menu {
 
   label {
     @apply --mono;
-    font-size: 12px;
-    font-weight: 700;
+    padding-right: 2px;
+    padding-left: 5px;
+  }
+  & .icon {
+    padding-left: 3px;
   }
   &.critical .icon {
     color: rgb(var(--error) / 0.8);
@@ -303,15 +311,14 @@ menu {
 
 .tasks {
   @apply --status-entry;
-  border-width: 1px;
-  border-color: black(0.22);
+  border-width: 2.5px;
   padding: 0px 2px;
-  color: white(0.9);
+  color: white(0.92);
   > * {
     padding: 0px 5px;
   }
   > *:not(:last-child) {
-    border-right-width: 2px;
+    border-right-width: 2.5px;
   }
   &.active {
     border-color: rgb(var(--active) / 0.55);
@@ -320,9 +327,10 @@ menu {
     }
   }
   &.short-break {
-    border-color: rgb(var(--primary) / 0.9);
+    border-color: oklch(from var(--color-special) l c h / 0.95);
+    background-color: oklch(from var(--color-special) l c h / 0.15);
     > *:not(:last-child) {
-      border-right-color: rgb(var(--primary) / 0.9);
+      border-right-color: oklch(from var(--color-special) l c h / 0.55);
     }
   }
   &.long-break {
@@ -333,12 +341,15 @@ menu {
     }
   }
   &.waiting {
+    border-color: rgb(var(--warning) / 0.61);
+    .icon {
+      padding-right: 0;
+    }
     > * {
       background-color: rgb(var(--warning-dark) / 0.8);
     }
-    border-color: rgb(var(--warning) / 0.6);
     > *:not(:last-child) {
-      border-right-color: rgb(var(--warning) / 0.6);
+      border-right-color: rgb(var(--warning) / 0.61);
     }
   }
   box {

@@ -34,6 +34,8 @@ let
         "spectrum"
         "utility"
         "git"
+        "node"
+        "python"
         "archive"
         "completion"
         "fasd"
@@ -47,6 +49,12 @@ let
       ssh.identities = [ "id_rsa" ];
       terminal.autoTitle = true;
       utility.safeOps = false;
+      extraConfig = ''
+        # zstyle ':prezto:module:terminal' auto-title 'always'
+        zstyle ':prezto:module:terminal:window-title' format '%m: %s'
+        zstyle ':prezto:module:terminal:tab-title' format '%m: %s'
+        zstyle ':prezto:module:terminal:multiplexer-title' format '%s'
+      '';
     };
 
     shellAliases = {
@@ -121,7 +129,7 @@ let
       '';
       greg = "greg -cf ~/.greg.conf";
       H = "history -50000 | grep -i";
-      n = "cd ${config.host.config-dir}";
+      n = "cd ${host.config-dir}";
       zsh-profile = "ZPROFILE=1 zsh -i -c exit";
     } // (extra.shellAliases or { });
 
@@ -155,7 +163,7 @@ let
     initExtraFirst = ''
       export USING_P10K=0
       [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
-      export ZSHCONFIG="${config.host.config-dir}/dotfiles/zsh"
+      export ZSHCONFIG="${host.config-dir}/dotfiles/zsh"
       fpath+=( "$ZSHCONFIG/prompts" "${config.user.home}/.zsh/completions" )
       ${extra.initExtraFirst or ""}
       [[ -n "$ZPROFILE" ]] && zmodload zsh/zprof

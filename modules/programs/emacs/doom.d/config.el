@@ -729,8 +729,8 @@
   (setq! whitespace-line-column nil)
   (setq! whitespace-style '(face tabs empty trailing indentation space-after-tab space-before-tab)))
 
-(after! python-mode
-  (setq-default python-indent-offset 4))
+(after! python
+  nil)
 
 (use-package! systemd
   :mode (("\\.service\\'" . systemd-mode)
@@ -769,8 +769,10 @@
 
 (after! org
   (setq! org-log-done 'time
-         org-agenda-files '("~/org/agenda")
-         org-agenda-timegrid-use-ampm t)
+         org-agenda-files '("~/org/roam/" "~/org/todo.org")
+         org-agenda-timegrid-use-ampm t
+         +org-capture-todo-file "roam/20240416233119-tasks.org"
+         +org-capture-emails-file "roam/20240416233119-tasks.org")
   (map! :mode org-mode
         "C-<tab>"        nil
         "C-k"            nil
@@ -969,9 +971,11 @@
         "s-l" '--lsp-ui-doc-glance-toggle
         ;; "s-L" (cmd! (lsp-ui-doc--delete-frame) (command-execute 'lsp-ui-doc-glance))
         "s-;" 'lsp-ui-doc-focus-frame
+        "s-:" 'lsp-ui-doc-focus-frame
         :mode lsp-ui-doc-frame-mode
         "s-l" 'lsp-ui-doc-hide
         "s-;" 'lsp-ui-doc-unfocus-frame
+        "s-:" 'lsp-ui-doc-unfocus-frame
         :leader
         "l" 'lsp-ui-doc-toggle))
 

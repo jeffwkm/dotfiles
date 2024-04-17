@@ -20,6 +20,7 @@ with lib.my; {
       vfio.enable = true;
       wayland.enable = true;
       services.protonmail.enable = true;
+      services.protonvpn.enable = false;
       services.protonvpn.configFile =
         "/private/wg-quick/protonvpn-1-US-VA-14.conf";
       wayland.hyprland.enable = true;
@@ -78,14 +79,15 @@ with lib.my; {
       firefox_nightly
       input-leap_git
       waynergy_git
+      dnsmasq
     ];
 
-    # create machine definitions in /etc/machines
+    ## create machine definitions in /etc/machines
     environment.etc = { "machines/win10.xml".source = ./libvirt/win10.xml; };
 
-    # create virtual proxy devices for usb devices passed to qemu
-    # - this is needed so that qemu "-object input-linux,evdev=..." won't break
-    #   if the host device is temporarily disconnected
+    ## create virtual proxy devices for usb devices passed to qemu
+    ## - this is needed so that qemu "-object input-linux,evdev=..." won't break
+    ##   if the host device is temporarily disconnected
     services.persistent-evdev = {
       enable = true;
       devices = {
@@ -120,7 +122,8 @@ with lib.my; {
         "/dev/input/by-id/uinput-persist-steam0"
       ]
 
-      namespaces = []'';
+      namespaces = []
+    '';
 
     networking.interfaces.enp6s0.useDHCP = true;
     networking.bridges.br0.interfaces = [ "enp6s0" ];
@@ -165,7 +168,8 @@ with lib.my; {
 
     # boot.kernelPackages = pkgs.linuxPackages_latest;
     boot.kernelPackages = pkgs.linuxPackages_cachyos;
-    chaotic.scx.enable = true;
+
+    chaotic.scx.enable = false;
     systemd.services.scx.serviceConfig.SyslogLevel = "debug";
     systemd.services.scx.serviceConfig.LogLevelMax = "info";
 

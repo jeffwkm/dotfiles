@@ -12,7 +12,7 @@ const dateNow = Variable("", {
 
 const cpuTemp = Variable(0, {
   poll: [
-    1500,
+    1000,
     (_) => {
       const temp = Utils.readFile("/sys/class/hwmon/hwmon4/temp1_input");
       if (!temp) {
@@ -63,7 +63,7 @@ export const CpuTemp = () => {
   return Widget.Box({
     class_name: cpuTemp.bind().as((t) => `cputemp ${getLevel(t)}`),
     visible: cpuTemp.bind().as((t) => t > 0),
-    children: [icon, label],
+    children: [label, icon],
   });
 };
 
@@ -86,14 +86,6 @@ export const Volume = () =>
   Widget.Box({
     class_name: "volume",
     children: [
-      Widget.Icon({
-        class_name: "icon",
-        setup: (self) => {
-          self.hook(Audio.speaker, (self) => {
-            self.icon = getVolumeIcon();
-          });
-        },
-      }),
       Widget.Box({
         class_name: "status",
         child: Widget.Box({
@@ -102,6 +94,14 @@ export const Volume = () =>
             value: Audio.speaker.bind("volume").as((v) => v || 0),
           }),
         }),
+      }),
+      Widget.Icon({
+        class_name: "icon",
+        setup: (self) => {
+          self.hook(Audio.speaker, (self) => {
+            self.icon = getVolumeIcon();
+          });
+        },
       }),
     ],
   });
@@ -164,7 +164,7 @@ export const SysTray = () =>
       self.hook(SystemTray, (self) => {
         self.visible = SystemTray.items.length > 0;
         if (!self.visible) {
-          self.children = null;
+          self.children = [];
         } else {
           self.children = SystemTray.items.map((item) =>
             Widget.Button({

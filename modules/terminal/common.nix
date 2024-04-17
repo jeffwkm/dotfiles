@@ -38,6 +38,7 @@ in {
           expect
           glow
           gpg-tui
+          graphicsmagick-imagemagick-compat
           greg
           inetutils
           inxi

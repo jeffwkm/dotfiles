@@ -43,6 +43,7 @@ export const Pomodoro = () => {
   const task = Variable("");
   const stateIcon = Variable("");
   const stateClass = Variable("");
+  const text = Variable("");
 
   return Widget.Box({
     class_name: stateClass.bind().as((c) => `tasks ${c}`),
@@ -65,8 +66,8 @@ export const Pomodoro = () => {
       }),
       Widget.Label({
         class_name: "task",
-        label: task.bind(),
-        visible: task.bind().as((h) => h.length > 0),
+        label: text.bind(),
+        visible: text.bind().as((h) => h.length > 0),
       }),
     ],
     setup: (self) => {
@@ -79,6 +80,15 @@ export const Pomodoro = () => {
           state.value = result.state;
           stateIcon.value = stateToIcon(result.state);
           stateClass.value = stateToClass(result.state);
+          if (result.state === "pomodoro") {
+            text.value = task.value;
+          } else if (result.state === "short-break") {
+            text.value = "* Short break! *";
+          } else if (result.state === "long-break") {
+            text.value = "* Long break! *";
+          } else {
+            text.value = "Waiting for a task...";
+          }
           self.visible = true;
         } else {
           console.warn("Invalid Pomodoro result:", json);

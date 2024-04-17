@@ -11,7 +11,7 @@ in {
     fontFamily = mkOpt str "JetBrainsMono Nerd Font";
     fontStyle = mkOpt str "Semibold";
     fontSize = mkOpt number 10;
-    opacity = mkOpt float 0.865;
+    opacity = mkOpt float 0.8;
     padding = mkOpt int 4;
     decorations = mkOpt str "full";
   };

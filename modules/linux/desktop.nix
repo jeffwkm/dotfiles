@@ -139,6 +139,7 @@ in {
             gthumb
             gtk3
             gtk4
+            gtkperf
             libadwaita
             libpulseaudio
             themechanger

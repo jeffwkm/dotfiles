@@ -2,7 +2,7 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user modules;
+  inherit (config) modules;
   cfg = modules.services.protonvpn;
 in {
   options.modules.services.protonvpn = with types; {
@@ -15,8 +15,8 @@ in {
     networking.wg-quick.interfaces.wg0.configFile = cfg.configFile;
 
     # networking.firewall.enable = false;
-    networking.firewall.checkReversePath = false;
-    # networking.firewall.trustedInterfaces = "br0";
+    # networking.firewall.checkReversePath = false;
+    networking.firewall.trustedInterfaces = [ "br0" "virbr0" ];
 
     # networking.firewall.logReversePathDrops = true;
     # networking.firewall.logRefusedPackets = true;
@@ -32,13 +32,11 @@ in {
         server = [ "10.2.0.1" ];
         # no-resolv = true;
       } // (mkIf config.virtualisation.libvirtd.enable {
-        # prevent conflict with dnsmasq instance from libvirtd
-        interface = "br0";
+        # prevent conflict with libvirtd's dnsmasq
+        except-interface = "virbr0";
         bind-interfaces = true;
       }));
     };
-    systemd.services.dnsmasq.after = [ "libvirtd.service" ];
-    systemd.services.dnsmasq.wants = [ "libvirtd.service" ];
 
     environment.systemPackages = with pkgs; [
       wireguard-tools

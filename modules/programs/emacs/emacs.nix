@@ -87,6 +87,7 @@ in {
         mu
         isync
         gnutls
+        graphviz
       ];
 
       xdg.configFile = {
