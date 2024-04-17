@@ -14,26 +14,25 @@ in {
   config = mkIf (cfg.enable && (cfg.configFile != null)) {
     networking.wg-quick.interfaces.wg0.configFile = cfg.configFile;
 
-    # networking.firewall.enable = false;
-    # networking.firewall.checkReversePath = false;
     networking.firewall.trustedInterfaces = [ "br0" "virbr0" ];
-
-    # networking.firewall.logReversePathDrops = true;
-    # networking.firewall.logRefusedPackets = true;
 
     networking.firewall.allowedUDPPorts =
       optionals (cfg.port != null) [ cfg.port ];
     networking.firewall.allowedTCPPorts =
       optionals (cfg.port != null) [ cfg.port ];
 
+    networking.resolvconf.extraConfig = ''
+      search_domains_append=lan
+      name_servers_append=192.168.86.1
+    '';
+
     services.dnsmasq = {
       enable = true;
       settings = ({
-        server = [ "10.2.0.1" ];
-        # no-resolv = true;
+        server = [ "10.2.0.1" "/lan/192.168.86.1" ];
       } // (mkIf config.virtualisation.libvirtd.enable {
         # prevent conflict with libvirtd's dnsmasq
-        except-interface = "virbr0";
+        interface = "br0";
         bind-interfaces = true;
       }));
     };

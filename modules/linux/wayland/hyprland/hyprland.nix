@@ -98,6 +98,9 @@ in {
           Type = "simple";
           ExecStart = "${pkgs.hyprpaper}/bin/hyprpaper";
           SyslogLevel = "debug";
+          LogLevelMax = "info";
+          Restart = "always";
+          RestartSec = 15;
         };
       };
 

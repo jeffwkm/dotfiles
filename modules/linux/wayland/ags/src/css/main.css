@@ -19,32 +19,43 @@
   --h-blue: 264;
   --h-primary: 254;
   --h-special: 282;
+  --h-active: 140;
 
   --color-primary-01: oklch(64% 0.192 var(--h-primary));
   --color-primary-02: oklch(70% 0.15 var(--h-primary));
   --color-primary-03: oklch(69% 0.16 var(--h-primary));
 
+  --color-active-01: oklch(72.5% 0.225 var(--h-active));
+
   --color-special-01: oklch(67% 0.162 var(--h-special));
 
+  --color-primary: var(--color-primary-03);
+  --color-active: var(--color-active-01);
   --color-special: var(--color-special-01);
 
-  --color-primary: var(--color-primary-03);
-  --border-opacity: 0.9;
-  --internal-border-opacity: 0.6;
+  --border-opacity: 0.95;
+  --internal-border-opacity: 0.75;
+  --border-width: 1.5px;
 
   --color-bar-background-01: oklch(44% 0.0195 var(--h-primary) / 0.65);
   --color-bar-background-02: oklch(42.8% 0.0165 var(--h-blue) / 0.65);
+  --color-bar-background-03: oklch(36% 0.0305 calc(var(--h-primary)) / 0.6);
+  --color-bar-background-04: oklch(38% 0.0275 calc(var(--h-primary)) / 0.6);
 
-  --color-bar-background: var(--color-bar-background-02);
+  --color-bar-background: var(--color-bar-background-04);
+
+  --color-bar-border: oklch(from var(--color-bar-background) 60% calc(c * 0.25) h / 0.51);
+
+  --bar-border: 2px solid var(--color-bar-border);
 
   --status-entry-border-color: oklch(from var(--color-primary) l c h / var(--border-opacity));
-  --status-entry-border: 1.2px solid var(--status-entry-border-color);
-  --status-entry-internal-border-color: var(--status-entry-border-color);
+  --status-entry-border: var(--border-width) solid var(--status-entry-border-color);
   --status-entry-internal-border-color: oklch(
-    from var(--status-entry-border-color) calc(l - 0.06) calc(c * 0.5) h /
+    from var(--status-entry-border-color) calc(l * 0.75) calc(c * 0.6) h /
       var(--internal-border-opacity)
   );
-  --status-entry-internal-border: 1px solid var(--status-entry-internal-border-color);
+  --status-entry-internal-border: var(--border-width) solid
+    var(--status-entry-internal-border-color);
   --status-entry-background: rgb(var(--dark) / 0.8);
   --status-entry-padding: 1px 4px;
 
@@ -122,7 +133,7 @@
 
 .outer {
   padding: 4px;
-  border-bottom: 2px solid rgba(127, 128, 129, 0.51);
+  border-bottom: var(--bar-border);
   background: var(--color-bar-background);
 }
 
@@ -311,26 +322,31 @@ menu {
 
 .tasks {
   @apply --status-entry;
-  border-width: 2.5px;
+  border-width: 2px;
   padding: 0px 2px;
   color: white(0.92);
+  .icon.icon-material {
+    padding-right: 4px;
+    font-weight: 600;
+  }
   > * {
     padding: 0px 5px;
   }
   > *:not(:last-child) {
-    border-right-width: 2.5px;
+    border-right-width: 2px;
   }
   &.active {
-    border-color: rgb(var(--active) / 0.55);
+    border-color: oklch(from var(--color-active) l c h / 0.9);
+    background-color: oklch(from var(--color-active) calc(l * 0.35) calc(c * 0.35) h / 0.6);
     > *:not(:last-child) {
-      border-right-color: rgb(var(--active) / 0.55);
+      border-right-color: oklch(from var(--color-active) l c h / 0.9);
     }
   }
   &.short-break {
     border-color: oklch(from var(--color-special) l c h / 0.95);
     background-color: oklch(from var(--color-special) l c h / 0.15);
     > *:not(:last-child) {
-      border-right-color: oklch(from var(--color-special) l c h / 0.55);
+      border-right-color: oklch(from var(--color-special) l c h / 0.95);
     }
   }
   &.long-break {
@@ -343,6 +359,7 @@ menu {
   &.waiting {
     border-color: rgb(var(--warning) / 0.61);
     .icon {
+      padding-left: 1px;
       padding-right: 0;
     }
     > * {

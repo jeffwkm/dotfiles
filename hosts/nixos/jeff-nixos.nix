@@ -46,9 +46,6 @@ with lib.my; {
 
     # nix.settings.system-features = [ "gccarch-znver3" ];
 
-    nixpkgs.overlays =
-      [ (final: prev: { alacritty = optimize config prev.alacritty_git; }) ];
-
     services.nginx = {
       enable = true;
       recommendedOptimisation = true;

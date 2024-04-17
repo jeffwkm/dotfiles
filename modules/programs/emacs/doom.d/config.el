@@ -16,6 +16,10 @@
 (byte-recompile-file (concat (dir!) "commands.el") nil 0 t)
 (load! "commands")
 
+(defvar --window-opacity)
+(defvar --background-color)
+(load (expand-file-name "~/.config/config-nix.el"))
+
 (setq! split-window-preferred-function 'split-window-prefer-horizontal)
 
 ;; (setq! debug-on-error t)
@@ -31,6 +35,8 @@
 (after! copilot
   (pushnew! copilot-disable-predicates '--byte-compiling-p)
   (pushnew! warning-suppress-types '(copilot copilot-exceeds-max-char)))
+
+(require 'gcmh)
 
 (setq! user-full-name "Jeff Workman"
        user-mail-address "jeff.workman@gmail.com"
@@ -67,9 +73,10 @@
        doom-one-brighter-comments t
        doom-one-brighter-modeline nil
        doom-themes-padded-modeline t
-       doom-gruvbox-dark-variant "soft")
+       doom-gruvbox-dark-variant "soft"
+       gcmh-high-cons-threshold (* 1024 1024 300))
 
-(setf (alist-get 'alpha-background default-frame-alist) 0.88)
+(setf (alist-get 'alpha-background default-frame-alist) --window-opacity)
 (setf (alist-get 'right-fringe default-frame-alist) 8)
 (setf (alist-get 'left-fringe default-frame-alist) 8)
 (setf (alist-get 'internal-border-width default-frame-alist) 4)
@@ -81,7 +88,7 @@
 (windmove-default-keybindings '(control meta))
 (windmove-mode +1)
 
-(setq-default tab-width 2
+(setq-default tab-width 2               ; editorconfig overrides this
               fill-column 100
               byte-compile-warning-types '(not free-vars constants mutate-constant)
               lisp-indent-offset nil)
@@ -136,28 +143,52 @@
   (cl-eval-when 'eval
     (-some-> (symbol-function '--sync-fonts) funcall)))
 
-(defun --configure-fonts ()
-  (setq! doom-font (--get-font-spec)
-         --modeline-font (--get-font-spec nil t)
-         doom-big-font nil
-         doom-big-font-increment 2
-         doom-font-increment 1
-         doom-variable-pitch-font (--get-font-spec t))
-  (custom-theme-set-faces! nil
-    `(font-lock-comment-face :foreground "#8d8e8e")
-    `(font-lock-doc-face :foreground "#8d8e8e"))
-  (if --modeline-font
-      (custom-theme-set-faces! nil
-        `(doom-modeline :font ,--modeline-font)
-        `(mode-line :font ,--modeline-font)
-        `(mode-line-active :font ,--modeline-font)
-        `(mode-line-inactive :font ,--modeline-font))
+(progn
+  (defun --configure-fonts ()
+    (setq! doom-font (--get-font-spec)
+           --modeline-font (--get-font-spec nil t)
+           doom-big-font nil
+           doom-big-font-increment 2
+           doom-font-increment 1
+           doom-variable-pitch-font (--get-font-spec t))
     (custom-theme-set-faces! nil
-      `(doom-modeline)
-      `(mode-line)
-      `(mode-line-active)
-      `(mode-line-inactive)))
-  nil)
+      `(font-lock-comment-face :foreground "#8d8e8e")
+      `(font-lock-doc-face :foreground "#8d8e8e")
+      `(shadow :foreground "#868889")
+      ;; set no background color for terminal frames
+      `(default :background unspecified))
+
+    (defun --set-faces-on-frame (&optional frame)
+      (interactive)
+      (let ((frame (or frame (selected-frame))))
+        (when (display-graphic-p frame)
+          ;; (set-face-background 'default "#181a20" frame)
+          ;; (set-face-background 'default "#191a1e" frame)
+          ;; (set-face-background 'default "#17191d" frame)
+          (set-face-background 'default --background-color frame)
+          )))
+
+    (add-hook! '(after-make-frame-functions server-after-make-frame-hook)
+               :append '--set-faces-on-frame)
+
+    (dolist (frame (frame-list))
+      (when (display-graphic-p frame)
+        (--set-faces-on-frame frame)))
+
+    (if --modeline-font
+        (custom-theme-set-faces! nil
+          `(doom-modeline :font ,--modeline-font)
+          `(mode-line :font ,--modeline-font)
+          `(mode-line-active :font ,--modeline-font)
+          `(mode-line-inactive :font ,--modeline-font))
+      (custom-theme-set-faces! nil
+        `(doom-modeline)
+        `(mode-line)
+        `(mode-line-active)
+        `(mode-line-inactive)))
+    nil)
+  (cl-eval-when 'eval
+    (-some-> (symbol-function '--configure-fonts) funcall)))
 
 (--configure-fonts)
 
@@ -557,7 +588,7 @@
   :commands copilot-mode
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
-  (setq! copilot-idle-delay 0.025
+  (setq! copilot-idle-delay 0
          copilot-max-char 100000
          copilot-indent-offset-warning-disable t)
   (pushnew! copilot-clear-overlay-ignore-commands

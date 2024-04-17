@@ -61,7 +61,7 @@ let
       _ = "sudo";
       __ = "sudo -i";
       dmesg = "sudo dmesg";
-      top = "sudo htop";
+      top = "sudo btop";
       ".." = "cd ..";
       e = "emacsclient -t -a emacs";
       ee = "emacs -nw";

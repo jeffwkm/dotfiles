@@ -27,6 +27,7 @@ in {
 
       home.packages = with pkgs;
         [
+          (optimize config btop)
           (optimize config fd)
           (optimize config lsd)
           asciinema

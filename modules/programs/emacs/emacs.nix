@@ -2,10 +2,10 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user host modules;
+  inherit (config) user host modules theme;
   inherit (host) darwin;
   inherit (pkgs) fetchpatch;
-  cfg = config.modules.programs.emacs;
+  cfg = modules.programs.emacs;
   pwd = "${host.config-dir}/modules/programs/emacs";
 
   emacsPkgs = (epkgs:
@@ -93,6 +93,11 @@ in {
       xdg.configFile = {
         "doom-config/".source =
           config.lib.file.mkOutOfStoreSymlink "${pwd}/doom.d";
+
+        "config-nix.el".text = ''
+          (setq! --background-color "${theme.colors.background}")
+          (setq! --window-opacity ${toString theme.windowOpacity})
+        '';
 
         # "emacs" = {
         #   source = inputs.doom-emacs;

@@ -120,6 +120,7 @@ in {
     };
 
     environment.systemPackages = with pkgs; [
+      ananicy-cpp
       binutils
       coreutils
       curl
