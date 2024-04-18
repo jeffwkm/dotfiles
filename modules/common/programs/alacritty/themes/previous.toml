@@ -1,0 +1,17 @@
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[colors.normal]
+black = "#1e2127"
+blue = "#61afef"
+cyan = "#56b6c2"
+green = "#98c379"
+magenta = "#c678dd"
+red = "#fff000"
+white = "#e6efff"
+yellow = "#d19a66"
+
+[colors.primary]
+background = "@background@"
+bright_foreground = "#e6efff"
+foreground = "#abb2bf"

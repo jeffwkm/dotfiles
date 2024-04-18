@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+[[ -n "$ALACRITTY_WINDOW_ID" ]] && export TERM=alacritty-direct
+/run/current-system/sw/bin/emacsclient "$@"

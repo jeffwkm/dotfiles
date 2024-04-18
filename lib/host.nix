@@ -33,10 +33,6 @@ let
       };
     })
   ];
-
-  ## TODO: move vscode.nix into linux/
-  platformSpecificModules = darwin:
-    if darwin then [ ] else [ inputs.vscode-server.nixosModule ];
 in rec {
   mkHost = { system, nixpkgsConfig, overlays }:
     path:
@@ -65,7 +61,6 @@ in rec {
           };
         }
       ] ++ [ path ../nix-config.nix ] ++ (systemHomeManagerModules darwin)
-        ++ (platformSpecificModules darwin)
         ++ (mapModulesRec' (toString ../modules) importModule ignore);
     };
 
