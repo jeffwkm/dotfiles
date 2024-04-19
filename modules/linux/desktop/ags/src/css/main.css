@@ -176,16 +176,17 @@ button {
 .workspaces-group {
   border-radius: 9999px;
   background: var(--status-entry-background);
+  padding: 0;
 
   button {
     @apply --mono;
-    padding: 0 2px;
+    padding: 0 1px;
     min-width: 2em;
     background: transparent;
 
     border: var(--status-entry-border);
-    border-left: 0;
-    border-right: var(--status-entry-border);
+    border-left-width: 0.75px;
+    border-right-width: 0.75px;
     &.first {
       border-left: var(--status-entry-border);
       border-top-left-radius: 9999px;
@@ -194,23 +195,26 @@ button {
       padding-left: 2px;
     }
     &.last {
+      border-right: var(--status-entry-border);
       border-top-right-radius: 9999px;
       border-bottom-right-radius: 9999px;
       padding: 0;
       padding-right: 2px;
     }
+    &.first.last {
+      padding: 0 1px;
+    }
     &.focused {
-      border-color: transparent;
-      background: oklch(from var(--color-primary) l c h / 0.35);
+      background: oklch(from var(--color-primary) calc(l * 0.9) c h / 0.6);
       .outer.active & {
-        background: oklch(from var(--color-primary) l c h / 0.6);
+        background: oklch(from var(--color-primary) calc(l * 0.9) c h / 0.95);
       }
     }
   }
 }
 
 .notification {
-  color: rgba(var(--warning) / 0.8);
+  color: oklch(from var(--color-warning) l c h / 0.8);
 }
 
 .client-title {
@@ -298,7 +302,7 @@ menu {
     color: rgb(var(--error) / 0.8);
   }
   &.high .icon {
-    color: rgb(var(--warning) / 0.8);
+    color: oklch(from var(--color-warning) l c h / 0.8);
   }
   &.medium .icon {
     color: rgba(255, 220, 100, 0.8);
@@ -311,10 +315,12 @@ menu {
 .media-event-box {
   .media {
     @apply --status-entry;
+    border-color: oklch(from var(--color-primary) 0.95 0.01 h / 0.62);
+    > *:not(:last-child) {
+      border-right-color: oklch(from var(--color-primary) 0.95 0.01 h / 0.52);
+    }
     .icon.player {
       font-size: 15px;
-    }
-    .icon.status {
     }
   }
   &:hover {
@@ -322,23 +328,36 @@ menu {
   }
 }
 
-.bar-center {
-}
-
 .tasks {
   @apply --status-entry;
   border-width: 2px;
   padding: 0px 2px;
-  color: white(0.92);
-  .icon.icon-material {
+  .state {
     padding-right: 4px;
+    margin-left: -3px;
+    font-size: 16px;
+    font-weight: 700;
+    color: white(0.8);
+  }
+  .timer {
+    @apply --mono;
+    font-weight: 700;
+    color: white(0.92);
+  }
+  .task {
+    font-size: 12px;
     font-weight: 600;
+    color: white(0.92);
   }
   > * {
     padding: 0px 5px;
   }
   > *:not(:last-child) {
     border-right-width: 2px;
+  }
+  .icon.state {
+    padding-left: 0;
+    padding-right: 5px;
   }
   &.active {
     border-color: oklch(from var(--color-active) l c h / 0.9);
@@ -355,42 +374,23 @@ menu {
     }
   }
   &.long-break {
-    background-color: rgb(var(--special) / 1);
-    border-color: rgb(var(--special) / 1);
+    border-color: oklch(from var(--color-special) l c h / 0.95);
+    background-color: oklch(from var(--color-special) l c h / 0.15);
     > *:not(:last-child) {
-      border-right-color: rgb(var(--special) / 1);
+      border-right-color: oklch(from var(--color-special) l c h / 0.95);
     }
   }
   &.waiting {
-    border-color: rgb(var(--warning) / 0.61);
-    .icon {
+    .icon.state {
       padding-left: 1px;
       padding-right: 0;
     }
+    border-color: oklch(from var(--color-warning) l c h / 0.9);
     > * {
-      background-color: rgb(var(--warning-dark) / 0.8);
+      background-color: var(--background-warning);
     }
     > *:not(:last-child) {
-      border-right-color: rgb(var(--warning) / 0.61);
+      border-right-color: oklch(from var(--color-warning) l c h / 0.9);
     }
-  }
-  box {
-    label.state {
-      padding-right: 1px;
-      margin-left: -3px;
-      font-size: 15px;
-      font-weight: 500;
-    }
-  }
-  label.timer {
-    @apply --mono;
-  }
-  label.state {
-    font-size: 16px;
-    font-weight: 700;
-  }
-  label.task {
-    font-size: 12px;
-    font-weight: 600;
   }
 }

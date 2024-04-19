@@ -11,7 +11,8 @@ export const pomodoroResult = Variable("", {
 
 const stateToIcon = (state: string) => {
   if (state === "pomodoro") {
-    return "hourglass_empty";
+    return "schedule";
+    // return "hourglass_empty";
   } else if (state === "short-break") {
     return "refresh";
   } else if (state === "long-break") {

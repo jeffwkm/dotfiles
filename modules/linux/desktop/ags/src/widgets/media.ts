@@ -178,6 +178,14 @@ export const Media = () => {
           self.child = Widget.Box({
             class_name: "media",
             children: [Status(), Artist(), Title(), PlayerIcon()],
+            setup: (self) => {
+              const doUpdate = (self) => {
+                const status = currentPlayer()?.play_back_status.toLowerCase();
+                self.class_name = `media ${status}`;
+              };
+              self.hook(Mpris, doUpdate);
+              self.hook(selected, doUpdate);
+            },
           });
           self.visible = true;
           initialized = true;
