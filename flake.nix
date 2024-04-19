@@ -75,6 +75,11 @@
     in {
       inherit inputs lib;
 
+      options = import ./options-to-json.nix {
+        pkgs = import nixpkgs { config = nixpkgsConfig; };
+        options = self.nixosConfigurations.jeff-nixos.options;
+      };
+
       nixosConfigurations = (mapHosts' ./hosts/nixos "x86_64-linux")
         // (mapHosts' ./hosts/apple "aarch64-linux");
 
