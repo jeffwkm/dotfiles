@@ -22,7 +22,7 @@ with lib.my; {
       services.protonmail.enable = true;
       services.protonvpn.enable = false;
       services.protonvpn.configFile =
-        "/private/wg-quick/protonvpn-1-US-VA-14.conf";
+        "/private/wg-quick/protonvpn-US-NY-158.conf";
       wayland.hyprland.enable = true;
       wayland.hyprland.extraConf = ''
         # enable brightness controls for external monitors
@@ -43,6 +43,8 @@ with lib.my; {
       services.mpd.musicDirectory = "/mnt/huge/Music";
       programs.vscode.enable = true;
     };
+
+    services.openssh.ports = [ 22224 ];
 
     # nix.settings.system-features = [ "gccarch-znver3" ];
 

@@ -16,9 +16,10 @@
 (byte-recompile-file (concat (dir!) "commands.el") nil 0 t)
 (load! "commands")
 
-(defvar --window-opacity)
-(defvar --background-color)
+(defvar --window-opacity nil)
+(defvar --background-color nil)
 (load (expand-file-name "~/.config/config-nix.el"))
+(setq! --window-opacity 0.865)
 
 (setq! split-window-preferred-function 'split-window-prefer-horizontal)
 
@@ -78,7 +79,7 @@
        doom-gruvbox-dark-variant "medium"
        gcmh-high-cons-threshold (* 1024 1024 300))
 
-(use-package! catppuccin-theme)
+(require 'catppuccin-theme)
 
 (setf (alist-get 'alpha-background default-frame-alist) --window-opacity)
 (setf (alist-get 'right-fringe default-frame-alist) 8)
@@ -168,16 +169,15 @@
       `(font-lock-doc-face :foreground "#8d8e8e")
       `(shadow :foreground "#868889"))
 
-    (custom-theme-set-faces! nil
-      ;; set no background color for terminal frames
-      `(default :background unspecified))
+    (custom-theme-set-faces! 'catppuccin
+      `(highlight
+        :foreground ,(catppuccin-lighten "#cad3f5" 50)
+        :background ,(catppuccin-lighten "#2f3244" 14))
+      `(shadow :foreground ,(catppuccin-lighten "#6e738d" 20)))
 
-    (eval-and-compile
-      (defun --set-faces-on-frame (&optional frame)
-        (interactive)
-        (let ((frame (or frame (selected-frame))))
-          (when (display-graphic-p frame)
-            (set-face-background 'default --background-color frame)))))
+    (defun --set-faces-on-frame (&optional frame)
+      (when (and frame (display-graphic-p frame))
+        (set-face-background 'default --background-color frame)))
 
     (add-hook! '(after-make-frame-functions server-after-make-frame-hook)
                :append '--set-faces-on-frame)
@@ -564,11 +564,6 @@
          corfu-popupinfo-max-height 15
          corfu-popupinfo-min-width 30
          corfu-popupinfo-max-width 80)
-
-  (defun --corfu-set-faces (&optional frame)
-    (set-face-background 'corfu-current "#3a3c3d" frame))
-  (add-hook! 'after-make-frame-functions :append '--corfu-set-faces)
-  (--corfu-set-faces)
 
   (map! :mode corfu-mode
         "C-." 'complete-symbol

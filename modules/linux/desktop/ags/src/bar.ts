@@ -10,6 +10,7 @@ import {
   Notification,
   Media,
   Pomodoro,
+  CpuGroup,
 } from "./widgets";
 
 const TopLeft = (monitorId: number) =>
@@ -30,7 +31,7 @@ const TopRight = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-right",
     hpack: "end",
-    children: [Notification(), , SysTray(), CpuTemp(), Volume(), BatteryLabel(), Clock()],
+    children: [Notification(), , SysTray(), CpuGroup(), Volume(), BatteryLabel(), Clock()],
   });
 
 const BottomCenter = (monitorId: number) =>

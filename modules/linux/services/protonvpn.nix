@@ -14,7 +14,7 @@ in {
   config = mkIf (cfg.enable && (cfg.configFile != null)) {
     networking.wg-quick.interfaces.wg0.configFile = cfg.configFile;
 
-    networking.firewall.trustedInterfaces = [ "br0" "virbr0" ];
+    networking.firewall.trustedInterfaces = [ "virbr0" ];
 
     networking.firewall.allowedUDPPorts =
       optionals (cfg.port != null) [ cfg.port ];

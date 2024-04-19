@@ -190,8 +190,7 @@ in {
 
     services.openssh = {
       enable = true;
-      ports = [ 22 ];
-      settings.X11Forwarding = true;
+      ports = mkDefault [ 22 ];
     };
 
     fileSystems."/mnt/huge" = mkDefault {

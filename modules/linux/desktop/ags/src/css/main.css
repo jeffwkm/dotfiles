@@ -11,10 +11,40 @@
   --h-active: 140;
   --h-warning: 70;
 
-  --color-primary-01: oklch(64% 0.192 var(--h-primary));
-  --color-primary-02: oklch(70% 0.15 var(--h-primary));
-  --color-primary-03: oklch(69.5% 0.16 var(--h-primary));
-  --color-primary: var(--color-primary-03);
+  /* black = "#5b6078" */
+  /* red = "#ed8796" */
+  /* green = "#a6da95" */
+  /* yellow = "#eed49f" */
+  /* blue = "#8aadf4" */
+  /* magenta = "#f5bde6" */
+  /* cyan = "#8bd5ca" */
+  /* white = "#a5adcb" */
+
+  /* catppuccin colors */
+  --color-text: oklch(0.8168 0.04 272.86);
+  --fg-text: oklch(from var(--color-text) 0.822 c h);
+  --fg-text-mono: oklch(from var(--fg-text) 0.88 c h);
+  --fg-text-bright: oklch(from var(--color-text) 0.91 c h);
+  --fg-text-white: oklch(from var(--color-text) 0.99 0.001 h);
+
+  --color-mocha-background: oklch(0.2429 0.03 283.91);
+  --color-blue: oklch(0.7497 0.11 263.81);
+  --color-inactive: oklch(0.606 0.051 274.27);
+  --color-orange: oklch(82.37% 0.101 52.63);
+  --color-yellow: oklch(87.9% 0.074 84.75);
+  --color-green: oklch(83.5% 0.108 138.15);
+
+  --fg-warning: oklch(from var(--color-orange) l c h / 0.97);
+  --bg-warning: oklch(from var(--color-orange) calc(l * 0.4) calc(c * 0.5) h / 0.5);
+  --fg-inactive: oklch(from var(--color-inactive) l c h / 0.95);
+  --bg-inactive: oklch(from var(--color-inactive) l c h / 0.11);
+  --fg-yellow: oklch(from var(--color-yellow) l c h / 0.9);
+  --bg-yellow: oklch(from var(--color-yellow) calc(l * 0.4) calc(c * 0.5) h / 0.5);
+  --fg-green: oklch(from var(--color-green) l c h / 0.95);
+  --bg-green: oklch(from var(--color-green) calc(l * 0.45) calc(c * 0.75) h / 0.5);
+  /*****************************************/
+
+  --color-primary: var(--color-blue);
 
   --color-active-01: oklch(72.5% 0.225 var(--h-active));
   --color-active: var(--color-active-01);
@@ -22,30 +52,20 @@
   --color-special-01: oklch(67% 0.162 var(--h-special));
   --color-special: var(--color-special-01);
 
-  --color-warning-01: oklch(80% 0.16 var(--h-warning));
-  --color-warning: var(--color-warning-01);
-  --background-warning: oklch(from var(--color-warning) calc(l * 0.8) calc(c * 0.8) h / 0.5);
+  --color-bar-background: oklch(from var(--color-mocha-background) l c h / 0.75);
 
-  --color-bar-background-01: oklch(44% 0.0195 var(--h-primary) / 0.65);
-  --color-bar-background-02: oklch(42.8% 0.0165 var(--h-blue) / 0.65);
-  --color-bar-background-03: oklch(36% 0.0305 calc(var(--h-primary)) / 0.6);
-  --color-bar-background-04: oklch(28% 0.005 calc(var(--h-primary)) / 0.65);
+  --color-bar-border: oklch(from var(--color-bar-background) 0.75 0.1 h / 0.66);
 
-  --color-bar-background: var(--color-bar-background-04);
+  --bar-border: 2px solid var(--color-bar-border);
 
-  --color-bar-border: oklch(from var(--color-bar-background) 62% calc(c * 0.25) h / 0.95);
-
-  --bar-border: 2.5px solid var(--color-bar-border);
-
-  --border-opacity: 0.95;
-  --internal-border-opacity: 0.75;
+  --border-opacity: 0.99;
+  --internal-border-opacity: 0.8;
   --border-width: 1.5px;
 
   --status-entry-border-color: oklch(from var(--color-primary) l c h / var(--border-opacity));
   --status-entry-border: var(--border-width) solid var(--status-entry-border-color);
   --status-entry-internal-border-color: oklch(
-    from var(--status-entry-border-color) calc(l * 0.75) calc(c * 0.6) h /
-      var(--internal-border-opacity)
+    from var(--status-entry-border-color) l c h / var(--internal-border-opacity)
   );
   --status-entry-internal-border: var(--border-width) solid
     var(--status-entry-internal-border-color);
@@ -80,14 +100,17 @@
   }
   --mono {
     font-family: "Symbols Nerd Font Mono", "JetBrains Mono", monospace;
+    font-weight: 700;
+    color: var(--fg-text-mono);
+    font-size: 12px;
   }
 }
 
 .icon {
-  font-size: 13px;
+  font-size: 14px;
   -gtk-icon-palette:
     success rgb(var(--success) / 0.8),
-    warning oklch(from var(--color-warning) l c h / 0.8),
+    warning oklch(from var(--fg-warning) l c h / 0.8),
     error rgb(var(--error) / 0.8);
 }
 
@@ -102,8 +125,8 @@
 .bar {
   @apply --sans;
   background: transparent;
-  color: white(0.825);
-  font-size: 12px;
+  color: var(--fg-text);
+  font-size: 12.5px;
   font-weight: 600;
   .bar-left {
     > * {
@@ -126,14 +149,19 @@
 }
 
 .outer {
-  padding: 4px;
+  padding: 3px;
   background: var(--color-bar-background);
 
   min-height: 24px;
 
+  .task.active .bar {
+    border-color: oklch(from var(--fg-green) l c h);
+  }
+
   .bar.bar-bottom & {
     border-bottom: 0;
     border-top: var(--bar-border);
+    min-height: 24px;
   }
 
   .bar.bar-top & {
@@ -148,7 +176,7 @@ button {
   border-radius: 0;
   background: rgb(var(--dark) / 0.6);
   font-weight: 700;
-  color: white(0.925);
+  color: var(--fg-text-white);
 
   &:hover {
     background: rgb(var(--dark) / 0.3);
@@ -214,12 +242,11 @@ button {
 }
 
 .notification {
-  color: oklch(from var(--color-warning) l c h / 0.8);
+  color: var(--fg-warning);
 }
 
 .client-title {
   margin-right: 6em;
-  font-size: 12px;
   & > label {
     padding: 0 10px;
     background: var(--status-entry-background);
@@ -273,51 +300,54 @@ menu {
 .volume {
   @apply --status-entry;
 
-  .icon {
-    font-size: 13px;
-  }
-
   .status {
     > box {
       margin-top: -1px;
       .circular {
-        color: rgba(40, 70, 255, 0.85);
+        color: var(--color-blue);
       }
     }
   }
 }
 
-.cputemp {
+.cpu-group {
   @apply --status-entry;
+  border-color: var(--fg-yellow);
+  background: var(--bg-yellow);
+  .icon {
+    font-size: 15px;
+  }
 
-  label {
-    @apply --mono;
-    padding-right: 2px;
-    padding-left: 5px;
-  }
-  & .icon {
-    padding-left: 3px;
-  }
-  &.critical .icon {
-    color: rgb(var(--error) / 0.8);
-  }
-  &.high .icon {
-    color: oklch(from var(--color-warning) l c h / 0.8);
-  }
-  &.medium .icon {
-    color: rgba(255, 220, 100, 0.8);
-  }
-  &.low .icon {
-    color: rgba(230, 255, 100, 0.8);
+  .cputemp {
+    label {
+      @apply --mono;
+      font-weight: 700;
+      margin-right: -1px;
+      padding-left: 1px;
+    }
+    &.critical .icon {
+      color: rgb(var(--error) / 0.8);
+    }
+    &.high .icon {
+      color: oklch(from var(--fg-warning) l c calc(h - 6) / 0.95);
+    }
+    &.medium .icon {
+      color: oklch(from var(--fg-warning) l c h / 0.9);
+    }
+    &.low .icon {
+      color: oklch(from var(--fg-warning) l c calc(h + 22) / 0.88);
+    }
   }
 }
 
 .media-event-box {
   .media {
     @apply --status-entry;
-    border-color: oklch(from var(--color-primary) 0.95 0.01 h / 0.62);
+    border-width: 1.8px;
+    border-color: var(--fg-inactive);
+    background: var(--bg-inactive);
     > *:not(:last-child) {
-      border-right-color: oklch(from var(--color-primary) 0.95 0.01 h / 0.52);
+      border-right-color: var(--fg-inactive);
     }
     .icon.player {
       font-size: 15px;
@@ -330,40 +360,45 @@ menu {
 
 .tasks {
   @apply --status-entry;
-  border-width: 2px;
-  padding: 0px 2px;
+  border-width: 2.5px;
+  /* padding: 0px 1px; */
   .state {
+    min-height: 25px;
     padding-right: 4px;
     margin-left: -3px;
     font-size: 16px;
     font-weight: 700;
-    color: white(0.8);
   }
   .timer {
     @apply --mono;
-    font-weight: 700;
-    color: white(0.92);
+    font-size: 13.5px;
+  }
+  .timer {
+    color: oklch(from var(--fg-text-mono) l c h / 0.975);
   }
   .task {
-    font-size: 12px;
-    font-weight: 600;
-    color: white(0.92);
+    color: oklch(from var(--fg-text-bright) l c h / 0.95);
   }
   > * {
-    padding: 0px 5px;
+    padding: 0px 6px;
   }
   > *:not(:last-child) {
-    border-right-width: 2px;
+    border-right-width: 2.5px;
   }
   .icon.state {
+    font-size: 18px;
     padding-left: 0;
-    padding-right: 5px;
+    padding-right: 4px;
   }
   &.active {
-    border-color: oklch(from var(--color-active) l c h / 0.9);
-    background-color: oklch(from var(--color-active) calc(l * 0.35) calc(c * 0.35) h / 0.6);
+    border-color: oklch(from var(--fg-green) l c h / 1);
+    background-color: var(--bg-green);
+    color: var(--fg-text-bright);
+    .task {
+      font-size: 13.5px;
+    }
     > *:not(:last-child) {
-      border-right-color: oklch(from var(--color-active) l c h / 0.9);
+      border-right-color: oklch(from var(--fg-green) l c h / 1);
     }
   }
   &.short-break {
@@ -382,15 +417,16 @@ menu {
   }
   &.waiting {
     .icon.state {
+      padding: 0;
       padding-left: 1px;
-      padding-right: 0;
+      margin-right: -2px;
     }
-    border-color: oklch(from var(--color-warning) l c h / 0.9);
+    border-color: var(--fg-warning);
     > * {
-      background-color: var(--background-warning);
+      background-color: var(--bg-warning);
     }
     > *:not(:last-child) {
-      border-right-color: oklch(from var(--color-warning) l c h / 0.9);
+      border-right-color: var(--fg-warning);
     }
   }
 }

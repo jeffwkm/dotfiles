@@ -109,8 +109,8 @@ in {
 
     programs.steam = {
       enable = cfg.steam;
-      remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
+      # remotePlay.openFirewall = true;
+      # dedicatedServer.openFirewall = true;
       gamescopeSession.enable = true;
       # gamescopeSession.package = pkgs.gamescope_git;
     };
@@ -222,9 +222,9 @@ in {
           ++ x11 ++ catppuccin;
 
         services.easyeffects = { enable = true; };
-
         services.pass-secret-service.enable = true;
-
+        # services.gnome-keyring.enable = true;
+        # services.gnome-keyring.components = [ "secrets" ];
         services.udiskie.enable = true;
 
         gtk = {

@@ -2,8 +2,8 @@ live_config_reload = true
 working_directory = "None"
 
 import = [
-  # "~/.config/alacritty/themes/catppuccin-macchiato.toml",
-  "~/.config/alacritty/themes/catppuccin-mocha.toml",
+  "~/.config/alacritty/themes/catppuccin-macchiato.toml",
+  # "~/.config/alacritty/themes/catppuccin-mocha.toml",
   "~/.config/alacritty/custom.toml"
 ]
 

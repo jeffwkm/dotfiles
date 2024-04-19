@@ -8,8 +8,8 @@ let
   lsd_completion =
     builtins.toFile "_lsd" (builtins.readFile ../../dotfiles/_lsd);
 
-  emacs_vterm_zsh = builtins.toFile "emacs-vterm-zsh.sh"
-    (builtins.readFile ./emacs-vterm-zsh.sh);
+  # emacs_vterm_zsh = builtins.toFile "emacs-vterm-zsh.sh"
+  #   (builtins.readFile ./emacs-vterm-zsh.sh);
 
   makeUserConfig = extra: {
     enable = true;
@@ -44,8 +44,9 @@ let
         "prompt"
       ];
       pmoduleDirs = [ ../../dotfiles/zsh/prompts ];
-      prompt.theme = lib.mkDefault "jeffw";
-      # prompt.theme = lib.mkDefault "powerlevel10k";
+      # prompt.theme = lib.mkDefault "starship";
+      # prompt.theme = lib.mkDefault "jeffw";
+      prompt.theme = lib.mkDefault "powerlevel10k";
       ssh.identities = [ "id_rsa" ];
       terminal.autoTitle = true;
       utility.safeOps = false;
@@ -161,7 +162,7 @@ let
     } // (extra.shellGlobalAliases or { });
 
     initExtraFirst = ''
-      export USING_P10K=0
+      export USING_P10K=1
       [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
       export ZSHCONFIG="${host.config-dir}/dotfiles/zsh"
       fpath+=( "$ZSHCONFIG/prompts" "${config.user.home}/.zsh/completions" )
@@ -194,7 +195,6 @@ let
       fi
 
       source ${lsd_completion} 2> /dev/null
-      source ${emacs_vterm_zsh} 2> /dev/null
 
       if [[ -n "$INSIDE_EMACS" ]] ; then
         prompt restore
@@ -260,6 +260,11 @@ in {
       home.packages = with pkgs; [
         nix-zsh-completions
         starship
+        spaceship-prompt
+        powerline-go
+        liquidprompt
+        iay
+        agkozak-zsh-prompt
         zsh-better-npm-completion
       ];
     };

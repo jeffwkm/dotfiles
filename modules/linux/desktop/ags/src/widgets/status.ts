@@ -38,6 +38,21 @@ export const Clock = () =>
     ],
   });
 
+export const CpuSpeed = () =>
+  Widget.Box({
+    class_name: "cpu",
+    children: [
+      Widget.Icon({
+        class_name: "icon",
+        icon: "processor-symbolic",
+      }),
+      Widget.Label({
+        class_name: "label",
+        label: "MHz",
+      }),
+    ],
+  });
+
 export const CpuTemp = () => {
   const levels = {
     90: "critical",
@@ -66,6 +81,15 @@ export const CpuTemp = () => {
     children: [label, icon],
   });
 };
+
+export const CpuGroup = () =>
+  Widget.Box({
+    class_name: "cpu-group",
+    children: [
+      // CpuSpeed(),
+      CpuTemp(),
+    ],
+  });
 
 const volumeIcons = {
   101: "overamplified",

@@ -5,8 +5,8 @@ Create Both
 # This will create folders that don't exist on both sides
 CopyArrivalDate yes
 # This will preserve the original arrival date of messages
-Expunge None # see manpage for how to configure this
-#Expunge Both
+# Expunge None # see manpage for how to configure this
+Expunge Both
 # This will expunge (permanently delete) messages marked for deletion on both sides
 
 # IMAP account configuration
