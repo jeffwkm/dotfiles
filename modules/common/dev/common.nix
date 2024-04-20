@@ -36,6 +36,7 @@ in {
           editorconfig-core-c
           gnumake
           nil
+          nixd
           nixfmt-classic
           nodePackages.stylelint
           nodePackages.prettier

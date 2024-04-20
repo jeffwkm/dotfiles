@@ -6,7 +6,7 @@ Create Both
 CopyArrivalDate yes
 # This will preserve the original arrival date of messages
 # Expunge None # see manpage for how to configure this
-Expunge Both
+Expunge Near
 # This will expunge (permanently delete) messages marked for deletion on both sides
 
 # IMAP account configuration
@@ -35,12 +35,12 @@ MaildirStore protonmail-bridge-local
 Path ~/.mail/protonmail-bridge/
 # The directory where your mail will be stored locally. Ensure it exists.
 # MapInbox Inbox
-# Inbox ~/mail/protonmail-bridge/Inbox
+Inbox ~/.mail/protonmail-bridge/Inbox
 # Local path for the Inbox. Adjust as necessary.
 SubFolders Verbatim
 
 # Channel configuration
-Channel protonmain-bridge
+Channel protonmail-bridge
 # This defines a synchronization channel between the remote IMAP store and the local maildir store
 Far :protonmail-bridge-remote:
 # The remote IMAP store defined above

@@ -1007,7 +1007,9 @@
            lsp-nix-nil-formatter ["nixfmt" "-w" "80"]
            lsp-nix-nil-auto-archive t
            lsp-nix-nil-auto-eval-inputs nil
-           lsp-nix-nil-nixpkgs-input-name "nixpkgs"))
+           lsp-nix-nil-nixpkgs-input-name "nixpkgs"
+           lsp-nix-nixd-server-path "nixd")
+    (setq-hook! nix-mode-hook +format-with-lsp t))
   (after! lsp-treemacs
     (setq! lsp-treemacs-error-list-current-project-only t
            treemacs-show-cursor t))

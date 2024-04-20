@@ -23,11 +23,13 @@ in {
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.packages = optionals (!darwin) [ pkgs.alacritty ];
-      xdg.configFile."alacritty/alacritty.toml".source = pkgs.substituteAll {
-        src = ./alacritty.toml;
+      xdg.configFile."alacritty/alacritty.toml".source = ./alacritty.toml;
+      xdg.configFile."alacritty/main.toml".source = pkgs.substituteAll {
+        src = ./main.toml;
         inherit (cfg) fontFamily fontStyle fontSize opacity padding decorations;
         inherit (cfg.colors) background;
       };
+      xdg.configFile."alacritty/keybindings.toml".source = ./keybindings.toml;
       xdg.configFile."alacritty/themes/".source = ./themes;
     };
   };

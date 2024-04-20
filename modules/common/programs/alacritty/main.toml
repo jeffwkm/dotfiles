@@ -1,0 +1,55 @@
+live_config_reload = true
+working_directory = "None"
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+class = "Alacritty"
+decorations = "@decorations@"
+decorations_theme_variant = "Dark"
+dynamic_padding = false
+dynamic_title = true
+opacity = @opacity@
+startup_mode = "Windowed"
+
+[window.dimensions]
+columns = 0
+lines = 0
+
+[window.padding]
+x = @padding@
+y = @padding@
+
+[cursor]
+style = "Block"
+thickness = 0.185
+unfocused_hollow = true
+
+[font]
+size = @fontSize@
+
+[font.normal]
+family = "@fontFamily@"
+style = "@fontStyle@"
+
+[font.offset]
+x = 0
+y = 0
+
+[scrolling]
+history = 20000
+multiplier = 4
+
+[selection]
+save_to_clipboard = true
+semantic_escape_chars = ",│`|:\" ()[]{}<>"
+
+[mouse]
+hide_when_typing = false
+
+[debug]
+log_level = "Warn"
+persistent_logging = true
+print_events = false
+render_timer = false

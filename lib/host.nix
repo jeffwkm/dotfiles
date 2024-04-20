@@ -13,10 +13,9 @@ let
     else
       home-manager.nixosModules.home-manager)
     ({ config, ... }: {
-      nix.nixPath = mkIf (darwin) {
-        "darwin-config" = "${config.host.config-dir}";
-        nixpkgs = "${inputs.nixpkgs}";
-      };
+      nix.nixPath =
+        optionals darwin [ "darwin-config=${config.host.config-dir}" ];
+
       users.users.${config.user.name}.home = "${config.user.home}";
 
       home-manager = {

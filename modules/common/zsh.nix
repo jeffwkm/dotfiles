@@ -255,6 +255,8 @@ in {
     environment.shells = with pkgs; [ zsh bash ];
     nixpkgs.overlays = [ (final: prev: { zsh = optimize config prev.zsh; }) ];
 
+    programs.command-not-found.enable = true;
+
     home-manager.users.${user.name} = {
       programs.zsh = userConfig;
       home.packages = with pkgs; [
