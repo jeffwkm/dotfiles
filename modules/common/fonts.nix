@@ -1,10 +1,9 @@
-{ config, lib, pkgs, options, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
-with lib.my;
 let
-  inherit (config) user host modules;
-  inherit (host) darwin;
+  inherit (lib.my) mkBoolOpt;
 
+  inherit (config) modules;
   cfg = config.modules.fonts;
 
   font-pkgs = with pkgs; [
@@ -33,19 +32,12 @@ let
 in {
   options.modules.fonts = { enable = mkBoolOpt modules.desktop.enable; };
 
-  config = mkIf cfg.enable ({
+  config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ fontconfig ];
-
     nixpkgs.config.input-fonts.acceptLicense = true;
-  } // (if (options.fonts ? packages) then {
-    fonts = {
-      fontDir.enable = true;
-      packages = font-pkgs;
-    };
-  } else {
-    fonts = {
-      fontDir.enable = true;
-      fonts = font-pkgs;
-    };
-  }));
+    fonts.fontDir.enable = true;
+    fonts.fontDir.decompressFonts = true;
+    fonts.enableDefaultPackages = true;
+    fonts.packages = font-pkgs;
+  };
 }

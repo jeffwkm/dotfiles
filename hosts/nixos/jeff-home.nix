@@ -3,7 +3,7 @@
 
   config = {
     modules = {
-      linux.systemd-boot = true;
+      linux.systemd-boot.enable = true;
       desktop.enable = false;
       dev.enable-all = true;
       programs.mpv.enable = true;

@@ -377,8 +377,7 @@ for_window [class="[Ss]team.*"] \
 ######################################################################
 ### startup initialization
 ######################################################################
-exec "reload-xrdb && \
-      systemctl --user import-environment && \
+exec "systemctl --user import-environment && \
       systemctl --user start sway-session.target && \
       systemctl --user restart emacs.service; \
       on-sway-start"

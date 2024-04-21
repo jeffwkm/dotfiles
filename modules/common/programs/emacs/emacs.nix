@@ -96,7 +96,7 @@ in {
 
         "config-nix.el".text = ''
           ;; (setq! --background-color "${theme.colors.background}")
-          ;; (setq! --window-opacity ${toString theme.windowOpacity})
+          (setq! --window-opacity ${toString theme.windowOpacity})
         '';
 
         # "emacs" = {

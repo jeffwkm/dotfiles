@@ -1,15 +1,9 @@
 { config, lib, pkgs, ... }:
 with lib;
-with lib.my;
 let
+  inherit (lib.my) mkBoolOpt wrapOptimize;
   inherit (config) host user;
   inherit (config.host) darwin;
-
-  lsd_completion =
-    builtins.toFile "_lsd" (builtins.readFile ../../dotfiles/_lsd);
-
-  # emacs_vterm_zsh = builtins.toFile "emacs-vterm-zsh.sh"
-  #   (builtins.readFile ./emacs-vterm-zsh.sh);
 
   makeUserConfig = extra: {
     enable = true;
@@ -17,11 +11,12 @@ let
     history = { };
     initExtraBeforeCompInit = "";
     envExtra = ''
-      fpath+=( ~/.zsh/completions )
+      fpath+=( "${user.home}/.zsh/completions" )
     '';
     profileExtra = "";
     loginExtra = "";
     logoutExtra = "";
+
     prezto = {
       enable = true;
       pmodules = [
@@ -43,10 +38,8 @@ let
         "command-not-found"
         "prompt"
       ];
-      pmoduleDirs = [ ../../dotfiles/zsh/prompts ];
-      # prompt.theme = lib.mkDefault "starship";
-      # prompt.theme = lib.mkDefault "jeffw";
-      prompt.theme = lib.mkDefault "powerlevel10k";
+      pmoduleDirs = [ ./prompts ];
+      prompt.theme = mkDefault "powerlevel10k";
       ssh.identities = [ "id_rsa" ];
       terminal.autoTitle = true;
       utility.safeOps = false;
@@ -163,11 +156,15 @@ let
 
     initExtraFirst = ''
       export USING_P10K=1
+
       [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
-      export ZSHCONFIG="${host.config-dir}/dotfiles/zsh"
-      fpath+=( "$ZSHCONFIG/prompts" "${config.user.home}/.zsh/completions" )
+
+      fpath+=( "${user.home}/.zsh/prompts" "${user.home}/.zsh/completions" )
+
       ${extra.initExtraFirst or ""}
+
       [[ -n "$ZPROFILE" ]] && zmodload zsh/zprof
+
       if [[ "$USING_P10K" -eq 1 ]]; then
         if [[ -r "$HOME/.cache/p10k-instant-prompt-$USER.zsh" ]]; then
           source "$HOME/.cache/p10k-instant-prompt-$USER.zsh"
@@ -176,25 +173,17 @@ let
     '';
 
     initExtra = ''
-      function _zsh_nix_profiles() {
-        echo "$(realpath ~/.nix-profile)"
-      }
-
-      export _ZSH_NIX_PROFILES="$(_zsh_nix_profiles)"
+      [[ -n "$ZPROFILE" ]] && zprof
 
       if [[ "$USING_P10K" -ne 1 ]] ; then
         setopt PROMPT_CR
       fi
       setopt PROMPT_SP
 
-      [[ -n "$ZPROFILE" ]] && zprof
-
       if [[ "$USING_P10K" -eq 1 ]]; then
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
         p10k finalize
       fi
-
-      source ${lsd_completion} 2> /dev/null
 
       if [[ -n "$INSIDE_EMACS" ]] ; then
         prompt restore
@@ -234,6 +223,7 @@ let
     '';
     initExtra = "";
   };
+
   userDarwinConfig = makeUserConfig {
     shellAliases = {
       brew = "/opt/homebrew/bin/brew";
@@ -245,29 +235,35 @@ let
       if [ -z $DISPLAY ]; then export DISPLAY=:0.0; fi
     '';
   };
-  userConfig = if darwin then userDarwinConfig else userLinuxConfig;
+
   cfg = config.modules.zsh;
 in {
-  options.modules.zsh = { enable = mkBoolOpt true; };
+  options.modules.zsh.enable = mkBoolOpt true;
 
   config = mkIf cfg.enable {
     programs.zsh.enable = true;
+
     environment.shells = with pkgs; [ zsh bash ];
-    nixpkgs.overlays = [ (final: prev: { zsh = optimize config prev.zsh; }) ];
 
     programs.command-not-found.enable = true;
 
+    nixpkgs.overlays = [ (wrapOptimize config "zsh") ];
+
     home-manager.users.${user.name} = {
-      programs.zsh = userConfig;
+      programs.zsh = (if darwin then userDarwinConfig else userLinuxConfig);
+
+      home.file.".zsh/prompts".source = ./prompts;
+      home.file.".zsh/completions/_lsd".source = ./_lsd;
+      home.file.".p10k.zsh".source = ./p10k.zsh;
+
       home.packages = with pkgs; [
         nix-zsh-completions
-        starship
-        spaceship-prompt
-        powerline-go
-        liquidprompt
-        iay
-        agkozak-zsh-prompt
         zsh-better-npm-completion
+
+        zsh-powerlevel10k
+        starship
+        powerline-go
+        agkozak-zsh-prompt
       ];
     };
   };

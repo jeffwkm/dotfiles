@@ -9,14 +9,15 @@ let
 in {
   options.modules.desktop = {
     enable = mkBoolOpt false;
-    gnome = mkBoolOpt true;
+    gnome.enable = mkBoolOpt cfg.enable;
+    gnome.services.enable = mkBoolOpt false;
     qt = mkBoolOpt false;
     amdgpu-fan = mkBoolOpt false;
     steam = mkBoolOpt (pkgs.system != "aarch64-linux");
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = optional cfg.gnome (final: prev: {
+    nixpkgs.overlays = optional cfg.gnome.enable (final: prev: {
       gnome = prev.gnome.overrideScope (gfinal: gprev: {
         nautilus = gprev.nautilus.overrideAttrs (old: {
           buildInputs = old.buildInputs ++ (with prev.gst_all_1; [
@@ -42,6 +43,8 @@ in {
       };
     };
 
+    xdg.mime.enable = true;
+
     console = {
       earlySetup = false;
       keyMap = "us";
@@ -49,26 +52,23 @@ in {
       font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
     };
 
+    services.logind.extraConfig = ''
+      # don’t shutdown when power button is short-pressed
+      HandlePowerKey=ignore
+    '';
+
     users.extraUsers.root.extraGroups =
       [ "audio" "input" "plugdev" "libvirtd" ];
 
     sound.enable = true;
-
+    programs.dconf.enable = true;
     security.rtkit.enable = true;
     security.polkit.enable = true;
-
-    services.udisks2 = { enable = true; };
-    programs.gnome-disks.enable = cfg.gnome;
-
     services.gvfs.enable = true;
-    # services.tumbler.enable = true; # thumbnailer
+    services.udisks2.enable = true;
+    programs.gnome-disks.enable = cfg.gnome.enable;
 
-    # programs.thunar.enable = true; # xfce file manager
-    # programs.xfconf.enable = true; # xfce settings
-
-    programs.dconf.enable = true;
-
-    services.gnome = mkIf cfg.gnome {
+    services.gnome = mkIf cfg.gnome.services.enable {
       tracker.enable = true;
       tracker-miners.enable = true;
       sushi.enable = true;
@@ -129,7 +129,7 @@ in {
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let
         gnomePackages = with pkgs;
-          optionals cfg.gnome ([
+          optionals cfg.gnome.enable ([
             baobab
             ffmpegthumbnailer
             gedit
@@ -158,6 +158,7 @@ in {
           optionals cfg.qt [ qt5.full qt5.qtwayland qt5ct adwaita-qt ];
         cli = with pkgs;
           [
+            cava
             ddcutil
             keyd
             latencytop
@@ -166,6 +167,7 @@ in {
             ncpamixer
             pamixer
             playerctl
+            slack-term
             usbutils
             xdg-user-dirs
           ] ++ [
@@ -262,10 +264,11 @@ in {
         home.file.".Xresources.d".source = ./Xresources.d;
         home.file.".Xresources".source =
           ./Xresources.d/.Xresources.TomorrowNight;
+        xdg.configFile."cava/config".source = ./cava/config;
 
         qt = {
           enable = true;
-        } // mkIf cfg.gnome {
+        } // mkIf cfg.gnome.enable {
           platformTheme = "gnome";
           style.name = "adwaita-dark";
           style.package = pkgs.adwaita-qt;

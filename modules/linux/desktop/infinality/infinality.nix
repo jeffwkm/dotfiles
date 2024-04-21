@@ -1,11 +1,10 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
-with lib.my;
 let
-  inherit (config) user host modules;
-  inherit (host) darwin;
+  inherit (lib.my) mkBoolOpt optimize;
+  inherit (config) modules;
 in {
-  options.modules.fonts = { infinality = mkBoolOpt modules.desktop.enable; };
+  options.modules.fonts.infinality = mkBoolOpt modules.desktop.enable;
 
   config = mkIf modules.fonts.infinality {
     nixpkgs.overlays = [

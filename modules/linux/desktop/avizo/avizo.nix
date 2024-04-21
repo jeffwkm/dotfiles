@@ -16,9 +16,9 @@ in {
 
     environment.systemPackages = with pkgs; [ avizo brightnessctl ddcutil ];
 
-    # need "ddcci" kernel module for brightnessctl
-    # boot.extraModulePackages = with config.boot.kernelPackages;
-    #   [ ddcci-driver ];
+    ## need "ddcci" kernel module for brightnessctl
+    boot.extraModulePackages = with config.boot.kernelPackages;
+      [ ddcci-driver ];
 
     boot.kernelModules = [ "i2c-dev" ];
 
@@ -58,11 +58,7 @@ in {
           ExecStart =
             "${pkgs.bash}/bin/bash -c '${pkgs.avizo}/bin/avizo-service | ${pkgs.gnugrep}/bin/grep -v Fade'";
           SyslogLevel = "debug";
-          # LogRateLimitIntervalSec = "5s";
-          # LogRateLimitBurst = "3";
-          # LogFilterPatterns = "~.*Fade.*";
-          # StandardError = "null";
-          # StandardOutput = "null";
+          LogLevelMax = "info";
         };
       };
     };

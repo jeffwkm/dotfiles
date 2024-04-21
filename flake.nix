@@ -65,7 +65,7 @@
 
       nixpkgsConfig = { allowUnfree = true; };
 
-      overlays = import ./pkgsets.nix { inherit inputs nixpkgsConfig; };
+      overlays = import ./nix/pkgsets.nix { inherit inputs nixpkgsConfig; };
 
       mapHosts' = dir: system:
         lib.my.mapHosts dir {
@@ -75,7 +75,7 @@
     in {
       inherit inputs lib;
 
-      options = import ./options-to-json.nix {
+      options = import ./nix/options-to-json.nix {
         pkgs = import nixpkgs { config = nixpkgsConfig; };
         options = self.nixosConfigurations.jeff-nixos.options;
       };

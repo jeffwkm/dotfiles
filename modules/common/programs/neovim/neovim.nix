@@ -6,7 +6,7 @@ let
   pwd = "${host.config-dir}/modules/common/programs/neovim";
   cfg = modules.programs.neovim;
 in {
-  options = { modules.programs.neovim.enable = mkBoolOpt true; };
+  options.modules.programs.neovim.enable = mkBoolOpt true;
 
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = { config, pkgs, ... }: {

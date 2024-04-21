@@ -1,173 +1,25 @@
-{ config, options, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
-with lib.my;
 let
+  inherit (lib.my) mkBoolOpt;
+  inherit (builtins) readFile;
   inherit (config) user modules;
-  cfg = config.modules.linux;
+  inherit (modules) programs;
+  cfg = modules.linux;
 in {
-  options.modules.linux = { systemd-boot = mkBoolOpt false; };
+  options.modules.linux.systemd-boot.enable = mkBoolOpt false;
 
   config = {
     i18n.defaultLocale = mkDefault "en_US.UTF-8";
     time.timeZone = mkDefault "America/New_York";
-
-    nixpkgs.config.permittedInsecurePackages =
-      [ "nodejs-10.24.1" "nodejs-12.22.12" "python-2.7.18.6" ];
-
     nix.settings.trusted-users = [ "root" "${user.name}" ];
     environment.pathsToLink = [ "/libexec" ];
+    security.sudo.wheelNeedsPassword = false;
+    system.autoUpgrade.enable = false;
+    system.autoUpgrade.allowReboot = false;
 
-    environment.sessionVariables = {
-      SSH_AUTH_SOCK = "/run/user/1000/ssh-agent.socket";
-      _GLOBAL_ENV_LOADED = "1";
-    };
-
-    services.vscode-server.enable = modules.programs.vscode.enable;
-
-    users.defaultUserShell = mkIf modules.zsh.enable pkgs.zsh;
-
-    fonts = mkIf modules.fonts.enable {
-      enableDefaultPackages = true;
-      fontDir.enable = true;
-      fontDir.decompressFonts = true;
-      fontconfig = {
-        enable = true;
-        antialias = true;
-        hinting.enable = true;
-        subpixel.rgba = "rgb";
-        subpixel.lcdfilter = "default";
-        defaultFonts = {
-          serif = [ "Inter:medium" "Inter" "Noto Sans" ];
-          sansSerif = [ "Inter:medium" "Inter" "Noto Sans" ];
-          monospace = [
-            "JetBrains Mono Nerd Font:medium"
-            "JetBrains Mono Nerd Font"
-            "JetBrains Mono:medium"
-            "JetBrains Mono"
-          ];
-        };
-        localConf = ''
-          <?xml version="1.0"?>
-          <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
-          <fontconfig>
-            <match target="pattern">
-              <test qual="any" name="family"><string>Noto Sans</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>Inter</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>Roboto</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>Inter</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>Segoe UI</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>Inter</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>arial</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>Inter</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>Helvetica Neue</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>Inter</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>Helvetica</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>Inter</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>Liberation Sans</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>Inter</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>ui-monospace</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>JetBrainsMono Nerd Font</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>SFMono-Regular</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>JetBrainsMono Nerd Font</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>SF Mono</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>JetBrainsMono Nerd Font</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>SF Mono</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>JetBrainsMono Nerd Font</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>Menlo</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>JetBrainsMono Nerd Font</string></edit>
-            </match>
-
-            <match target="pattern">
-              <test qual="any" name="family"><string>Consolas</string></test>
-              <edit name="family" mode="prepend" binding="same"><string>JetBrainsMono Nerd Font</string></edit>
-            </match>
-          </fontconfig>
-        '';
-      };
-    };
-
-    environment.systemPackages = with pkgs; [
-      ananicy-cpp
-      binutils
-      coreutils
-      curl
-      file
-      fscrypt-experimental
-      inetutils
-      iotop
-      kmon
-      libtool
-      lsof
-      nix-index
-      openssh
-      openssl
-      pinentry-curses
-      pkg-config
-      psmisc
-      readline
-      sshfs
-      tcpdump
-      mtr
-      tomb
-      tmux
-      wget
-      xdg-utils
-    ];
-
-    security.sudo = { wheelNeedsPassword = false; };
-
-    users.extraUsers.${user.name} = {
-      isNormalUser = true;
-      home = "${user.home}";
-      description = "${user.full-name}";
-      extraGroups =
-        [ "audio" "input" "users" "wheel" "video" "docker" "libvirtd" ];
-      uid = 1000;
-    };
-
-    users.users.${user.name}.openssh.authorizedKeys.keys =
-      [ (builtins.readFile ../../dotfiles/id_rsa.pub) ];
-
-    system.autoUpgrade = {
-      enable = false;
-      allowReboot = false;
-    };
-
-    # Increase open file limits
-    # Fixes various "too many open files" errors
+    ## Increase open file limits
+    ## Fixes various "too many open files" errors
     systemd.extraConfig = ''
       DefaultLimitNOFILE=1048576
       DefaultTimeoutStopSec=45
@@ -179,19 +31,23 @@ in {
       item = "nofile";
       value = "1048576";
     }];
-    services.logind.extraConfig = ''
-      # don’t shutdown when power button is short-pressed
-      HandlePowerKey=ignore
-    '';
+    boot.kernel.sysctl."fs.inotify.max_user_instances" = 8192;
+    boot.kernel.sysctl."fs.inotify.max_user_watches" = 1164444;
 
-    xdg.mime.enable = true;
-
-    programs.fuse = { userAllowOther = true; };
-
-    services.openssh = {
-      enable = true;
-      ports = mkDefault [ 22 ];
+    environment.sessionVariables = {
+      SSH_AUTH_SOCK = "/run/user/1000/ssh-agent.socket";
+      _GLOBAL_ENV_LOADED = "1";
     };
+
+    services.dbus.enable = true;
+    services.openssh.enable = true;
+    services.openssh.ports = mkDefault [ 22 ];
+    services.openssh.openFirewall = true;
+    services.openssh.settings.PermitRootLogin = "prohibit-password";
+    services.openssh.settings.PasswordAuthentication = true;
+    services.openssh.settings.X11Forwarding = false;
+    programs.mosh.enable = true;
+    programs.fuse.userAllowOther = true;
 
     fileSystems."/mnt/huge" = mkDefault {
       device = "jeff@jeff-home:/mnt/huge";
@@ -212,30 +68,58 @@ in {
       noCheck = true;
     };
 
-    services.dbus.enable = true;
-
-    programs.mosh.enable = true;
-
-    boot.kernel.sysctl = {
-      "fs.inotify.max_user_instances" = 8192;
-      "fs.inotify.max_user_watches" = 1164444;
-    };
-
+    # TODO: find out why this is necessary; this was recommended somewhere
     networking.firewall.allowedTCPPorts = [ 445 139 ]
-      ++ (if config.modules.programs.spotify.enable then [ 57621 ] else [ ]);
+      ++ optionals programs.spotify.enable [ 57621 ];
     networking.firewall.allowedUDPPorts = [ 137 138 ]
-      ++ (if config.modules.programs.spotify.enable then [ 5353 ] else [ ]);
+      ++ optionals programs.spotify.enable [ 5353 ];
 
-    boot.loader = mkIf cfg.systemd-boot {
-      efi = {
-        canTouchEfiVariables = true;
-        efiSysMountPoint = "/boot";
-      };
-      systemd-boot = {
-        enable = true;
-        consoleMode = "auto";
-        configurationLimit = 50;
-      };
+    boot.loader = mkIf cfg.systemd-boot.enable {
+      efi.canTouchEfiVariables = true;
+      efi.efiSysMountPoint = "/boot";
+      systemd-boot.enable = true;
+      systemd-boot.consoleMode = "auto";
+      systemd-boot.configurationLimit = 30;
     };
+
+    users.extraUsers.${user.name} = {
+      isNormalUser = true;
+      home = "${user.home}";
+      description = "${user.full-name}";
+      extraGroups =
+        [ "audio" "input" "users" "wheel" "video" "docker" "libvirtd" ];
+      uid = 1000;
+    };
+
+    users.users.${user.name}.openssh.authorizedKeys.keys =
+      [ (readFile ./id_rsa.pub) ];
+
+    environment.systemPackages = with pkgs; [
+      ananicy-cpp
+      binutils
+      coreutils
+      curl
+      file
+      fscrypt-experimental
+      inetutils
+      iotop
+      kmon
+      libtool
+      lsof
+      mtr
+      nix-index
+      openssh
+      openssl
+      pinentry-curses
+      pkg-config
+      psmisc
+      readline
+      sshfs
+      tcpdump
+      tmux
+      tomb
+      wget
+      xdg-utils
+    ];
   };
 }

@@ -24,7 +24,7 @@ let
         users.${config.user.name} = {
           options =
             (import ../hosts/options.nix { inherit lib config; }).options;
-          imports = importModules [ ../nix-config.nix ];
+          imports = importModules [ ../nix/nix-config.nix ];
           config = {
             home.stateVersion = "22.11"; # TODO: set this individually per host
           };
@@ -59,7 +59,7 @@ in rec {
             overlays = overlays;
           };
         }
-      ] ++ [ path ../nix-config.nix ] ++ (systemHomeManagerModules darwin)
+      ] ++ [ path ../nix/nix-config.nix ] ++ (systemHomeManagerModules darwin)
         ++ (mapModulesRec' (toString ../modules) importModule ignore);
     };
 

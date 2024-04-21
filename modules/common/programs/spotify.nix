@@ -6,10 +6,8 @@ let
   inherit (config) user host modules;
   cfg = config.modules.programs.spotify;
 in {
-  options.modules.programs.spotify = {
-    enable = mkBoolOpt false;
-    spotifyd.enable = mkBoolOpt false;
-  };
+  options.modules.programs.spotify.enable = mkBoolOpt false;
+  options.modules.programs.spotify.spotifyd.enable = mkBoolOpt false;
 
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = {
@@ -25,11 +23,11 @@ in {
         # colorScheme = "CatppuccinMacchiato";
 
         theme = spicePkgs.themes.catppuccin;
-        colorScheme = "mocha";
-        # colorScheme = "macchiatto";
+        # colorScheme = "mocha";
+        colorScheme = "macchiatto";
 
         enabledExtensions = with spicePkgs.extensions; [
-          fullAppDisplay
+          # fullAppDisplay
           shuffle # shuffle+ (special characters are sanitized out of ext names)
           hidePodcasts
           keyboardShortcut

@@ -11,6 +11,8 @@ in {
   imports = [ inputs.vscode-server.nixosModule ];
 
   config = mkIf cfg.enable {
+    services.vscode-server.enable = true;
+
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       programs.vscode = {
         enable = true;

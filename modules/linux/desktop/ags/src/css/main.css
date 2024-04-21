@@ -33,6 +33,9 @@
   --color-orange: oklch(82.37% 0.101 52.63);
   --color-yellow: oklch(87.9% 0.074 84.75);
   --color-green: oklch(83.5% 0.108 138.15);
+  --color-mauve: oklch(78.71% 0.119 304.77);
+  --color-lavender-rgb: #b7bdf8;
+  --color-lavender: oklch(from var(--color-lavender-rgb) l c h);
 
   --fg-warning: oklch(from var(--color-orange) l c h / 0.97);
   --bg-warning: oklch(from var(--color-orange) calc(l * 0.4) calc(c * 0.5) h / 0.5);
@@ -54,9 +57,9 @@
 
   --color-bar-background: oklch(from var(--color-mocha-background) l c h / 0.75);
 
-  --color-bar-border: oklch(from var(--color-bar-background) 0.75 0.1 h / 0.66);
+  --color-bar-border: oklch(from var(--color-lavender) calc(l * 0.8) calc(c * 0.8) h / 0.8);
 
-  --bar-border: 2px solid var(--color-bar-border);
+  --bar-border: 3.5px solid var(--color-bar-border);
 
   --border-opacity: 0.99;
   --internal-border-opacity: 0.8;
@@ -149,7 +152,7 @@
 }
 
 .outer {
-  padding: 3px;
+  padding: 4px;
   background: var(--color-bar-background);
 
   min-height: 24px;

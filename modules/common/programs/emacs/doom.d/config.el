@@ -19,7 +19,7 @@
 (defvar --window-opacity nil)
 (defvar --background-color nil)
 (load (expand-file-name "~/.config/config-nix.el"))
-(setq! --window-opacity 0.865)
+;; (setq! --window-opacity 0.865)
 
 (setq! split-window-preferred-function 'split-window-prefer-horizontal)
 
@@ -144,11 +144,8 @@
     (if (and modeline? (mac?))
         nil
       (apply 'font-spec
-             :family (if variable? "Inter" "JetBrainsMono Nerd Font")
-             :size (if variable?
-                       13
-                     (+ (if (equal (system-name) "jeff-nixos") 14 14)
-                        (if modeline? -1 0)))
+             :family (if variable? "Inter" "JetBrains Mono Nerd Font")
+             :size (+ 14 (if variable? 0 0) (if modeline? -1 0))
              :weight (if variable? 'medium (if modeline? 'bold 'semibold))
              nil)))
   ;; apply changes when loaded with interactive `eval-defun' etc
@@ -171,10 +168,9 @@
 
     (custom-theme-set-faces! 'catppuccin
       `(highlight
-        :foreground ,(catppuccin-lighten "#cad3f5" 50)
-        :background ,(catppuccin-lighten "#2f3244" 14))
-      `(shadow :foreground ,(catppuccin-lighten "#6e738d" 20)))
-
+        :foreground ,(catppuccin-lighten "#cad3f5" 40)
+        :background ,(catppuccin-lighten "#2f3244" 16))
+      `(shadow :foreground ,(catppuccin-lighten "#6e738d" 25)))
     (defun --set-faces-on-frame (&optional frame)
       (when (and frame (display-graphic-p frame))
         (set-face-background 'default --background-color frame)))

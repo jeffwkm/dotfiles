@@ -13,7 +13,7 @@ with lib.my; {
   config = {
     host.optimize = true;
     modules = {
-      linux.systemd-boot = true;
+      linux.systemd-boot.enable = true;
       desktop.enable = true;
       desktop.amdgpu-fan = true;
       dev.enable-all = true;
@@ -75,9 +75,9 @@ with lib.my; {
       vdpauinfo
       libva-utils
       vulkan-tools
-      firefox_nightly
-      input-leap_git
-      waynergy_git
+      # firefox_nightly
+      # input-leap_git
+      # waynergy_git
       dnsmasq
     ];
 
@@ -165,9 +165,11 @@ with lib.my; {
       };
     };
 
+    boot.kernelPackages = pkgs.linuxPackages;
     # boot.kernelPackages = pkgs.linuxPackages_latest;
-    boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    # boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
+    ## user-space scheduler daemon
     chaotic.scx.enable = false;
     systemd.services.scx.serviceConfig.SyslogLevel = "debug";
     systemd.services.scx.serviceConfig.LogLevelMax = "info";
