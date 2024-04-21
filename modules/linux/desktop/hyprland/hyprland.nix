@@ -100,7 +100,7 @@ in {
           SyslogLevel = "debug";
           LogLevelMax = "info";
           Restart = "always";
-          RestartSec = 15;
+          RestartSec = 5;
         };
       };
 

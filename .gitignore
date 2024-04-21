@@ -18,3 +18,4 @@ chromium_dev_keys.sh
 **/neovim/config/data
 **/nvim/data
 **/wallpapers/*
+/nixos-options.json

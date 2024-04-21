@@ -3,8 +3,14 @@ with lib;
 with lib.my; {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    inputs.nixos-apple-silicon.nixosModules.default
-  ];
+    inputs.nixos-apple-silicon.nixosModules.default ]
+  ++ (with inputs.chaotic.nixosModules; [
+      nyx-cache
+      nyx-overlay
+      # mesa-git
+      # scx
+      # zfs-impermanence-on-shutdown
+    ]);
 
   config = {
     # host options
@@ -21,6 +27,7 @@ with lib.my; {
       '';
       programs.alacritty.enable = true;
       services.protonmail.enable = true;
+      services.protonvpn.enable = false;
       services.protonvpn.configFile =
         "/private/wg-quick/protonvpn-1-US-VA-14.conf";
     };
