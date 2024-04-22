@@ -1,0 +1,4 @@
+#+title: nixos config (+ nix-darwin)
+
+* screenshot
+[[./2024-04-22-023439_hyprshot.png]]
