@@ -4,7 +4,7 @@ let
   inherit (lib.my) mkBoolOpt optimize;
   inherit (config) modules;
 in {
-  options.modules.fonts.infinality = mkBoolOpt modules.desktop.enable;
+  options.modules.fonts.infinality = mkBoolOpt false;
 
   config = mkIf modules.fonts.infinality {
     nixpkgs.overlays = [

@@ -125,6 +125,8 @@ in {
 
     environment.sessionVariables.XCURSOR_THEME = "capitaine-cursors-white";
     environment.sessionVariables.XCURSOR_SIZE = "24";
+    environment.sessionVariables.FREETYPE_PROPERTIES =
+      "truetype:interpreter-version=38";
 
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let

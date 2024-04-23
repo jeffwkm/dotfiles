@@ -26,13 +26,14 @@ in {
         programs.kitty = {
           enable = true;
           # font.name = "${cfg.fontFamily} Bold ${cfg.fontStyle}";
-          font.name = "${cfg.fontFamily} Bold";
-          font.size = cfg.fontSize;
+          # font.name = "${cfg.fontFamily} Bold";
+          # font.size = cfg.fontSize;
           extraConfig = ''
             include ~/.config/kitty/extra.conf
           '';
           theme = "Catppuccin-Macchiato";
           environment = { "LD_LIBRARY_PATH" = ""; };
+          shellIntegration.mode = "no-rc no-cursor";
         };
       };
   };

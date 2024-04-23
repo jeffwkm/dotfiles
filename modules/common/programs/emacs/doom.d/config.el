@@ -146,7 +146,7 @@
       (apply 'font-spec
              :family (if variable? "Inter" "JetBrains Mono Nerd Font")
              :size (+ 14 (if variable? 0 0) (if modeline? -1 0))
-             :weight (if variable? 'medium (if modeline? 'bold 'semibold))
+             :weight (if variable? 'medium (if modeline? 'extrabold 'bold))
              nil)))
   ;; apply changes when loaded with interactive `eval-defun' etc
   (cl-eval-when 'eval
