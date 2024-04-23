@@ -212,21 +212,22 @@ button {
   button {
     @apply --mono;
     padding: 0 1px;
-    min-width: 2em;
+    min-width: 1.4em;
     background: transparent;
-
-    border: var(--status-entry-border);
-    border-left-width: 0.75px;
-    border-right-width: 0.75px;
+    border: 1.5px solid var(--status-entry-border-color);
+    &:not(.first) {
+      border-left-width: 0.75px;
+    }
+    &:not(.last) {
+      border-right-width: 0.75px;
+    }
     &.first {
-      border-left: var(--status-entry-border);
       border-top-left-radius: 9999px;
       border-bottom-left-radius: 9999px;
       padding: 0;
       padding-left: 2px;
     }
     &.last {
-      border-right: var(--status-entry-border);
       border-top-right-radius: 9999px;
       border-bottom-right-radius: 9999px;
       padding: 0;

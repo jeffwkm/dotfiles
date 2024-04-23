@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -eu
+
+export LD_LIBRARY_PATH=
+/etc/profiles/per-user/$USER/bin/kitty "$@"

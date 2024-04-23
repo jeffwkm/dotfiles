@@ -47,6 +47,8 @@ const workspacesGroup = (monitorId: number, groupId: number) => {
           Widget.Button({
             class_name: `${id === first.id ? "first" : ""} ${id === last.id ? "last" : ""} ${id === activeId ? "focused" : ""}`,
             label: `${groupSyms[toGroupId(id)]}${toGroupWsId(id) % 10}`,
+            vexpand: false,
+            vpack: "center",
             hpack: "center",
             on_clicked: () => Hyprland.messageAsync(`dispatch workspace ${id}`),
           }),

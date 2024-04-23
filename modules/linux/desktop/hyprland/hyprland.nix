@@ -16,6 +16,7 @@ in {
     nixpkgs.overlays = [
       inputs.hyprland.overlays.default
       inputs.hyprland.overlays.wlroots-hyprland
+      inputs.hyprpaper.overlays.default
       (final: prev: {
         wlroots = optimize' prev.wlroots;
         wlroots-hyprland = optimize' prev.wlroots-hyprland;

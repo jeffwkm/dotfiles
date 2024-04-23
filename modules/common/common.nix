@@ -33,6 +33,9 @@ in {
         programs.htop.package = optimize config pkgs.htop;
         programs.gpg.enable = true;
 
+        programs.imv.enable = true;
+        programs.pqiv.enable = true;
+
         home.packages = with pkgs;
           [
             (optimize config fd)
@@ -70,6 +73,7 @@ in {
             speedtest-rs
             termtosvg
             tgpt
+            timg
             tmux
             tree
             unrar

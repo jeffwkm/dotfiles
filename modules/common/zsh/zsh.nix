@@ -56,7 +56,11 @@ let
       __ = "sudo -i";
       dmesg = "sudo dmesg";
       top = "sudo btop";
-      ".." = "cd ..";
+      cd = "z";
+      ".." = "z ..";
+      cdi = "zi";
+      f = "fzf";
+      fI = "fzf --preview='timg -pk -g 60x80 -U -W {}'";
       e = "emacsclient -t -a emacs";
       ee = "emacs -nw";
       v = "vim";
@@ -251,6 +255,8 @@ in {
 
     home-manager.users.${user.name} = {
       programs.zsh = (if darwin then userDarwinConfig else userLinuxConfig);
+      programs.zoxide.enable = true;
+      programs.fzf.enable = true;
 
       home.file.".zsh/prompts".source = ./prompts;
       home.file.".zsh/completions/_lsd".source = ./_lsd;

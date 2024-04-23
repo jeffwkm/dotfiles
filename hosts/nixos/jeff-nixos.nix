@@ -257,7 +257,7 @@ with lib.my; {
       ];
     };
 
-    # nix.settings.max-jobs = 32;
+    nix.settings.max-jobs = 4;
     nix.settings.cores = 16;
 
     networking.extraHosts = ''
