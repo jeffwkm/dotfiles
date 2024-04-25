@@ -211,6 +211,7 @@ button {
 
   button {
     @apply --mono;
+    font-weight: 800;
     padding: 0 1px;
     min-width: 1.4em;
     background: transparent;
@@ -225,13 +226,13 @@ button {
       border-top-left-radius: 9999px;
       border-bottom-left-radius: 9999px;
       padding: 0;
-      padding-left: 2px;
+      padding-left: 3px;
     }
     &.last {
       border-top-right-radius: 9999px;
       border-bottom-right-radius: 9999px;
       padding: 0;
-      padding-right: 2px;
+      padding-right: 3px;
     }
     &.first.last {
       padding: 0 1px;
@@ -239,7 +240,8 @@ button {
     &.focused {
       background: oklch(from var(--color-primary) calc(l * 0.9) c h / 0.6);
       .outer.active & {
-        background: oklch(from var(--color-primary) calc(l * 0.9) c h / 0.95);
+        background: oklch(from var(--color-primary) calc(l * 0.8) c h / 0.85);
+        color: oklch(from var(--fg-text-white) l c h / 0.96);
       }
     }
   }

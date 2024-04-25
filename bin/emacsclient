@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 [[ -n "$ALACRITTY_WINDOW_ID" ]] && export TERM=alacritty-direct
-[[ -n "$SSH_TTY" ]] && export TERM=alacritty-direct
+[[ -n "$SSH_TTY" ]] && export TERM=xterm-kitty
 /run/current-system/sw/bin/emacsclient "$@"
