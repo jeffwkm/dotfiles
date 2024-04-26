@@ -114,7 +114,7 @@ export const Volume = () =>
         class_name: "status",
         child: Widget.Box({
           child: Widget.CircularProgress({
-            class_name: "circular",
+            class_name: "circular-progress",
             value: Audio.speaker.bind("volume").as((v) => v || 0),
           }),
         }),

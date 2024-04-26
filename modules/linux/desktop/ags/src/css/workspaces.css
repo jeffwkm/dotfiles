@@ -1,0 +1,62 @@
+.workspaces {
+  > * {
+    margin-right: 6px;
+  }
+  > *:last-child {
+    margin-right: 0px;
+  }
+}
+
+.workspaces-group {
+  border-radius: 9999px;
+  background: var(--status-entry-background);
+  padding: 0;
+
+  button {
+    @apply --mono;
+    font-weight: 800;
+    padding: 0 1px;
+    min-width: 1.4em;
+    background: transparent;
+    border: 1.5px solid var(--status-entry-border-color);
+    &:not(.first) {
+      border-left-width: 0.75px;
+    }
+    &:not(.last) {
+      border-right-width: 0.75px;
+    }
+    &.first {
+      border-top-left-radius: 9999px;
+      border-bottom-left-radius: 9999px;
+      padding: 0;
+      padding-left: 3px;
+    }
+    &.last {
+      border-top-right-radius: 9999px;
+      border-bottom-right-radius: 9999px;
+      padding: 0;
+      padding-right: 3px;
+    }
+    &.first.last {
+      padding: 0 1px;
+    }
+    &.focused {
+      background: oklch(from var(--color-primary) calc(l * 0.9) c h / 0.6);
+      .outer.active & {
+        background: oklch(from var(--color-primary) calc(l * 0.8) c h / 0.85);
+        color: oklch(from var(--fg-text-white) l c h / 0.96);
+      }
+    }
+  }
+}
+
+.client-title {
+  margin-right: 6em;
+  & > label {
+    padding: 0 10px;
+    background: var(--status-entry-background);
+    border: var(--status-entry-border);
+    border-radius: 9999px;
+    min-width: 2em;
+  }
+}

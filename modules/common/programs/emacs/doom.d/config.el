@@ -856,6 +856,7 @@
         ;; cider-preferred-build-tool 'shadow-cljs
         ;; cider-default-cljs-repl 'shadow-select
         cider-shadow-default-options ":dev"
+        cider-clojure-cli-aliases ":dev"
         clojure-docstring-fill-column 80
         clojure-align-forms-automatically nil)
   (--each '((cider-clojure-cli-global-options . "-A:dev:test:+default")

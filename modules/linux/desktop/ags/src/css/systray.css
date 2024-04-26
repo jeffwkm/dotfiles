@@ -1,0 +1,30 @@
+.systray {
+  @apply --status-entry;
+  padding: 0px;
+  button {
+    &:hover {
+      background: white(0.08);
+    }
+    .icon {
+      font-size: 15px;
+    }
+  }
+}
+
+menu {
+  @apply --sans;
+  padding: 2px;
+  background: rgba(30, 30, 30, 0.875);
+  border: 2px solid rgba(0, 0, 0, 1);
+  font-size: 13px;
+  color: #d8d8d8;
+  button,
+  label {
+    font-weight: 600;
+  }
+  button,
+  item {
+    padding: 6px;
+    margin: 0;
+  }
+}

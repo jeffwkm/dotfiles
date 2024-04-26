@@ -1,0 +1,70 @@
+.datetime {
+  @apply --status-entry;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+.battery {
+  @apply --status-entry;
+}
+
+.volume {
+  @apply --status-entry;
+
+  .status {
+    > box {
+      margin-top: -1px;
+      .circular-progress {
+        color: var(--color-blue);
+      }
+    }
+  }
+}
+
+.cpu-group {
+  @apply --status-entry;
+  border-color: var(--fg-yellow);
+  background: var(--bg-yellow);
+  .icon {
+    font-size: 15px;
+  }
+
+  .cputemp {
+    label {
+      @apply --mono;
+      font-weight: 700;
+      margin-right: -1px;
+      padding-left: 1px;
+    }
+    &.critical .icon {
+      color: rgb(var(--error) / 0.8);
+    }
+    &.high .icon {
+      color: oklch(from var(--fg-warning) l c calc(h - 6) / 0.95);
+    }
+    &.medium .icon {
+      color: oklch(from var(--fg-warning) l c h / 0.9);
+    }
+    &.low .icon {
+      color: oklch(from var(--fg-warning) l c calc(h + 22) / 0.88);
+    }
+  }
+}
+
+.media-event-box {
+  .media {
+    @apply --status-entry;
+    border-width: 1.8px;
+    border-color: var(--fg-inactive);
+    background: var(--bg-inactive);
+    > *:not(:last-child) {
+      border-right-color: var(--fg-inactive);
+    }
+    .icon.player {
+      font-size: 15px;
+    }
+  }
+  &:hover {
+    background: white(0.05);
+  }
+}
