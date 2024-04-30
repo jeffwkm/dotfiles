@@ -64,6 +64,7 @@ let
       e = "emacsclient -t -a emacs";
       ee = "emacs -nw";
       v = "vim";
+      ssh = "mosh";
       ### nix
       ss = "nix-search";
       ns = "nix search nixpkgs";

@@ -14,6 +14,7 @@ in {
     nix.configureBuildUsers = true;
     environment.loginShell = pkgs.zsh;
     services.nix-daemon.enable = true;
+    programs.mosh.enable = true;
 
     homebrew.brews = optionals programs.mpv.enable [ "mpv" "vapoursynth" ];
     homebrew.casks = with programs;
