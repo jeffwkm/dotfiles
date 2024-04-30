@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (lib) foldl';
+  inherit (lib) foldl' optional optionals;
   addFlagC = pkg: flag:
     pkg.overrideAttrs (attrs: {
       NIX_CFLAGS_COMPILE = (attrs.NIX_CFLAGS_COMPILE or "") + " ${flag}";
@@ -11,34 +11,27 @@ let
     pkg.overrideAttrs
     (attrs: { RUSTFLAGS = (attrs.RUSTFLAGS or "") + " ${flag}"; });
   addFlagsRust = pkg: flags: foldl' (pkg: flag: addFlagRust pkg flag) pkg flags;
-  addFlags = pkg: flagsC: flagsRust:
-    addFlagsRust (addFlagsC pkg flagsC) flagsRust;
+  addFlags = pkg: { c, rust }: addFlagsRust (addFlagsC pkg c) rust;
 in rec {
+  optimizePkg = { enable ? true, level ? 2, native ? true }:
+    pkg:
+    if (!enable) then
+      pkg
+    else
+      addFlags pkg {
+        c = (optional (level == 2) "-O2" ++ optional (level == 3) "-O3"
+          ++ optionals (level > 3) [ "-Ofast" "-fno-finite-math-only" ]
+          ++ optional native "-march=native");
+        rust = (optionals (level == 2) [ "-C" "opt-level=2" ]
+          ++ optionals (level > 2) [ "-C" "opt-level=3" ]
+          ++ optionals native [ "-C" "target-cpu=native" ]);
+      };
   optimize = config: pkg:
-    if config.host.optimize then
-      (addFlags pkg [ "-O3" "-march=native" ] [
-        "-C"
-        "opt-level=3"
-        "-C"
-        "target-cpu=native"
-      ])
-    else
-      pkg;
-  optimizeNative = config: pkg:
-    if config.host.optimize then
-      (addFlags pkg [ "-march=native" ] [ "-C" "target-cpu=native" ])
-    else
-      pkg;
-  optimizeFast = config: pkg:
-    if config.host.optimize then
-      (addFlags pkg [ "-march=native" "-Ofast" "-fno-finite-math-only" ] [
-        "-C"
-        "opt-level=3"
-        "-C"
-        "target-cpu=native"
-      ])
-    else
-      pkg;
+    optimizePkg {
+      enable = config.host.optimize;
+      level = 3;
+      native = true;
+    } pkg;
   wrapOptimize = config: pkgname:
     (final: prev: { final.pkgname = optimize config prev.pkgname; });
 }

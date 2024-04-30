@@ -1,4 +1,6 @@
-{ config, options, pkgs, lib, modulesPath, ... }: {
+{ config, options, pkgs, lib, modulesPath, ... }:
+with lib;
+with lib.my; {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   config = {
@@ -7,11 +9,23 @@
       desktop.enable = false;
       dev.enable-all = true;
       programs.mpv.enable = true;
+      programs.kitty.enable = true;
       services.protonvpn.configFile =
-        "/private/wg-quick/protonvpn-1-US-VA-14.conf";
+        "/private/wg-quick/protonvpn-US-NY-306.conf";
     };
 
-    environment.systemPackages = with pkgs; [ firmwareLinuxNonfree rtorrent ];
+    nixpkgs.overlays = [
+      (final: prev: {
+        libtorrent = optimizePkg { level = 3; } prev.libtorrent;
+        rtorrent = optimizePkg { level = 3; } prev.rtorrent;
+      })
+    ];
+
+    environment.systemPackages = with pkgs; [
+      firmwareLinuxNonfree
+      rtorrent
+      pyrosimple
+    ];
 
     networking.useDHCP = true;
 
@@ -38,8 +52,8 @@
     hardware.cpu.intel.updateMicrocode = true;
     hardware.enableAllFirmware = true;
 
-    networking.firewall.allowedTCPPorts = [ 43227 ];
-    networking.firewall.allowedUDPPorts = [ 43227 ];
+    networking.firewall.allowedTCPPorts = [ 32838 ];
+    networking.firewall.allowedUDPPorts = [ 32838 42170 ];
 
     services.samba = {
       enable = true;
@@ -77,7 +91,7 @@
     };
 
     services.openvpn.servers = {
-      torguard = { config = "config /root/vpn/torguard.conf"; };
+      # torguard = { config = "config /root/vpn/torguard.conf"; };
     };
 
     system.stateVersion = "22.11";

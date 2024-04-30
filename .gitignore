@@ -19,3 +19,4 @@ chromium_dev_keys.sh
 **/nvim/data
 **/wallpapers/*
 /nixos-options.json
+**/do-ssh-add*

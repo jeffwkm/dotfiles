@@ -17,8 +17,11 @@ let
       mu4e-alert
       mu4e-crypto
     ]);
-
-  emacs-base = optimizeFast config (if darwin then
+  emacs-base = optimizePkg {
+    enable = host.optimize;
+    level = 4;
+    native = true;
+  } (if darwin then
     pkgs.emacs-git.overrideAttrs (old: {
       patches = (old.patches or [ ]) ++ [
         # Fix OS window role so that yabai can pick up emacs
