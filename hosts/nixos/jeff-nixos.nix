@@ -44,7 +44,7 @@ with lib.my; {
       programs.vscode.enable = true;
     };
 
-    services.openssh.ports = [ 22224 ];
+    services.openssh.ports = [ 22 ];
 
     # nix.settings.system-features = [ "gccarch-znver3" ];
 

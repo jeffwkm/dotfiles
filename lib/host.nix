@@ -51,6 +51,7 @@ in rec {
             host.darwin = darwin;
             host.name = hostname;
             networking.hostName = mkDefault hostname;
+            nix.nixPath = [ "nixpkgs=${config.host.config-dir}/nixpkgs.nix" ];
           };
         })
         {

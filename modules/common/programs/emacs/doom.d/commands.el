@@ -252,6 +252,7 @@ interactively for spacing value."
           "~/.cargo/registry"
           "~/.rustup"
           "~/.cache"
+          "~/.m2"
           ,doom-emacs-dir
           ,doom-local-dir)
   (pushnew! --external-source-file-paths (expand-file-name it)))

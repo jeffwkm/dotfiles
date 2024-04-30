@@ -5,7 +5,11 @@ let
   inherit (config) user host modules;
   cfg = modules.wayland.hyprland;
   pwd = "${host.config-dir}/modules/linux/desktop/hyprland";
-  optimize' = optimizeNative config;
+  optimize' = optimizePkg {
+    enable = host.optimize;
+    level = 2;
+    native = true;
+  };
 in {
   options.modules.wayland.hyprland = {
     enable = mkBoolOpt modules.wayland.enable;
