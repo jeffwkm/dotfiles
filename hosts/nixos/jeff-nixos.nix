@@ -79,6 +79,7 @@ with lib.my; {
       # input-leap_git
       # waynergy_git
       dnsmasq
+      # google-chrome
     ];
 
     ## create machine definitions in /etc/machines

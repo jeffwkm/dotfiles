@@ -28,7 +28,7 @@
   padding: 4px;
   background: var(--color-bar-background);
 
-  min-height: 24px;
+  min-height: 23px;
 
   .task.active .bar {
     border-color: oklch(from var(--fg-green) l c h);

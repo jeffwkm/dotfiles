@@ -2,6 +2,8 @@ import Audio from "resource:///com/github/Aylur/ags/service/audio.js";
 import Battery from "resource:///com/github/Aylur/ags/service/battery.js";
 import SystemTray from "resource:///com/github/Aylur/ags/service/systemtray.js";
 
+const hostName = Utils.exec("hostname").trim();
+
 const timeNow = Variable("", {
   poll: [1000, 'date +"%l:%M %p"'],
 });
@@ -12,13 +14,46 @@ const dateNow = Variable("", {
 
 const cpuTemp = Variable(0, {
   poll: [
-    1000,
+    1500,
     (_) => {
-      const temp = Utils.readFile("/sys/class/hwmon/hwmon4/temp1_input");
+      let temp;
+      if (hostName === "jeff-nixos") {
+        temp = Utils.readFile("/sys/class/hwmon/hwmon4/temp1_input");
+      }
       if (!temp) {
         return 0;
       }
       return parseInt(temp) / 1000;
+    },
+  ],
+});
+
+const avgList = (list: number[]) => list.reduce((a, b) => a + b, 0) / list.length;
+
+const getCpuMhzAll = () =>
+  Utils.readFile("/proc/cpuinfo")
+    .split("\n")
+    .map((line) => {
+      if (line.startsWith("cpu MHz")) {
+        return parseFloat(line.split(":")[1].trim());
+      } else {
+        return null;
+      }
+    })
+    .filter((x) => x);
+
+const getCpuMhzAvg = () => avgList(getCpuMhzAll());
+
+const cpuMhz = Variable(0, {
+  poll: [
+    1500,
+    (_) => {
+      let speed;
+      speed = getCpuMhzAvg();
+      if (!speed || speed === "") {
+        return 0;
+      }
+      return Math.floor(speed);
     },
   ],
 });
@@ -40,15 +75,17 @@ export const Clock = () =>
 
 export const CpuSpeed = () =>
   Widget.Box({
-    class_name: "cpu",
+    class_name: "cpu-speed",
     children: [
-      Widget.Icon({
-        class_name: "icon",
-        icon: "processor-symbolic",
-      }),
+      // Widget.Icon({
+      //   class_name: "icon",
+      //   icon: "computer-symbolic",
+      // }),
       Widget.Label({
-        class_name: "label",
-        label: "MHz",
+        class_name: "mhz",
+
+        visible: cpuMhz.bind().as((mhz) => mhz > 0),
+        label: cpuMhz.bind().as((mhz) => `${mhz} ㎒`),
       }),
     ],
   });
@@ -66,29 +103,25 @@ export const CpuTemp = () => {
     return levels[threshold];
   };
 
-  const icon = Widget.Icon({
-    class_name: "icon",
-    icon: "sensors-temperature-symbolic",
-  });
-
-  const label = Widget.Label({
-    label: cpuTemp.bind().as((t) => `${Math.floor(t)}°`),
-  });
-
   return Widget.Box({
     class_name: cpuTemp.bind().as((t) => `cputemp ${getLevel(t)}`),
     visible: cpuTemp.bind().as((t) => t > 0),
-    children: [label, icon],
+    children: [
+      Widget.Label({
+        label: cpuTemp.bind().as((t) => `${Math.floor(t)}°`),
+      }),
+      Widget.Icon({
+        class_name: "icon",
+        icon: "sensors-temperature-symbolic",
+      }),
+    ],
   });
 };
 
 export const CpuGroup = () =>
   Widget.Box({
     class_name: "cpu-group",
-    children: [
-      // CpuSpeed(),
-      CpuTemp(),
-    ],
+    children: [CpuSpeed(), CpuTemp()],
   });
 
 const volumeIcons = {

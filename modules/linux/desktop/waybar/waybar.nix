@@ -5,24 +5,18 @@ with lib.my;
 let
   inherit (config) user modules;
   cfg = config.modules.wayland.waybar;
-  cpufreqPy = pkgs.writeTextFile {
-    name = "cpufreq.py";
-    text = readFile ./cpufreq.py;
-    executable = true;
-  };
 in {
-  options.modules.wayland.waybar = {
-    enable = mkBoolOpt modules.wayland.enable;
-  };
+  options.modules.wayland.waybar = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays =
       [ (final: prev: { waybar = optimize config prev.waybar; }) ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
-      xdg.configFile."waybar/config".text =
-        replaceStrings [ "__CPUFREQ_PY__" ] [ "${cpufreqPy}" ]
-        (readFile ./config);
+      # xdg.configFile."waybar/config".text =
+      #   replaceStrings [ "__CPUFREQ_PY__" ] [ "${cpufreqPy}" ]
+      #   (readFile ./config);
+      xdg.configFile."waybar/config".source = ./config;
 
       xdg.configFile."waybar/style.css".source = ./style.css;
 
