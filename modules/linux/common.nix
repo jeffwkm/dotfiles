@@ -54,6 +54,7 @@ in {
       "umac-128-etm@openssh.com"
     ];
     programs.mosh.enable = true;
+    programs.mosh.openFirewall = true;
     programs.fuse.userAllowOther = true;
 
     fileSystems."/mnt/huge" = mkDefault {
