@@ -235,7 +235,10 @@
 
 (after! mu4e
   (setq! mu4e-get-mail-command "mbsync -a"
-         mu4e-update-interval 300)
+         mu4e-change-filenames-when-moving t
+         ;; mu4e-update-interval 300
+         mu4e-headers-auto-update t
+         message-signature nil)
   (set-email-account!
    "protonmail" '((user-full-name . "Jeff Workman")
                   (user-mail-address . "jeff.workman@protonmail.com")

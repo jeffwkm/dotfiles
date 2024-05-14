@@ -146,6 +146,7 @@ let
       # mpv options
       V = "--volume";
       V50 = "--volume=50";
+      FLOG = "--hwdec=auto --vf-clr --gamma=-14 --saturation=100 --contrast=40";
       SHF = "--shuffle";
       FS0 = "--fs --fs-screen=0";
       FS1 = "--fs --fs-screen=1";

@@ -61,7 +61,7 @@ in {
           Service = let
             mu-init = pkgs.writeShellScript "mu-init" ''
               [ -e "$HOME/.cache/mu" ] && exit 0
-              mu init --maildir=~/.mail/protonmail-bridge --my-address='/jeff\.workman.*/' --my-address='/xjeffw.*/' --ignored-address='/.*reply.*/'
+              mu init --maildir=~/.mail/protonmail/ --my-address='/jeff\.workman.*/' --my-address='/asdf...@protonmail\.com/'
               mu index
             '';
           in {
