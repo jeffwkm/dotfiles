@@ -1,7 +1,10 @@
 .systray {
-  @apply --status-entry;
+  /* @apply --status-entry; */
   padding: 0px;
-  button {
+  > * {
+    @apply --status-entry;
+  }
+  > {
     &:hover {
       background: white(0.08);
     }

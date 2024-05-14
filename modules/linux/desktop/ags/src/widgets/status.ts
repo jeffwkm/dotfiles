@@ -73,9 +73,12 @@ export const Clock = () =>
     ],
   });
 
+const cpuSpeedVisible = cpuMhz.bind().as((mhz) => mhz > 0);
+
 export const CpuSpeed = () =>
   Widget.Box({
     class_name: "cpu-speed",
+    visible: cpuSpeedVisible,
     children: [
       // Widget.Icon({
       //   class_name: "icon",
@@ -84,11 +87,12 @@ export const CpuSpeed = () =>
       Widget.Label({
         class_name: "mhz",
 
-        visible: cpuMhz.bind().as((mhz) => mhz > 0),
         label: cpuMhz.bind().as((mhz) => `${mhz} ㎒`),
       }),
     ],
   });
+
+const cpuTempVisible = cpuTemp.bind().as((t) => t > 0);
 
 export const CpuTemp = () => {
   const levels = {
@@ -105,7 +109,7 @@ export const CpuTemp = () => {
 
   return Widget.Box({
     class_name: cpuTemp.bind().as((t) => `cputemp ${getLevel(t)}`),
-    visible: cpuTemp.bind().as((t) => t > 0),
+    visible: cpuTempVisible,
     children: [
       Widget.Label({
         label: cpuTemp.bind().as((t) => `${Math.floor(t)}°`),
@@ -120,6 +124,7 @@ export const CpuTemp = () => {
 
 export const CpuGroup = () =>
   Widget.Box({
+    visible: Utils.merge([cpuSpeedVisible, cpuTempVisible], (s, t) => s || t),
     class_name: "cpu-group",
     children: [CpuSpeed(), CpuTemp()],
   });
