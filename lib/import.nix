@@ -1,5 +1,5 @@
 { inputs, lib, ... }:
-let modulesPath = "${inputs.nixpkgs}/nixos/modules";
+let modulesPath = "${inputs.nixpkgs-primary}/nixos/modules";
 in rec {
   importModule = path:
     { config, options, pkgs, ... }:

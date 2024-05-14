@@ -3,8 +3,8 @@ with lib;
 let
   inherit (lib.my.import) importModule importModules;
   inherit (lib.my.modules) mapModules mapModulesRec' ignoreDarwin ignoreLinux;
-  inherit (inputs) home-manager nixpkgs;
-  inherit (nixpkgs.lib) nixosSystem;
+  inherit (inputs) home-manager nixpkgs-primary;
+  inherit (nixpkgs-primary.lib) nixosSystem;
   inherit (inputs.darwin.lib) darwinSystem;
 
   systemHomeManagerModules = darwin: [

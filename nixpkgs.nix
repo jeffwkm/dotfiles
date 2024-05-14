@@ -1,2 +1,2 @@
 { system ? builtins.currentSystem, ... }@args:
-import (import ./default.nix).inputs.nixpkgs args
+import (import ./default.nix).inputs.nixpkgs-primary args

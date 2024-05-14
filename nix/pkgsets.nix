@@ -16,7 +16,7 @@
   };
   pkgs-x86 = final: prev:
     prev.lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-      pkgs-x86 = import inputs.nixpkgs {
+      pkgs-x86 = import inputs.nixpkgs-primary {
         system = "x86_64-darwin";
         config = nixpkgsConfig;
       };

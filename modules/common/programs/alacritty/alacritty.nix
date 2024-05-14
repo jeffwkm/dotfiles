@@ -19,7 +19,7 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays =
-      [ (final: prev: { alacritty = optimize config prev.alacritty_git; }) ];
+      [ (final: prev: { alacritty = optimize config prev.alacritty; }) ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.packages = optionals (!darwin) [ pkgs.alacritty ];

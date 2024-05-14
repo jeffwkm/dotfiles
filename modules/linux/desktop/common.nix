@@ -101,10 +101,9 @@ in {
       enable = true;
       wlr.enable = wayland.enable;
       # xdgOpenUsePortal = true;
-      extraPortals = with pkgs;
-        [ xdg-desktop-portal-gtk ]
-        ++ optional wayland.enable xdg-desktop-portal-wlr
-        ++ optional wayland.hyprland.enable xdg-desktop-portal-hyprland;
+      extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+      # ++ optional wayland.enable xdg-desktop-portal-wlr
+      # ++ optional wayland.hyprland.enable xdg-desktop-portal-hyprland;
     };
 
     programs.steam = {

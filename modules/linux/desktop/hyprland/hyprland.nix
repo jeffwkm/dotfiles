@@ -16,20 +16,21 @@ in {
     extraConf = mkOpt types.str "";
   };
 
+  imports = [ inputs.hyprland.nixosModules.default ];
+
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      inputs.hyprland.overlays.default
-      inputs.hyprland.overlays.wlroots-hyprland
+      # inputs.hyprland.overlays.default
       inputs.hyprpaper.overlays.default
       (final: prev: {
-        wlroots = optimize' prev.wlroots;
-        wlroots-hyprland = optimize' prev.wlroots-hyprland;
-        hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
-          wlroots-hyprland = final.wlroots-hyprland;
-        });
-        hyprland = optimize' (prev.hyprland.override {
-          wlroots-hyprland = final.wlroots-hyprland;
-        });
+        # wlroots = optimize' prev.wlroots;
+        # hyprland-unwrapped = oprimize' prev.hyprland-unwrapped;
+        # hyprland = optimize' prev.hyprland;
+        # hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
+        #   wlroots-hyprland = final.wlroots-hyprland;
+        # });
+        # hyprland =
+        #   optimize' (prev.hyprland.override { wlroots = final.wlroots; });
         hyprpaper = optimize' prev.hyprpaper;
       })
     ];

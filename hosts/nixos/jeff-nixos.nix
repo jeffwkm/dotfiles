@@ -1,14 +1,15 @@
 { config, options, pkgs, lib, inputs, modulesPath, ... }:
 with lib;
 with lib.my; {
-  imports = ([ (modulesPath + "/installer/scan/not-detected.nix") ]
-    ++ (with inputs.chaotic.nixosModules; [
-      nyx-cache
-      nyx-overlay
-      mesa-git
-      scx
-      # zfs-impermanence-on-shutdown
-    ]));
+  imports = ([ (modulesPath + "/installer/scan/not-detected.nix") ]);
+  # ++ (with inputs.chaotic.nixosModules;
+  #   [
+  #     nyx-cache
+  #     nyx-overlay
+  #     mesa-git
+  #     scx
+  #     # zfs-impermanence-on-shutdown
+  #   ]));
 
   config = {
     host.optimize = true;
@@ -171,9 +172,9 @@ with lib.my; {
     # boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     ## user-space scheduler daemon
-    chaotic.scx.enable = false;
-    systemd.services.scx.serviceConfig.SyslogLevel = "debug";
-    systemd.services.scx.serviceConfig.LogLevelMax = "info";
+    # chaotic.scx.enable = false;
+    # systemd.services.scx.serviceConfig.SyslogLevel = "debug";
+    # systemd.services.scx.serviceConfig.LogLevelMax = "info";
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
@@ -212,28 +213,28 @@ with lib.my; {
     # chaotic.hdr.kernelPackages = pkgs.linuxPackages_cachyos;
     # chaotic.hdr.kernelPackages = pkgs.linuxKernel.packages.linux_hdr
 
-    chaotic.mesa-git = {
-      enable = true;
-      #method = "GBM_BACKENDS_PATH"; # default
-      #method = "replaceRuntimeDependencies";
-      extraPackages = with pkgs; [
-        vaapiVdpau
-        libvdpau-va-gl
-        libva
-        amdvlk
-        rocm-opencl-icd
-        rocm-opencl-runtime
-        libvdpau
-      ];
-      extraPackages32 = with pkgs.pkgsi686Linux; [
-        vaapiVdpau
-        libvdpau-va-gl
-        libva
-        amdvlk
-        vdpauinfo
-        libva-utils
-      ];
-    };
+    # chaotic.mesa-git = {
+    #   enable = true;
+    #   #method = "GBM_BACKENDS_PATH"; # default
+    #   #method = "replaceRuntimeDependencies";
+    #   extraPackages = with pkgs; [
+    #     vaapiVdpau
+    #     libvdpau-va-gl
+    #     libva
+    #     amdvlk
+    #     rocm-opencl-icd
+    #     rocm-opencl-runtime
+    #     libvdpau
+    #   ];
+    #   extraPackages32 = with pkgs.pkgsi686Linux; [
+    #     vaapiVdpau
+    #     libvdpau-va-gl
+    #     libva
+    #     amdvlk
+    #     vdpauinfo
+    #     libva-utils
+    #   ];
+    # };
 
     hardware.opengl = {
       enable = true;

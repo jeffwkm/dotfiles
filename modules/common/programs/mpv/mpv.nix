@@ -13,13 +13,12 @@ in {
     enable = mkBoolOpt modules.desktop.enable;
     vapoursynth =
       mkBoolOpt (cfg.enable && !darwin && pkgs.system != "aarch64-linux");
-    git = mkBoolOpt false;
     extraConf = mkOpt types.str "";
   };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      # customize mpv build
+      # customize mpv build for plugins and vapoursynth-mvtools
       (final: prev:
         let
           mpvOpts = {
@@ -35,30 +34,10 @@ in {
             ];
           };
           wrapMpv = mpv-unwrapped: prev.wrapMpv mpv-unwrapped mpvOpts;
-          fromGit = mpv-unwrapped:
-            if (!cfg.git) then
-              mpv-unwrapped
-            else
-              mpv-unwrapped.overrideAttrs (old:
-                # use mpv from github master
-                lib.optionalAttrs false {
-                  src = prev.fetchFromGitHub {
-                    owner = "mpv-player";
-                    repo = "mpv";
-                    rev = "e76660cc54751726eee041c9b2ebd1beaff68599";
-                    sha256 =
-                      "sha256-PC6deDra8Gd91CpF5RJSlVrvkmXgrUmfqR29B7DRRUk=";
-                  };
-                });
           withVS = mpv-unwrapped:
             mpv-unwrapped.override { vapoursynthSupport = cfg.vapoursynth; };
         in {
-          mpv = pipe prev.mpv-unwrapped [
-            fromGit
-            withVS
-            wrapMpv
-            (optimize config)
-          ];
+          mpv = pipe prev.mpv-unwrapped [ withVS wrapMpv (optimize config) ];
         })
     ];
 

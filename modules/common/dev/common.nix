@@ -40,7 +40,7 @@ in {
           nixfmt-classic
           nodePackages.stylelint
           nodePackages.prettier
-          nodejs_21
+          nodejs_latest
           openai
           python3Packages.grip
           rbenv

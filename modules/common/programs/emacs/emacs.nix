@@ -15,7 +15,6 @@ let
       treesit-grammars.with-all-grammars
       mu4e
       mu4e-alert
-      mu4e-crypto
     ]);
   emacs-base = optimizePkg {
     enable = host.optimize;
