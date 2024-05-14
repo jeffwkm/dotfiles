@@ -27,6 +27,14 @@ in {
               convert
               mpris
               mpv-playlistmanager
+              # modernx
+              # modernx-zydezu
+              # mpv-osc-modern
+              # videoclip
+              # cutter
+              # uosc
+              thumbnail
+              # thumbfast
             ];
             extraMakeWrapperArgs = optionals cfg.vapoursynth [
               "--prefix"
