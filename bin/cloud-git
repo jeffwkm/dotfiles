@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+
+import os, subprocess, sys
+
+host = 'jeff-aws.ddns.net'
+
+def run_cmd(cmd):
+    return subprocess.run(cmd, shell=True, check=True)
+
+def ssh_cmd(cmd):
+    return run_cmd(f'ssh {host} {cmd}')
+
+def list_repos():
+    ssh_cmd('ls -1 /git/')
+
+def create_repo(name):
+    ssh_cmd(f'git init --bare /git/{name}.git')
+
+# main cli handler
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print('Usage: cloud-git <command> [args]')
+        print('Commands: list, create')
+        sys.exit(1)
+
+    cmd = sys.argv[1]
+    if cmd == 'list':
+        list_repos()
+    elif cmd == 'create':
+        if len(sys.argv) < 3:
+            print('Usage: cloud-git create <name>')
+            sys.exit(1)
+        create_repo(sys.argv[2])
+    else:
+        print(f'Unknown command: {cmd}')
+        sys.exit(1)
