@@ -1,6 +1,8 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
+(package! consult :pin "c0d8a12bce2568298ff9bcfec1c6cb5e68ca0b61")
+
 (package! aggressive-indent)
 (package! alert)
 ;; (package! cider
