@@ -1,5 +1,19 @@
 ;; -*- lexical-binding: t -*-
 
+(setq! debug-on-error t)
+(pushnew! debug-ignored-errors
+          'scan-sexps
+          ".*debug-on-message.*"
+          "\.\*Selecting deleted buffer\.\*")
+;; (toggle-debug-on-error)
+(setq! debug-on-message ".*Selecting deleted buffer.*")
+(setq! backtrace-on-redisplay-error t)
+;; (setq! backtrace-on-redisplay-error nil)
+
+;;
+;; (consult-xref)
+;;
+
 (require 'dash)
 (require 's)
 (require 'f)
@@ -19,19 +33,10 @@
 (defvar --window-opacity nil)
 (defvar --background-color nil)
 (load (expand-file-name "~/.config/config-nix.el"))
-;; (setq! --window-opacity 0.865)
+;; (setq! --window-opacity 0.85)
 
 (setq! split-window-preferred-function 'split-window-prefer-horizontal)
 
-;; (setq! debug-on-error t)
-(pushnew! debug-ignored-errors
-          'scan-sexps
-          ".*debug-on-message.*"
-          "\.\*Selecting deleted buffer\.\*")
-;; (toggle-debug-on-error)
-;; (setq! debug-on-message ".*Selecting deleted buffer.*")
-;; (setq! backtrace-on-redisplay-error t)
-;; (setq! backtrace-on-redisplay-error nil)
 
 (after! copilot
   (pushnew! copilot-disable-predicates '--byte-compiling-p)

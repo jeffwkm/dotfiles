@@ -6,7 +6,7 @@ with lib.my; {
       nyx-cache
       nyx-overlay
       mesa-git
-      scx
+      # scx
       # zfs-impermanence-on-shutdown
     ]));
 
@@ -169,9 +169,9 @@ with lib.my; {
     boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     ## user-space scheduler daemon
-    chaotic.scx.enable = true;
-    systemd.services.scx.serviceConfig.SyslogLevel = "debug";
-    systemd.services.scx.serviceConfig.LogLevelMax = "info";
+    # chaotic.scx.enable = true;
+    # systemd.services.scx.serviceConfig.SyslogLevel = "debug";
+    # systemd.services.scx.serviceConfig.LogLevelMax = "info";
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =

@@ -70,6 +70,7 @@ in {
             pass
             procs
             ripgrep
+            rippkgs
             screenfetch
             speedtest-rs
             termtosvg
@@ -84,8 +85,7 @@ in {
             xz
             yt-dlp
             zip
-          ] ++ (with inputs.rippkgs.packages."${pkgs.system}";
-            [ rippkgs rippkgs-index ] ++ [ cmatrix tmatrix unimatrix ]);
+          ] ++ [ cmatrix tmatrix unimatrix ];
       };
   };
 }
