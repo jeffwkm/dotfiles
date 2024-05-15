@@ -2,7 +2,7 @@
 
 import os, subprocess, sys
 
-host = 'jeff-aws.ddns.net'
+host = 'jeff-cloud.ddns.net'
 
 def run_cmd(cmd):
     return subprocess.run(cmd, shell=True, check=True)
