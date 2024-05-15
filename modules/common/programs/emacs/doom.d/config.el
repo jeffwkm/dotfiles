@@ -949,13 +949,8 @@
 ;; (define-advice )
 (after! lsp-mode
   (setq! lsp-idle-delay 0.5
-         ;; lsp-response-timeout 10
-         ;; lsp-enable-dap-auto-configure nil
          lsp-ui-doc-max-width 80
-         ;; lsp-ui-doc-max-height 20
-         ;; lsp-ui-doc-use-childframe t
          lsp-ui-doc-use-webkit nil
-         ;; lsp-keep-workspace-alive nil
          lsp-auto-guess-root t
          lsp-guess-root-without-session t
          lsp-warn-no-matched-clients nil
@@ -972,14 +967,6 @@
            lsp-rust-rustfmt-path "rustfmt"
            lsp-rust-analyzer-diagnostics-disabled ["inactive-code"]
            lsp-rust-analyzer-display-chaining-hints t))
-  (after! company
-    ;; trying to fix company-mode errors from conflict with lsp-mode
-    (setq! lsp-completion-enable-additional-text-edit t
-           lsp-completion-default-behaviour :replace
-           lsp-enable-snippet nil
-           lsp-enable-links nil
-           lsp-enable-symbol-highlighting t
-           lsp-symbol-highlighting-skip-current nil))
   (after! nix-mode
     (defcustom-lsp lsp-nix-nil-auto-archive nil
       "Auto-archiving behavior which may use network."

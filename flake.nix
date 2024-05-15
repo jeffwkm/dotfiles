@@ -4,10 +4,9 @@
   inputs = {
     ## System
     nixpkgs-primary.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    # nixpkgs-unstable.follows = "nixos-apple-silicon/nixpkgs";
     nixos-apple-silicon.url = "github:tpwrules/nixos-apple-silicon";
+    nixos-apple-silicon.inputs.nixpkgs.follows = "nixpkgs-primary";
     nixos-apple-silicon.inputs.rust-overlay.follows = "rust-overlay";
-    # nixos-apple-silicon.inputs.nixpkgs.follows = "nixpkgs-primary";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
     nixpkgs-2305.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
     darwin.url = "github:LnL7/nix-darwin";
@@ -15,6 +14,7 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-primary";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    # chaotic.inputs.nixpkgs.follows = "nixpkgs-primary";
     ## Nix helpers
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;

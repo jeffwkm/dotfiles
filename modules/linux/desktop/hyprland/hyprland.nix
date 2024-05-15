@@ -41,7 +41,6 @@ in {
       hypridle
       hyprlock
       hyprpaper
-      hyprland-autoname-workspaces
       hyprkeys
     ];
 
@@ -53,9 +52,6 @@ in {
         xdg.configFile."hypr/hyprlock.conf".source = link "hyprlock.conf";
         xdg.configFile."hypr/mocha.conf".source = link "mocha.conf";
         xdg.configFile."hypr/hyprland.extra.conf".text = cfg.extraConf;
-
-        xdg.configFile."hyprland-autoname-workspaces/config.toml".source =
-          link "_autoname_config.toml";
 
         systemd.user.targets.hyprland-session = {
           Unit = {
@@ -101,19 +97,6 @@ in {
             LogLevelMax = "info";
             Restart = "always";
             RestartSec = 5;
-          };
-        };
-
-        systemd.user.services.hyprland-autoname-workspaces = {
-          Unit = {
-            Description = "hyprland-autoname-workspaces service";
-            PartOf = [ "graphical-session.target" ];
-          };
-          Install = { WantedBy = [ "hyprland-session.target" ]; };
-          Service = {
-            Type = "simple";
-            ExecStart =
-              "${pkgs.hyprland-autoname-workspaces}/bin/hyprland-autoname-workspaces";
           };
         };
       };
