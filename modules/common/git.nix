@@ -20,6 +20,9 @@ in {
           url."https://aur.archlinux.org/".insteadOf = "aur://";
           url."git@github.com:".insteadOf = "gh://";
           url."git@bitbucket.org:".insteadOf = "bb://";
+          url."jeff@jeff-nixos:/home/jeff/".insteadOf = "jeff-nixos://";
+          url."jeff@jeff-asahi:/home/jeff/".insteadOf = "jeff-asahi://";
+          url."jeff@jeff-aws.ddns.net/git/".insteadOf = "jeff-aws://";
         };
       };
     };
