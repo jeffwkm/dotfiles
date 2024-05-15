@@ -1,14 +1,24 @@
 ;; -*- lexical-binding: t -*-
 
-(setq! debug-on-error t)
+(defun --toggle-emacs-debug (&optional force enable)
+  (interactive)
+  (let ((enable (if force (not (not enable)) (not debug-on-error))))
+    (setq! debug-on-error enable
+           backtrace-on-redisplay-error enable
+           debug-on-message (if enable ".*Selecting deleted buffer.*" nil))
+    (if enable
+        (message "Enabled emacs debugging")
+      (message "Disabled emacs debugging"))
+    enable))
+
+;; (setq backtrace-on-redisplay-error nil)
+
 (pushnew! debug-ignored-errors
           'scan-sexps
           ".*debug-on-message.*"
           "\.\*Selecting deleted buffer\.\*")
+
 ;; (toggle-debug-on-error)
-(setq! debug-on-message ".*Selecting deleted buffer.*")
-(setq! backtrace-on-redisplay-error t)
-;; (setq! backtrace-on-redisplay-error nil)
 
 ;;
 ;; (consult-xref)
@@ -160,7 +170,7 @@
 (progn
   (defun --configure-fonts ()
     (setq! doom-font (--get-font-spec)
-           --modeline-font nil  ;; (--get-font-spec nil t)
+           --modeline-font nil ;; (--get-font-spec nil t)
            doom-big-font nil
            doom-big-font-increment 2
            doom-font-increment 1
@@ -490,7 +500,10 @@
   (when (or (graphical?) (and (featurep 'server) server-process))
     (--load-default-session))
   (--kill-external-source-buffers)
-  (--projectile-remove-external-projects))
+  (--projectile-remove-external-projects)
+  (require 'tsc)
+  (require 'tsc-dyn)
+  (--toggle-emacs-debug t t))
 (add-hook! 'emacs-startup-hook :depth 90 '--emacs-startup)
 
 (after! tramp
