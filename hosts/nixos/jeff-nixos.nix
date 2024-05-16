@@ -36,6 +36,7 @@ with lib.my; {
       programs.alacritty.enable = true;
       programs.mpv.extraConf = ''
         autofit=1080 # fix for mpv+hyprland multi-monitor bug
+        ao=pulse # pipewire default gives crackling audio
       '';
       programs.spotify.enable = true;
       programs.firefox.enable = true;

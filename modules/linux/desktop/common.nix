@@ -79,6 +79,7 @@ in {
       alsa.enable = true;
       alsa.support32Bit = mkDefault true;
       pulse.enable = true;
+      # don't remember why this is here
       extraConfig.pipewire."92-low-latency.conf" = {
         context.modules = [{
           name = "libpipewire-module-protocol-pulse";
@@ -258,8 +259,6 @@ in {
             "file:///mnt/huge/Youtube"
             "file:///mnt/huge/files"
           ];
-          gtk3.extraConfig = { gtk-application-prefer-dark-theme = true; };
-          gtk4.extraConfig = { gtk-application-prefer-dark-theme = true; };
         };
 
         home.file.".Xresources.d".source = ./Xresources.d;
