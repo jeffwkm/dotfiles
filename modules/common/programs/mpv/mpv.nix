@@ -49,34 +49,36 @@ in {
         })
     ];
 
-    home-manager.users.${user.name} = { config, pkgs, ... }: {
-      home.packages = with pkgs;
-        optionals (!darwin) [ mpv mpvc celluloid ffmpeg ]
-        ++ optionals cfg.vapoursynth [ vapoursynth vapoursynth-mvtools ];
-
-      xdg.configFile = let
-        mpvExtra = (if darwin then ''
-          input-ipc-server=/tmp/mpvsocket
-        '' else
-          ''
-            gpu-context=waylandvk
-          '' + (if cfg.vapoursynth then ''
-            vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
-          '' else
-            ""));
-        inputExtra = (if cfg.vapoursynth then ''
-          I vf toggle format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
-        '' else
-          "");
+    home-manager.users.${user.name} = { config, pkgs, ... }:
+      let link = config.lib.file.mkOutOfStoreSymlink;
       in {
-        "mpv/mpv.conf".text = (readFile ./mpv.conf) + mpvExtra + cfg.extraConf;
-        "mpv/input.conf".text = (readFile ./input.conf) + inputExtra;
-        "mpv/script-opts/stats.conf".text = readFile ./script-opts/stats.conf;
-        "mpv/lua-settings/mpv_thumbnail_script.conf".source =
-          ./lua-settings/mpv_thumbnail_script.conf;
-        "mpv/motioninterpolation.vpy".source =
-          config.lib.file.mkOutOfStoreSymlink "${pwd}/motioninterpolation.vpy";
+        home.packages = with pkgs;
+          optionals (!darwin) [ mpv mpvc celluloid ffmpeg ]
+          ++ optionals cfg.vapoursynth [ vapoursynth vapoursynth-mvtools ];
+
+        xdg.configFile = let
+          mpvExtra = (if darwin then ''
+            input-ipc-server=/tmp/mpvsocket
+          '' else
+            "" + (if cfg.vapoursynth then ''
+              vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
+            '' else
+              ""));
+          inputExtra = (if cfg.vapoursynth then ''
+            I vf toggle format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
+          '' else
+            "");
+        in {
+          "mpv/mpv.conf".text = (readFile ./mpv.conf) + mpvExtra
+            + cfg.extraConf;
+          "mpv/input.conf".text = (readFile ./input.conf) + inputExtra;
+          "mpv/script-opts/stats.conf".source =
+            link "${pwd}/script-opts/stats.conf";
+          "mpv/script-opts/mpv_thumbnail_script.conf".source =
+            link "${pwd}/script-opts/mpv_thumbnail_script.conf";
+          "mpv/motioninterpolation.vpy".source =
+            link "${pwd}/motioninterpolation.vpy";
+        };
       };
-    };
   };
 }
