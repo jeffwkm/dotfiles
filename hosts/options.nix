@@ -8,7 +8,7 @@ in {
     user = {
       name = mkOpt str "jeff";
       full-name = mkOpt str "Jeff Workman";
-      email = mkOpt str "jeff.workman@gmail.com";
+      email = mkOpt str "jeff.workman@protonmail.com";
       home = mkOpt str "${host.home-root}/${user.name}";
     };
     host = {

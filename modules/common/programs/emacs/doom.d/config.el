@@ -10,19 +10,10 @@
         (message "Enabled emacs debugging")
       (message "Disabled emacs debugging"))
     enable))
-
-;; (setq backtrace-on-redisplay-error nil)
-
 (pushnew! debug-ignored-errors
           'scan-sexps
           ".*debug-on-message.*"
           "\.\*Selecting deleted buffer\.\*")
-
-;; (toggle-debug-on-error)
-
-;;
-;; (consult-xref)
-;;
 
 (require 'dash)
 (require 's)
@@ -47,7 +38,6 @@
 
 (setq! split-window-preferred-function 'split-window-prefer-horizontal)
 
-
 (after! copilot
   (pushnew! copilot-disable-predicates '--byte-compiling-p)
   (pushnew! warning-suppress-types '(copilot copilot-exceeds-max-char)))
@@ -55,7 +45,7 @@
 (require 'gcmh)
 
 (setq! user-full-name "Jeff Workman"
-       user-mail-address "jeff.workman@gmail.com"
+       user-mail-address "jeff.workman@protonmail.com"
        doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
        smie-indent-basic 2
@@ -359,9 +349,6 @@
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :config
   (use-package! tree-sitter)
-  (add-hook! (emacs-lisp-mode lisp-interaction-mode) 'elisp-slime-nav-mode)
-  (map! :mode elisp-slime-nav-mode
-        "M-." nil)
   (map! :mode (emacs-lisp-mode lisp-interaction-mode)
         :localleader
         "e p" 'eval-print-last-sexp)
@@ -552,14 +539,6 @@
   :config
   (setq-hook! (c-mode c++-mode objc-mode java-mode)
     indent-tabs-mode t))
-
-(use-package! aggressive-indent
-  :config
-  (setq! aggressive-indent-sit-for-time 0)
-  (dolist (mode '(cider-repl-mode c-mode c++-mode objc-mode java-mode))
-    (pushnew! aggressive-indent-excluded-modes mode))
-  ;; conflicts with apheleia-mode
-  (global-aggressive-indent-mode 0))
 
 (after! corfu
   (corfu-popupinfo-mode 1)
@@ -896,6 +875,8 @@
   (set-mode-name clojurec-mode "CLJC")
   (add-hook! (clojure-mode clojurescript-mode clojurec-mode) 'cider-mode 'apheleia-mode)
   (add-hook! (clojure-mode clojurescript-mode clojurec-mode cider-repl-mode) 'lispy-mode)
+  (setq-hook! (clojure-mode clojurescript-mode clojurec-mode)
+    lsp-lens-enable nil)
   (define-key! 'cider-mode-map
     "M-." nil ;; 'cider-find-var
     "C-c C-k" 'cider-load-buffer
@@ -1397,24 +1378,14 @@
   (map! :mode treemacs-mode
         "C-o" (cmd! (call-interactively 'other-window))))
 
-;; (after! emojify
-;;   :config
-;;   (global-emojify-mode -1)
-;;   (global-emojify-mode-line-mode -1)
-
-;;   (custom-set-variables
-;;    '(emojify-display-style 'image)
-;;    '(emojify-emoji-styles '(unicode))))
-
 (defmacro --setup-js-prettier-modes (feature-modes extra-modes)
   "Configure modes that are auto-formatted by external `prettier` tool."
   (let* ((features feature-modes)
          (modes `(,@feature-modes ,@extra-modes))
          (forms (-mapcat (lambda (mode)
-                           (list `(setq-mode-local ,mode +format-with-lsp nil)
-                                 `(pushnew! aggressive-indent-excluded-modes ',mode)))
+                           (list `(setq-mode-local ,mode +format-with-lsp nil)))
                          modes)))
-    `(after! (lsp-mode aggressive-indent)
+    `(after! lsp-mode
        (-each ',features 'require)
        (after! ,features ,@forms)
        ',modes)))

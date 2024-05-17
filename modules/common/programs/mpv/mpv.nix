@@ -74,8 +74,10 @@ in {
           "mpv/input.conf".text = (readFile ./input.conf) + inputExtra;
           "mpv/script-opts/stats.conf".source =
             link "${pwd}/script-opts/stats.conf";
-          "mpv/script-opts/mpv_thumbnail_script.conf".source =
-            link "${pwd}/script-opts/mpv_thumbnail_script.conf";
+          "mpv/lua-settings/mpv_thumbnail_script.conf".text =
+            replaceStrings [ "__CACHE_DIR__" ]
+            [ "${user.home}/.cache/mpv-thumbnail" ]
+            (readFile ./lua-settings/mpv_thumbnail_script.conf);
           "mpv/motioninterpolation.vpy".source =
             link "${pwd}/motioninterpolation.vpy";
         };

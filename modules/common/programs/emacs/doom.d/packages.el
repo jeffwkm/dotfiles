@@ -1,31 +1,25 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
+;; override the pinned versions of some packages
 (package! consult :pin "c0d8a12bce2568298ff9bcfec1c6cb5e68ca0b61")
+(package! lsp-mode :pin "62e1f68c1f2363f7ebe8f1c2762e472f3b5de46a") ; 9.0.0 pre-release
+;; (package! org-roam :pin ...)
 
-(package! aggressive-indent)
-(package! alert)
-;; (package! cider
-;;   :recipe (:host github :repo "clojure-emacs/cider")
-;;   :pin "6e5294624959736c486f7a466bd5e78ce6183ab9")
-;; (package! clj-refactor
-;;   :recipe (:host github :repo "clojure-emacs/clj-refactor.el")
-;;   :pin "b476345c580ae7cbc6b356ba0157db782684c47f")
-;; (package! clojure-mode
-;;   :recipe (:host github :repo "clojure-emacs/clojure-mode")
-;;   :pin "481ca480e8b7b6c90881f8bd8434addab1d33778")
-(package! catppuccin-theme)
-(package! centered-window)
+;; non-elpa packages
 (package! shell-maker :recipe
   (:host github :repo "xenodium/chatgpt-shell" :files ("shell-maker.el")))
 (package! chatgpt-shell :recipe
   (:host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell.el")))
 (package! copilot :recipe
   (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
-;; (package! deferred)
-(package! disable-mouse)
 (package! elsa :recipe (:host github :repo "emacs-elsa/Elsa"))
-(package! elisp-slime-nav :built-in 'prefer)
+(package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
+
+(package! alert)
+(package! catppuccin-theme)
+(package! centered-window)
+(package! disable-mouse)
 (package! emacsql)
 (package! eshell-prompt-extras)
 (package! eterm-256color)
@@ -38,36 +32,27 @@
 (package! git-link)
 (package! git-messenger)
 (package! goto-chg)
-(package! groovy-mode)
-(package! gscholar-bibtex)
-;;(package! ligature)
-(package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
+(package! mentor)                       ; rtorrent client
 (package! nameless)
-(package! nginx-mode)
-;;(package! nix-buffer :built-in 'prefer)
-;;(package! nix-sandbox :built-in 'prefer)
-;;(package! nix-update :built-in 'prefer)
-(package! org-fancy-priorities)
-;; (package! org-pomodoro)
-;; (package! org-present)
-;; (package! org-projectile)
+(package! org-present)
 (package! org-ql)
 (package! org-ref)
-;; (package! org-roam)
-(package! org-roam-bibtex)
-(package! org-roam-ui)
 (package! org-roam-ql)
 (package! org-roam-ql-ql)
 (package! org-roam-timestamps)
+(package! org-roam-ui)
 (package! org-super-agenda)
-(package! paradox)
+(package! paradox)                      ; package manager
 (package! paren-face)
-(package! pkgbuild-mode)
 (package! rainbow-mode)
 (package! shut-up)
-;; (package! swiper)
-(package! systemd)
-(package! vimrc-mode)
 (package! volatile-highlights)
 (package! whitespace)
+
+;; major modes
+(package! groovy-mode)
+(package! nginx-mode)
+(package! pkgbuild-mode)
+(package! systemd)
+(package! vimrc-mode)
 (package! yaml-mode)

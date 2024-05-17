@@ -52,7 +52,8 @@ let
         ++ [ "LDFLAGS=-headerpad_max_install_names" ];
     })
   else if modules.wayland.enable then
-    pkgs.emacs29-pgtk
+    pkgs.emacs-pgtk # git from emacs-overlay
+    # pkgs.emacs29-pgtk # stable from nixpkgs
   else
     pkgs.emacs29-nox);
 in {

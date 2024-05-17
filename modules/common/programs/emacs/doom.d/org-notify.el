@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2020 Jeff Workman
 
-;; Author: Jeff Workman <jeff.workman@gmail.com>
+;; Author: Jeff Workman <jeff.workman@protonmail.com>
 ;; Version: 0.1.0
 ;; Package-Requires: ((s "1.10.0") (dash "2.11.0") (alert "1.2") (org-ql))
 ;; Keywords: org, org-mode, alert, notify, notifications, calendar
@@ -52,8 +52,8 @@
   ;; `'(ts :on today)
   `'(ts-active :from (->> (ts-now)
                           (ts-adjust 'day -2))
-               :to   (->> (ts-now)
-                          (ts-adjust 'day 1))))
+     :to   (->> (ts-now)
+                (ts-adjust 'day 1))))
 
 (defun org-notify--extract (x)
   (let* ((hl (car (alist-get 'headline (list x))))
@@ -123,11 +123,11 @@
 
 (defun org-notify--format (x)
   (cl-flet ((f
-             (field)
-             (plist-get x field))
+              (field)
+              (plist-get x field))
             (format-time
-             (x)
-             (or (-some->> x (ts-format "%l:%M %p")) "")))
+              (x)
+              (or (-some->> x (ts-format "%l:%M %p")) "")))
     (let* ((title (f :title))
            (scheduled (-some-> (f :scheduled) (ts-parse)))
            (deadline (-some-> (f :deadline) (ts-parse)))
