@@ -44,10 +44,7 @@ in {
           Type = "simple";
           ExecStart = "${pkgs.emacs}/bin/emacs --fg-daemon";
           Restart = "no";
-          Environment = [
-            "DOOMDIR=%h/.config/doom-config"
-            "DOOMLOCALDIR=%h/.config/doom-local"
-          ];
+          Environment = [ "DOOMDIR=%h/.config/doom" ];
         };
       };
 

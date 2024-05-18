@@ -62,59 +62,49 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       inputs.emacs-overlay.overlay
+      (final: prev: { ripgrep = prev.ripgrep.override { withPCRE2 = true; }; })
       (final: prev: {
-        ## * emacsWithPackages [ mu4e ] -> mu.mu4e -> emacs -> emacsWithPackages ...
-        ## * build mu with original emacs package to avoid the infinite recursion
+        ## note:
+        ## emacsWithPackages [ mu4e ] -> mu.mu4e -> emacs -> emacsWithPackages ...
+        ## build mu with original emacs package to avoid the infinite recursion
         mu = prev.mu.override { emacs = prev.emacs; };
         emacs = (prev.emacsPackagesFor emacs-base).emacsWithPackages emacsPkgs;
       })
     ];
 
-    environment.systemPackages = with pkgs; [ emacs xclip ];
+    environment.systemPackages = with pkgs; [ emacs xsel xclip ];
 
-    home-manager.users.${user.name} = { config, pkgs, ... }: {
-      home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
+    home-manager.users.${user.name} = { config, pkgs, ... }:
+      let link = config.lib.file.mkOutOfStoreSymlink;
+      in {
+        home.sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
 
-      home.sessionVariables = {
-        DOOMDIR = "${config.xdg.configHome}/doom-config";
-        DOOMLOCALDIR = "${config.xdg.configHome}/doom-local";
-        EDITOR = "emacsclient -t -a emacs";
-        VISUAL = "emacsclient -t -a emacs";
+        home.sessionVariables = {
+          EMACSDIR = "${config.xdg.configHome}/emacs";
+          DOOMDIR = "${config.xdg.configHome}/doom";
+          EDITOR = "emacsclient -t -a emacs";
+          VISUAL = "emacsclient -t -a emacs";
+        };
+
+        home.packages = with pkgs; [
+          ripgrep
+          sqlite
+          editorconfig-core-c
+          eask
+          mu
+          isync
+          gnutls
+          graphviz
+        ];
+
+        xdg.configFile = {
+          "doom/".source = link "${pwd}/doom.d";
+
+          "config-nix.el".text = ''
+            ;; (setq! --background-color "${theme.colors.background}")
+            (setq! --window-opacity ${toString theme.windowOpacity})
+          '';
+        };
       };
-
-      home.packages = with pkgs; [
-        (ripgrep.override { withPCRE2 = true; })
-        sqlite
-        editorconfig-core-c
-        eask
-        mu
-        isync
-        gnutls
-        graphviz
-      ];
-
-      xdg.configFile = {
-        "doom-config/".source =
-          config.lib.file.mkOutOfStoreSymlink "${pwd}/doom.d";
-
-        "config-nix.el".text = ''
-          ;; (setq! --background-color "${theme.colors.background}")
-          (setq! --window-opacity ${toString theme.windowOpacity})
-        '';
-
-        # "emacs" = {
-        #   source = inputs.doom-emacs;
-        #   onChange = "${pkgs.writeShellScript "doom-change" ''
-        #     export DOOMDIR="${config.home.sessionVariables.DOOMDIR}"
-        #     export DOOMLOCALDIR="${config.home.sessionVariables.DOOMLOCALDIR}"
-        #     if [ ! -d "$DOOMLOCALDIR" ]; then
-        #       ~/.config/emacs/bin/doom -y install
-        #         else
-        #       ~/.config/emacs/bin/doom -y sync -u
-        #     fi
-        #   ''}";
-        # };
-      };
-    };
   };
 }
