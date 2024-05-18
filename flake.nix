@@ -1,54 +1,81 @@
 {
-  description = "Personal system config for nixos, nix-darwin";
+  description = "Personal system config (nixos, nix-darwin)";
 
   inputs = {
-    ## System
+    ### System
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixos-apple-silicon.url = "github:tpwrules/nixos-apple-silicon";
-    nixos-apple-silicon.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-apple-silicon.inputs.rust-overlay.follows = "rust-overlay";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
-    nixpkgs-2305.url = "github:NixOS/nixpkgs/nixpkgs-23.05-darwin";
-    darwin.url = "github:LnL7/nix-darwin";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    # chaotic.inputs.nixpkgs.follows = "nixpkgs";
-    ## Nix helpers
-    flake-compat.url = "github:edolstra/flake-compat";
-    flake-compat.flake = false;
+    nixos-apple-silicon = {
+      url = "github:tpwrules/nixos-apple-silicon";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.rust-overlay.follows = "rust-overlay";
+    };
+    darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    chaotic = {
+      url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ### Nix helpers
     flake-utils.url = "github:numtide/flake-utils";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    agenix.url = "github:ryantm/agenix";
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
-    agenix.inputs.darwin.follows = "darwin";
-    agenix.inputs.home-manager.follows = "home-manager";
-    ## Additional sources
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    emacs-overlay.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
-    emacs-overlay.inputs.flake-utils.follows = "flake-utils";
-    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
-    hyprpaper.url = "github:hyprwm/hyprpaper";
-    hyprpaper.inputs.nixpkgs.follows = "nixpkgs";
-    hyprpaper.inputs.hyprlang.follows = "hyprland/hyprlang";
-    ags.url = "github:Aylur/ags";
-    ags.inputs.nixpkgs.follows = "nixpkgs";
-    rust-overlay.url = "github:oxalica/rust-overlay";
-    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    rust-overlay.inputs.flake-utils.follows = "flake-utils";
-    nil-server.url = "github:oxalica/nil";
-    nil-server.inputs.nixpkgs.follows = "nixpkgs";
-    nil-server.inputs.flake-utils.follows = "flake-utils";
-    nil-server.inputs.rust-overlay.follows = "rust-overlay";
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
-    vscode-server.inputs.nixpkgs.follows = "nixpkgs";
-    vscode-server.inputs.flake-utils.follows = "flake-utils";
-    spicetify-nix.url = "github:the-argus/spicetify-nix";
-    spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
-    spicetify-nix.inputs.flake-utils.follows = "flake-utils";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.darwin.follows = "darwin";
+      inputs.home-manager.follows = "home-manager";
+    };
+    ### Additional sources
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-stable.follows = "nixpkgs-stable";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+    hyprland = {
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprpaper = {
+      url = "github:hyprwm/hyprpaper";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.hyprlang.follows = "hyprland/hyprlang";
+    };
+    ags = {
+      url = "github:Aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+    nil-server = {
+      url = "github:oxalica/nil";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.rust-overlay.follows = "rust-overlay";
+    };
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+    spicetify-nix = {
+      url = "github:the-argus/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
   };
 
   outputs = { self, ... }@inputs:
@@ -66,7 +93,7 @@
 
       nixpkgsConfig = { allowUnfree = true; };
 
-      overlays = import ./nix/pkgsets.nix { inherit inputs nixpkgsConfig; };
+      overlays = import ./nix/overlays.nix { inherit inputs nixpkgsConfig; };
 
       mapHosts' = dir: system:
         lib.my.mapHosts dir {

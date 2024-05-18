@@ -47,8 +47,7 @@ in {
           Environment = [
             "DOOMDIR=%h/.config/doom-config"
             "DOOMLOCALDIR=%h/.config/doom-local"
-          ] ++ optional modules.fonts.infinality
-            "LD_LIBRARY_PATH=${pkgs.freetype_subpixel}/lib";
+          ];
         };
       };
 
