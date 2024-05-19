@@ -32,6 +32,7 @@
 (package! git-link)
 (package! git-messenger)
 (package! goto-chg)
+(package! ligature)
 (package! mentor)                       ; rtorrent client
 (package! nameless)
 (package! org-present)
