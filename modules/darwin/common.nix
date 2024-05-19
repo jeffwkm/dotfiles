@@ -10,6 +10,7 @@ in {
   options.modules.wayland.enable = mkBoolOpt false;
 
   config = {
+    host.gui = true;
     nix.settings.trusted-users = [ "@admin" ];
     nix.configureBuildUsers = true;
     environment.loginShell = pkgs.zsh;

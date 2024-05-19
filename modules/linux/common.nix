@@ -3,7 +3,7 @@ with lib;
 let
   inherit (lib.my) mkBoolOpt;
   inherit (builtins) readFile;
-  inherit (config) user modules;
+  inherit (config) user host modules;
   inherit (modules) programs;
   cfg = modules.linux;
 in {
@@ -55,6 +55,7 @@ in {
     ];
     programs.mosh.enable = true;
     programs.mosh.openFirewall = true;
+
     programs.fuse.userAllowOther = true;
 
     fileSystems."/mnt/huge" = mkDefault {
@@ -102,32 +103,35 @@ in {
     users.users.${user.name}.openssh.authorizedKeys.keys =
       [ (readFile ./id_rsa.pub) ];
 
-    environment.systemPackages = with pkgs; [
-      ananicy-cpp
-      binutils
-      coreutils
-      curl
-      file
-      fscrypt-experimental
-      inetutils
-      iotop
-      kmon
-      libtool
-      lsof
-      mtr
-      nix-index
-      openssh
-      openssl
-      pinentry-curses
-      pkg-config
-      psmisc
-      readline
-      sshfs
-      tcpdump
-      tmux
-      tomb
-      wget
-      xdg-utils
-    ];
+    environment.systemPackages = with pkgs;
+      [
+        binutils
+        coreutils
+        curl
+        file
+        gnumake
+        inetutils
+        iotop
+        kmon
+        libtool
+        lsof
+        nix-index
+        openssh
+        openssl
+        pinentry-curses
+        pkg-config
+        psmisc
+        readline
+        sshfs
+        tcpdump
+        tmux
+        wget
+        xdg-utils
+      ] ++ optionals (!host.minimal) [
+        ananicy-cpp
+        fscrypt-experimental
+        mtr
+        tomb
+      ];
   };
 }

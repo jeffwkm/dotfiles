@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 <config> <remoteuser> <remotehost> [nixos-rebuild-args...]"
+  exit 1
+fi
+
+set -eu
+
+config="$1"
+remoteuser="$2"
+remotehost="$3"
+shift 3
+args="$*"
+
+sudo nixos-rebuild switch --flake '.#'"$config" \
+  --target-host "${remoteuser}@${remotehost}" --use-substitutes \
+  $args

@@ -53,7 +53,8 @@ in {
         defaultCacheTtl = (60 * 60 * 24 * 7);
         maxCacheTtl = (60 * 60 * 24 * 7);
         enableSshSupport = false;
-        pinentryPackage = pkgs.pinentry-rofi;
+        pinentryPackage =
+          (if host.gui then pkgs.pinentry-rofi else pkgs.pinentry-curses);
       };
     };
   };

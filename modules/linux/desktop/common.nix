@@ -17,6 +17,8 @@ in {
   };
 
   config = mkIf cfg.enable {
+    host.gui = true;
+
     nixpkgs.overlays = optional cfg.gnome.enable (final: prev: {
       gnome = prev.gnome.overrideScope (gfinal: gprev: {
         nautilus = gprev.nautilus.overrideAttrs (old: {

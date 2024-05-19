@@ -1,6 +1,5 @@
 { lib, modulesPath, ... }:
-with lib;
-{
+with lib; {
   imports = [ "${modulesPath}/virtualisation/amazon-image.nix" ];
 
   config = {
@@ -9,9 +8,11 @@ with lib;
     ec2.hvm = true;
 
     modules = {
+      dev.enable = true;
       dev.aws.enable = true;
       programs.emacs.enable = true;
     };
+    host.minimal = true;
 
     nix.settings.cores = 1;
     nix.settings.max-jobs = 1;

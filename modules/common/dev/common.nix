@@ -30,28 +30,30 @@ in {
         [
           babashka
           bun
-          cmake
           direnv
           editorconfig-checker
           editorconfig-core-c
           gnumake
           nil
-          nixd
           nixfmt-classic
           nodePackages.stylelint
           nodePackages.prettier
           nodejs_latest
-          openai
-          python3Packages.grip
           rbenv
-          reg
-          regctl
           shellcheck
           shfmt
+        ] ++ optionals (!darwin) [ gcc ]
+        ++ optionals (host.gui) [ python3Packages.grip ]
+        ++ optionals (!host.minimal) [
+          cmake
+          nixd
+          openai
+          reg
+          regctl
           skopeo
           subversion
-        ] ++ optionals (!darwin) [ gcc ]
-        ++ optionals (pkgs.system != "aarch64-linux") [ semgrep ];
+        ] ++ optionals (pkgs.system != "aarch64-linux" && !host.minimal)
+        [ semgrep ];
     };
   };
 }

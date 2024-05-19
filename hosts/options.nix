@@ -1,10 +1,9 @@
 { lib, config, ... }:
-with lib;
-with lib.my;
-with types;
-let inherit (config) user host;
+let
+  inherit (lib.my) mkOpt mkBoolOpt;
+  inherit (config) user host;
 in {
-  options = {
+  options = with lib.types; {
     user = {
       name = mkOpt str "jeff";
       full-name = mkOpt str "Jeff Workman";
@@ -14,6 +13,8 @@ in {
     host = {
       name = mkOpt (nullOr str) null;
       darwin = mkBoolOpt false;
+      gui = mkBoolOpt false;
+      minimal = mkBoolOpt false;
       config-dir = mkOpt str "${user.home}/.config/nixpkgs";
       home-root = mkOpt str (if host.darwin then "/Users" else "/home");
       optimize = mkBoolOpt false;

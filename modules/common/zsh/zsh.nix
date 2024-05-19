@@ -144,7 +144,6 @@ let
       _l = "| less";
       EC2AUTH = "-O $AWS_ACCESS_KEY_ID -W $AWS_SECRET_ACCESS_KEY";
       # mpv options
-      V = "--volume";
       V50 = "--volume=50";
       FLOG = "--hwdec=auto --vf-clr --gamma=-14 --saturation=100 --contrast=40";
       SHF = "--shuffle";
@@ -191,10 +190,10 @@ let
         p10k finalize
       fi
 
-      if [[ -n "$INSIDE_EMACS" ]] ; then
-        prompt restore
-        prompt clint
-      fi
+      # if [[ -n "$INSIDE_EMACS" ]] ; then
+      #   prompt restore
+      #   prompt clint
+      # fi
 
       ${extra.initExtra or ""}
     '';
