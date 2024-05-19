@@ -1,12 +1,14 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 let
-  inherit (lib.my) optimize;
-  inherit (config) user host;
+  inherit (lib.my) mkBoolOpt optimize;
+  inherit (config) user host modules;
   inherit (user) home;
   inherit (host) config-dir;
   pwd = "${config-dir}/modules/common";
 in {
+  options = { modules.guix.enable = mkBoolOpt (!host.minimal); };
+
   config = {
     users.defaultUserShell = pkgs.zsh;
 
@@ -85,7 +87,8 @@ in {
             xz
             yt-dlp
             zip
-          ] ++ [ cmatrix tmatrix unimatrix ];
+          ] ++ [ cmatrix tmatrix unimatrix ]
+          ++ optionals (modules.guix.enable) [ guix ];
       };
   };
 }

@@ -39,6 +39,8 @@ in {
       _GLOBAL_ENV_LOADED = "1";
     };
 
+    services.guix = mkIf modules.guix.enable { enable = true; };
+
     services.dbus.enable = true;
     services.openssh.enable = true;
     services.openssh.ports = mkDefault [ 22 ];
