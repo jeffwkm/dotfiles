@@ -34,12 +34,14 @@ in {
         };
       };
 
-      systemd.user.services.emacs = mkIf modules.programs.emacs.enable {
+      systemd.user.services.emacs = mkIf modules.programs.emacs.service.enable {
         Unit = {
           Description = "Emacs daemon";
           After = [ "default.target" ];
         };
-        Install = { WantedBy = [ "default.target" ]; };
+        Install = mkIf modules.programs.emacs.service.install {
+          WantedBy = [ "default.target" ];
+        };
         Service = {
           Type = "simple";
           ExecStart = "${pkgs.emacs}/bin/emacs --fg-daemon";

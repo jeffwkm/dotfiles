@@ -57,7 +57,13 @@ let
   else
     pkgs.emacs29-nox);
 in {
-  options = { modules.programs.emacs = { enable = mkBoolOpt true; }; };
+  options = {
+    modules.programs.emacs = {
+      enable = mkBoolOpt true;
+      service.enable = mkBoolOpt cfg.enable;
+      service.install = mkBoolOpt cfg.service.enable;
+    };
+  };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
@@ -95,6 +101,7 @@ in {
           isync
           gnutls
           graphviz
+          (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
         ];
 
         xdg.configFile = {

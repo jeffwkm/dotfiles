@@ -825,7 +825,13 @@
   (use-package! org-super-agenda :config (org-super-agenda-mode 1))
   (use-package! org-fancy-priorities)
   (use-package! org-superstar :config (setq org-superstar-special-todo-items t))
-  (add-hook! org-mode 'org-fancy-priorities-mode))
+  (add-hook! org-mode 'org-fancy-priorities-mode)
+  (setq-hook! org-mode
+    debug-on-error nil
+    debug-on-message nil)
+  (after! spell-fu
+    (pushnew! spell-fu-ignore-modes 'org-mode)
+    (add-hook! org-mode :append (spell-fu-mode -1))))
 
 (after! org-roam
   (setq! org-roam-completion-everywhere t

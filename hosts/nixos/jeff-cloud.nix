@@ -10,7 +10,8 @@ with lib; {
     modules = {
       dev.enable = true;
       dev.aws.enable = true;
-      programs.emacs.enable = true;
+      programs.emacs.enable = false;
+      programs.neovim.enable = true;
     };
     host.minimal = true;
 
