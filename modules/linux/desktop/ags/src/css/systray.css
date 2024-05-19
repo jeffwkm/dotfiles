@@ -1,8 +1,11 @@
 .systray {
-  /* @apply --status-entry; */
   padding: 0px;
+  margin-right: -6px;
   > * {
     @apply --status-entry;
+  }
+  > *:last-child {
+    margin-right: 6px;
   }
   > {
     &:hover {

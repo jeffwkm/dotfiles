@@ -1,6 +1,6 @@
 import Notifications from "resource:///com/github/Aylur/ags/service/notifications.js";
 
-Notifications.popupTimeout = 2000;
+Notifications.popupTimeout = 4000;
 
 export const Notification = () => {
   const popups = Notifications.bind("popups");
@@ -9,6 +9,7 @@ export const Notification = () => {
     visible: popups.as((p) => p.length > 0),
     children: [
       Widget.Icon({
+        class_name: "icon",
         icon: "preferences-system-notifications-symbolic",
       }),
       Widget.Button({

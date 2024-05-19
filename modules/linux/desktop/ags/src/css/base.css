@@ -26,6 +26,7 @@
   --fg-text-mono: oklch(from var(--fg-text) 0.88 c h);
   --fg-text-bright: oklch(from var(--color-text) 0.91 c h);
   --fg-text-white: oklch(from var(--color-text) 0.99 0.001 h);
+  --fg-black: rgba(0, 0, 0, 1);
 
   --color-mocha-background: oklch(0.2429 0.03 283.91);
   --color-blue: oklch(0.7497 0.11 263.81);

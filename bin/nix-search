@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
+# better formatting for nix search
 nix search nixpkgs "$@" | sed 's/legacyPackages.[^.]*.//' | grep -v "evaluating '" | grep -Ee '.+' | sed 's/\* //'

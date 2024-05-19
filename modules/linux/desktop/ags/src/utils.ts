@@ -42,7 +42,7 @@ export const playerToIcon = (identity: string | null) => {
   if (identity == "Chromium") return Icons.CHROMIUM;
   else if (identity == "Chrome") return Icons.CHROME;
   else if (identity.startsWith("mpv")) return Icons.MEDIA;
-  else if (identity == "Spotify") return Icons.SPOTIFY;
+  else if (identity.includes("Spotify")) return Icons.SPOTIFY;
   else return Icons.DEFAULT;
 };
 

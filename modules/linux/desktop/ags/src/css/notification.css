@@ -1,3 +1,18 @@
-.notification {
-  color: var(--fg-warning);
+box.notification {
+  color: var(--fg-black);
+  background: var(--color-mauve);
+  border-radius: 9999px;
+  padding: 0 9px;
+
+  & > .icon {
+    margin-bottom: -1px;
+    padding-right: 4px;
+  }
+
+  & > button {
+    color: var(--fg-black);
+    font-weight: 700;
+    background: transparent;
+    padding: 0;
+  }
 }
