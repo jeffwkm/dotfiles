@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -eu
+
+title="$1"
+shift 1
+
+options=""
+for x in "$@" ; do
+    options+="$x\n"
+done
+options=$(echo -e "$options" | sort | uniq | grep -vEe '^$')
+
+echo -e "$options" | rofi.sh rofi -dmenu -i -no-custom -window-title "$title"

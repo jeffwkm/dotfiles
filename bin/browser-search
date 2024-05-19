@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -eu
+
+valid_modes=("NixOS" "Home Manager" "Google")
+valid_modes_msg="Valid modes: ${valid_modes[*]}"
+usage="Usage: \n  $0\n  $0 <mode>\n  $0 <mode> <query>\n$valid_modes_msg"
+print_usage() {
+  >&2 echo -e "$usage"
+}
+
+browser_search() {
+  set -eu
+
+  set +u
+  [ -z "$1" ] || [ -z "$2" ] && print_usage && exit 1
+  set -u
+
+  mode="$1"
+  query="$2"
+
+  url=""
+  [ "$mode" == "NixOS" ] && url="https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=${query}"
+  [ "$mode" == "Home Manager" ] && url="https://home-manager-options.extranix.com/?query=${query}&release=master"
+  [ "$mode" == "Google" ] && url="https://www.google.com/search?q=${query}"
+  [ -z "$url" ] && print_usage && exit 1
+
+  [ -n "$query" ] && $DEFAULT_BROWSER "$url"
+}
+
+rofi_search() {
+  set -eu
+
+  set +u
+  mode="$1"
+  [ -z "$1" ] && mode="rofi"
+  set -u
+
+  if [ "$mode" == "rofi" ]; then
+    mode="$(rofi-select search "${valid_modes[@]}")"
+    [ -z "$mode" ] && exit 0
+  fi
+
+  query="$(rofi-query "$mode")"
+
+  browser_search "$mode" "$query"
+}
+
+set +u
+if [ -z "$1" ]; then
+  rofi_search
+elif [ -z "$2" ]; then
+  rofi_search "$1"
+else
+  browser_search "$1" "$2"
+fi

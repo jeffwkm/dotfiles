@@ -3,4 +3,4 @@ set -eu
 
 title="$1"
 
-rofi -dmenu -window-title "$title"
+rofi.sh rofi -dmenu -window-title "$title"
