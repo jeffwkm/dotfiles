@@ -4,14 +4,14 @@ let inherit (config) user;
 in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    inputs.nixos-apple-silicon.nixosModules.default ]
-  ++ (with inputs.chaotic.nixosModules; [
-      nyx-cache
-      nyx-overlay
-      # mesa-git
-      # scx
-      # zfs-impermanence-on-shutdown
-    ]);
+    inputs.nixos-apple-silicon.nixosModules.default
+  ] ++ (with inputs.chaotic.nixosModules; [
+    nyx-cache
+    nyx-overlay
+    # mesa-git
+    # scx
+    # zfs-impermanence-on-shutdown
+  ]);
 
   config = {
     ## host options
@@ -45,6 +45,7 @@ in {
     boot.initrd.kernelModules = [ ];
     boot.kernelModules = [ ];
     boot.extraModulePackages = [ ];
+    boot.kernelParams = [ "mitigations=off" ];
     ## hardware
     fileSystems = {
       "/" = {
