@@ -13,7 +13,8 @@
 (pushnew! debug-ignored-errors
           'scan-sexps
           ".*debug-on-message.*"
-          "\.\*Selecting deleted buffer\.\*")
+          "\.\*Selecting deleted buffer\.\*"
+          ".*Window.*too small.*")
 
 (require 'dash)
 (require 's)
