@@ -21,7 +21,7 @@ in rec {
       addFlags pkg {
         c = (optional (level == 2) "-O2" ++ optional (level == 3) "-O3"
           ++ optionals (level > 3) [ "-Ofast" "-fno-finite-math-only" ]
-          ++ optional native "-march=native");
+          ++ optionals native [ "-mtune=native" "-march=native" ]);
         rust = (optionals (level == 2) [ "-C" "opt-level=2" ]
           ++ optionals (level > 2) [ "-C" "opt-level=3" ]
           ++ optionals native [ "-C" "target-cpu=native" ]);
