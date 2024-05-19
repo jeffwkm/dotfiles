@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eu
+
+query="$(rofi -dmenu -window-title 'nixos options')"
+
+search-nixos-options "$query"
