@@ -1,42 +1,33 @@
 .tasks {
   @apply --status-entry;
   border-width: 2.2px;
-  /* padding: 0px 1px; */
-  .state {
-    min-height: 25px;
-    padding-right: 4px;
-    margin-left: -3px;
-    font-size: 16px;
-    font-weight: 700;
+  padding: 0 1px;
+  > * {
+    padding: 0px 5px;
   }
   .timer {
     @apply --mono;
     font-size: 13.5px;
   }
   .timer {
-    color: oklch(from var(--fg-text-mono) l c h / 0.975);
+    color: oklch(from var(--fg-text-mono) l c h / 0.9);
   }
   .task {
-    color: oklch(from var(--fg-text-bright) l c h / 0.95);
-  }
-  > * {
-    padding: 0px 6px;
+    color: oklch(from var(--fg-text-bright) l c h / 0.92);
+    padding-right: 6px;
+    font-size: 13.5px;
   }
   > *:not(:last-child) {
     border-right-width: 2.2px;
   }
-  .icon.state {
-    font-size: 18px;
-    padding-left: 0;
-    padding-right: 4px;
+  .state {
+    font-size: 17px;
+    padding: 0;
   }
   &.active {
     border-color: oklch(from var(--fg-green) l c h / 1);
     background-color: var(--bg-green);
     color: var(--fg-text-bright);
-    .task {
-      font-size: 13.5px;
-    }
     > *:not(:last-child) {
       border-right-color: oklch(from var(--fg-green) l c h / 1);
     }
@@ -56,17 +47,12 @@
     }
   }
   &.waiting {
-    .icon.state {
-      padding: 0;
-      padding-left: 1px;
-      margin-right: -2px;
-    }
-    border-color: var(--fg-warning);
+    border-color: oklch(from var(--fg-warning) l c h / 0.7);
     > * {
       background-color: var(--bg-warning);
     }
     > *:not(:last-child) {
-      border-right-color: var(--fg-warning);
+      border-color: oklch(from var(--fg-warning) l c h / 0.52);
     }
   }
 }

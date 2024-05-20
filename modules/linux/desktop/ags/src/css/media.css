@@ -1,5 +1,6 @@
 .media-event-box {
   .media {
+    margin-left: 6px;
     @apply --status-entry;
     border-color: var(--fg-inactive);
     background: var(--bg-inactive);

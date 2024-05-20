@@ -28,6 +28,7 @@
   --fg-text-white: oklch(from var(--color-text) 0.99 0.001 h);
   --fg-black: rgba(0, 0, 0, 1);
 
+  --color-macchiato-background: #24273a;
   --color-mocha-background: oklch(0.2429 0.03 283.91);
   --color-blue: oklch(0.7497 0.11 263.81);
   --color-inactive: oklch(0.606 0.051 274.27);
@@ -39,7 +40,7 @@
   --color-lavender: oklch(from var(--color-lavender-rgb) l c h);
 
   --fg-warning: oklch(from var(--color-orange) l c h / 0.97);
-  --bg-warning: oklch(from var(--color-orange) calc(l * 0.4) calc(c * 0.5) h / 0.5);
+  --bg-warning: oklch(from var(--color-orange) calc(l * 0.475) calc(c * 0.4) h / 0.8);
   --fg-inactive: oklch(from var(--color-inactive) l c h / 0.95);
   --bg-inactive: oklch(from var(--color-inactive) l c h / 0.11);
   --fg-yellow: oklch(from var(--color-yellow) l c h / 0.9);
@@ -56,7 +57,7 @@
   --color-special-01: oklch(67% 0.162 var(--h-special));
   --color-special: var(--color-special-01);
 
-  --color-bar-background: oklch(from var(--color-mocha-background) l c h / 0.75);
+  --color-bar-background: oklch(from var(--color-macchiato-background) l c h / 0.94);
 
   --color-bar-border: oklch(from var(--color-lavender) calc(l * 0.8) calc(c * 0.8) h / 0.8);
 

@@ -22,7 +22,8 @@ const tryStartApp = () => {
       app = App.config({
         gtkTheme: "adw-gtk3-dark",
         style: cssOut,
-        windows: () => [forMonitors(TopBar), forMonitors(BottomBar)].flat(1),
+        // windows: () => [forMonitors(TopBar), forMonitors(BottomBar)].flat(1),
+        windows: () => [forMonitors(TopBar)].flat(1),
         cacheCoverArt: false,
       });
       console.log("App started");
@@ -42,6 +43,11 @@ const tryApplyCss = (_file: Gio.File, event: Gio.FileMonitorEvent) => {
     App.applyCss(cssOut); // don't wipe out CSS until we know the new one is valid
     App.applyCss(cssOut, true);
     const timeElapsed = GLib.get_monotonic_time() - timeStart;
+    Utils.notify({
+      summary: "ags: CSS updated",
+      transient: true,
+      timeout: 2000,
+    });
     console.log("CSS updated in", timeElapsed / 1000, "ms");
   } catch (e) {
     console.warn(e);

@@ -12,6 +12,8 @@
   .bar-center {
     & > * {
       margin: 0 6px;
+      margin-bottom: -2px;
+      margin-top: -1px;
     }
   }
   .bar-right {
@@ -25,7 +27,7 @@
 }
 
 .outer {
-  padding: 4px;
+  padding: 5px 4px;
   background: var(--color-bar-background);
 
   min-height: 23px;

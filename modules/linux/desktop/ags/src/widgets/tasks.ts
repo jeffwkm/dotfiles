@@ -88,7 +88,7 @@ export const Pomodoro = () => {
           } else if (result.state === "long-break") {
             text.value = "* Long break! *";
           } else {
-            text.value = "Waiting for a task...";
+            text.value = "SPC n r d t ...";
           }
           self.visible = true;
         } else {

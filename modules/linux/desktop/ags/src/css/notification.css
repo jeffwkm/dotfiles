@@ -5,13 +5,14 @@ box.notification {
   padding: 0 9px;
 
   & > .icon {
+    color: var(--fg-black);
     margin-bottom: -1px;
     padding-right: 4px;
   }
 
   & > button {
     color: var(--fg-black);
-    font-weight: 700;
+    font-weight: 600;
     background: transparent;
     padding: 0;
   }

@@ -23,7 +23,7 @@ const TopCenter = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-center",
     hpack: "center",
-    children: [Media()],
+    children: [Pomodoro()],
     // children: [],
   });
 
@@ -31,13 +31,15 @@ const TopRight = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-right",
     hpack: "end",
-    children: [Notification(), SysTray(), CpuGroup(), Volume(), BatteryLabel(), Clock()],
+    // TODO: move Notification into a popup
+    children: [Notification(), Media(), SysTray(), CpuGroup(), Volume(), BatteryLabel(), Clock()],
   });
 
 const BottomCenter = (monitorId: number) =>
   Widget.Box({
     class_name: "bar-center",
-    children: [Pomodoro()],
+    // children: [Pomodoro()],
+    children: [],
   });
 
 export const TopBar = (monitorId: number) =>
