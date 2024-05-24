@@ -162,7 +162,8 @@
 (progn
   (defun --configure-fonts ()
     (setq! doom-font (--get-font-spec)
-           --modeline-font nil ;; (--get-font-spec nil t)
+           --modeline-font (--get-font-spec nil t)
+           ;; --modeline-font nil
            doom-big-font nil
            doom-big-font-increment 2
            doom-font-increment 1
