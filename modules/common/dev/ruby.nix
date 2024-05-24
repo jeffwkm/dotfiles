@@ -6,20 +6,20 @@ let
   inherit (modules) dev;
   rubyPackages = (ps:
     with ps; [
+      curses
       ffi
       glib2
-      sqlite3
-      pkg-config
-      rake
+      gtk3
       native-package-installer
       pango
-      curses
+      pkg-config
+      rake
       rexml
-      terminal-table
-      gtk3
       sequel
+      sqlite3
+      terminal-table
     ]);
-  rubyCustom = pkgs.ruby_3_2.withPackages rubyPackages;
+  rubyCustom = pkgs.ruby_3_3.withPackages rubyPackages;
   cfg = config.modules.dev.ruby;
 in {
   options.modules.dev.ruby.enable = mkBoolOpt dev.enable-all;
