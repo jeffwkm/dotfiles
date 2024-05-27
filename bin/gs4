@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -e
+
+character="$1"
+[[ -z "$character" ]] && echo >&2 "Usage: $0 <character>" && exit 1
+
+set -u
+
+get_port() {
+    if [ "$character" == "Jafwyk" ]; then
+        echo 8500
+    elif [ "$character" == "Spelldark" ]; then
+        echo 8501
+    elif [ "$character" == "Azhe" ]; then
+        echo 8501
+    else
+        echo >&2 "Unknown character"
+        exit 1
+    fi
+}
+
+port=$(get_port)
+
+run_profanity() {
+    set -eu
+    cd ~/gs4/ProfanityFE
+    TERM=xterm-256color ruby profanity.rb --port="$port" --char="$character"
+}
+
+run_lich() {
+    set -eu
+    cd ~/gs4/lich-5
+    ruby lich.rbw --login $character --without-frontend --detachable-client=$port
+}
+
+run_profanity 2>/dev/null || (
+    echo "Starting lich"
+    run_lich &
+    sleep 5
+    run_profanity
+    psgkill $character
+)
