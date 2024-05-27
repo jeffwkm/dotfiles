@@ -68,7 +68,7 @@ with lib.my; {
     environment.systemPackages = with pkgs; [
       firmwareLinuxNonfree
       libguestfs
-      darktable
+      ansel # darktable
       # pgadmin
       amdgpu_top
       vdpauinfo

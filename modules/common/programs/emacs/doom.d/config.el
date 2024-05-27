@@ -1445,7 +1445,8 @@
   (setq! lsp-tailwindcss-add-on-mode t
          lsp-tailwindcss-server-version "0.10.2")
   :config
-  (pushnew! lsp-disabled-clients 'tailwindcss)
+  ;; (pushnew! lsp-disabled-clients 'tailwindcss)
+  ;; (setq! lsp-disabled-clients (-remove-item 'tailwindcss lsp-disabled-clients))
   (--each '(web-mode
             css-mode
             css-ts-mode

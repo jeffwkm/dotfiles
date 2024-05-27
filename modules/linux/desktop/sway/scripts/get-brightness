@@ -23,7 +23,7 @@ function run_get () {
   set -eu
   # ddc_wait && ddc_wait
   # ddc_wait
-  value=$(sudo ddcutil --less-sleep --maxtries 3,3,3 --noudf --nousb \
+  value=$(sudo ddcutil --maxtries 3,3,3 --noudf --nousb \
                --sleep-multiplier=0.166 -b "$model" -t \
                getvcp $ddc_param | tail -n1 |
             sed s/'.*C '// | sed s/' .*'//)
