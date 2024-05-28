@@ -9,7 +9,9 @@ set -u
 get_port() {
     if [ "$character" == "Jafwyk" ]; then
         echo 8500
-    elif [ "$character" == "Spelldark" ]; then
+    elif [ "$character" == "Tadrinth" ]; then
+        echo 8500
+    elif [ "$character" == "Arioth" ]; then
         echo 8501
     elif [ "$character" == "Azhe" ]; then
         echo 8501

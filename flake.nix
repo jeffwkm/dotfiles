@@ -18,10 +18,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    chaotic = {
-      url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     ### Nix helpers
     flake-utils.url = "github:numtide/flake-utils";
     flake-parts.url = "github:hercules-ci/flake-parts";

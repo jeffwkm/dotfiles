@@ -1,6 +1,25 @@
 { config, options, pkgs, lib, inputs, modulesPath, ... }:
 with lib;
-with lib.my; {
+let
+  mesaPkgs = with pkgs; [
+    vaapiVdpau
+    libvdpau-va-gl
+    libva
+    # amdvlk
+    rocmPackages.clr.icd
+    rocm-opencl-icd
+    rocm-opencl-runtime
+    libvdpau
+  ];
+  mesaPkgs32 = with pkgs.pkgsi686Linux; [
+    vaapiVdpau
+    libvdpau-va-gl
+    libva
+    # amdvlk
+    vdpauinfo
+    libva-utils
+  ];
+in {
   imports = ([ (modulesPath + "/installer/scan/not-detected.nix") ]
     ++ (with inputs.chaotic.nixosModules; [
       nyx-cache
@@ -20,28 +39,33 @@ with lib.my; {
       vfio.enable = true;
       wayland.enable = true;
       services.protonmail.enable = true;
-      services.protonvpn.enable = false;
-      services.protonvpn.configFile =
-        "/private/wg-quick/protonvpn-US-NY-158.conf";
-      wayland.hyprland.enable = true;
-      wayland.hyprland.extraConf = ''
-        # enable brightness controls for external monitors
-        exec-once = bash -c "sleep 5 && ([ -e /sys/class/backlight/ddcci5 ] && [ -e /sys/class/backlight/ddcci6 ]) || sudo systemctl restart ddcci.service"
+      services.protonvpn = {
+        enable = false;
+        configFile = "/private/wg-quick/protonvpn-US-NY-158.conf";
+      };
+      wayland.hyprland = {
+        enable = true;
+        extraConf = ''
+          # enable brightness controls for external monitors
+          # exec-once = bash -c "sleep 5 && ([ -e /sys/class/backlight/ddcci5 ] && [ -e /sys/class/backlight/ddcci6 ]) || sudo systemctl restart ddcci.service"
 
-        input {
-            sensitivity = -0.5
-            kb_options = ctrl:nocaps
-        }
-      '';
-      programs.alacritty.enable = true;
+          input {
+              sensitivity = -0.5
+              kb_options = ctrl:nocaps
+          }
+        '';
+      };
+      # programs.alacritty.enable = true;
       programs.mpv.extraConf = ''
         autofit=1080 # fix for mpv+hyprland multi-monitor bug
         ao=pulse # pipewire default gives crackling audio
       '';
       programs.spotify.enable = true;
       programs.firefox.enable = true;
-      services.mpd.enable = true;
-      services.mpd.musicDirectory = "/mnt/huge/Music";
+      services.mpd = {
+        enable = true;
+        musicDirectory = "/mnt/huge/Music";
+      };
       programs.vscode.enable = true;
     };
 
@@ -66,6 +90,7 @@ with lib.my; {
     # services.printing.enable = true;
 
     environment.systemPackages = with pkgs; [
+      clinfo
       firmwareLinuxNonfree
       libguestfs
       ansel # darktable
@@ -169,11 +194,6 @@ with lib.my; {
     # boot.kernelPackages = pkgs.linuxPackages_latest;
     boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
-    ## user-space scheduler daemon
-    # chaotic.scx.enable = true;
-    # systemd.services.scx.serviceConfig.SyslogLevel = "debug";
-    # systemd.services.scx.serviceConfig.LogLevelMax = "info";
-
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
       [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
@@ -189,7 +209,7 @@ with lib.my; {
     boot.blacklistedKernelModules = [ "nouveau" "nvidia" ];
     boot.kernelParams = [
       "amd_iommu=on"
-      "iommu=pt"
+      # "iommu=pt"
       "rd.driver.pre=vfio-pci"
       "hugepagesz=1G"
       "default_hugepagesz=1G"
@@ -200,62 +220,28 @@ with lib.my; {
       "kvm.report_ignored_msrs=0"
       "kvm_amd.nested=0"
       "mitigations=off"
+      # "video=DP-3:3840x2160@60"
+      # "video=DP-2:3840x2160@60"
     ];
 
     hardware.cpu.amd.updateMicrocode = true;
     hardware.enableAllFirmware = true;
 
-    # chaotic.nyx.overlay.onTopOf = "flake-nixpkgs"; # default
-    # chaotic.nyx.overlay.onTopOf = "user-pkgs";
-
+    # chaotic.nyx.overlay.onTopOf = "user-pkgs"; # "flake-nixpkgs"
     # chaotic.hdr.enable = true;
-    # chaotic.hdr.kernelPackages = pkgs.linuxPackages_cachyos;
-    # chaotic.hdr.kernelPackages = pkgs.linuxKernel.packages.linux_hdr
-
-    chaotic.mesa-git = {
-      enable = true;
-      #method = "GBM_BACKENDS_PATH"; # default
-      #method = "replaceRuntimeDependencies";
-      extraPackages = with pkgs; [
-        vaapiVdpau
-        libvdpau-va-gl
-        libva
-        amdvlk
-        rocm-opencl-icd
-        rocm-opencl-runtime
-        libvdpau
-      ];
-      extraPackages32 = with pkgs.pkgsi686Linux; [
-        vaapiVdpau
-        libvdpau-va-gl
-        libva
-        amdvlk
-        vdpauinfo
-        libva-utils
-      ];
-    };
 
     hardware.opengl = {
       enable = true;
       driSupport = true;
       driSupport32Bit = true;
-      extraPackages = with pkgs; [
-        vaapiVdpau
-        libvdpau-va-gl
-        libva
-        amdvlk
-        rocm-opencl-icd
-        rocm-opencl-runtime
-        libvdpau
-      ];
-      extraPackages32 = with pkgs.pkgsi686Linux; [
-        vaapiVdpau
-        libvdpau-va-gl
-        libva
-        amdvlk
-        vdpauinfo
-        libva-utils
-      ];
+      extraPackages = mesaPkgs;
+      extraPackages32 = mesaPkgs32;
+    };
+
+    chaotic.mesa-git = {
+      enable = true;
+      extraPackages = mesaPkgs;
+      extraPackages32 = mesaPkgs32;
     };
 
     nix.settings.max-jobs = 4;
