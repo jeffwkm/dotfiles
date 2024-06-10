@@ -19,34 +19,26 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       # customize mpv build for plugins and vapoursynth-mvtools
-      (final: prev:
-        let
-          mpvOpts = {
-            scripts = with final.mpvScripts; [
-              autoload
-              convert
-              mpris
-              mpv-playlistmanager
-              # modernx
-              # modernx-zydezu
-              # mpv-osc-modern
-              # videoclip
-              # cutter
-              # uosc
-              thumbnail
-              # thumbfast
-            ];
-            extraMakeWrapperArgs = optionals cfg.vapoursynth [
-              "--prefix"
-              "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
-            ];
-          };
-          wrapMpv = mpv-unwrapped: prev.wrapMpv mpv-unwrapped mpvOpts;
-          withVS = mpv-unwrapped:
-            mpv-unwrapped.override { vapoursynthSupport = cfg.vapoursynth; };
-        in {
-          mpv = pipe prev.mpv-unwrapped [ withVS wrapMpv (optimize config) ];
-        })
+      (final: prev: {
+        mpv = prev.mpv.override {
+          scripts = with final.mpvScripts; [
+            autoload
+            convert
+            mpris
+            mpv-playlistmanager
+            # videoclip
+            # cutter
+            thumbnail
+          ];
+          extraMakeWrapperArgs = optionals cfg.vapoursynth [
+            "--prefix"
+            "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+          ];
+          mpv = optimize config (prev.mpv.unwrapped.override {
+            vapoursynthSupport = cfg.vapoursynth;
+          });
+        };
+      })
     ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }:
