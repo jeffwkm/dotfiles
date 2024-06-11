@@ -28,7 +28,9 @@ in {
             mpv-playlistmanager
             # videoclip
             # cutter
-            thumbnail
+            # thumbnail
+            thumbfast
+            uosc
           ];
           extraMakeWrapperArgs = optionals cfg.vapoursynth [
             "--prefix"
