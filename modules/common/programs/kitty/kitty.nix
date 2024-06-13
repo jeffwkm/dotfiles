@@ -17,7 +17,7 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays =
-      [ (final: prev: { kitty = optimize config prev.kitty; }) ];
+      [ (final: prev: { kitty = optimize config final.pkgs-stable.kitty; }) ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let link = path: config.lib.file.mkOutOfStoreSymlink "${pwd}/${path}";

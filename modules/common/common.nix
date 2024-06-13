@@ -60,7 +60,6 @@ in {
             inxi
             jc
             jq
-            kitty
             mediainfo
             mods
             ncdu

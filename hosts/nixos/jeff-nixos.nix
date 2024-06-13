@@ -57,7 +57,6 @@ in {
       };
       # programs.alacritty.enable = true;
       programs.mpv.extraConf = ''
-        autofit=1080 # fix for mpv+hyprland multi-monitor bug
         ao=pulse # pipewire default gives crackling audio
       '';
       programs.spotify.enable = true;
@@ -239,7 +238,7 @@ in {
     };
 
     chaotic.mesa-git = {
-      enable = true;
+      enable = false;
       extraPackages = mesaPkgs;
       extraPackages32 = mesaPkgs32;
     };
