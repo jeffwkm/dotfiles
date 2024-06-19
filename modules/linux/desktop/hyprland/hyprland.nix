@@ -16,6 +16,7 @@ in {
     extraConf = mkOpt types.str "";
   };
 
+  # use hyprland from github:
   imports = [ inputs.hyprland.nixosModules.default ];
 
   config = mkIf cfg.enable {
