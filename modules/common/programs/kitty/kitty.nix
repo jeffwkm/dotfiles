@@ -17,7 +17,7 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays =
-      [ (final: prev: { kitty = optimize config final.pkgs-stable.kitty; }) ];
+      [ (final: prev: { kitty = optimize config prev.kitty; }) ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let link = path: config.lib.file.mkOutOfStoreSymlink "${pwd}/${path}";
@@ -32,7 +32,6 @@ in {
             include ~/.config/kitty/extra.conf
           '';
           theme = "Catppuccin-Macchiato";
-          environment = { "LD_LIBRARY_PATH" = ""; };
           shellIntegration.mode = "no-rc no-cursor";
         };
       };

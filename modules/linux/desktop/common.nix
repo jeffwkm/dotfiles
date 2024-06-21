@@ -238,15 +238,13 @@ in {
           cursorTheme.size = 24;
           iconTheme.name = "Papirus";
           iconTheme.package = pkgs.catppuccin-papirus-folders;
-          theme.name = "Catppuccin-Macchiato-Compact-Blue-Dark";
-          theme.package = catppuccin-macchiato;
+          # theme.name = "Catppuccin-Macchiato-Compact-Blue-Dark";
+          # theme.package = catppuccin-macchiato;
 
-          # theme.package = pkgs.adw-gtk3;
+          theme.name = "adw-gtk3-dark";
+          theme.package = pkgs.adw-gtk3;
 
-          ## validVariants = [ "latte" "frappe" "macchiato" "mocha" ];
-          ## validAccents = [ "blue" "flamingo" "green" "lavender" "maroon" "mauve" "peach" "pink" "red" "rosewater" "sapphire" "sky" "teal" "yellow" ];
-          ## validSizes = [ "standard" "compact" ];
-          ## validTweaks = [ "black" "rimless" "normal" ];
+          # gtk4.extraConfig = { gtk-theme-name = "Adwaita"; };
 
           gtk3.bookmarks = [
             "file:///home/${user.name}/Downloads"
