@@ -3,9 +3,10 @@
   border-radius: 0;
   /* `otf-font-awesome` is required to be installed for icons */
 
-  font-family: "JetBrains Mono Nerd Font", Inconsolata, monospace;
-  font-size: 14px;
-  font-weight: 600;
+  /* font-family: "JetBrains Mono Nerd Font", Inconsolata, monospace; */
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 700;
 
   /* font-family: "Inter", system-ui, sans-serif; */
   /* font-size: 14px; */
@@ -39,8 +40,8 @@ window#waybar.chromium {
 #workspaces button {
   padding-left: 0.7em;
   padding-right: 1.1em;
-  padding-top: 2px;
-  padding-bottom: 3px;
+  padding-top: 0px;
+  padding-bottom: 1px;
   background-color: transparent;
   color: #ffffff;
   /* border-bottom: 1.5px solid transparent; */
@@ -90,17 +91,17 @@ window#waybar.chromium {
 #mode,
 #idle_inhibitor,
 #mpd {
-  border-bottom-width: 1.5px;
-  padding-left: 0.85em;
-  padding-right: 0.85em;
-  padding-top: 2px;
-  padding-bottom: 3px;
+  border-bottom-width: 2px;
+  padding-left: 0.65em;
+  padding-right: 0.65em;
+  padding-top: 0px;
+  padding-bottom: 1px;
   margin: 0 0;
   color: #ffffff;
 }
 
 #cpu {
-  padding-right: 1.45em;
+  padding-right: 1.4em;
   background-color: rgba(160, 255, 20, 0.2);
   color: white;
 }
@@ -165,7 +166,7 @@ label:focus {
   /* background-color: #f1c40f; */
   /* background-color: #f8cf1f; */
   color: #ffffff;
-  padding-right: 1em;
+  padding-right: 0.9em;
 }
 
 #pulseaudio.muted {
@@ -211,8 +212,8 @@ label:focus {
 #idle_inhibitor {
   background-color: rgba(100, 180, 255, 0.35);
   color: white;
-  padding-left: 0.85em;
-  padding-right: 1.15em;
+  padding-left: 0.8em;
+  padding-right: 1.2em;
 }
 
 #idle_inhibitor.activated {

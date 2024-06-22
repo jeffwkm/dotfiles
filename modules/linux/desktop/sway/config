@@ -112,7 +112,7 @@ bindsym XF86AudioStop          exec bash -c "$playerctl stop"
 ######################################################################
 ### program launch bindings
 ######################################################################
-bindsym $M+Return            exec alacritty
+bindsym $M+Return            exec kitty -1
 bindsym $CM+e                exec emacsclient -c
 bindsym $CM+p                exec (killall pavucontrol || true) && pavucontrol
 bindsym $M+p                 exec rofi -show run    # program launcher
@@ -377,7 +377,7 @@ for_window [class="[Ss]team.*"] \
 ######################################################################
 ### startup initialization
 ######################################################################
-exec "systemctl --user import-environment && \
+exec "dbus-update-activation-environment --systemd PATH DISPLAY SWAYSOCK WAYLAND_DISPLAY XDG_CURRENT_DESKTOP && \
       systemctl --user start sway-session.target && \
       systemctl --user restart emacs.service; \
       on-sway-start"

@@ -2,11 +2,13 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user host;
+  inherit (config) user host modules;
   cfg = config.modules.wayland.mako;
   pwd = "${host.config-dir}/modules/linux/desktop";
 in {
-  options.modules.wayland.mako = { enable = mkBoolOpt false; };
+  options.modules.wayland.mako = {
+    enable = mkBoolOpt modules.wayland.sway.enable;
+  };
 
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = { config, pkgs, ... }: {

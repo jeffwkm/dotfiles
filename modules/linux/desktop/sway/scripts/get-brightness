@@ -3,13 +3,13 @@ set -eu
 
 model="$1"
 ddc_param=10
-model_id=$(echo "$model" | sed s/' '/'_'/)
+model_id=${model// /_}
 value_path="$HOME/.brightness-value-${model_id}"
 
-function ddc_wait () {
-  for x in {1..40} ; do
+function ddc_wait() {
+  for _x in {1..40}; do
     pids="$(pidof ddcutil || echo -n '')"
-    if [ ! -z "$pids" ] ; then
+    if [ -n "$pids" ]; then
       sleep 0.025
     else
       sleep 0.025
@@ -19,15 +19,15 @@ function ddc_wait () {
   return 1
 }
 
-function run_get () {
+function run_get() {
   set -eu
   # ddc_wait && ddc_wait
-  # ddc_wait
-  value=$(sudo ddcutil --maxtries 3,3,3 --noudf --nousb \
-               --sleep-multiplier=0.166 -b "$model" -t \
-               getvcp $ddc_param | tail -n1 |
-            sed s/'.*C '// | sed s/' .*'//)
-  echo "$value" > "$value_path" &
+  ddc_wait
+  value=$(sudo ddcutil --maxtries 6,6,6 --disable-udf --disable-usb --skip-ddc-checks \
+    --sleep-multiplier=0.066 --disable-dynamic-sleep -b "$model" -t \
+    getvcp $ddc_param | tail -n1 |
+    sed s/'.*C '// | sed s/' .*'//)
+  echo "$value" >"$value_path" &
   echo "$value"
 }
 

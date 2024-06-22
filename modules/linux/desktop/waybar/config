@@ -1,12 +1,14 @@
 {
   // "layer": "top", // Waybar at top layer
   // "position": "bottom", // Waybar position (top|bottom|left|right)
-  "height": 30, // Waybar height (to be removed for auto height)
+  // "height": 30, // Waybar height (to be removed for auto height)
   // "width": 1280, // Waybar width
   // "margin": 8,
   // Choose the order of the modules
-  "modules-left": ["hyprland/workspaces", "hyprland/mode", "custom/media"],
-  "modules-center": ["hyprland/window"],
+  // "modules-left": ["hyprland/workspaces", "hyprland/mode"],
+  // "modules-center": ["hyprland/window"],
+  "modules-left": ["sway/workspaces", "sway/mode"],
+  "modules-center": ["sway/window"],
   // "modules-right": ["mpd", "idle_inhibitor", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "battery", "battery#bat2", "clock", "tray"],
   // "modules-right": ["idle_inhibitor", "network", "cpu", "temperature", "memory", "pulseaudio", "clock", "tray"],
   "modules-right": [
@@ -21,6 +23,50 @@
     "clock#date"
   ],
   // Modules configuration
+  "sway/workspaces": {
+    // "disable-scroll": true,
+    "all-outputs": false,
+    // "numeric-first": true,
+    "format": "{name}: {icon}",
+    "enable-bar-scroll": true,
+    "format-icons": {
+      // "0": "",
+      "0": "",
+      // "%": "",
+      // "`": "",
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "7": "",
+      "8": "",
+      // "8": "x",
+      // "9": "n",
+      // "10": "s",
+      // "^1": "",
+      "^1": "",
+      "^2": "",
+      "^3": "",
+      "^4": "",
+      "^5": "",
+      // "^8": "",
+      // "^10": "",
+      // "urgent": "",
+      // "focused": "",
+      "default": ""
+    },
+    "persistent-workspaces": {
+      // "0": ["DP-3"]
+    }
+  },
+  "sway/mode": {
+    "format": "<span style=\"italic\">{}</span>"
+  },
+  // "sway/window": {
+  //   "max-length": 100,
+  //   "separate-outputs": true
+  // },
   "hyprland/workspaces": {
     "all-outputs": false,
     "format": "{name}",
@@ -165,19 +211,7 @@
     "interval": 1,
     // "escape": true,
     // "return-type": "json",
-    "exec": "__CPUFREQ_PY__ | grep avg | sed -Ee 's/[^0-9]+//g'"
-  },
-  "custom/media": {
-    "format": "{icon} {}",
-    "return-type": "json",
-    "max-length": 40,
-    "format-icons": {
-      "spotify": "",
-      "default": "🎜"
-    },
-    "escape": true,
-    "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
-    // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+    "exec": "$HOME/bin/cpufreq.py | grep avg | awk '{print $2}'"
   },
   "custom/qemu": {
     "format": "{icon} {}",
