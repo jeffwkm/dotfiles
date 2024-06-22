@@ -11,6 +11,7 @@ node_modules
 *.eln
 flycheck_config.el
 flycheck_init.el
+/flake-update.txt
 
 /bin/do-ssh*
 chromium_dev_keys.sh

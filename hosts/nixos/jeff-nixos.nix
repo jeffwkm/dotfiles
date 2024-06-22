@@ -208,7 +208,7 @@ in {
     boot.blacklistedKernelModules = [ "nouveau" "nvidia" ];
     boot.kernelParams = [
       "amd_iommu=on"
-      # "iommu=pt"
+      "iommu=pt"
       "rd.driver.pre=vfio-pci"
       "hugepagesz=1G"
       "default_hugepagesz=1G"
@@ -219,8 +219,8 @@ in {
       "kvm.report_ignored_msrs=0"
       "kvm_amd.nested=0"
       "mitigations=off"
-      # "video=DP-3:3840x2160@60"
-      # "video=DP-2:3840x2160@60"
+      "video=DP-3:3840x2160@60"
+      "video=DP-2:3840x2160@60"
     ];
 
     hardware.cpu.amd.updateMicrocode = true;
