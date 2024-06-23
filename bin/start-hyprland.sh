@@ -12,4 +12,3 @@ set +e
 # systemd-cat --identifier=hyprland Hyprland
 Hyprland
 systemctl --user stop graphical-session.target
-loginctl terminate-user $UID

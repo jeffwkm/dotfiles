@@ -28,4 +28,3 @@ sway
 
 # terminate user session upon sway exit
 systemctl --user stop graphical-session.target
-loginctl terminate-user $UID
