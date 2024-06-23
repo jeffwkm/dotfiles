@@ -68,6 +68,12 @@ in {
       programs.vscode.enable = true;
     };
 
+    # programs.hyprland.package = inputs.hyprland-391.packages.hyprland;
+    nixpkgs.overlays = [
+      (final: prev: { hyprpaper = pkgs.pkgs-stable.hyprpaper; })
+      inputs.hyprland-391.overlays.default
+    ];
+
     services.openssh.ports = [ 22 ];
 
     services.nginx = {

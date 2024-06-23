@@ -5,6 +5,8 @@ in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-apple-silicon.nixosModules.default
+    # use hyprland from github
+    inputs.hyprland.nixosModules.default
   ] ++ (with inputs.chaotic.nixosModules; [
     nyx-cache
     nyx-overlay

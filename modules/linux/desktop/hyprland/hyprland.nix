@@ -16,9 +16,6 @@ in {
     extraConf = mkOpt types.str "";
   };
 
-  # use hyprland from github:
-  imports = [ inputs.hyprland.nixosModules.default ];
-
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       # inputs.hyprland.overlays.default
@@ -38,12 +35,10 @@ in {
     ];
 
     programs.hyprland.enable = true;
-    # programs.hyprland.package = pkgs.pkgs-stable.hyprland;
 
     environment.systemPackages = with pkgs; [
       hypridle
       hyprlock
-      # pkgs.pkgs-stable.hyprpaper
       hyprpaper
       hyprkeys
     ];

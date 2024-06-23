@@ -8,6 +8,12 @@
       config = nixpkgsConfig;
     };
   };
+  pkgs-2311 = final: prev: {
+    pkgs-2311 = import inputs.nixpkgs-2311 {
+      inherit (prev.stdenv) system;
+      config = nixpkgsConfig;
+    };
+  };
   pkgs-x86 = final: prev:
     prev.lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
       pkgs-x86 = import inputs.nixpkgs {
