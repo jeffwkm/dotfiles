@@ -22,7 +22,7 @@ set $out1           DP-2
 set $out2           DP-3
 
 output  *           subpixel rgb
-output  *           max_render_time 10
+output  *           max_render_time 4
 output  $out1       position 0 0 scale 1.75
 output  $out2       position 2195 0 scale 1.75
 # output  $out2       color profile "/home/jeff/.local/share/icc/p2715q.icc"
@@ -94,9 +94,9 @@ bindsym $CM+l                  exec swaylock -f -c 000000   # lock screen
 # bindsym $CM+l                  exec swaylock-fancy --daemonize # lock screen
 bindsym $CMS+e                 exec "swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway?' -b 'Yes, exit sway' 'swaymsg exit'"
 ## volume controls
-bindsym XF86AudioRaiseVolume   exec volume-up.sh
-bindsym XF86AudioLowerVolume   exec volume-down.sh
-bindsym XF86AudioMute          exec toggle-mute.sh
+bindsym XF86AudioRaiseVolume   exec volumectl -d +
+bindsym XF86AudioLowerVolume   exec volumectl -d -
+bindsym XF86AudioMute          exec volumectl -d %
 ## media player controls
 set $playerctl ~/bin.local/playerctl.sh
 bindsym $Su+$C+Up              exec bash -c "$playerctl play-pause"
@@ -123,39 +123,39 @@ bindsym $CMS+p               exec rofi-pass         # password lookup
 ### window management bindings
 ######################################################################
 ## focus window
-bindsym $M+Left       focus left          
+bindsym $M+Left       focus left
 bindsym $M+Down       focus down
 bindsym $M+Up         focus up
 bindsym $M+Right      focus right
 ## move window
-bindsym $MS+Left      move left           
+bindsym $MS+Left      move left
 bindsym $MS+Down      move down
 bindsym $MS+Up        move up
 bindsym $MS+Right     move right
 ## split mode -> horizontal
-bindsym $M+h          split h             
+bindsym $M+h          split h
 ##            -> vertical
-bindsym $M+v          split v             
+bindsym $M+v          split v
 ## container layout mode
 bindsym $MS+s         layout stacking
 bindsym $MS+w         layout tabbed
 bindsym $MS+e         layout toggle split
 ## toggle container fullscreen
-bindsym $M+f          fullscreen toggle   
+bindsym $M+f          fullscreen toggle
 ## toggle window floating
-bindsym $MS+space     floating toggle     
+bindsym $MS+space     floating toggle
 ## toggle focus on floating
-bindsym $M+space      focus mode_toggle   
+bindsym $M+space      focus mode_toggle
 ## focus parent container
-bindsym $M+a          focus parent        
+bindsym $M+a          focus parent
 ## focus child container
-bindsym $M+d          focus child         
+bindsym $M+d          focus child
 ## kill focused window
-bindsym $CM+q         kill                
+bindsym $CM+q         kill
 ## move window to scratchpad
-bindsym $MS+minus     move scratchpad     
+bindsym $MS+minus     move scratchpad
 ## cycle scratchpad display
-bindsym $M+minus      scratchpad show     
+bindsym $M+minus      scratchpad show
 ######################################################################
 
 ######################################################################
@@ -251,7 +251,7 @@ set $dp2                  6
 bindsym $Su+equal         exec change-brightness $dp1 + 2
 bindsym $Su+minus         exec change-brightness $dp1 - 2
 ## grave is `
-bindsym $Su+grave         exec change-brightness $dp1 96 
+bindsym $Su+grave         exec change-brightness $dp1 96
 bindsym $Su+backslash     exec change-brightness $dp1 80
 
 bindsym $CSu+equal        exec change-brightness $dp2 + 2
@@ -269,7 +269,6 @@ bindsym $CSu+3            exec ~/bin/disp -s mac
 ### resize mode
 ######################################################################
 set $resize "resize: +Width[Right] -Width[Left] +Height[Up] -Height[Down]"
-## mode definition
 mode $resize {
         bindsym j resize shrink width 10 px or 5 ppt
         bindsym k resize grow height 10 px or 5 ppt
@@ -338,37 +337,28 @@ mode "$mode_gaps_outer" {
 ######################################################################
 ### window configurations
 ######################################################################
-for_window  [class="[Mm]pv.*"]                    floating enable
 for_window  [instance="[Mm]pv.*"]                 floating enable
 for_window  [app_id="[Mm]pv.*"]                   floating enable
-for_window  [class="[Ee]og.*"]                    floating enable
 for_window  [app_id="[Ee]og.*"]                   floating enable
-for_window  [class="[Nn]vidia-settings"]          floating enable
-for_window  [class="[Gg]nome-control-center"]     floating enable
-for_window  [class="[Gg]nome-tweak-tool"]         floating enable
-for_window  [class="[Pp]avucontrol.*"]            floating enable
 for_window  [app_id="[Pp]avucontrol.*"]           floating enable
 for_window  [app_id="SVPManager.*"]               floating enable
 for_window  [app_id="qt5ct"]                      floating enable
 for_window  [app_id="[Kk][Vv]antum.*"]            floating enable
 for_window  [app_id="[Ww]eb.*[Cc]amoid.*"]        floating enable
 for_window  [app_id="[Nn]autilus.*"]              floating enable
-for_window  [class="[Nn]autilus.*"]               floating enable
 for_window  [app_id="looking-glass-client.*"]     inhibit_idle visible, move window to workspace $WSPA_10
 for_window  [app_id="[Dd]conf.*"]                 floating enable
 for_window  [class="[Ll]xappearance.*"]           floating enable
-for_window  [app_id="[Ll]xappearance.*"]          floating enable
 for_window  [class="[Gg]tk[Pp]erf.*"]             floating enable
 for_window  [app_id="[Cc]aerbannog.*"]            floating enable, resize set width 800 height 650
-for_window  [class="[Cc]aerbannog.*"]             floating enable
-
-for_window [class="[Ss]lack.*"] \
+for_window  [app_id="lich.rbw.*"]                 floating enable
+for_window  [app_id="[Ss]lack.*"] \
   mark --add slack, \
   move window to workspace $WSPB_1
-for_window [class="[Ss]potify.*"] \
+for_window  [app_id="[Ss]potify.*"] \
   mark --add spotify, \
   move window to workspace $WSPA_10
-for_window [class="[Ss]team.*"] \
+for_window  [class="[Ss]team.*"] \
   mark --add steam, \
   floating enable, \
   move window to workspace $WSPA_10
