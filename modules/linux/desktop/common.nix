@@ -34,7 +34,7 @@ in {
     });
 
     environment.systemPackages = with pkgs;
-      [ gparted ] ++ optional cfg.amdgpu-fan amdgpu-fan;
+      [ gparted wine ] ++ optional cfg.amdgpu-fan amdgpu-fan;
 
     systemd.services.amdgpu-fan = mkIf cfg.amdgpu-fan {
       enable = true;
