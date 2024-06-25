@@ -1,6 +1,8 @@
 { config, options, pkgs, lib, inputs, modulesPath, ... }:
 with lib;
 let
+  inherit (lib.my) optimizePkg;
+  optimize' = optimizePkg { level = 3; };
   mesaPkgs = with pkgs; [
     vaapiVdpau
     libvdpau-va-gl
@@ -20,14 +22,17 @@ let
     libva-utils
   ];
 in {
-  imports = ([ (modulesPath + "/installer/scan/not-detected.nix") ]
-    ++ (with inputs.chaotic.nixosModules; [
-      nyx-cache
-      nyx-overlay
-      mesa-git
-      # scx
-      # zfs-impermanence-on-shutdown
-    ]));
+  imports = ([
+    (modulesPath + "/installer/scan/not-detected.nix")
+    # use hyprland from github
+    # inputs.hyprland.nixosModules.default
+  ] ++ (with inputs.chaotic.nixosModules; [
+    nyx-cache
+    nyx-overlay
+    mesa-git
+    # scx
+    # zfs-impermanence-on-shutdown
+  ]));
 
   config = {
     host.optimize = true;
@@ -70,8 +75,17 @@ in {
 
     # programs.hyprland.package = inputs.hyprland-391.packages.hyprland;
     nixpkgs.overlays = [
-      (final: prev: { hyprpaper = pkgs.pkgs-stable.hyprpaper; })
       inputs.hyprland-391.overlays.default
+      (final: prev: {
+        wlroots-hyprland = optimize' prev.wlroots-hyprland;
+        hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
+          wlroots-hyprland = final.wlroots-hyprland;
+        });
+        hyprland = optimize' (prev.hyprland.override {
+          wlroots-hyprland = final.wlroots-hyprland;
+        });
+        hyprpaper = optimize' final.pkgs-stable.hyprpaper;
+      })
     ];
 
     services.openssh.ports = [ 22 ];

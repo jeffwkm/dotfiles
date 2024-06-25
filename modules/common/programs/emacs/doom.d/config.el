@@ -841,6 +841,9 @@
          ;; +org-roam-auto-backlinks-buffer t
          ))
 
+(after! corfu
+  (setq! global-corfu-modes '((not) prog-mode)))
+
 (use-package! org-roam-timestamps
   :after org-roam
   :config (org-roam-timestamps-mode))
