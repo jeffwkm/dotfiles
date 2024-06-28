@@ -64,12 +64,20 @@ let
   asahi = (pkgs.system == "aarch64-linux");
   cfg = config.modules.programs.chromium;
 
-  chromiumSh = pkgs.writeScriptBin "chromium.sh" (''
-    #!${pkgs.bash}/bin/bash
+  use-chromium = asahi;
+  app = if use-chromium then "chromium.desktop" else "google-chrome.desktop";
+  chromiumSh = pkgs.writeScriptBin "chromium.sh" (if use-chromium then
+    (''
+      #!${pkgs.bash}/bin/bash
 
-    source ~/.config/chromium_dev_keys.sh
+      source ~/.config/chromium_dev_keys.sh
 
-    env chromium "$'' + ''{opts[@]}" "$@" 2>&1'');
+      env chromium "$'' + ''{opts[@]}" "$@" 2>&1'')
+  else
+    (''
+      #!${pkgs.bash}/bin/bash
+
+      env google-chrome-stable "$'' + ''{opts[@]}" "$@" 2>&1''));
 in {
   options.modules.programs.chromium.enable = mkBoolOpt modules.desktop.enable;
 
@@ -77,14 +85,15 @@ in {
     environment.systemPackages = with pkgs;
       [ chromiumSh ]
       ++ (if asahi then [ chromiumWidevineWrapper ] else [ chromium ])
-      ++ optionals (!asahi) [ chromedriver ];
+      ++ optional (!use-chromium) google-chrome
+      ++ optional (!asahi) chromedriver;
 
     xdg.mime.defaultApplications = mkIf (!darwin) {
-      "text/html" = "chromium.desktop";
-      "x-scheme-handler/http" = "chromium.desktop";
-      "x-scheme-handler/https" = "chromium.desktop";
-      "x-scheme-handler/about" = "chromium.desktop";
-      "x-scheme-handler/unknown" = "chromium.desktop";
+      "text/html" = app;
+      "x-scheme-handler/http" = app;
+      "x-scheme-handler/https" = app;
+      "x-scheme-handler/about" = app;
+      "x-scheme-handler/unknown" = app;
     };
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
