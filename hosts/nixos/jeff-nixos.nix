@@ -73,6 +73,8 @@ in {
       programs.vscode.enable = true;
     };
 
+    # TODO: add printing
+
     # programs.hyprland.package = inputs.hyprland-391.packages.hyprland;
     nixpkgs.overlays = [
       inputs.hyprland-391.overlays.default
@@ -85,6 +87,7 @@ in {
           wlroots-hyprland = final.wlroots-hyprland;
         });
         hyprpaper = optimize' final.pkgs-stable.hyprpaper;
+        libliftoff = pkgs.pkgs-stable.libliftoff;
       })
     ];
 
@@ -249,10 +252,8 @@ in {
     # chaotic.nyx.overlay.onTopOf = "user-pkgs"; # "flake-nixpkgs"
     # chaotic.hdr.enable = true;
 
-    hardware.opengl = {
+    hardware.graphics = {
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
       extraPackages = mesaPkgs;
       extraPackages32 = mesaPkgs32;
     };

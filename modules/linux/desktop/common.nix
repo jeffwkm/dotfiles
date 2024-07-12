@@ -20,16 +20,14 @@ in {
     host.gui = true;
 
     nixpkgs.overlays = optional cfg.gnome.enable (final: prev: {
-      gnome = prev.gnome.overrideScope (gfinal: gprev: {
-        nautilus = gprev.nautilus.overrideAttrs (old: {
-          buildInputs = old.buildInputs ++ (with prev.gst_all_1; [
-            gst-plugins-good
-            gst-plugins-bad
-            gst-plugins-ugly
-            gst-libav
-            prev.ffmpegthumbnailer
-          ]);
-        });
+      nautilus = prev.nautilus.overrideAttrs (old: {
+        buildInputs = old.buildInputs ++ (with prev.gst_all_1; [
+          gst-plugins-good
+          gst-plugins-bad
+          gst-plugins-ugly
+          gst-libav
+          prev.ffmpegthumbnailer
+        ]);
       });
     });
 
@@ -129,12 +127,16 @@ in {
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let
         gnomePackages = with pkgs;
-          optionals cfg.gnome.enable ([
+          optionals cfg.gnome.enable [
             baobab
+            dconf-editor
+            eog
+            evince
             ffmpegthumbnailer
+            file-roller
             gedit
-            glib
             gjs
+            glib
             gnome-podcasts
             gnome-usage
             gobject-introspection
@@ -145,15 +147,10 @@ in {
             gtkperf
             libadwaita
             libpulseaudio
-            themechanger
-          ] ++ (with gnome; [
-            dconf-editor
-            eog
-            evince
-            file-roller
             nautilus
+            themechanger
             totem
-          ]));
+          ];
         qtPackages = with pkgs;
           optionals cfg.qt [ qt5.full qt5.qtwayland qt5ct adwaita-qt ];
         cli = with pkgs;

@@ -64,7 +64,8 @@ let
   asahi = (pkgs.system == "aarch64-linux");
   cfg = config.modules.programs.chromium;
 
-  use-chromium = asahi;
+  # use-chromium = asahi;
+  use-chromium = true;
   app = if use-chromium then "chromium.desktop" else "google-chrome.desktop";
   chromiumSh = pkgs.writeScriptBin "chromium.sh" (if use-chromium then
     (''
