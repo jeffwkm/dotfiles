@@ -19,19 +19,18 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       # inputs.hyprland.overlays.default
-      # inputs.hyprpaper.overlays.default
-      (final: prev:
-        {
-          # wlroots = optimize' prev.wlroots;
-          # hyprland-unwrapped = oprimize' prev.hyprland-unwrapped;
-          # hyprland = optimize' prev.hyprland;
-          # hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
-          #   wlroots-hyprland = final.wlroots-hyprland;
-          # });
-          # hyprland =
-          #   optimize' (prev.hyprland.override { wlroots = final.wlroots; });
-          # hyprpaper = optimize' prev.hyprpaper;
-        })
+      inputs.hyprpaper.overlays.default
+      (final: prev: {
+        # wlroots = optimize' prev.wlroots;
+        # hyprland-unwrapped = oprimize' prev.hyprland-unwrapped;
+        # hyprland = optimize' prev.hyprland;
+        # hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
+        #   wlroots-hyprland = final.wlroots-hyprland;
+        # });
+        # hyprland =
+        #   optimize' (prev.hyprland.override { wlroots = final.wlroots; });
+        hyprpaper = optimize' prev.hyprpaper;
+      })
     ];
 
     programs.hyprland.enable = true;

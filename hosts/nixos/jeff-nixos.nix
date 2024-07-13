@@ -25,7 +25,7 @@ in {
   imports = ([
     (modulesPath + "/installer/scan/not-detected.nix")
     # use hyprland from github
-    # inputs.hyprland.nixosModules.default
+    inputs.hyprland.nixosModules.default
   ] ++ (with inputs.chaotic.nixosModules; [
     nyx-cache
     nyx-overlay
@@ -77,17 +77,18 @@ in {
 
     # programs.hyprland.package = inputs.hyprland-391.packages.hyprland;
     nixpkgs.overlays = [
-      inputs.hyprland-391.overlays.default
+      # inputs.hyprland-391.overlays.default
       (final: prev: {
-        wlroots-hyprland = optimize' prev.wlroots-hyprland;
-        hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
-          wlroots-hyprland = final.wlroots-hyprland;
-        });
-        hyprland = optimize' (prev.hyprland.override {
-          wlroots-hyprland = final.wlroots-hyprland;
-        });
-        hyprpaper = optimize' final.pkgs-stable.hyprpaper;
-        libliftoff = pkgs.pkgs-stable.libliftoff;
+        # wlroots-hyprland = optimize' prev.wlroots-hyprland;
+        # hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
+        #   wlroots-hyprland = final.wlroots-hyprland;
+        # });
+        # hyprland = optimize' (prev.hyprland.override {
+        #   wlroots-hyprland = final.wlroots-hyprland;
+        # });
+        # hyprpaper = optimize' final.pkgs-stable.hyprpaper;
+        hyprpaper = optimize' prev.hyprpaper;
+        # libliftoff = pkgs.pkgs-stable.libliftoff;
       })
     ];
 
@@ -264,7 +265,7 @@ in {
       extraPackages32 = mesaPkgs32;
     };
 
-    nix.settings.max-jobs = 4;
+    nix.settings.max-jobs = 2;
     nix.settings.cores = 16;
 
     networking.extraHosts = ''

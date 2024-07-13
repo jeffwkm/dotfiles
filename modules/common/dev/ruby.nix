@@ -18,15 +18,20 @@ let
       sequel
       sqlite3
       terminal-table
+      ## repl (bundler console)
+      minitest
+      mutex_m
+      pry
+      simplecov
     ]);
-  rubyCustom = pkgs.ruby_3_3.withPackages rubyPackages;
+  rubyCustom = pkgs.pkgs-stable.ruby_3_3.withPackages rubyPackages;
   cfg = config.modules.dev.ruby;
 in {
   options.modules.dev.ruby.enable = mkBoolOpt dev.enable-all;
 
   config = {
     environment.systemPackages =
-      if cfg.enable then [ rubyCustom ] else [ pkgs.ruby ];
+      if cfg.enable then [ (optimize config rubyCustom) ] else [ pkgs.ruby ];
     home-manager.users.${user.name} = { };
   };
 }

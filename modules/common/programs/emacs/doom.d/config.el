@@ -1495,7 +1495,7 @@
 ;; 'git-gutter-mode instead of 'git-gutter-fringe-mode.
 ;; This restarts git-gutter-mode for all buffers
 ;; upon opening a graphical frame.
-(add-hook! 'server-after-make-frame-hook '--fix-git-gutter-buffers)
+;;(add-hook! 'server-after-make-frame-hook '--fix-git-gutter-buffers)
 
 ;;;; no-byte-compile: t
 

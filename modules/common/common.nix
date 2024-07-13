@@ -65,7 +65,6 @@ in {
             ncdu
             neofetch
             nethack
-            # nix-top
             nushell
             p7zip
             pass

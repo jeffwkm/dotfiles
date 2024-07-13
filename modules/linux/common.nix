@@ -130,7 +130,7 @@ in {
         wget
         xdg-utils
       ] ++ optionals (!host.minimal) [
-        ananicy-cpp
+        # ananicy-cpp
         fscrypt-experimental
         mtr
         tomb

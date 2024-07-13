@@ -196,11 +196,11 @@ in {
           [ vivid base16-builder base16-shell-preview ] ++ [
             adw-gtk3
             capitaine-cursors
-            catppuccin-cursors
+            # catppuccin-cursors
             # papirus-icon-theme
             catppuccin-papirus-folders
             catppuccin-sddm-corners
-            gnome.adwaita-icon-theme
+            adwaita-icon-theme
             gnome-icon-theme
             nordic
           ] ++ optionals modules.desktop.qt

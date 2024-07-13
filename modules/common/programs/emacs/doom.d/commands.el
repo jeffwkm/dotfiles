@@ -94,31 +94,32 @@
         (-when-let (derived-mode (get mode 'derived-mode-parent))
           (--derived-mode-p ancestor derived-mode)))))
 
-(require 'git-gutter)
 
 (declare-function +vc-gutter-init-maybe-h nil)
 (declare-function +workspace/delete nil)
 (declare-function +workspace-current-name nil)
 (declare-function doom-active-minor-modes nil)
 
-(defun --fix-git-gutter-buffers (&optional frame)
-  "Ensure git-gutter-fringe-mode is used in all buffers if FRAME is graphical."
-  (interactive)
-  (let ((frame (or frame (selected-frame))))
-    (when (display-graphic-p frame)
-      (--each (buffer-list)
-        (with-current-buffer it
-          (unless (memq major-mode git-gutter:disabled-modes)
-            (git-gutter-mode +1))))
-      (let ((gg-buffers (--buffers-with-minor-mode 'git-gutter-mode))
-            (count 0))
-        (dolist (buffer gg-buffers)
-          (with-current-buffer buffer
-            (git-gutter-mode -1)
-            (+vc-gutter-init-maybe-h)
-            (git-gutter-mode +1)
-            (cl-incf count)))
-        (message "Restarted git-gutter-mode in %d buffers" count)))))
+;;(require 'git-gutter)
+
+;; (defun --fix-git-gutter-buffers (&optional frame)
+;;   "Ensure git-gutter-fringe-mode is used in all buffers if FRAME is graphical."
+;;   (interactive)
+;;   (let ((frame (or frame (selected-frame))))
+;;     (when (display-graphic-p frame)
+;;       (--each (buffer-list)
+;;         (with-current-buffer it
+;;           (unless (memq major-mode git-gutter:disabled-modes)
+;;             (git-gutter-mode +1))))
+;;       (let ((gg-buffers (--buffers-with-minor-mode 'git-gutter-mode))
+;;             (count 0))
+;;         (dolist (buffer gg-buffers)
+;;           (with-current-buffer buffer
+;;             (git-gutter-mode -1)
+;;             (+vc-gutter-init-maybe-h)
+;;             (git-gutter-mode +1)
+;;             (cl-incf count)))
+;;         (message "Restarted git-gutter-mode in %d buffers" count)))))
 
 (defun print-to-buffer (x)
   (princ (concat "\n" (with-output-to-string (print x))) (current-buffer)))
