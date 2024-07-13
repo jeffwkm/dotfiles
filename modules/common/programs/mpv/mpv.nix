@@ -19,29 +19,65 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       # customize mpv build for plugins and vapoursynth-mvtools
-      (final: prev: {
-        mpv = prev.mpv.override {
-          scripts = with final.mpvScripts; [
-            autoload
-            convert
-            mpris
-            mpv-playlistmanager
-            # videoclip
-            # cutter
-            # thumbnail
-            thumbfast
-            uosc
+      # mpv from pkgs-stable
+      (final: prev:
+        let
+          mpvOpts = {
+            scripts = with final.mpvScripts; [
+              autoload
+              convert
+              mpris
+              mpv-playlistmanager
+              # videoclip
+              # cutter
+              # thumbnail
+              thumbfast
+              uosc
+            ];
+            extraMakeWrapperArgs = optionals cfg.vapoursynth [
+              "--prefix"
+              "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+            ];
+          };
+          wrapMpv = mpv-unwrapped:
+            final.pkgs-stable.wrapMpv mpv-unwrapped mpvOpts;
+          withVS = mpv-unwrapped:
+            mpv-unwrapped.override { vapoursynthSupport = cfg.vapoursynth; };
+        in {
+          mpv = pipe final.pkgs-stable.mpv-unwrapped [
+            withVS
+            wrapMpv
+            (optimize config)
           ];
-          extraMakeWrapperArgs = optionals cfg.vapoursynth [
-            "--prefix"
-            "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
-          ];
-          mpv = optimize config (prev.mpv.unwrapped.override {
-            vapoursynthSupport = cfg.vapoursynth;
-          });
-        };
-      })
+        })
     ];
+
+    # nixpkgs.overlays = [
+    #   # customize mpv build for plugins and vapoursynth-mvtools
+    #   # mpv from nixpkgs-unstable
+    #   (final: prev: {
+    #     mpv = pkgs.pkgs-stable.mpv.override {
+    #       scripts = with final.mpvScripts; [
+    #         autoload
+    #         convert
+    #         mpris
+    #         mpv-playlistmanager
+    #         # videoclip
+    #         # cutter
+    #         # thumbnail
+    #         thumbfast
+    #         uosc
+    #       ];
+    #       extraMakeWrapperArgs = optionals cfg.vapoursynth [
+    #         "--prefix"
+    #         "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+    #       ];
+    #       mpv = optimize config (prev.mpv.unwrapped.override {
+    #         vapoursynthSupport = cfg.vapoursynth;
+    #       });
+    #     };
+    #   })
+    # ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let link = config.lib.file.mkOutOfStoreSymlink;
