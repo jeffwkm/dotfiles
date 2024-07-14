@@ -25,9 +25,6 @@ in {
         xdg.configFile."kitty/extra.conf".source = link "extra.conf";
         programs.kitty = {
           enable = true;
-          # font.name = "${cfg.fontFamily} Bold ${cfg.fontStyle}";
-          # font.name = "${cfg.fontFamily} Bold";
-          # font.size = cfg.fontSize;
           extraConfig = ''
             include ~/.config/kitty/extra.conf
           '';
