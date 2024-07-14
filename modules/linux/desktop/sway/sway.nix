@@ -37,7 +37,7 @@ let
   cfg = config.modules.wayland.sway;
 in {
   options.modules.wayland.sway = {
-    enable = mkBoolOpt modules.desktop.enable;
+    enable = mkBoolOpt false; # modules.desktop.enable
     icc = mkBoolOpt false;
   };
 
