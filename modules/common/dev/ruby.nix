@@ -15,6 +15,7 @@ let
       pkg-config
       rake
       rexml
+      rubocop
       sequel
       sqlite3
       terminal-table

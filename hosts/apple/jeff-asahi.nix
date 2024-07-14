@@ -16,6 +16,13 @@ in {
   ]);
 
   config = {
+    nixpkgs.overlays = [
+      (final: prev: {
+        mesa-asahi-edge = final.callPackage ../../mesa-asahi-edge {
+          mesa = pkgs.pkgs-stable.mesa;
+        };
+      })
+    ];
     ## host options
     modules = {
       desktop.enable = true;

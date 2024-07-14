@@ -493,7 +493,8 @@
   (--projectile-remove-external-projects)
   (require 'tsc)
   (require 'tsc-dyn)
-  (--toggle-emacs-debug t t))
+  ;; (--toggle-emacs-debug t t)
+  )
 (add-hook! 'emacs-startup-hook :depth 90 '--emacs-startup)
 
 (after! tramp
