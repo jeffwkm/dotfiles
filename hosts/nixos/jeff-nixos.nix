@@ -24,8 +24,7 @@ let
 in {
   imports = ([
     (modulesPath + "/installer/scan/not-detected.nix")
-    # use hyprland from github
-    inputs.hyprland.nixosModules.default
+    inputs.hyprland-stable.nixosModules.default
   ] ++ (with inputs.chaotic.nixosModules; [
     nyx-cache
     nyx-overlay
@@ -75,20 +74,17 @@ in {
 
     # TODO: add printing
 
-    # programs.hyprland.package = inputs.hyprland-391.packages.hyprland;
     nixpkgs.overlays = [
-      # inputs.hyprland-391.overlays.default
+      inputs.hyprland-stable.overlays.default
+      inputs.hyprpaper-stable.overlays.default
       (final: prev: {
-        # wlroots-hyprland = optimize' prev.wlroots-hyprland;
-        # hyprland-unwrapped = optimize' (prev.hyprland-unwrapped.override {
-        #   wlroots-hyprland = final.wlroots-hyprland;
-        # });
-        # hyprland = optimize' (prev.hyprland.override {
-        #   wlroots-hyprland = final.wlroots-hyprland;
-        # });
-        # hyprpaper = optimize' final.pkgs-stable.hyprpaper;
-        hyprpaper = optimize' prev.hyprpaper;
-        # libliftoff = pkgs.pkgs-stable.libliftoff;
+        wlroots-hyprland = optimize' (prev.wlroots-hyprland.override {
+          wlroots = optimize'
+            (prev.wlroots.override { libliftoff = final.libliftoff_0_4; });
+        });
+        hyprland-unwrapped = optimize' prev.hyprland-unwrapped.override {
+          wlroots-hyprland = final.wlroots-hyprland;
+        };
       })
     ];
 

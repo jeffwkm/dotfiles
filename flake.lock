@@ -286,15 +286,15 @@
     "hyprcursor_2": {
       "inputs": {
         "hyprlang": [
-          "hyprland-391",
+          "hyprland-stable",
           "hyprlang"
         ],
         "nixpkgs": [
-          "hyprland-391",
+          "hyprland-stable",
           "nixpkgs"
         ],
         "systems": [
-          "hyprland-391",
+          "hyprland-stable",
           "systems"
         ]
       },
@@ -340,33 +340,6 @@
         "url": "https://github.com/hyprwm/Hyprland"
       }
     },
-    "hyprland-391": {
-      "inputs": {
-        "hyprcursor": "hyprcursor_2",
-        "hyprland-protocols": "hyprland-protocols_2",
-        "hyprlang": "hyprlang_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "systems": "systems_5",
-        "wlroots": "wlroots",
-        "xdph": "xdph_2"
-      },
-      "locked": {
-        "lastModified": 1713283263,
-        "narHash": "sha256-Urb/njWiHYUudXpmK8EKl9Z58esTIG0PxXw5LuM2r5g=",
-        "owner": "hyprwm",
-        "repo": "Hyprland",
-        "rev": "fe7b748eb668136dd0558b7c8279bfcd7ab4d759",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hyprwm",
-        "ref": "v0.39.1",
-        "repo": "Hyprland",
-        "type": "github"
-      }
-    },
     "hyprland-protocols": {
       "inputs": {
         "nixpkgs": [
@@ -397,11 +370,11 @@
     "hyprland-protocols_2": {
       "inputs": {
         "nixpkgs": [
-          "hyprland-391",
+          "hyprland-stable",
           "nixpkgs"
         ],
         "systems": [
-          "hyprland-391",
+          "hyprland-stable",
           "systems"
         ]
       },
@@ -416,6 +389,33 @@
       "original": {
         "owner": "hyprwm",
         "repo": "hyprland-protocols",
+        "type": "github"
+      }
+    },
+    "hyprland-stable": {
+      "inputs": {
+        "hyprcursor": "hyprcursor_2",
+        "hyprland-protocols": "hyprland-protocols_2",
+        "hyprlang": "hyprlang_2",
+        "nixpkgs": [
+          "nixpkgs-stable"
+        ],
+        "systems": "systems_5",
+        "wlroots": "wlroots",
+        "xdph": "xdph_2"
+      },
+      "locked": {
+        "lastModified": 1713283263,
+        "narHash": "sha256-Urb/njWiHYUudXpmK8EKl9Z58esTIG0PxXw5LuM2r5g=",
+        "owner": "hyprwm",
+        "repo": "Hyprland",
+        "rev": "fe7b748eb668136dd0558b7c8279bfcd7ab4d759",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hyprwm",
+        "ref": "v0.39.1",
+        "repo": "Hyprland",
         "type": "github"
       }
     },
@@ -451,11 +451,11 @@
     "hyprlang_2": {
       "inputs": {
         "nixpkgs": [
-          "hyprland-391",
+          "hyprland-stable",
           "nixpkgs"
         ],
         "systems": [
-          "hyprland-391",
+          "hyprland-stable",
           "systems"
         ]
       },
@@ -494,6 +494,31 @@
       },
       "original": {
         "owner": "hyprwm",
+        "repo": "hyprpaper",
+        "type": "github"
+      }
+    },
+    "hyprpaper-stable": {
+      "inputs": {
+        "hyprlang": [
+          "hyprland-stable",
+          "hyprlang"
+        ],
+        "nixpkgs": [
+          "nixpkgs-stable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1704230554,
+        "narHash": "sha256-mqxnaNiCVJS88Dk4V1v2wdS0RaCbOk8HFOUUbp0Uiy0=",
+        "owner": "hyprwm",
+        "repo": "hyprpaper",
+        "rev": "9e2a2670e1e461f133376a89e3b47adffc48f984",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hyprwm",
+        "ref": "v0.6.0",
         "repo": "hyprpaper",
         "type": "github"
       }
@@ -731,8 +756,9 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager_2",
         "hyprland": "hyprland",
-        "hyprland-391": "hyprland-391",
+        "hyprland-stable": "hyprland-stable",
         "hyprpaper": "hyprpaper",
+        "hyprpaper-stable": "hyprpaper-stable",
         "nil-server": "nil-server",
         "nixos-apple-silicon": "nixos-apple-silicon",
         "nixpkgs": "nixpkgs_2",
@@ -949,19 +975,19 @@
     "xdph_2": {
       "inputs": {
         "hyprland-protocols": [
-          "hyprland-391",
+          "hyprland-stable",
           "hyprland-protocols"
         ],
         "hyprlang": [
-          "hyprland-391",
+          "hyprland-stable",
           "hyprlang"
         ],
         "nixpkgs": [
-          "hyprland-391",
+          "hyprland-stable",
           "nixpkgs"
         ],
         "systems": [
-          "hyprland-391",
+          "hyprland-stable",
           "systems"
         ]
       },

@@ -44,14 +44,19 @@
       url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland-391 = {
+    hyprland-stable = {
       url = "github:hyprwm/Hyprland/v0.39.1";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
     hyprpaper = {
       url = "github:hyprwm/hyprpaper";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.hyprlang.follows = "hyprland/hyprlang";
+    };
+    hyprpaper-stable = {
+      url = "github:hyprwm/hyprpaper/v0.6.0";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.hyprlang.follows = "hyprland-stable/hyprlang";
     };
     ags = {
       url = "github:Aylur/ags";

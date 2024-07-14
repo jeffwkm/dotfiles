@@ -19,11 +19,6 @@ let
       sequel
       sqlite3
       terminal-table
-      ## repl (bundler console)
-      minitest
-      mutex_m
-      pry
-      simplecov
     ]);
   rubyCustom = pkgs.pkgs-stable.ruby_3_3.withPackages rubyPackages;
   cfg = config.modules.dev.ruby;
