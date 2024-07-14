@@ -10,20 +10,33 @@ let
     level = 2;
     native = true;
   };
+  input-hyprland =
+    if cfg.stable then inputs.hyprland-stable else inputs.hyprland;
+  input-hyprpaper =
+    if cfg.stable then inputs.hyprpaper-stable else inputs.hyprpaper;
+  hyprland-overlay = input-hyprland.overlays.default;
+  hyprpaper-overlay = input-hyprpaper.overlays.default;
 in {
   options.modules.wayland.hyprland = {
     enable = mkBoolOpt modules.wayland.enable;
+    stable = mkBoolOpt false;
     extraConf = mkOpt types.str "";
   };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      # inputs.hyprland.overlays.default
-      # inputs.hyprland-stable.overlays.default
-      # inputs.hyprpaper.overlays.default
-      # inputs.hyprpaper-stable.overlays.default
+      hyprland-overlay
+      hyprpaper-overlay
       (final: prev: { hyprpaper = optimize' prev.hyprpaper; })
-    ];
+    ] ++ optional cfg.stable (final: prev: {
+      wlroots-hyprland = optimize' (prev.wlroots-hyprland.override {
+        wlroots = optimize'
+          (prev.wlroots.override { libliftoff = final.libliftoff_0_4; });
+      });
+      hyprland-unwrapped = optimize' prev.hyprland-unwrapped.override {
+        wlroots-hyprland = final.wlroots-hyprland;
+      };
+    });
 
     programs.hyprland.enable = true;
 

@@ -22,7 +22,7 @@ let
     libva-utils
   ];
 in {
-  imports = ([
+  imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.hyprland-stable.nixosModules.default
   ] ++ (with inputs.chaotic.nixosModules; [
@@ -31,7 +31,7 @@ in {
     mesa-git
     # scx
     # zfs-impermanence-on-shutdown
-  ]));
+  ]);
 
   config = {
     host.optimize = true;
@@ -49,6 +49,7 @@ in {
       };
       wayland.hyprland = {
         enable = true;
+        stable = true;
         extraConf = ''
           # enable brightness controls for external monitors
           # exec-once = bash -c "sleep 5 && ([ -e /sys/class/backlight/ddcci5 ] && [ -e /sys/class/backlight/ddcci6 ]) || sudo systemctl restart ddcci.service"
@@ -74,19 +75,7 @@ in {
 
     # TODO: add printing
 
-    nixpkgs.overlays = [
-      inputs.hyprland-stable.overlays.default
-      inputs.hyprpaper-stable.overlays.default
-      (final: prev: {
-        wlroots-hyprland = optimize' (prev.wlroots-hyprland.override {
-          wlroots = optimize'
-            (prev.wlroots.override { libliftoff = final.libliftoff_0_4; });
-        });
-        hyprland-unwrapped = optimize' prev.hyprland-unwrapped.override {
-          wlroots-hyprland = final.wlroots-hyprland;
-        };
-      })
-    ];
+    nixpkgs.overlays = [ ];
 
     services.openssh.ports = [ 22 ];
 

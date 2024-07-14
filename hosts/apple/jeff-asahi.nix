@@ -5,15 +5,8 @@ in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-apple-silicon.nixosModules.default
-    # use hyprland from github
     inputs.hyprland.nixosModules.default
-  ] ++ (with inputs.chaotic.nixosModules; [
-    nyx-cache
-    nyx-overlay
-    # mesa-git
-    # scx
-    # zfs-impermanence-on-shutdown
-  ]);
+  ] ++ (with inputs.chaotic.nixosModules; [ nyx-cache nyx-overlay ]);
 
   config = {
     nixpkgs.overlays = [
@@ -28,18 +21,22 @@ in {
       desktop.enable = true;
       dev.enable-all = true;
       wayland.enable = true;
-      wayland.hyprland.enable = true;
-      wayland.hyprland.extraConf = ''
-        input {
-            sensitivity = 0.0
-            kb_options = ctrl:nocaps,altwin:swap_alt_win
-        }
-      '';
+      wayland.hyprland = {
+        enable = true;
+        stable = false;
+        extraConf = ''
+          input {
+              sensitivity = 0.0
+              kb_options = ctrl:nocaps,altwin:swap_alt_win
+          }
+        '';
+      };
       programs.alacritty.enable = true;
       services.protonmail.enable = true;
-      services.protonvpn.enable = false;
-      services.protonvpn.configFile =
-        "/private/wg-quick/protonvpn-1-US-VA-14.conf";
+      services.protonvpn = {
+        enable = false;
+        configFile = "/private/wg-quick/protonvpn-1-US-VA-14.conf";
+      };
     };
     host.optimize = false;
     ## asahi system
