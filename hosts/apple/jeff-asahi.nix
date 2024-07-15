@@ -23,7 +23,6 @@ in {
       wayland.enable = true;
       wayland.hyprland = {
         enable = true;
-        stable = false;
         extraConf = ''
           input {
               sensitivity = 0.0

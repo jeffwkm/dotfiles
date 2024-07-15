@@ -1,8 +1,6 @@
 { config, options, pkgs, lib, inputs, modulesPath, ... }:
 with lib;
 let
-  inherit (lib.my) optimizePkg;
-  optimize' = optimizePkg { level = 3; };
   mesaPkgs = with pkgs; [
     vaapiVdpau
     libvdpau-va-gl

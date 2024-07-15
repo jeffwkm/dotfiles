@@ -10,22 +10,22 @@ let
     level = 2;
     native = true;
   };
-  input-hyprland =
-    if cfg.stable then inputs.hyprland-stable else inputs.hyprland;
   input-hyprpaper =
     if cfg.stable then inputs.hyprpaper-stable else inputs.hyprpaper;
-  hyprland-overlay = input-hyprland.overlays.default;
   hyprpaper-overlay = input-hyprpaper.overlays.default;
 in {
   options.modules.wayland.hyprland = {
     enable = mkBoolOpt modules.wayland.enable;
+    # NOTE: top-level config must also import corresponding
+    #       nixos module from corresponding hyprland input
+    #       (conditional import gives infinite recursion)
     stable = mkBoolOpt false;
     extraConf = mkOpt types.str "";
   };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      # hyprland-overlay
+      # NOTE: never apply hyprland overlay, breaks asahi build
       hyprpaper-overlay
       (final: prev: { hyprpaper = optimize' prev.hyprpaper; })
     ] ++ optional cfg.stable (final: prev: {
