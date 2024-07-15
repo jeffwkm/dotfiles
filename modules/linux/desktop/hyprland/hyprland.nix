@@ -25,7 +25,7 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      hyprland-overlay
+      # hyprland-overlay
       hyprpaper-overlay
       (final: prev: { hyprpaper = optimize' prev.hyprpaper; })
     ] ++ optional cfg.stable (final: prev: {
