@@ -16,8 +16,7 @@ let
 in {
   options.modules.wayland.hyprland = {
     enable = mkBoolOpt modules.wayland.enable;
-    # NOTE: top-level config must also import corresponding
-    #       nixos module from corresponding hyprland input
+    # NOTE: top-level host config must also import nixos module from corresponding hyprland input
     #       (conditional import gives infinite recursion)
     stable = mkBoolOpt false;
     extraConf = mkOpt types.str "";
