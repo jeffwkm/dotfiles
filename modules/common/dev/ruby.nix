@@ -16,6 +16,7 @@ let
       rake
       rexml
       rubocop
+      solargraph
       sequel
       sqlite3
       terminal-table
@@ -26,8 +27,11 @@ in {
   options.modules.dev.ruby.enable = mkBoolOpt dev.enable-all;
 
   config = {
-    environment.systemPackages =
-      if cfg.enable then [ (optimize config rubyCustom) ] else [ pkgs.ruby ];
+    environment.systemPackages = if cfg.enable then [
+      (optimize config rubyCustom)
+      pkgs.ruby_3_3.devdoc
+    ] else
+      [ pkgs.ruby ];
     home-manager.users.${user.name} = { };
   };
 }
