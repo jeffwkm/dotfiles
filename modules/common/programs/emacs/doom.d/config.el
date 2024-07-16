@@ -812,8 +812,8 @@
   (setq! org-log-done 'time
          org-agenda-files '("~/org/roam/" "~/org/todo.org")
          org-agenda-timegrid-use-ampm t
-         +org-capture-todo-file "roam/20240416233119-tasks.org"
-         +org-capture-emails-file "roam/20240416233119-tasks.org")
+         +org-capture-todo-file "roam/20240416233119-current_tasks.org"
+         +org-capture-emails-file "roam/20240416233119-current_tasks.org")
   (map! :mode org-mode
         "C-<tab>"        nil
         "C-k"            nil
