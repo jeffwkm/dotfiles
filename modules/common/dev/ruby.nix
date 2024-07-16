@@ -14,12 +14,6 @@ let
       pango
       pkg-config
       rake
-      rexml
-      rubocop
-      solargraph
-      sequel
-      sqlite3
-      terminal-table
     ]);
   rubyCustom = pkgs.pkgs-stable.ruby_3_3.withPackages rubyPackages;
   cfg = config.modules.dev.ruby;
