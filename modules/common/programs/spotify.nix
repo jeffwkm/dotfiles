@@ -2,7 +2,7 @@
 with lib;
 with lib.my;
 let
-  spicePkgs = inputs.spicetify-nix.packages.${pkgs.system}.default;
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
   inherit (config) user host modules;
   cfg = config.modules.programs.spotify;
 in {
@@ -12,7 +12,7 @@ in {
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = {
       imports = optionals modules.desktop.enable
-        [ inputs.spicetify-nix.homeManagerModule ];
+        [ inputs.spicetify-nix.homeManagerModules.default ];
 
       home.packages = with pkgs; [ spotify-player sptlrx ];
 

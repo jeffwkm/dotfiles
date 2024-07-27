@@ -61,7 +61,6 @@ in {
     users.extraUsers.root.extraGroups =
       [ "audio" "input" "plugdev" "libvirtd" ];
 
-    sound.enable = true;
     programs.dconf.enable = true;
     security.rtkit.enable = true;
     security.polkit.enable = true;
