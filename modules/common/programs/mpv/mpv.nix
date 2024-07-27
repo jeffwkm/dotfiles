@@ -44,11 +44,7 @@ in {
           withVS = mpv-unwrapped:
             mpv-unwrapped.override { vapoursynthSupport = cfg.vapoursynth; };
         in {
-          mpv = pipe final.pkgs-stable.mpv-unwrapped [
-            withVS
-            wrapMpv
-            (optimize config)
-          ];
+          mpv = pipe final.mpv-unwrapped [ withVS wrapMpv (optimize config) ];
         })
     ];
 

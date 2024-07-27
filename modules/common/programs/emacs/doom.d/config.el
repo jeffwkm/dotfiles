@@ -1451,6 +1451,8 @@
   :config
   ;; (pushnew! lsp-disabled-clients 'tailwindcss)
   ;; (setq! lsp-disabled-clients (-remove-item 'tailwindcss lsp-disabled-clients))
+  (after! clojure-mode
+    (setq-hook! clojurec-mode lsp-tailwindcss-experimental-class-regex ["\"([^\"]*)\""]))
   (--each '(web-mode
             css-mode
             css-ts-mode
@@ -1458,7 +1460,8 @@
             less-css-mode
             tsx-ts-mode
             typescript-ts-mode
-            rjsx-mode)
+            rjsx-mode
+            clojurec-mode)
     (pushnew! lsp-tailwindcss-major-modes it)))
 
 (after! lsp-css

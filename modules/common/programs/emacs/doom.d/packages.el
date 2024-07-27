@@ -2,19 +2,21 @@
 ;;; $DOOMDIR/packages.el
 
 ;; override the pinned versions of some packages
-(package! consult :pin "c0d8a12bce2568298ff9bcfec1c6cb5e68ca0b61")
-(package! lsp-mode :pin "62e1f68c1f2363f7ebe8f1c2762e472f3b5de46a") ; 9.0.0 pre-release
+(package! consult :pin "4889458dccf842ab6223099f8a73ff8b147e9459")
+(package! lsp-mode :pin "3afc56249e370afc334cf33a58a1f48d453d6267")
 ;; (package! org-roam :pin ...)
 
 ;; non-elpa packages
-(package! shell-maker :recipe
-  (:host github :repo "xenodium/chatgpt-shell" :files ("shell-maker.el")))
-(package! chatgpt-shell :recipe
-  (:host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell.el")))
-(package! copilot :recipe
-  (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
-(package! elsa :recipe (:host github :repo "emacs-elsa/Elsa"))
-(package! lsp-tailwindcss :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
+(package! shell-maker
+  :recipe (:host github :repo "xenodium/chatgpt-shell" :files ("shell-maker.el")))
+(package! chatgpt-shell
+  :recipe (:host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell.el")))
+(package! copilot
+  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
+(package! elsa
+  :recipe (:host github :repo "emacs-elsa/Elsa"))
+(package! lsp-tailwindcss
+  :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
 
 (package! alert)
 (package! catppuccin-theme)

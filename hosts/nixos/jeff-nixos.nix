@@ -226,8 +226,6 @@ in {
       "kvm.report_ignored_msrs=0"
       "kvm_amd.nested=0"
       "mitigations=off"
-      "video=DP-3:3840x2160@60"
-      "video=DP-2:3840x2160@60"
     ];
 
     hardware.cpu.amd.updateMicrocode = true;
@@ -243,7 +241,7 @@ in {
     };
 
     chaotic.mesa-git = {
-      enable = false;
+      enable = true;
       extraPackages = mesaPkgs;
       extraPackages32 = mesaPkgs32;
     };
