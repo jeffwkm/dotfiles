@@ -17,10 +17,12 @@ in {
       virt-manager
     ];
 
-    systemd.tmpfiles.rules = [
-      "f /dev/shm/scream          0660 ${user.name} qemu-libvirtd -"
-      "f /dev/shm/looking-glass   0660 ${user.name} qemu-libvirtd -"
-    ];
+    # for scream
+    networking.firewall.allowedTCPPorts = [ 4010 ];
+    networking.firewall.allowedUDPPorts = [ 4010 ];
+
+    systemd.tmpfiles.rules =
+      [ "f /dev/shm/looking-glass   0660 ${user.name} qemu-libvirtd -" ];
 
     # (on libvirtd startup) set machine definitions from nix config
     systemd.services.vm-define = {
@@ -46,10 +48,7 @@ in {
       description = "Scream IVSHMEM";
       serviceConfig = {
         Type = "exec";
-        ExecStartPre =
-          "${pkgs.bash}/bin/sh -c 'while [ ! -e /dev/shm/scream ]; do sleep 15 ; done'";
-        ExecStart =
-          "${pkgs.scream}/bin/scream -m /dev/shm/scream -o pulse -t 16 -v";
+        ExecStart = "${pkgs.scream}/bin/scream -o pulse -t 16 -v";
         TimeoutStartSec = "infinity";
         Restart = "always";
         RestartSec = 60;
