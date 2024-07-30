@@ -966,7 +966,8 @@
          lsp-auto-guess-root t
          lsp-guess-root-without-session t
          lsp-warn-no-matched-clients nil
-         lsp-ui-doc-include-signature t)
+         lsp-ui-doc-include-signature t
+         lsp-inlay-hint-enable nil)
   (pushnew! lsp-file-watch-ignored-directories "/home/jeff/repos/nix/nixpkgs" "/nix/store")
   (pushnew! lsp-disabled-clients 'semgrep-ls)
   (use-package! lsp-ui)
@@ -974,7 +975,7 @@
   (after! rustic
     (setq! lsp-rust-analyzer-server-format-inlay-hints t
            lsp-rust-analyzer-display-parameter-hints nil
-           lsp-rust-analyzer-max-inlay-hint-length 15
+           lsp-rust-analyzer-max-inlay-hint-length nil
            lsp-rust-clippy-preference "opt-in"
            lsp-rust-rustfmt-path "rustfmt"
            lsp-rust-analyzer-diagnostics-disabled ["inactive-code"]
