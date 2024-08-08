@@ -1,0 +1,100 @@
+{
+  "editor.fontFamily": "'JetBrainsMono Nerd Font', 'Courier New', monospace",
+  "editor.fontWeight": "600",
+  "editor.fontSize": 12,
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.fontWeight": "600",
+  "editor.fontLigatures": true,
+  "editor.cursorStyle": "line",
+  "editor.cursorBlinking": "smooth",
+  "editor.inlineSuggest.enabled": true,
+  "[python]": {
+    "editor.formatOnType": true
+  },
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "vscode-neovim.revealCursorScrollLine": true,
+  "vscode-neovim.neovimViewportHeightExtend": 2,
+  "nix.serverPath": "nil",
+  "nix.enableLanguageServer": true,
+  "nix.formatterPath": "nixfmt",
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.guides.indentation": false,
+  "editor.indentSize": 4,
+  "editor.smoothScrolling": true,
+  "editor.cursorSmoothCaretAnimation": "explicit",
+  "editor.cursorSurroundingLines": 1,
+  "editor.minimap.scale": 2,
+  "editor.minimap.maxColumn": 100,
+  "editor.minimap.showSlider": "always",
+  "files.insertFinalNewline": true,
+  "shellcheck.logLevel": "warn",
+  "git.autofetch": true,
+  "workbench.colorTheme": "Tomorrow Night",
+  "editorconfig.generateAuto": false,
+  "git.confirmSync": false,
+  "workbench.iconTheme": "material-icon-theme",
+  "git.rebaseWhenSync": true,
+  "scm.diffDecorationsGutterPattern": {
+    "added": true,
+    "modified": true
+  },
+  "explorer.confirmDelete": false,
+  "window.zoomLevel": 1,
+  "testExplorer.useNativeTesting": false,
+  "nvim-ui.nvimColorCustomizationKeys": ["statusBar.background"],
+  "workbench.colorCustomizations": {
+    "statusBar.background": null,
+    "editorCursor.foreground": null
+  },
+  "nvim-ui.nvimColorInsert": "#2F8F2F",
+  "nvim-ui.nvimColorNormal": null,
+  "nvim-ui.nvimColorVisual": "#673AB7",
+  "nvim-ui.nvimColorReplace": "#C06700",
+  "nix.serverSettings": {
+    "nil": {
+      "formatting": {
+        "command": ["/etc/profiles/per-user/jeff/bin/nixfmt", "-w", "80"]
+      },
+      "diagnostics": {
+        "ignored": ["unused_binding"]
+      },
+      "nix": {
+        "binary": "/run/current-system/sw/bin/nix",
+        "flake": {
+          "autoArchive": true,
+          "autoEvalInputs": false,
+          "nixpkgsInputName": "nixpkgs"
+        }
+      }
+    }
+  },
+  "git.openRepositoryInParentFolders": "always",
+  "calva.paredit.killAlsoCutsToClipboard": true,
+  "cursor.cpp.disabledLanguages": ["plaintext", "markdown", "scminput"],
+  "workbench.activityBar.orientation": "vertical",
+  "gitlens.hovers.currentLine.over": "line",
+  "gitlens.currentLine.enabled": false,
+  "gitlens.codeLens.enabled": false,
+  "vscode-neovim.ctrlKeysForInsertMode": ["a", "d", "e", "k", "w"],
+  "vscode-neovim.ctrlKeysForNormalMode": [
+    "a",
+    "d",
+    "e",
+    "f",
+    "j",
+    "k",
+    "l",
+    "r",
+    "w",
+    "backspace",
+    "delete"
+  ],
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.useEditorConfig": true
+}

@@ -10,9 +10,8 @@ let g:EasyMotion_show_prompt = 0
 let g:EasyMotion_prompt = ''
 
 call plug#begin('~/.config/nvim/data/plugged')
-"  Plug 'tpope/vim-sensible'
-Plug 'easymotion/vim-easymotion', Cond(!exists('g:vscode'))
-Plug 'asvetliakov/vim-easymotion', Cond(exists('g:vscode'), { 'as': 'vsc-easymotion' })
+" Plug 'tpope/vim-sensible'
+Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-commentary', Cond(!exists('g:vscode'))
 Plug 'machakann/vim-sandwich'
 call plug#end()
@@ -32,16 +31,20 @@ let g:mapleader = " "
 " Define global variable to prevent triggering hooks when entering insert mode
 let g:fake_insert_mode = 0
 
-nnoremap <Leader>s <Plug>(easymotion-s2)
-onoremap <Leader>s <Plug>(easymotion-s2)
+nnoremap s <Plug>(easymotion-s2)
+onoremap s <Plug>(easymotion-s2)
+nnoremap f <Plug>(easymotion-f)
+onoremap f <Plug>(easymotion-f)
+nnoremap F <Plug>(easymotion-F)
+onoremap F <Plug>(easymotion-F)
 nnoremap t <Plug>(easymotion-tl)
 onoremap t <Plug>(easymotion-tl)
 nnoremap T <Plug>(easymotion-Tl)
 onoremap T <Plug>(easymotion-Tl)
-nnoremap <Leader>j <Plug>(easymotion-j)
-onoremap <Leader>j <Plug>(easymotion-j)
-nnoremap <Leader>k <Plug>(easymotion-k)
-onoremap <Leader>k <Plug>(easymotion-k)
+nnoremap gsj <Plug>(easymotion-j)
+onoremap gsj <Plug>(easymotion-j)
+nnoremap gsk <Plug>(easymotion-k)
+onoremap gsk <Plug>(easymotion-k)
 
 function! BackspaceInNormalMode() abort
   let g:fake_insert_mode = 1
