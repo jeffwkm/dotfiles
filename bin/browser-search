@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -eu
 
+DEFAULT_BROWSER="firefox"
+
 valid_modes=("NixOS" "Home Manager" "Google")
 valid_modes_msg="Valid modes: ${valid_modes[*]}"
 usage="Usage: \n  $0\n  $0 <mode>\n  $0 <mode> <query>\n$valid_modes_msg"

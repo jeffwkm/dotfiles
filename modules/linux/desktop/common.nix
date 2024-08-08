@@ -74,6 +74,11 @@ in {
       sushi.enable = true;
     };
 
+    programs.appimage = {
+      enable = true;
+      binfmt = true;
+    };
+
     services.pipewire = {
       enable = true;
       alsa.enable = true;
