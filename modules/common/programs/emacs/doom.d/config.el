@@ -627,10 +627,12 @@
   (map! :i "C-TAB" nil
         :i "C-<tab>" nil
         :i "<backtab>" nil)
-  (after! corfu-mode
+  (after! corfu
     (map! :map corfu-map
-          "TAB" nil
-          "<tab>" nil))
+          :nmig "TAB" nil
+          :nmig "<tab>" nil
+          :nmig "S-TAB" nil
+          :nmig "<backtab>" nil))
   (after! company
     (map! :map company-active-map
           "TAB" nil
