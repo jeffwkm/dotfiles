@@ -25,8 +25,8 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       # NOTE: never apply hyprland overlay, breaks asahi build
-      hyprpaper-overlay
-      (final: prev: { hyprpaper = optimize' prev.hyprpaper; })
+      # hyprpaper-overlay
+      # (final: prev: { hyprpaper = optimize' prev.hyprpaper; })
     ] ++ optional cfg.stable (final: prev: {
       wlroots-hyprland = optimize' (prev.wlroots-hyprland.override {
         wlroots = optimize'
@@ -38,6 +38,7 @@ in {
     });
 
     programs.hyprland.enable = true;
+    programs.hyprland.package = inputs.hyprland.packages.${pkgs.system}.hyprland;
 
     environment.systemPackages = with pkgs; [
       hypridle

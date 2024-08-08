@@ -12,8 +12,6 @@ in {
   config = mkIf cfg.enable {
     # virtualisation.docker = { enable = true; };
 
-    nixpkgs.overlays = [ (final: prev: { docker = prev.docker_24; }) ];
-
     environment.systemPackages = with pkgs; [ docker docker-compose ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }: { };

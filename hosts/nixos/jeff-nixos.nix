@@ -22,7 +22,8 @@ let
 in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    inputs.hyprland-stable.nixosModules.default
+    # inputs.hyprland-stable.nixosModules.default
+    # inputs.hyprland.nixosModules.default
   ] ++ (with inputs.chaotic.nixosModules; [
     nyx-cache
     nyx-overlay
@@ -47,7 +48,7 @@ in {
       };
       wayland.hyprland = {
         enable = true;
-        stable = true;
+        # stable = true;
         extraConf = ''
           # enable brightness controls for external monitors
           # exec-once = bash -c "sleep 5 && ([ -e /sys/class/backlight/ddcci5 ] && [ -e /sys/class/backlight/ddcci6 ]) || sudo systemctl restart ddcci.service"
@@ -197,8 +198,8 @@ in {
     };
 
     # boot.kernelPackages = pkgs.linuxPackages;
-    boot.kernelPackages = pkgs.linuxPackages_latest;
-    # boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    # boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
