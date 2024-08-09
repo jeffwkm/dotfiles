@@ -8,6 +8,8 @@
   "editor.cursorStyle": "line",
   "editor.cursorBlinking": "smooth",
   "editor.inlineSuggest.enabled": true,
+  "rust-analyzer.inlayHints.maxLength": 40,
+  "rust-analyzer.inlayHints.renderColons": true,
   "[python]": {
     "editor.formatOnType": true
   },
@@ -27,16 +29,16 @@
   "editor.smoothScrolling": true,
   "editor.cursorSmoothCaretAnimation": "explicit",
   "editor.cursorSurroundingLines": 1,
-  "editor.minimap.scale": 2,
   "editor.minimap.maxColumn": 100,
   "editor.minimap.showSlider": "always",
+  "editor.minimap.enabled": true,
   "files.insertFinalNewline": true,
   "shellcheck.logLevel": "warn",
   "git.autofetch": true,
-  "workbench.colorTheme": "Tomorrow Night",
+  "workbench.colorTheme": "Gruvbox Dark Soft",
   "editorconfig.generateAuto": false,
   "git.confirmSync": false,
-  "workbench.iconTheme": "material-icon-theme",
+  "workbench.iconTheme": "vs-nomo-dark",
   "git.rebaseWhenSync": true,
   "scm.diffDecorationsGutterPattern": {
     "added": true,
@@ -51,7 +53,6 @@
     "editorCursor.foreground": null
   },
   "nvim-ui.nvimColorInsert": "#2F8F2F",
-  "nvim-ui.nvimColorNormal": null,
   "nvim-ui.nvimColorVisual": "#673AB7",
   "nvim-ui.nvimColorReplace": "#C06700",
   "nix.serverSettings": {
@@ -96,5 +97,9 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "prettier.useEditorConfig": true
+  "prettier.useEditorConfig": true,
+  "yaml.validate": false,
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  }
 }
