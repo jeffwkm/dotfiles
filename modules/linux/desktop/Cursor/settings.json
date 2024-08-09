@@ -25,7 +25,7 @@
   "nix.formatterPath": "nixfmt",
   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
   "editor.guides.indentation": false,
-  "editor.indentSize": 4,
+  "editor.indentSize": 2,
   "editor.smoothScrolling": true,
   "editor.cursorSmoothCaretAnimation": "explicit",
   "editor.cursorSurroundingLines": 1,
@@ -45,13 +45,10 @@
     "modified": true
   },
   "explorer.confirmDelete": false,
-  "window.zoomLevel": 1,
+  "window.zoomLevel": 0.5,
   "testExplorer.useNativeTesting": false,
   "nvim-ui.nvimColorCustomizationKeys": ["statusBar.background"],
-  "workbench.colorCustomizations": {
-    "statusBar.background": null,
-    "editorCursor.foreground": null
-  },
+  "nvim-ui.nvimColorNormal": null,
   "nvim-ui.nvimColorInsert": "#2F8F2F",
   "nvim-ui.nvimColorVisual": "#673AB7",
   "nvim-ui.nvimColorReplace": "#C06700",
@@ -101,5 +98,9 @@
   "yaml.validate": false,
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "workbench.colorCustomizations": {
+    "statusBar.background": null,
+    "editorCursor.foreground": null
   }
 }
