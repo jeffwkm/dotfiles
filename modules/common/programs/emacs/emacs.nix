@@ -51,7 +51,7 @@ let
       configureFlags = (old.configureFlags or [ ])
         ++ [ "LDFLAGS=-headerpad_max_install_names" ];
     })
-  else if modules.wayland.enable then
+  else if modules.desktop.enable then
     pkgs.emacs-pgtk # git from emacs-overlay
     # pkgs.emacs29-pgtk # stable from nixpkgs
   else

@@ -1,39 +1,51 @@
 [
   {
-    "key": "meta+ctrl+shift+p",
-    "command": "workbench.action.tasks.toggleProblems"
-  },
-  {
     "key": "alt+.",
     "command": "editor.action.goToDeclaration"
-  },
-  {
-    "key": "alt+shift+.",
-    "command": "editor.action.goToReferences"
   },
   {
     "key": "alt+,",
     "command": "workbench.action.navigateBack"
   },
   {
-    "key": "alt+shift+,",
-    "command": "workbench.action.navigateForward"
+    "key": "meta+p",
+    "command": "workbench.actions.view.toggleProblems"
   },
   {
-    "key": "meta+h",
-    "command": "workbench.action.previousEditor"
+    "key": "alt+e",
+    "command": "workbench.view.explorer",
+    "when": "viewContainer.workbench.view.explorer.enabled"
   },
   {
-    "key": "meta+l",
-    "command": "workbench.action.nextEditor"
+    "key": "alt+s",
+    "command": "workbench.view.scm",
+    "when": "viewContainer.workbench.view.scm.enabled"
   },
   {
-    "key": "meta+v",
+    "key": "alt+z",
     "command": "workbench.action.toggleSidebarVisibility"
   },
   {
-    "key": "meta+b",
-    "command": "workbench.action.toggleAuxiliaryBar"
+    "key": "alt+shift+.",
+    "command": "editor.action.goToReferences"
+  },
+  {
+    "key": "alt+;",
+    "command": "workbench.action.navigateBack",
+    "when": "canNavigateBack"
+  },
+  {
+    "key": "alt+'",
+    "command": "workbench.action.navigateForward",
+    "when": "canNavigateForward"
+  },
+  {
+    "key": "ctrl+;",
+    "command": "workbench.action.previousEditor"
+  },
+  {
+    "key": "ctrl+'",
+    "command": "workbench.action.nextEditor"
   },
   {
     "key": "meta+shift+h",
@@ -52,11 +64,11 @@
     "command": "workbench.action.focusRightGroup"
   },
   {
-    "key": "ctrl+w w",
+    "key": "ctrl+w",
     "command": "workbench.action.closeActiveEditor"
   },
   {
-    "key": "ctrl+w q",
+    "key": "ctrl+shift+w",
     "command": "workbench.action.closeGroup"
   },
   {
@@ -136,28 +148,54 @@
     "command": "workbench.action.focusActiveEditorGroup"
   },
   {
-    "key": "ctrl+'",
+    "key": "ctrl+shift+'",
     "command": "workbench.action.focusNextPart"
   },
   {
-    "key": "ctrl+;",
+    "key": "ctrl+shift+alt+.",
+    "command": "editor.action.smartSelect.expand",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+alt+,",
+    "command": "editor.action.smartSelect.shrink",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+shift+alt+'",
+    "command": "editor.action.selectToBracket"
+  },
+  {
+    "key": "ctrl+shift+;",
     "command": "workbench.action.focusPreviousPart"
   },
   {
-    "key": "ctrl+left",
-    "command": "workbench.action.navigateLeft"
+    "key": "ctrl+j",
+    "command": "workbench.action.togglePanel",
+    "when": "editorFocus || panelFocus"
   },
   {
-    "key": "ctrl+j",
-    "command": "-workbench.action.togglePanel"
+    "key": "ctrl+shift+j",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "panelVisible"
   },
-  // Focus next search result when search results view focused
+  {
+    "key": "ctrl+alt+=",
+    "command": "workbench.action.increaseViewSize"
+  },
+  {
+    "key": "ctrl+alt+-",
+    "command": "workbench.action.decreaseViewSize"
+  },
   {
     "key": "ctrl+j",
     "command": "search.action.focusNextSearchResult",
     "when": "searchViewletVisible"
   },
-  // Focus previous search result when in search view or search results view
+  {
+    "key": "ctrl+o",
+    "command": "workbench.action.focusNextGroup"
+  },
   {
     "key": "ctrl+k",
     "command": "search.action.focusPreviousSearchResult",
@@ -165,7 +203,7 @@
   },
   {
     "key": "ctrl+shift+t",
-    "command": "-workbench.action.reopenClosedEditor"
+    "command": "workbench.action.reopenClosedEditor"
   },
   {
     "key": "j",
@@ -176,5 +214,29 @@
     "key": "k",
     "command": "list.focusUp",
     "when": "listFocus && !inputFocus"
+  },
+  {
+    "key": "ctrl+.",
+    "command": "editor.action.marker.next"
+  },
+  {
+    "key": "ctrl+,",
+    "command": "editor.action.marker.prev"
+  },
+  {
+    "key": "ctrl+]",
+    "command": "paredit.sexpRangeExpansion",
+    "when": "editorLangId == 'clojure'"
+  },
+  {
+    "key": "ctrl+[",
+    "command": "paredit.sexpRangeContraction",
+    "when": "editorLangId == 'clojure'"
+  },
+  {
+    "key": "alt+\\",
+    "command": "joyride.runUserScript",
+    "args": "ignore_form.cljs",
+    "when": "editorLangId == 'clojure'"
   }
 ]

@@ -17,6 +17,7 @@ let
       python-lsp-server
       requests
       setuptools
+      ipykernel
     ] ++ optionals (!host.darwin && host.gui) [ pulsectl ]
     ++ optionals (!host.minimal) [ openai catppuccin pandas openai ]
     ++ optionals

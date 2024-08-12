@@ -3,11 +3,11 @@ with lib;
 with lib.my;
 let
   inherit (config) user host modules;
-  cfg = config.modules.wayland.mako;
+  cfg = config.modules.desktop.mako;
   pwd = "${host.config-dir}/modules/linux/desktop";
 in {
-  options.modules.wayland.mako = {
-    enable = mkBoolOpt modules.wayland.sway.enable;
+  options.modules.desktop.mako = {
+    enable = mkBoolOpt modules.desktop.sway.enable;
   };
 
   config = mkIf cfg.enable {

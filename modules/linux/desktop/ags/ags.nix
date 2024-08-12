@@ -3,9 +3,11 @@ with lib;
 with lib.my;
 let
   inherit (config) user modules;
-  cfg = modules.wayland.ags;
+  cfg = modules.desktop.ags;
 in {
-  options.modules.wayland.ags = { enable = mkBoolOpt modules.wayland.enable; };
+  options.modules.desktop.ags = {
+    enable = mkBoolOpt modules.desktop.hyprland.enable;
+  };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [ (wrapOptimize config "ags") ];

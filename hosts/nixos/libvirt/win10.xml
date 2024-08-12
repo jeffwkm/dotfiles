@@ -62,6 +62,7 @@
   </features>
   <cpu mode='host-passthrough' check='none' migratable='off'>
     <topology sockets='1' dies='1' cores='16' threads='1'/>
+    <feature policy='require' name='topoext'/>
   </cpu>
   <clock offset='localtime'>
     <timer name='rtc' tickpolicy='catchup'/>

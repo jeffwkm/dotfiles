@@ -3,10 +3,10 @@ with lib;
 with lib.my;
 let
   inherit (config) user host modules;
-  cfg = modules.wayland.avizo;
+  cfg = modules.desktop.avizo;
 in {
-  options.modules.wayland.avizo = {
-    enable = mkBoolOpt' modules.wayland.enable
+  options.modules.desktop.avizo = {
+    enable = mkBoolOpt' modules.desktop.enable
       "Enable avizo (MacOS-style volume/brightness OSD)";
   };
 

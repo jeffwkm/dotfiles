@@ -3,47 +3,12 @@ with lib;
 with lib.my;
 let
   inherit (config) user host modules;
-  iccOverlay = (final: prev: {
-    ## build sway/wlroots from icc color-profiles branch
-    wlroots = optimize config (prev.wlroots.overrideAttrs (old: {
-      # mesonFlags = [ "-Dlogind-provider=systemd" "-Dlibseat=disabled" ];
-      mesonFlags = [ "-Dauto_features=auto" ];
-      src = prev.fetchFromGitHub {
-        owner = "akvadrako";
-        repo = "wlroots";
-        rev = "a0e0dfacd43b7d295b41f0208a7c04f4473f0a8c";
-        sha256 = "1m03ns2nfw7gcagch5mlb83xkv6cx73nr4xnz9lxd0narq1knahr";
-      };
-      buildInputs = old.buildInputs ++ [ prev.lcms2 prev.libuuid ];
-    }));
-    sway = optimize config (prev.sway.overrideAttrs (old: {
-      src = prev.fetchFromGitHub {
-        owner = "akvadrako";
-        repo = "sway";
-        rev = "afa611719412b351319bec578a8d3775afbc658f";
-        sha256 = "1ibsy4402zhr6vvy114yhzqdx0y72s9qdg06izg5xgv7cznlg1gf";
-      };
-    }));
-    sway-unwrapped = optimize config (prev.sway-unwrapped.overrideAttrs (old: {
-      src = prev.fetchFromGitHub {
-        owner = "akvadrako";
-        repo = "sway";
-        rev = "afa611719412b351319bec578a8d3775afbc658f";
-        sha256 = "1ibsy4402zhr6vvy114yhzqdx0y72s9qdg06izg5xgv7cznlg1gf";
-      };
-    }));
-  });
   pwd = "${host.config-dir}/modules/linux/desktop/sway";
-  cfg = config.modules.wayland.sway;
+  cfg = config.modules.desktop.sway;
 in {
-  options.modules.wayland.sway = {
-    enable = mkBoolOpt false; # modules.desktop.enable
-    icc = mkBoolOpt false;
-  };
+  options.modules.desktop.sway = { enable = mkBoolOpt modules.desktop.enable; };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = optional cfg.icc iccOverlay;
-
     programs.sway = {
       enable = true;
       wrapperFeatures.gtk = true;
@@ -71,10 +36,10 @@ in {
       };
 
       # systemd.user.services.mako.Install.WantedBy =
-      #   mkIf modules.wayland.mako.enable [ "sway-session.target" ];
+      #   mkIf modules.desktop.mako.enable [ "sway-session.target" ];
 
       systemd.user.services.waybar.Install.WantedBy =
-        mkIf modules.wayland.waybar.enable [ "sway-session.target" ];
+        mkIf modules.desktop.waybar.enable [ "sway-session.target" ];
 
       systemd.user.services.swayidle = {
         Unit = {

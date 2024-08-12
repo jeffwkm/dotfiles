@@ -3,7 +3,7 @@ with lib;
 with lib.my;
 let
   inherit (config) user host modules;
-  cfg = modules.wayland.hyprland;
+  cfg = modules.desktop.hyprland;
   pwd = "${host.config-dir}/modules/linux/desktop/hyprland";
   optimize' = optimizePkg {
     enable = host.optimize;
@@ -14,8 +14,8 @@ let
     if cfg.stable then inputs.hyprpaper-stable else inputs.hyprpaper;
   hyprpaper-overlay = input-hyprpaper.overlays.default;
 in {
-  options.modules.wayland.hyprland = {
-    enable = mkBoolOpt modules.wayland.enable;
+  options.modules.desktop.hyprland = {
+    enable = mkBoolOpt modules.desktop.enable;
     # NOTE: top-level host config must also import nixos module from corresponding hyprland input
     #       (conditional import gives infinite recursion)
     stable = mkBoolOpt false;
@@ -25,20 +25,11 @@ in {
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
       # NOTE: never apply hyprland overlay, breaks asahi build
-      # hyprpaper-overlay
-      # (final: prev: { hyprpaper = optimize' prev.hyprpaper; })
-    ] ++ optional cfg.stable (final: prev: {
-      wlroots-hyprland = optimize' (prev.wlroots-hyprland.override {
-        wlroots = optimize'
-          (prev.wlroots.override { libliftoff = final.libliftoff_0_4; });
-      });
-      hyprland-unwrapped = optimize' prev.hyprland-unwrapped.override {
-        wlroots-hyprland = final.wlroots-hyprland;
-      };
-    });
+      hyprpaper-overlay
+      (final: prev: { hyprpaper = optimize' prev.hyprpaper; })
+    ] ++ optionals cfg.stable [ ];
 
     programs.hyprland.enable = true;
-    programs.hyprland.package = inputs.hyprland.packages.${pkgs.system}.hyprland;
 
     environment.systemPackages = with pkgs; [
       hypridle
@@ -64,13 +55,13 @@ in {
         };
 
         systemd.user.services.ags.Install.WantedBy =
-          mkIf modules.wayland.ags.enable [ "hyprland-session.target" ];
+          mkIf modules.desktop.ags.enable [ "hyprland-session.target" ];
 
         systemd.user.services.avizo.Install.WantedBy =
-          mkIf modules.wayland.avizo.enable [ "hyprland-session.target" ];
+          mkIf modules.desktop.avizo.enable [ "hyprland-session.target" ];
 
         systemd.user.services.lxqt-policykit-agent.Install.WantedBy =
-          mkIf modules.wayland.enable [ "hyprland-session.target" ];
+          mkIf modules.desktop.enable [ "hyprland-session.target" ];
 
         systemd.user.services.hypridle = {
           Unit = {

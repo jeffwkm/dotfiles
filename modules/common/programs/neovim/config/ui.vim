@@ -16,7 +16,7 @@ endfunction
 
 augroup CursorLineNrColorSwap
   autocmd!
-  autocmd ModeChanged *:[irRvVn\x06] call NvimUiModeChanged(v:event['new_mode'])
-  autocmd InsertLeave * call VSCodeNotify('nvim-theme.normal')
-  autocmd CursorHold * call VSCodeNotify('nvim-theme.normal')
+  " autocmd ModeChanged *:[irRvVn\x06] call NvimUiModeChanged(v:event['new_mode'])
+  " autocmd InsertLeave * call VSCodeNotify('nvim-theme.normal')
+  " autocmd CursorHold * call VSCodeNotify('nvim-theme.normal')
 augroup END

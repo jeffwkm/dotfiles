@@ -7,7 +7,9 @@ let
   cfg = programs.vscode;
   pwd = "${host.config-dir}/modules/linux/desktop";
 in {
-  options.modules.programs.vscode.enable = mkBoolOpt false;
+  options.modules.programs.vscode = {
+    enable = mkBoolOpt (modules.desktop.enable && modules.dev.enable-all);
+  };
 
   imports = [ inputs.vscode-server.nixosModule ];
 

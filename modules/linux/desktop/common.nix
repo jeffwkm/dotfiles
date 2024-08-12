@@ -3,7 +3,6 @@ with lib;
 with lib.my;
 let
   inherit (config) user modules;
-  inherit (modules) wayland;
   cfg = config.modules.desktop;
   amdgpu-fan = pkgs.python3Packages.callPackage ./_amdgpu-fan.nix { };
 in {
@@ -67,6 +66,18 @@ in {
     services.gvfs.enable = true;
     services.udisks2.enable = true;
     programs.gnome-disks.enable = cfg.gnome.enable;
+
+    services.avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
+
+    services.printing = {
+      enable = true;
+      browsing = true;
+      webInterface = true;
+    };
 
     services.gnome = mkIf cfg.gnome.services.enable {
       tracker.enable = true;

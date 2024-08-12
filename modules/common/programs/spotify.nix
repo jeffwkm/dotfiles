@@ -2,33 +2,32 @@
 with lib;
 with lib.my;
 let
-  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
   inherit (config) user host modules;
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+  gui = (modules.desktop.enable && pkgs.system != "aarch64-linux");
   cfg = config.modules.programs.spotify;
 in {
-  options.modules.programs.spotify.enable = mkBoolOpt false;
-  options.modules.programs.spotify.spotifyd.enable = mkBoolOpt false;
+  options.modules.programs.spotify = {
+    enable = mkBoolOpt modules.desktop.enable;
+    spotifyd.enable = mkBoolOpt true;
+  };
 
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = {
-      imports = optionals modules.desktop.enable
-        [ inputs.spicetify-nix.homeManagerModules.default ];
+      imports =
+        optionals gui [ inputs.spicetify-nix.homeManagerModules.default ];
 
       home.packages = with pkgs; [ spotify-player sptlrx ];
 
-      programs.spicetify = mkIf modules.desktop.enable {
+      programs.spicetify = mkIf gui {
         enable = true;
-
         # theme = spicePkgs.themes.text;
         # colorScheme = "CatppuccinMacchiato";
-
         theme = spicePkgs.themes.catppuccin;
         # colorScheme = "mocha";
         colorScheme = "macchiatto";
-
         enabledExtensions = with spicePkgs.extensions; [
-          # fullAppDisplay
-          shuffle # shuffle+ (special characters are sanitized out of ext names)
+          shuffle
           hidePodcasts
           keyboardShortcut
           powerBar

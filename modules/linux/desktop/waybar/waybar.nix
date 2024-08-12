@@ -4,11 +4,11 @@ with lib;
 with lib.my;
 let
   inherit (config) user host modules;
-  cfg = config.modules.wayland.waybar;
+  cfg = config.modules.desktop.waybar;
   pwd = "${host.config-dir}/modules/linux/desktop/waybar";
 in {
-  options.modules.wayland.waybar = {
-    enable = mkBoolOpt modules.wayland.sway.enable;
+  options.modules.desktop.waybar = {
+    enable = mkBoolOpt modules.desktop.sway.enable;
   };
 
   config = mkIf cfg.enable {

@@ -31,8 +31,10 @@ let g:mapleader = " "
 " Define global variable to prevent triggering hooks when entering insert mode
 let g:fake_insert_mode = 0
 
-nnoremap s <Plug>(easymotion-s2)
-onoremap s <Plug>(easymotion-s2)
+nmap s <Plug>(easymotion-s2)
+omap s <Plug>(easymotion-s2)
+nmap S <Plug>(easymotion-s2)
+omap S <Plug>(easymotion-s2)
 nnoremap f <Plug>(easymotion-f)
 onoremap f <Plug>(easymotion-f)
 nnoremap F <Plug>(easymotion-F)

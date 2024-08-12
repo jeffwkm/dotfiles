@@ -1,14 +1,11 @@
 { config, lib, pkgs, ... }:
 with lib;
 with lib.my;
-let
-  inherit (config) user host modules;
-  cfg = config.modules.wayland;
+let inherit (config) user host modules;
 in {
-  options.modules.wayland = { enable = mkBoolOpt modules.desktop.enable; };
-  options.modules.wayland.gammastep = { enable = mkBoolOpt false; };
+  options.modules.desktop.gammastep = { enable = mkBoolOpt false; };
 
-  config = mkIf cfg.enable {
+  config = mkIf modules.desktop.enable {
     nixpkgs.overlays = [
       (final: prev: { pass = prev.pass-wayland; })
       (final: prev: {
@@ -45,10 +42,11 @@ in {
       ELM_ENGINE = "wayland_egl";
       SDL_VIDEODRIVER = "wayland";
       NIXOS_OZONE_WL = "1";
+      ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     };
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
-      services.gammastep = mkIf cfg.gammastep.enable {
+      services.gammastep = mkIf modules.desktop.gammastep.enable {
         enable = true;
         provider = "manual";
         latitude = 39.02588;

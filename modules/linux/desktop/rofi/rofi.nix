@@ -3,9 +3,9 @@ with lib;
 with lib.my;
 let
   inherit (config) user host modules;
-  cfg = config.modules.wayland.rofi;
+  cfg = config.modules.desktop.rofi;
 in {
-  options.modules.wayland.rofi = { enable = mkBoolOpt modules.wayland.enable; };
+  options.modules.desktop.rofi = { enable = mkBoolOpt modules.desktop.enable; };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [ (wrapOptimize config "rofi-wayland-unwrapped") ];

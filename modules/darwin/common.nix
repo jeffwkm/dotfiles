@@ -7,7 +7,6 @@ let
 in {
   ## declare linux options needed for build
   options.modules.desktop.enable = mkBoolOpt false;
-  options.modules.wayland.enable = mkBoolOpt false;
 
   config = {
     host.gui = true;

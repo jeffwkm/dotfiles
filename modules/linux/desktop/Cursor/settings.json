@@ -1,57 +1,86 @@
 {
+  "workbench.colorTheme": "Gruvbox Dark Soft",
+  "workbench.iconTheme": "vs-nomo-dark",
+  "window.zoomLevel": 0.0,
+  "window.titleBarStyle": "custom",
+  "window.menuBarVisibility": "classic",
+  "workbench.activityBar.orientation": "vertical",
+  "editor.semanticTokenColorCustomizations": {
+    "enabled": true
+  },
   "editor.fontFamily": "'JetBrainsMono Nerd Font', 'Courier New', monospace",
+  "editor.fontSize": 13,
   "editor.fontWeight": "600",
-  "editor.fontSize": 12,
+  "editor.fontLigatures": true,
+  "editor.inlayHints.fontFamily": "Fira Code",
+  "editor.inlayHints.fontSize": 11,
+  "editor.inlayHints.padding": false,
+  "editor.codeLensFontFamily": "InputMono Nerd Font",
+  "editor.codeLensFontSize": 12,
   "terminal.integrated.fontSize": 12,
   "terminal.integrated.fontWeight": "600",
-  "editor.fontLigatures": true,
   "editor.cursorStyle": "line",
   "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorSurroundingLines": 1,
+  "editor.smoothScrolling": true,
+  "editor.minimap.maxColumn": 110,
+  "editor.minimap.showSlider": "always",
+  "editor.minimap.enabled": true,
+  "editor.minimap.scale": 1,
   "editor.inlineSuggest.enabled": true,
-  "rust-analyzer.inlayHints.maxLength": 40,
-  "rust-analyzer.inlayHints.renderColons": true,
-  "[python]": {
-    "editor.formatOnType": true
-  },
-  "extensions.experimental.affinity": {
-    "asvetliakov.vscode-neovim": 1
-  },
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
-  "vscode-neovim.revealCursorScrollLine": true,
-  "vscode-neovim.neovimViewportHeightExtend": 2,
-  "nix.serverPath": "nil",
-  "nix.enableLanguageServer": true,
-  "nix.formatterPath": "nixfmt",
   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
   "editor.guides.indentation": false,
   "editor.indentSize": 2,
-  "editor.smoothScrolling": true,
-  "editor.cursorSmoothCaretAnimation": "explicit",
-  "editor.cursorSurroundingLines": 1,
-  "editor.minimap.maxColumn": 100,
-  "editor.minimap.showSlider": "always",
-  "editor.minimap.enabled": true,
   "files.insertFinalNewline": true,
+  "gitlens.currentLine.enabled": false,
+  "gitlens.codeLens.enabled": true,
+  "gitlens.codeLens.scopes": ["document"],
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.perEditorGroup": true,
+  "workbench.editor.limit.excludeDirty": true,
+  "workbench.editor.limit.value": 5,
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "cursor.cpp.enablePartialAccepts": true,
+  "cursor.cpp.disabledLanguages": ["plaintext", "markdown", "scminput"],
+  "cursor.cmdk.autoSelect": true,
+  "cursor.cmdk.ghostTextAtSymbols": true,
+  "cursor.cmdk.useThemedDiffBackground": true,
+  "cursor.chat.ghostTextAtSymbols": true,
+  "cursor-retrieval.canAttemptGithubLogin": true,
+  "cursor.aipreview.enabled": true,
+  "cursor.general.enableShadowWorkspace": true,
+  "explorer.confirmDelete": false,
+  "rust-analyzer.inlayHints.maxLength": 40,
+  "rust-analyzer.inlayHints.renderColons": true,
+  "rust-analyzer.testExplorer": true,
+  "vscode-neovim.revealCursorScrollLine": true,
+  "vscode-neovim.neovimViewportHeightExtend": 2,
   "shellcheck.logLevel": "warn",
   "git.autofetch": true,
-  "workbench.colorTheme": "Gruvbox Dark Soft",
   "editorconfig.generateAuto": false,
   "git.confirmSync": false,
-  "workbench.iconTheme": "vs-nomo-dark",
   "git.rebaseWhenSync": true,
+  "git.openRepositoryInParentFolders": "always",
   "scm.diffDecorationsGutterPattern": {
     "added": true,
     "modified": true
   },
-  "explorer.confirmDelete": false,
-  "window.zoomLevel": 0.5,
-  "testExplorer.useNativeTesting": false,
-  "nvim-ui.nvimColorCustomizationKeys": ["statusBar.background"],
-  "nvim-ui.nvimColorNormal": null,
-  "nvim-ui.nvimColorInsert": "#2F8F2F",
-  "nvim-ui.nvimColorVisual": "#673AB7",
-  "nvim-ui.nvimColorReplace": "#C06700",
+  "testExplorer.hideWhen": "noAdapters",
+  "testExplorer.useNativeTesting": true,
+  "gitlens.views.commitDetails.files.layout": "tree",
+  // "nvim-ui.nvimColorCustomizationKeys": ["statusBar.background"],
+  // "nvim-ui.nvimColorNormal": null,
+  // "nvim-ui.nvimColorInsert": "#2F8F2F",
+  // "nvim-ui.nvimColorVisual": "#673AB7",
+  // "nvim-ui.nvimColorReplace": "#C06700",
+  "nix.serverPath": "nil",
+  "nix.enableLanguageServer": true,
+  "nix.formatterPath": "nixfmt",
   "nix.serverSettings": {
     "nil": {
       "formatting": {
@@ -70,37 +99,50 @@
       }
     }
   },
-  "git.openRepositoryInParentFolders": "always",
   "calva.paredit.killAlsoCutsToClipboard": true,
-  "cursor.cpp.disabledLanguages": ["plaintext", "markdown", "scminput"],
-  "workbench.activityBar.orientation": "vertical",
-  "gitlens.hovers.currentLine.over": "line",
-  "gitlens.currentLine.enabled": false,
-  "gitlens.codeLens.enabled": false,
-  "vscode-neovim.ctrlKeysForInsertMode": ["a", "d", "e", "k", "w"],
+  "calva.highlight.ignoredFormStyle": {
+    "color": "#808080"
+  },
+  "calva.highlight.misplacedBracketStyle": {
+    "backgroundColor": "#ff6a40",
+    "color": "#fbfbfb"
+  },
+  "calva.showCalvaSaysOnStart": true,
+  "vscode-neovim.ctrlKeysForInsertMode": [],
   "vscode-neovim.ctrlKeysForNormalMode": [
     "a",
     "d",
     "e",
-    "f",
-    "j",
-    "k",
     "l",
     "r",
     "w",
     "backspace",
     "delete"
   ],
+  "prettier.useEditorConfig": true,
+  "yaml.validate": false,
+  "evenBetterToml.schema.enabled": false,
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "prettier.useEditorConfig": true,
-  "yaml.validate": false,
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
-  "workbench.colorCustomizations": {
-    "statusBar.background": null,
-    "editorCursor.foreground": null
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+    "editor.formatOnType": true
+  },
+  "[clojure]": {
+    "editor.defaultFormatter": "rflagreca.vscode-clj-zprint"
+  },
+  "[output.calva-repl]": {
+    "editor.defaultFormatter": "betterthantomorrow.calva"
+  },
+  "calva.prettyPrintingOptions": {
+    "printEngine": "zprint",
+    "enabled": true
   }
+  // "vscode-neovim.editorLangIdExclusions": ["output.calva-repl"]
 }
