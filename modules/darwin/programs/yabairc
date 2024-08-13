@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+export PATH=/opt/homebrew/opt/yabai/bin:$PATH
+
+sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+
+# global settings
+yabai -m config mouse_follows_focus off
+yabai -m config focus_follows_mouse autofocus # autoraise autofocus off
+yabai -m config window_placement second_child
+yabai -m config window_opacity on
+yabai -m config window_opacity_duration 0.1
+yabai -m config window_shadow off
+yabai -m config window_origin_display cursor
+yabai -m config window_animation_duration 0.0
+
+yabai -m config active_window_opacity 1.0
+yabai -m config normal_window_opacity 0.95
+yabai -m config split_ratio 0.50
+yabai -m config auto_balance on
+yabai -m config mouse_modifier fn
+yabai -m config mouse_action1 move
+yabai -m config mouse_action2 resize
+yabai -m config mouse_drop_action swap
+
+# general space settings
+yabai -m config layout bsp # bsp stack float
+yabai -m config top_padding 6
+yabai -m config bottom_padding 6
+yabai -m config left_padding 6
+yabai -m config right_padding 6
+yabai -m config window_gap 8
+
+# window rules
+yabai -m rule --add label=settings app="System Settings" manage=off
+yabai -m rule --add label=installer title="Installer" manage=off
+yabai -m rule --add label=svp app="SVP 4 Mac" manage=off
+yabai -m rule --add label=steam app="Steam" manage=off
+yabai -m rule --add label=mpv app="mpv" manage=off opacity=1.0 native-fullscreen=off
+yabai -m rule --add label=slack app="Slack" space=14
+
+yabai -m config external_bar all:33:0
+
+echo "yabai configuration loaded.."

@@ -8,6 +8,19 @@
     "command": "workbench.action.navigateBack"
   },
   {
+    "key": "cmd+.",
+    "command": "editor.action.goToDeclaration"
+  },
+  {
+    "key": "cmd+,",
+    "command": "workbench.action.navigateBack"
+  },
+  {
+    "key": "cmd+ctrl+.",
+    "command": "editor.action.quickFix",
+    "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+  },
+  {
     "key": "alt+shift+p",
     "command": "workbench.actions.view.toggleProblems"
   },
@@ -17,12 +30,26 @@
     "when": "viewContainer.workbench.view.explorer.enabled"
   },
   {
+    "key": "cmd+shift+e",
+    "command": "workbench.view.explorer",
+    "when": "viewContainer.workbench.view.explorer.enabled"
+  },
+  {
     "key": "alt+s",
     "command": "workbench.view.scm",
     "when": "viewContainer.workbench.view.scm.enabled"
   },
   {
+    "key": "cmd+shift+s",
+    "command": "workbench.view.scm",
+    "when": "viewContainer.workbench.view.scm.enabled"
+  },
+  {
     "key": "alt+z",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "cmd+ctrl+z",
     "command": "workbench.action.toggleSidebarVisibility"
   },
   {
@@ -86,6 +113,14 @@
   {
     "key": "meta+ctrl+shift+k",
     "command": "workbench.action.moveEditorToAboveGroup"
+  },
+  {
+    "key": "cmd+p",
+    "command": "workbench.actions.view.toggleProblems"
+  },
+  {
+    "key": "ctrl+p",
+    "command": "workbench.action.quickOpen"
   },
   {
     "key": "ctrl+shift+p",

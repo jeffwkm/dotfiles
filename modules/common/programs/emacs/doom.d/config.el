@@ -151,8 +151,8 @@
     (if (and modeline? (mac?))
         nil
       (apply 'font-spec
-             :family (if variable? "Inter" "JetBrains Mono Nerd Font")
-             :size (+ 14 (if variable? 0 0) (if modeline? -1 0))
+             :family (if variable? "Inter" "JetBrainsMono Nerd Font")
+             :size (+ 14 (if variable? 0 0) (if modeline? -1 0) (if (mac?) -2 0))
              :weight (if variable? 'medium (if modeline? 'extrabold 'bold))
              nil)))
   ;; apply changes when loaded with interactive `eval-defun' etc

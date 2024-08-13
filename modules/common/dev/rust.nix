@@ -8,7 +8,7 @@ let
 in {
   options.modules.dev.rust = {
     enable = mkBoolOpt dev.enable-all;
-    rustup = mkBoolOpt config.host.darwin;
+    rustup = mkBoolOpt false;
   };
 
   config = mkIf cfg.enable {
