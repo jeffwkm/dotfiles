@@ -1,6 +1,6 @@
 {
-  "workbench.colorTheme": "Gruvbox Dark Soft",
-  "workbench.iconTheme": "vs-nomo-dark",
+  "workbench.colorTheme": "GitHub Dark",
+  "workbench.iconTheme": "material-icon-theme",
   "window.zoomLevel": 0.0,
   "window.titleBarStyle": "custom",
   "window.menuBarVisibility": "classic",
@@ -35,6 +35,8 @@
   "editor.guides.indentation": false,
   "editor.indentSize": 2,
   "files.insertFinalNewline": true,
+  "git.untrackedChanges": "separate",
+  // "editor.find.seedSearchStringFromSelection": "always",
   "gitlens.currentLine.enabled": false,
   "gitlens.codeLens.enabled": true,
   "gitlens.codeLens.scopes": ["document"],

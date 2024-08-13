@@ -238,5 +238,10 @@
     "command": "joyride.runUserScript",
     "args": "ignore_form.cljs",
     "when": "editorLangId == 'clojure'"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "workbench.action.terminal.clear",
+    "when": "terminalFocus"
   }
 ]
