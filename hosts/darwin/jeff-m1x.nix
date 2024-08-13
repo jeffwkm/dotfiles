@@ -13,9 +13,10 @@
       programs.mpv.enable = true;
       programs.spotify.enable = true;
       programs.vscode.enable = true;
+      programs.kitty.enable = true;
       programs.alacritty = {
         enable = true;
-        fontSize = 14;
+        fontSize = 12;
         decorations = "buttonless";
         fontStyle = "Medium";
       };

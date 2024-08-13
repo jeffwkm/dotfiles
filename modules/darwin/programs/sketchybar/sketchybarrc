@@ -6,12 +6,12 @@ source "$HOME/.config/sketchybar/icons.sh"  # Loads all defined icons
 ITEM_DIR="$HOME/.config/sketchybar/items"     # Directory where the items are configured
 PLUGIN_DIR="$HOME/.config/sketchybar/plugins" # Directory where all the plugin scripts are stored
 
-FONT="Inter"                                                 # Needs to have Regular, Bold, Semibold, Heavy and Black variants
+FONT="Inter" # Needs to have Regular, Bold, Semibold, Heavy and Black variants
 FONT_MONO="JetBrainsMono Nerd Font"
 FONT_ICON="$FONT_MONO"
 SPACE_CLICK_SCRIPT="yabai -m space --focus \$SID 2>/dev/null" # The script that is run for clicking on space components
 
-PADDINGS=6 # All paddings use this value (icon, label, background and bar paddings)
+PADDINGS=4 # All paddings use this value (icon, label, background and bar paddings)
 
 POPUP_BORDER_WIDTH=3
 POPUP_CORNER_RADIUS=11
@@ -19,11 +19,11 @@ POPUP_CORNER_RADIUS=11
 SHADOW=off
 
 # Setting up the general bar appearance and default values
-sketchybar --bar height=42 \
+sketchybar --bar height=36 \
   corner_radius=25 \
   border_width=0 \
   border_color=0xff909090 \
-  margin=6 \
+  margin=5 \
   blur_radius=12 \
   position=top \
   padding_left=8 \
@@ -31,13 +31,13 @@ sketchybar --bar height=42 \
   color=$BAR_COLOR \
   topmost=off \
   font_smoothing=on \
-  y_offset=6 \
+  y_offset=5 \
   shadow=$SHADOW \
   notch_width=200 \
   --default drawing=on \
   updates=when_shown \
-  label.font="$FONT:Medium:16.0" \
-  icon.font="$FONT_ICON:Regular:18.0" \
+  label.font="$FONT:Medium:13.0" \
+  icon.font="$FONT_ICON:Regular:14.0" \
   icon.color=$ICON_COLOR \
   label.color=$LABEL_COLOR \
   icon.padding_left=$PADDINGS \
@@ -107,10 +107,10 @@ for i in "${!SPACE_NAMES[@]}"; do
   sketchybar --add space space.$sid left \
     --set space.$sid associated_space=$sid \
     icon=${SPACE_ICONS[i]} \
-    icon.padding_left=8 \
-    icon.padding_right=8 \
+    icon.padding_left=6 \
+    icon.padding_right=6 \
     icon.highlight_color=$RED \
-    icon.font="$FONT_ICON:Regular:19.0" \
+    icon.font="$FONT_ICON:Medium:15.0" \
     background.height=$BRACKET_HEIGHT \
     background.color=$BRACKET_BG \
     background.padding_left=$leftmost \
@@ -122,8 +122,8 @@ done
 
 sketchybar --add item separator left \
   --set separator icon= \
-  icon.font="$FONT_ICON:Regular:18.0" \
-  background.padding_left=10 \
+  icon.font="$FONT_ICON:Semibold:14.0" \
+  background.padding_left=8 \
   background.padding_right=0 \
   label.drawing=off \
   icon.color=$WHITE
@@ -131,7 +131,7 @@ sketchybar --add item separator left \
 sketchybar --add event window_focus \
   --add item system.yabai left \
   --set system.yabai script="$PLUGIN_DIR/yabai.sh" \
-  icon.font="$FONT_ICON:Regular:20.0" \
+  icon.font="$FONT_ICON:Regular:16.0" \
   label.drawing=off \
   icon=$YABAI_GRID \
   icon.color=$GREEN \
@@ -142,8 +142,8 @@ sketchybar --add event window_focus \
   icon.drawing=off \
   background.padding_left=0 \
   label.color=$WHITE \
-  label.font="$FONT:Semibold:17.0" \
-  label.padding_left=6 \
+  label.font="$FONT:Semibold:13.0" \
+  label.padding_left=0 \
   --subscribe front_app front_app_switched
 
 ###
@@ -155,8 +155,8 @@ sketchybar --add item time right \
   icon= \
   script="$PLUGIN_DIR/time.sh" \
   label= \
-  icon.padding_left=11 \
-  label.padding_right=11 \
+  icon.padding_left=10 \
+  label.padding_right=10 \
   background.color=$BRACKET_BG \
   background.height=$BRACKET_HEIGHT \
   background.padding_left=3 \

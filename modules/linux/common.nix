@@ -34,6 +34,8 @@ in {
     boot.kernel.sysctl."fs.inotify.max_user_instances" = 8192;
     boot.kernel.sysctl."fs.inotify.max_user_watches" = 1164444;
 
+    users.defaultUserShell = pkgs.zsh;
+
     environment.sessionVariables = {
       SSH_AUTH_SOCK = "/run/user/1000/ssh-agent.socket";
       _GLOBAL_ENV_LOADED = "1";

@@ -8,7 +8,7 @@
     "command": "workbench.action.navigateBack"
   },
   {
-    "key": "meta+p",
+    "key": "alt+shift+p",
     "command": "workbench.actions.view.toggleProblems"
   },
   {

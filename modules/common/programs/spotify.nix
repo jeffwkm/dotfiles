@@ -3,19 +3,19 @@ with lib;
 with lib.my;
 let
   inherit (config) user host modules;
+  inherit (host) darwin;
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
   gui = (modules.desktop.enable && pkgs.system != "aarch64-linux");
   cfg = config.modules.programs.spotify;
 in {
   options.modules.programs.spotify = {
     enable = mkBoolOpt modules.desktop.enable;
-    spotifyd.enable = mkBoolOpt true;
+    spotifyd.enable = mkBoolOpt (!darwin);
   };
 
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = {
-      imports =
-        optionals gui [ inputs.spicetify-nix.homeManagerModules.default ];
+      imports = [ inputs.spicetify-nix.homeManagerModules.default ];
 
       home.packages = with pkgs; [ spotify-player sptlrx ];
 

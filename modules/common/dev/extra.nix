@@ -9,7 +9,7 @@ let
 in {
   options.modules.dev.extra = { enable = mkBoolOpt dev.enable-all; };
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ valgrind ];
+    environment.systemPackages = with pkgs; optionals (!darwin) [ valgrind ];
 
     home-manager.users.${user.name} = {
       home.packages = with pkgs; [

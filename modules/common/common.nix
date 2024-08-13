@@ -4,14 +4,14 @@ let
   inherit (lib.my) mkBoolOpt optimize;
   inherit (config) user host modules;
   inherit (user) home;
-  inherit (host) config-dir;
+  inherit (host) config-dir darwin;
   pwd = "${config-dir}/modules/common";
 in {
-  options = { modules.guix.enable = mkBoolOpt (!host.minimal); };
+  options = {
+    modules.guix.enable = mkBoolOpt (!host.minimal && !host.darwin);
+  };
 
   config = {
-    users.defaultUserShell = pkgs.zsh;
-
     nixpkgs.config.permittedInsecurePackages =
       [ "nodejs-10.24.1" "nodejs-12.22.12" "python-2.7.18.6" ];
 
@@ -35,8 +35,8 @@ in {
         programs.htop.package = optimize config pkgs.htop;
         programs.gpg.enable = true;
 
-        programs.imv.enable = true;
-        programs.pqiv.enable = true;
+        programs.imv.enable = !darwin;
+        programs.pqiv.enable = !darwin;
 
         home.packages = with pkgs;
           [

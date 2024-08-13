@@ -64,7 +64,6 @@ let
       e = "emacsclient -t -a emacs";
       ee = "emacs -nw";
       v = "vim";
-      ssh = "mosh";
       ### nix
       ss = "nix-search";
       ns = "nix search nixpkgs";
@@ -113,7 +112,6 @@ let
       ghrb = "gh repo view --web";
       ghb = "gh browse";
       gho = "gh org list";
-
       ### mpv
       mpvf = "mpv --input-ipc-server=";
       mpv-hlg =
@@ -201,6 +199,7 @@ let
 
   userLinuxConfig = makeUserConfig {
     shellAliases = {
+      ssh = "mosh";
       iotop = "sudo iotop";
       virsh = "VISUAL='emacs -nw' sudo -E virsh";
       ### systemctl
@@ -250,7 +249,7 @@ in {
 
     environment.shells = with pkgs; [ zsh bash ];
 
-    programs.command-not-found.enable = true;
+    # programs.command-not-found.enable = !darwin;
 
     nixpkgs.overlays = [ (wrapOptimize config "zsh") ];
 

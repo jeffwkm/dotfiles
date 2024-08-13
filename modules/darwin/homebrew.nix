@@ -30,7 +30,6 @@ with lib.my; {
 
     homebrew.brews = [
       "FelixKratz/formulae/sketchybar"
-      "adwaita-icon-theme"
       "autoconf"
       "automake"
       "binutils"
@@ -71,14 +70,14 @@ with lib.my; {
     homebrew.casks = [
       "daisydisk"
       "docker"
-      "elgato-game-capture-hd"
+      # "elgato-game-capture-hd"
       "google-chrome"
       "istat-menus"
       "iterm2"
       "pgadmin4"
       # "rescuetime"
       # "slack"
-      "snes9x"
+      # "snes9x"
       "sf-symbols"
       "steam"
       "vlc"

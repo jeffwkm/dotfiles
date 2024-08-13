@@ -5,16 +5,16 @@ let
   inherit (config) user host modules;
   inherit (modules) dev programs;
   cfg = programs.vscode;
-  pwd = "${host.config-dir}/modules/linux/desktop";
+  pwd = "${host.config-dir}/modules/common/programs";
 in {
   options.modules.programs.vscode = {
     enable = mkBoolOpt (modules.desktop.enable && modules.dev.enable-all);
   };
 
-  imports = [ inputs.vscode-server.nixosModule ];
+  # imports = [ inputs.vscode-server.nixosModule ];
 
   config = mkIf cfg.enable {
-    services.vscode-server.enable = true;
+    # services.vscode-server.enable = true;
 
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let link = config.lib.file.mkOutOfStoreSymlink;
@@ -23,7 +23,14 @@ in {
           link "${pwd}/Cursor/settings.json";
         xdg.configFile."Cursor/User/keybindings.json".source =
           link "${pwd}/Cursor/keybindings.json";
-        programs.vscode = {
+        home.file = mkIf (host.darwin) {
+          "Library/Application Support/Cursor/User/settings.json".source =
+            link "${pwd}/Cursor/settings.json";
+          "Library/Application Support/Cursor/User/keybindings.json".source =
+            link "${pwd}/Cursor/keybindings.json";
+        };
+
+        programs.vscode = mkIf (!host.darwin) {
           enable = true;
           package = pkgs.vscode.fhsWithPackages (ps:
             with ps;

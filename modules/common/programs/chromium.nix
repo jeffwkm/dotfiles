@@ -32,14 +32,6 @@ in {
       [ chromiumSh chromium ] ++ optional (!use-chromium) google-chrome
       ++ optional (!asahi) chromedriver;
 
-    xdg.mime.defaultApplications = mkIf (cfg.default && !darwin) {
-      "text/html" = app;
-      "x-scheme-handler/http" = app;
-      "x-scheme-handler/https" = app;
-      "x-scheme-handler/about" = app;
-      "x-scheme-handler/unknown" = app;
-    };
-
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.sessionVariables = mkIf cfg.default {
         BROWSER = "${chromiumSh}/bin/chromium.sh";

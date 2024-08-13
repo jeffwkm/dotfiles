@@ -21,7 +21,7 @@ let
     level = 4;
     native = true;
   } (if darwin then
-    pkgs.emacs-git.overrideAttrs (old: {
+    pkgs.emacs29.overrideAttrs (old: {
       patches = (old.patches or [ ]) ++ [
         # Fix OS window role so that yabai can pick up emacs
         (fetchpatch {

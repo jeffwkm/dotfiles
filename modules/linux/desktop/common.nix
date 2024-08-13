@@ -5,6 +5,10 @@ let
   inherit (config) user modules;
   cfg = config.modules.desktop;
   amdgpu-fan = pkgs.python3Packages.callPackage ./_amdgpu-fan.nix { };
+  browser = (if modules.programs.firefox.default then
+    "firefox.desktop"
+  else
+    "chromium.desktop");
 in {
   options.modules.desktop = {
     enable = mkBoolOpt false;
@@ -18,6 +22,14 @@ in {
   config = mkIf cfg.enable {
     host.gui = true;
 
+    xdg.mime.defaultApplications = {
+      "text/html" = browser;
+      "x-scheme-handler/http" = browser;
+      "x-scheme-handler/https" = browser;
+      "x-scheme-handler/about" = browser;
+      "x-scheme-handler/unknown" = browser;
+    };
+
     nixpkgs.overlays = optional cfg.gnome.enable (final: prev: {
       nautilus = prev.nautilus.overrideAttrs (old: {
         buildInputs = old.buildInputs ++ (with prev.gst_all_1; [
@@ -29,6 +41,9 @@ in {
         ]);
       });
     });
+
+    fonts.enableDefaultPackages = true;
+    fonts.fontDir.decompressFonts = true;
 
     environment.systemPackages = with pkgs;
       [ gparted ] ++ optional cfg.amdgpu-fan amdgpu-fan

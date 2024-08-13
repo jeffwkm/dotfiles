@@ -17,8 +17,7 @@ in {
         clang = prev.clang.overrideAttrs
           (attrs: { meta.priority = prev.gcc.meta.priority + 1; });
       })
-      inputs.nil-server.overlays.nil
-    ];
+    ] ++ optionals (!darwin) [ inputs.nil-server.overlays.nil ];
 
     home-manager.users.${user.name} = {
       programs.direnv = {
