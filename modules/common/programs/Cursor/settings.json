@@ -17,7 +17,7 @@
   "editor.inlayHints.padding": false,
   "editor.codeLensFontFamily": "InputMono Nerd Font",
   "editor.codeLensFontSize": 11,
-  "terminal.integrated.fontSize": 11,
+  "terminal.integrated.fontSize": 12,
   "terminal.integrated.fontWeight": "600",
   "editor.cursorStyle": "line",
   "editor.cursorBlinking": "smooth",

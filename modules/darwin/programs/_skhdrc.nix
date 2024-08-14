@@ -4,7 +4,7 @@ with modifiers;
 with apps; {
   cfg = ''
     # launch apps
-    ${launch} - ${appKeys.terminal} : ${commands.launchTerminal}
+    # ${launch} - ${appKeys.terminal} : ${commands.launchTerminal}
     # focus apps
     # ${focus} - ${appKeys.editor}    : ${commands.activateApp} ${editor}
     # ${focus} - ${appKeys.browser}   : ${commands.activateApp} ${browser}

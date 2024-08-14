@@ -215,6 +215,11 @@
     "when": "panelVisible"
   },
   {
+    "key": "cmd+shift+j",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "panelVisible"
+  },
+  {
     "key": "ctrl+alt+=",
     "command": "workbench.action.increaseViewSize"
   },
