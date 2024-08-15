@@ -38,7 +38,7 @@ in {
               babashka
               direnv
               git
-              neovim
+              # neovim
               nil
               nixfmt-classic
               nodejs

@@ -303,5 +303,36 @@
     "key": "ctrl+l",
     "command": "workbench.action.terminal.clear",
     "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "aipopup.action.modal.generate",
+    "when": "editorFocus",
+    "args": { "invocationType": "new" }
+  },
+  {
+    "key": "ctrl+up",
+    "command": "calva.showPreviousReplHistoryEntry",
+    "when": "editorLangId == 'clojure' && editorTextFocus && resourceFilename =~ /\\.calva-repl$/"
+  },
+  {
+    "key": "ctrl+down",
+    "command": "calva.showNextReplHistoryEntry",
+    "when": "editorLangId == 'clojure' && editorTextFocus && resourceFilename =~ /\\.calva-repl$/"
+  },
+  {
+    "key": "ctrl+backspace",
+    "command": "paredit.killSexpBackward",
+    "when": "editorLangId == 'clojure' && editorTextFocus"
+  },
+  {
+    "key": "ctrl+cmd+k",
+    "command": "paredit.killSexpForward",
+    "when": "isMac && editorLangId == 'clojure' && editorTextFocus"
+  },
+  {
+    "key": "ctrl+alt+k",
+    "command": "paredit.killSexpForward",
+    "when": "isLinux && editorLangId == 'clojure' && editorTextFocus"
   }
 ]

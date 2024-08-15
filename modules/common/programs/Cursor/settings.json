@@ -12,6 +12,7 @@
   "editor.fontSize": 13,
   "editor.fontWeight": "600",
   "editor.fontLigatures": true,
+  "editor.inlayHints.enabled": "onUnlessPressed",
   "editor.inlayHints.fontFamily": "Fira Code",
   "editor.inlayHints.fontSize": 11,
   "editor.inlayHints.padding": false,
@@ -26,7 +27,6 @@
   "editor.smoothScrolling": true,
   "editor.minimap.maxColumn": 110,
   "editor.minimap.showSlider": "always",
-  "editor.minimap.enabled": true,
   "editor.minimap.scale": 1,
   "editor.inlineSuggest.enabled": true,
   "editor.formatOnSave": true,
@@ -101,15 +101,6 @@
       }
     }
   },
-  "calva.paredit.killAlsoCutsToClipboard": true,
-  "calva.highlight.ignoredFormStyle": {
-    "color": "#808080"
-  },
-  "calva.highlight.misplacedBracketStyle": {
-    "backgroundColor": "#ff6a40",
-    "color": "#fbfbfb"
-  },
-  "calva.showCalvaSaysOnStart": true,
   "vscode-neovim.ctrlKeysForInsertMode": [],
   "vscode-neovim.ctrlKeysForNormalMode": [
     "a",
@@ -137,14 +128,24 @@
     "editor.formatOnType": true
   },
   "[clojure]": {
-    "editor.defaultFormatter": "rflagreca.vscode-clj-zprint"
-  },
-  "[output.calva-repl]": {
+    // "editor.defaultFormatter": "rflagreca.vscode-clj-zprint"
     "editor.defaultFormatter": "betterthantomorrow.calva"
   },
+  "calva.paredit.killAlsoCutsToClipboard": true,
+  "calva.highlight.ignoredFormStyle": {
+    "color": "#808080"
+  },
+  "calva.highlight.misplacedBracketStyle": {
+    "backgroundColor": "#ff6a40",
+    "color": "#fbfbfb"
+  },
   "calva.prettyPrintingOptions": {
-    "printEngine": "zprint",
-    "enabled": true
-  }
-  // "vscode-neovim.editorLangIdExclusions": ["output.calva-repl"]
+    "printEngine": "calva",
+    "enabled": true,
+    "width": 100,
+    "maxLength": 50
+  },
+  /////
+  "editor.minimap.enabled": true,
+  "calva.paredit.defaultKeyMap": "strict"
 }
