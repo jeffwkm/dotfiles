@@ -14,7 +14,10 @@ in {
         enable = true;
         viAlias = true;
         vimAlias = true;
-        plugins = with pkgs.vimPlugins; [ nvim-treesitter.withAllGrammars ];
+        extraPackages = with pkgs;
+          [ gnumake pkg-config ] ++ optional darwin clang
+          ++ optional (!darwin) gcc;
+        # plugins = with pkgs.vimPlugins; [ nvim-treesitter.withAllGrammars ];
       };
 
       xdg.configFile."nvim/".source =
