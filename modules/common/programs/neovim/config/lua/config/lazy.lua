@@ -31,6 +31,8 @@ vim.opt.hlsearch = true           -- enable search highlighting
 vim.opt.number = false            -- disable line numbers
 vim.opt.clipboard = "unnamedplus" -- use system clipboard for all operations
 
+vim.o.guifont = "JetBrainsMono Nerd Font:h12"
+
 require("config.globals")         -- load global utility defs
 require("config.keys")            -- load keybindings with no dependencies
 

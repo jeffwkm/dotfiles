@@ -1,10 +1,13 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 with lib.my;
 let
   inherit (config) user host modules;
+  inherit (host) darwin;
   pwd = "${host.config-dir}/modules/common/programs/neovim";
   cfg = modules.programs.neovim;
+  llvmPackages = pkgs.llvmPackages_18;
+  clang = llvmPackages.clang;
 in {
   options.modules.programs.neovim.enable = mkBoolOpt true;
 
@@ -15,10 +18,12 @@ in {
         viAlias = true;
         vimAlias = true;
         extraPackages = with pkgs;
-          [ gnumake pkg-config ] ++ optional darwin clang
+          with llvmPackages;
+          [ gnumake pkg-config luarocks ] ++ optional darwin clang
           ++ optional (!darwin) gcc;
-        # plugins = with pkgs.vimPlugins; [ nvim-treesitter.withAllGrammars ];
       };
+
+      home.packages = with pkgs; [ luarocks neovide ];
 
       xdg.configFile."nvim/".source =
         config.lib.file.mkOutOfStoreSymlink "${pwd}/config";

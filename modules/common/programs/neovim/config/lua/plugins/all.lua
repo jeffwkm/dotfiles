@@ -2,6 +2,235 @@ require("config.globals")
 
 return {
   {
+    'projekt0n/github-nvim-theme',
+    lazy = false,
+    priority = 1000,
+    enable = not vim.g.vscode,
+    config = function()
+      require('github-theme').setup({
+        options = {
+          transparent = true;
+        }
+      })
+      vim.cmd('colorscheme github_dark')
+    end,
+  },
+  {
+    'nvim-telescope/telescope.nvim',
+    tag = '0.1.8',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'BurntSushi/ripgrep',
+      'sharkdp/fd',
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons'
+    }
+  },
+  {
+    "nvim-neorg/neorg",
+    lazy = false,
+    version = "*",
+    config = function()
+      require("neorg").setup {
+        load = {
+          ["core.defaults"] = {},
+          ["core.concealer"] = {},
+          ["core.dirman"] = {
+            config = {
+              workspaces = {
+                notes = "~/notes",
+              },
+              default_workspace = "notes",
+            },
+          },
+        },
+      }
+
+      vim.wo.foldlevel = 99
+      vim.wo.conceallevel = 2
+    end,
+  },
+  {
+    "NeogitOrg/neogit",
+    enable = not vim.g.vscode,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "nvim-telescope/telescope.nvim",
+    },
+    config = function()
+      require("neogit").setup({
+        disable_hint = true,
+        -- graph_style = "ascii",
+        graph_style = "unicode"
+      })
+    end
+  },
+  {
+    "rebelot/kanagawa.nvim",
+    enable = not vim.g.vscode,
+    config = function()
+      require("kanagawa").setup({})
+      -- vim.cmd.colorscheme "kanagawa"
+    end
+  },
+  -- lazy.nvim
+  {
+    "folke/noice.nvim",
+    enable = not vim.g.vscode,
+    event = "VeryLazy",
+    opts = {
+      -- add any options here
+    },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      -- "rcarriga/nvim-notify",
+    },
+    config = function()
+      require("noice").setup({
+        lsp = {
+          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+          },
+        },
+        -- you can enable a preset for easier configuration
+        presets = {
+          bottom_search = true,         -- use a classic bottom cmdline for search
+          command_palette = true,       -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = true,       -- add a border to hover docs and signature help
+        },
+      })
+    end
+  },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    enable = not vim.g.vscode,
+    config = function()
+      require("catppuccin").setup({
+        flavour = "mocha",
+        transparent_background = true,
+        custom_highlights = function(colors)
+          return {
+            Comment = { fg = "#ACA8B8" },
+          }
+        end
+      })
+      -- vim.cmd.colorscheme "catppuccin"
+    end
+  },
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle focus=false<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>cl",
+        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+        desc = "LSP Definitions / references / ... (Trouble)",
+      },
+      {
+        "<leader>xL",
+        "<cmd>Trouble loclist toggle<cr>",
+        desc = "Location List (Trouble)",
+      },
+      {
+        "<leader>xQ",
+        "<cmd>Trouble qflist toggle<cr>",
+        desc = "Quickfix List (Trouble)",
+      },
+    },
+  },
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {}
+  },
+  {
+    'echasnovski/mini.icons',
+    version = false,
+    config = function()
+      require('mini.icons').setup()
+    end,
+  },
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    enable = not vim.g.vscode,
+    dependencies = { 'echasnovski/mini.icons' },
+    opts = {
+    },
+    keys = {
+      {
+        "<leader>?",
+        function()
+          require("which-key").show({ global = false })
+        end,
+        desc = "Buffer Local Keymaps (which-key)",
+      },
+    },
+  },
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    enable = not vim.g.vscode,
+    config = function()
+      if not vim.g.vscode then
+        require('lualine').setup({
+          sections = {
+            lualine_x = {
+              {
+                require("noice").api.status.message.get_hl,
+                cond = require("noice").api.status.message.has,
+              },
+              {
+                require("noice").api.status.command.get,
+                cond = require("noice").api.status.command.has,
+                color = { fg = "#ff9e64" },
+              },
+              {
+                require("noice").api.status.mode.get,
+                cond = require("noice").api.status.mode.has,
+                color = { fg = "#ff9e64" },
+              },
+              {
+                require("noice").api.status.search.get,
+                cond = require("noice").api.status.search.has,
+                color = { fg = "#ff9e64" },
+              },
+            },
+          },
+        })
+      end
+    end,
+  },
+  {
     "hrsh7th/vim-vsnip",
     dependencies = {
       "hrsh7th/vim-vsnip-integ",
@@ -20,6 +249,27 @@ return {
   },
   {
     "hrsh7th/cmp-nvim-lsp",
+    config = function()
+      if not vim.g.vscode then
+      end
+    end
+  },
+  {
+    "hrsh7th/cmp-path",
+    config = function()
+      if not vim.g.vscode then
+      end
+    end
+  },
+  {
+    "hrsh7th/cmp-cmdline",
+    config = function()
+      if not vim.g.vscode then
+      end
+    end
+  },
+  {
+    "hrsh7th/cmp-buffer",
     config = function()
       if not vim.g.vscode then
       end
@@ -62,6 +312,22 @@ return {
             { name = 'buffer' },
           })
         })
+        cmp.setup.cmdline({ '/', '?' }, {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = {
+            { name = 'buffer' }
+          }
+        })
+        cmp.setup.cmdline(':', {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = cmp.config.sources({
+            { name = 'path' }
+          }, {
+            { name = 'cmdline' }
+          }),
+          matching = { disallow_symbol_nonprefix_matching = false }
+        })
+        local capabilities = require('cmp_nvim_lsp').default_capabilities()
       end
     end
   },
@@ -78,8 +344,8 @@ return {
     config = function()
       if not vim.g.vscode then
         require("mason-lspconfig").setup({
-          ensure_installed = { "lua_ls", "rust_analyzer" },
-          -- automatic_installation = true,
+          ensure_installed = { "lua_ls", "rust_analyzer", "clojure_lsp" },
+          automatic_installation = true,
         })
       end
     end,
@@ -89,8 +355,10 @@ return {
     config = function()
       if not vim.g.vscode then
         local lspconfig = require('lspconfig')
+        local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
         lspconfig.lua_ls.setup {
+          capabilities = capabilities,
           on_init = function(client)
             local path = client.workspace_folders[1].name
             if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
@@ -121,8 +389,27 @@ return {
             Lua = {}
           }
         }
-
-        lspconfig.rust_analyzer.setup({})
+        lspconfig.rust_analyzer.setup({
+          capabilities = capabilities,
+        })
+        lspconfig.clojure_lsp.setup({
+          capabilities = capabilities,
+        })
+        lspconfig.nil_ls.setup({
+          capabilities = capabilities,
+        })
+        lspconfig.jsonls.setup({
+          capabilities = capabilities,
+        })
+        lspconfig.bashls.setup({
+          capabilities = capabilities,
+        })
+        lspconfig.pyright.setup({
+          capabilities = capabilities,
+        })
+        lspconfig.cssls.setup({
+          capabilities = capabilities,
+        })
       end
     end,
   },
@@ -198,7 +485,7 @@ return {
   },
   {
     "guns/vim-sexp",
-    ft = { "clojure", "scheme", "lisp" },
+    -- ft = { "clojure", "scheme", "lisp" },
     config = function()
     end,
   },
