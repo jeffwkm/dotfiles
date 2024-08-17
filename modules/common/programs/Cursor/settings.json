@@ -9,7 +9,7 @@
     "enabled": true
   },
   "editor.fontFamily": "'JetBrainsMono Nerd Font', 'Courier New', monospace",
-  "editor.fontSize": 13,
+  "editor.fontSize": 12,
   "editor.fontWeight": "600",
   "editor.fontLigatures": true,
   "editor.inlayHints.enabled": "onUnlessPressed",
@@ -27,7 +27,7 @@
   "editor.smoothScrolling": true,
   "editor.minimap.maxColumn": 110,
   "editor.minimap.showSlider": "always",
-  "editor.minimap.scale": 1,
+  "editor.minimap.scale": 2,
   "editor.inlineSuggest.enabled": true,
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
@@ -145,7 +145,6 @@
     "width": 100,
     "maxLength": 50
   },
-  /////
-  "editor.minimap.enabled": true,
-  "calva.paredit.defaultKeyMap": "strict"
+  "calva.paredit.defaultKeyMap": "strict",
+  "editor.minimap.enabled": true
 }

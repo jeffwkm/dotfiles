@@ -148,14 +148,13 @@
 
 (progn
   (defun --get-font-spec (&optional variable? modeline?)
-    (if (and modeline? (mac?))
+    (if modeline?
         nil
       (apply 'font-spec
              :family (if variable? "Inter" "JetBrainsMono Nerd Font")
-             :size (+ 14 (if variable? 0 0) (if modeline? -1 0) (if (mac?) -2 0))
+             :size (+ 12 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 0 0))
              :weight (if variable? 'medium (if modeline? 'extrabold 'bold))
              nil)))
-  ;; apply changes when loaded with interactive `eval-defun' etc
   (cl-eval-when 'eval
     (-some-> (symbol-function '--sync-fonts) funcall)))
 
@@ -163,7 +162,6 @@
   (defun --configure-fonts ()
     (setq! doom-font (--get-font-spec)
            --modeline-font (--get-font-spec nil t)
-           ;; --modeline-font nil
            doom-big-font nil
            doom-big-font-increment 2
            doom-font-increment 1
@@ -178,10 +176,17 @@
       `(highlight
         :foreground ,(catppuccin-lighten "#cad3f5" 40)
         :background ,(catppuccin-lighten "#2f3244" 16))
-      `(shadow :foreground ,(catppuccin-lighten "#6e738d" 25)))
+      ;; `(hl-line :background ,(catppuccin-lighten "#2f3244" 2))
+      `(shadow :foreground ,(catppuccin-lighten "#6e738d" 25))
+      `(lsp-inlay-hint-face :foreground ,(catppuccin-lighten "#6e738d" 25)))
+
     (defun --set-faces-on-frame (&optional frame)
       (when (and frame (display-graphic-p frame))
-        (set-face-background 'default --background-color frame)))
+        (set-face-background 'default --background-color frame)
+        (set-face-attribute 'lsp-lens-face frame :weight 'extrabold :height 0.9 :inherit 'shadow)
+        (set-face-attribute 'lsp-inlay-hint-face frame :family "Fira Code" :weight 'bold :height 0.85)
+        (set-face-attribute 'tree-sitter-hl-face:function.call frame :weight 'unspecified)
+        (set-face-attribute 'tree-sitter-hl-face:punctuation.delimiter frame :foreground (catppuccin-lighten "#939ab7" 50))))
 
     (add-hook! '(after-make-frame-functions server-after-make-frame-hook)
                :append '--set-faces-on-frame)
@@ -195,10 +200,10 @@
           `(mode-line-active :font ,--modeline-font)
           `(mode-line-inactive :font ,--modeline-font))
       (custom-theme-set-faces! nil
-        `(doom-modeline)
-        `(mode-line)
-        `(mode-line-active)
-        `(mode-line-inactive)))
+        `(doom-modeline :weight extrabold)
+        `(mode-line :weight extrabold)
+        `(mode-line-active :weight extrabold)
+        `(mode-line-inactive :weight extrabold)))
     nil)
   (cl-eval-when 'eval
     (-some-> (symbol-function '--configure-fonts) funcall)))
@@ -947,10 +952,7 @@
          +format-on-save-disabled-modes '(sql-mode
                                           tex-mode
                                           latex-mode
-                                          org-msg-edit-mode
-                                          clojure-mode
-                                          clojurescript-mode
-                                          clojurec-mode)))
+                                          org-msg-edit-mode)))
 
 (after! editorconfig
   (setq! editorconfig-lisp-use-default-indent t))
@@ -962,30 +964,51 @@
       (lsp-ui-doc--delete-frame)
     (lsp-ui-doc-glance)))
 
-;; TODO: delete lsp-ui-doc frame instead of hiding it
-;; (define-advice )
 (after! lsp-mode
-  (setq! lsp-idle-delay 0.5
-         lsp-ui-doc-max-width 80
+  (setq! lsp-idle-delay 0.25
+         lsp-ui-doc-max-width 100
+         lsp-ui-doc-max-height 16
          lsp-ui-doc-use-webkit nil
          lsp-auto-guess-root t
          lsp-guess-root-without-session t
          lsp-warn-no-matched-clients nil
          lsp-ui-doc-include-signature t
-         lsp-inlay-hint-enable nil)
+         lsp-inlay-hint-enable t)
   (pushnew! lsp-file-watch-ignored-directories "/home/jeff/repos/nix/nixpkgs" "/nix/store")
   (pushnew! lsp-disabled-clients 'semgrep-ls)
-  (use-package! lsp-ui)
-  (use-package! lsp-ui-doc)
-  (after! rustic
+  (require 'lsp-ui)
+  (require 'lsp-ui-doc)
+  (map! :mode lsp-mode
+        "s-l" '--lsp-ui-doc-glance-toggle
+        ;; "s-L" (cmd! (lsp-ui-doc--delete-frame) (command-execute 'lsp-ui-doc-glance))
+        "s-;" 'lsp-ui-doc-focus-frame
+        "s-:" 'lsp-ui-doc-focus-frame
+        :mode lsp-ui-doc-frame-mode
+        "s-l" 'lsp-ui-doc-hide
+        "s-;" 'lsp-ui-doc-unfocus-frame
+        "s-:" 'lsp-ui-doc-unfocus-frame
+        :leader
+        "l" '--lsp-ui-doc-glance-toggle
+        "L" 'lsp-avy-lens
+        "'" 'lsp-ui-doc-focus-frame
+        "RET" 'lsp-inlay-hints-mode))
+
+(after! lsp-treemacs
+  (setq! lsp-treemacs-error-list-current-project-only t))
+
+(after! rustic
+  (after! lsp-rust
     (setq! lsp-rust-analyzer-server-format-inlay-hints t
-           lsp-rust-analyzer-display-parameter-hints nil
-           lsp-rust-analyzer-max-inlay-hint-length nil
-           lsp-rust-clippy-preference "opt-in"
-           lsp-rust-rustfmt-path "rustfmt"
-           lsp-rust-analyzer-diagnostics-disabled ["inactive-code"]
-           lsp-rust-analyzer-display-chaining-hints t))
-  (after! nix-mode
+           lsp-rust-analyzer-display-chaining-hints t
+           lsp-rust-analyzer-display-parameter-hints t
+           lsp-rust-analyzer-max-inlay-hint-length 25
+           lsp-rust-analyzer-diagnostics-disabled ["inactive-code"]))
+  (after! apheleia
+    (dolist (mode '(rust-mode rust-ts-mode rustic-mode))
+      (setf (alist-get mode apheleia-mode-alist) 'lsp))))
+
+(after! nix-mode
+  (after! lsp-mode
     (defcustom-lsp lsp-nix-nil-auto-archive nil
       "Auto-archiving behavior which may use network."
       :type 'lsp-json-bool
@@ -1014,22 +1037,7 @@
            lsp-nix-nil-auto-eval-inputs nil
            lsp-nix-nil-nixpkgs-input-name "nixpkgs"
            lsp-nix-nixd-server-path "nixd")
-    (setq-hook! nix-mode-hook +format-with-lsp t))
-  (after! lsp-treemacs
-    (setq! lsp-treemacs-error-list-current-project-only t
-           treemacs-show-cursor t))
-  (map! :mode lsp-mode
-        ;; "s-l" 'lsp-ui-doc-show
-        "s-l" '--lsp-ui-doc-glance-toggle
-        ;; "s-L" (cmd! (lsp-ui-doc--delete-frame) (command-execute 'lsp-ui-doc-glance))
-        "s-;" 'lsp-ui-doc-focus-frame
-        "s-:" 'lsp-ui-doc-focus-frame
-        :mode lsp-ui-doc-frame-mode
-        "s-l" 'lsp-ui-doc-hide
-        "s-;" 'lsp-ui-doc-unfocus-frame
-        "s-:" 'lsp-ui-doc-unfocus-frame
-        :leader
-        "l" 'lsp-ui-doc-toggle))
+    (setq-hook! nix-mode-hook +format-with-lsp t)))
 
 (use-package! vimrc-mode
   :mode "\\.vim\\(rc\\)?\\'")
@@ -1356,24 +1364,16 @@
       ;; disable right fringe
       (set-window-fringes window nil 0))))
 
-(setq! ;; +treemacs-git-mode 'deferred
- treemacs-display-in-side-window t
- ;; treemacs-file-event-delay 1000
- treemacs-silent-filewatch t
- treemacs-silent-refresh t
- ;; treemacs-deferred-git-apply-delay 1.0
- ;; treemacs-file-follow-delay 0.5
- ;; treemacs-recenter-after-file-follow 'on-distance
- ;; treemacs-recenter-distance 0.2
- treemacs-is-never-other-window t
- ;; treemacs-show-cursor nil
- )
-
-;; (after! solaire-mode
-;;   ;; (after! treemacs (add-hook! 'treemacs-mode 'solaire-mode))
-;;   (solaire-global-mode 1))
+(setq! +treemacs-git-mode 'deferred)
 
 (after! treemacs
+  (setq! treemacs-display-in-side-window t
+         treemacs-file-event-delay 1000
+         treemacs-silent-filewatch t
+         treemacs-silent-refresh t
+         treemacs-indentation '(4 px)
+         treemacs-is-never-other-window t
+         treemacs-show-cursor nil)
   (require 'hide-mode-line)
   (setq-hook! treemacs-mode mode-line-format nil)
   (setq-hook! treemacs-mode tab-width 1)
@@ -1391,9 +1391,6 @@
   (treemacs-project-follow-mode 1)
   (treemacs-filewatch-mode 1)
   (treemacs-hide-gitignored-files-mode 1)
-  ;; (add-hook! 'treemacs-select-functions  ;; TODO: run this?
-  ;;            '--ensure-treemacs-hl-line-mode
-  ;;            '--treemacs-hide-fringes)
   (map! :mode treemacs-mode
         "C-o" (cmd! (call-interactively 'other-window))))
 
