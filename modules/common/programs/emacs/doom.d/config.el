@@ -186,7 +186,7 @@
     (add-hook! '(after-make-frame-functions server-after-make-frame-hook)
                :append '--set-faces-on-frame)
 
-    (-map '--set-faces-on-frame (frame-list))
+    (-each (frame-list) '--set-faces-on-frame)
 
     (if --modeline-font
         (custom-theme-set-faces! nil
@@ -577,7 +577,10 @@
         :nmig "RET" 'corfu-complete)
   nil)
 
-(+global-word-wrap-mode 1)
+(after! adaptive-wrap
+  ;; (+global-word-wrap-mode 1)
+  )
+
 ;; (pushnew! +word-wrap-disabled-modes 'cider-repl-mode)
 
 (use-package! helpful :defer-incrementally t)
@@ -1504,8 +1507,6 @@
 ;; upon opening a graphical frame.
 ;;(add-hook! 'server-after-make-frame-hook '--fix-git-gutter-buffers)
 
-;;;; no-byte-compile: t
-
-;; Local Variables:
-;; byte-compile-warnings: (not free-vars constants mutate-constant docstrings)
+;;;;; Local Variables:
+;; byte-compile-warnings: (not free-vars constants mutate-constant docstring unresolved)
 ;; End:
