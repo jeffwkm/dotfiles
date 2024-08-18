@@ -5,11 +5,11 @@ return {
     'projekt0n/github-nvim-theme',
     lazy = false,
     priority = 1000,
-    enable = not vim.g.vscode,
+    enabled = not vim.g.vscode,
     config = function()
       require('github-theme').setup({
         options = {
-          transparent = true;
+          transparent = true,
         }
       })
       vim.cmd('colorscheme github_dark')
@@ -52,7 +52,7 @@ return {
   },
   {
     "NeogitOrg/neogit",
-    enable = not vim.g.vscode,
+    enabled = not vim.g.vscode,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "sindrets/diffview.nvim",
@@ -68,16 +68,15 @@ return {
   },
   {
     "rebelot/kanagawa.nvim",
-    enable = not vim.g.vscode,
+    enabled = not vim.g.vscode,
     config = function()
       require("kanagawa").setup({})
       -- vim.cmd.colorscheme "kanagawa"
     end
   },
-  -- lazy.nvim
   {
     "folke/noice.nvim",
-    enable = not vim.g.vscode,
+    enabled = not vim.g.vscode,
     event = "VeryLazy",
     opts = {
       -- add any options here
@@ -88,7 +87,7 @@ return {
       -- OPTIONAL:
       --   `nvim-notify` is only needed, if you want to use the notification view.
       --   If not available, we use `mini` as the fallback
-      -- "rcarriga/nvim-notify",
+      "rcarriga/nvim-notify",
     },
     config = function()
       require("noice").setup({
@@ -106,7 +105,7 @@ return {
           command_palette = true,       -- position the cmdline and popupmenu together
           long_message_to_split = true, -- long messages will be sent to a split
           inc_rename = false,           -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = true,       -- add a border to hover docs and signature help
+          lsp_doc_border = true,        -- add a border to hover docs and signature help
         },
       })
     end
@@ -115,7 +114,7 @@ return {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
-    enable = not vim.g.vscode,
+    enabled = not vim.g.vscode,
     config = function()
       require("catppuccin").setup({
         flavour = "mocha",
@@ -132,6 +131,7 @@ return {
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    enabled = not vim.g.vscode,
     opts = {}, -- for default options, refer to the configuration section for custom setup.
     cmd = "Trouble",
     keys = {
@@ -169,12 +169,14 @@ return {
   },
   {
     'windwp/nvim-autopairs',
+    enabled = not vim.g.vscode,
     event = "InsertEnter",
     opts = {}
   },
   {
     'echasnovski/mini.icons',
     version = false,
+    enabled = not vim.g.vscode,
     config = function()
       require('mini.icons').setup()
     end,
@@ -182,7 +184,7 @@ return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    enable = not vim.g.vscode,
+    enabled = not vim.g.vscode,
     dependencies = { 'echasnovski/mini.icons' },
     opts = {
     },
@@ -199,35 +201,33 @@ return {
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    enable = not vim.g.vscode,
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-        require('lualine').setup({
-          sections = {
-            lualine_x = {
-              {
-                require("noice").api.status.message.get_hl,
-                cond = require("noice").api.status.message.has,
-              },
-              {
-                require("noice").api.status.command.get,
-                cond = require("noice").api.status.command.has,
-                color = { fg = "#ff9e64" },
-              },
-              {
-                require("noice").api.status.mode.get,
-                cond = require("noice").api.status.mode.has,
-                color = { fg = "#ff9e64" },
-              },
-              {
-                require("noice").api.status.search.get,
-                cond = require("noice").api.status.search.has,
-                color = { fg = "#ff9e64" },
-              },
+      require('lualine').setup({
+        sections = {
+          lualine_x = {
+            {
+              require("noice").api.status.message.get_hl,
+              cond = require("noice").api.status.message.has,
+            },
+            {
+              require("noice").api.status.command.get,
+              cond = require("noice").api.status.command.has,
+              color = { fg = "#ff9e64" },
+            },
+            {
+              require("noice").api.status.mode.get,
+              cond = require("noice").api.status.mode.has,
+              color = { fg = "#ff9e64" },
+            },
+            {
+              require("noice").api.status.search.get,
+              cond = require("noice").api.status.search.has,
+              color = { fg = "#ff9e64" },
             },
           },
-        })
-      end
+        },
+      })
     end,
   },
   {
@@ -235,182 +235,172 @@ return {
     dependencies = {
       "hrsh7th/vim-vsnip-integ",
     },
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-      end
     end,
   },
   {
     "hrsh7th/cmp-vsnip",
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-      end
     end
   },
   {
     "hrsh7th/cmp-nvim-lsp",
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-      end
     end
   },
   {
     "hrsh7th/cmp-path",
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-      end
     end
   },
   {
     "hrsh7th/cmp-cmdline",
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-      end
     end
   },
   {
     "hrsh7th/cmp-buffer",
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-      end
     end
   },
   {
     "hrsh7th/nvim-cmp",
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-        local cmp = require("cmp")
-        cmp.setup({
-          snippet = {
-            -- REQUIRED - you must specify a snippet engine
-            expand = function(args)
-              vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-              -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-              -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-              -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-              -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
-            end,
-          },
-          completion = cmp.config.window.bordered(),
-          window = {
-            documentation = cmp.config.window.bordered(),
-          },
-          mapping = cmp.mapping.preset.insert({
-            ['<C-p>'] = cmp.mapping.scroll_docs(-4),
-            ['<C-n>'] = cmp.mapping.scroll_docs(4),
-            ['<Tab>'] = cmp.mapping.complete(),
-            ['<C-g>'] = cmp.mapping.abort(),
-            ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-          }),
-          sources = cmp.config.sources({
-            { name = 'nvim_lsp' },
-            { name = 'vsnip' }, -- For vsnip users.
-            -- { name = 'luasnip' }, -- For luasnip users.
-            -- { name = 'ultisnips' }, -- For ultisnips users.
-            -- { name = 'snippy' }, -- For snippy users.
-          }, {
-            { name = 'buffer' },
-          })
+      local cmp = require("cmp")
+      cmp.setup({
+        snippet = {
+          -- REQUIRED - you must specify a snippet engine
+          expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+            -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+            -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+            -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+            -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+          end,
+        },
+        completion = cmp.config.window.bordered(),
+        window = {
+          documentation = cmp.config.window.bordered(),
+        },
+        mapping = cmp.mapping.preset.insert({
+          ['<C-p>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-n>'] = cmp.mapping.scroll_docs(4),
+          ['<Tab>'] = cmp.mapping.complete(),
+          ['<C-g>'] = cmp.mapping.abort(),
+          ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        }),
+        sources = cmp.config.sources({
+          { name = 'nvim_lsp' },
+          { name = 'vsnip' }, -- For vsnip users.
+          -- { name = 'luasnip' }, -- For luasnip users.
+          -- { name = 'ultisnips' }, -- For ultisnips users.
+          -- { name = 'snippy' }, -- For snippy users.
+        }, {
+          { name = 'buffer' },
         })
-        cmp.setup.cmdline({ '/', '?' }, {
-          mapping = cmp.mapping.preset.cmdline(),
-          sources = {
-            { name = 'buffer' }
-          }
-        })
-        cmp.setup.cmdline(':', {
-          mapping = cmp.mapping.preset.cmdline(),
-          sources = cmp.config.sources({
-            { name = 'path' }
-          }, {
-            { name = 'cmdline' }
-          }),
-          matching = { disallow_symbol_nonprefix_matching = false }
-        })
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      end
+      })
+      cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = 'buffer' }
+        }
+      })
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = 'path' }
+        }, {
+          { name = 'cmdline' }
+        }),
+        matching = { disallow_symbol_nonprefix_matching = false }
+      })
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
     end
   },
   {
     "williamboman/mason.nvim",
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-        require("mason").setup()
-      end
+      require("mason").setup()
     end,
   },
   {
     "williamboman/mason-lspconfig.nvim",
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-        require("mason-lspconfig").setup({
-          ensure_installed = { "lua_ls", "rust_analyzer", "clojure_lsp" },
-          automatic_installation = true,
-        })
-      end
+      require("mason-lspconfig").setup({
+        ensure_installed = { "lua_ls", "rust_analyzer", "clojure_lsp" },
+        automatic_installation = true,
+      })
     end,
   },
   {
     "neovim/nvim-lspconfig",
+    enabled = not vim.g.vscode,
     config = function()
-      if not vim.g.vscode then
-        local lspconfig = require('lspconfig')
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      local lspconfig = require('lspconfig')
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-        lspconfig.lua_ls.setup {
-          capabilities = capabilities,
-          on_init = function(client)
-            local path = client.workspace_folders[1].name
-            if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
-              return
-            end
+      lspconfig.lua_ls.setup {
+        capabilities = capabilities,
+        on_init = function(client)
+          local path = client.workspace_folders[1].name
+          if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
+            return
+          end
 
-            client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-              runtime = {
-                -- Tell the language server which version of Lua you're using
-                -- (most likely LuaJIT in the case of Neovim)
-                version = 'LuaJIT'
-              },
-              -- Make the server aware of Neovim runtime files
-              workspace = {
-                checkThirdParty = false,
-                library = {
-                  vim.env.VIMRUNTIME
-                  -- Depending on the usage, you might want to add additional paths here.
-                  -- "${3rd}/luv/library"
-                  -- "${3rd}/busted/library",
-                }
-                -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
-                -- library = vim.api.nvim_get_runtime_file("", true)
+          client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+            runtime = {
+              -- Tell the language server which version of Lua you're using
+              -- (most likely LuaJIT in the case of Neovim)
+              version = 'LuaJIT'
+            },
+            -- Make the server aware of Neovim runtime files
+            workspace = {
+              checkThirdParty = false,
+              library = {
+                vim.env.VIMRUNTIME
+                -- Depending on the usage, you might want to add additional paths here.
+                -- "${3rd}/luv/library"
+                -- "${3rd}/busted/library",
               }
-            })
-          end,
-          settings = {
-            Lua = {}
-          }
+              -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
+              -- library = vim.api.nvim_get_runtime_file("", true)
+            }
+          })
+        end,
+        settings = {
+          Lua = {}
         }
-        lspconfig.rust_analyzer.setup({
-          capabilities = capabilities,
-        })
-        lspconfig.clojure_lsp.setup({
-          capabilities = capabilities,
-        })
-        lspconfig.nil_ls.setup({
-          capabilities = capabilities,
-        })
-        lspconfig.jsonls.setup({
-          capabilities = capabilities,
-        })
-        lspconfig.bashls.setup({
-          capabilities = capabilities,
-        })
-        lspconfig.pyright.setup({
-          capabilities = capabilities,
-        })
-        lspconfig.cssls.setup({
-          capabilities = capabilities,
-        })
-      end
+      }
+      lspconfig.rust_analyzer.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.clojure_lsp.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.nil_ls.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.jsonls.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.bashls.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
+      })
+      lspconfig.cssls.setup({
+        capabilities = capabilities,
+      })
     end,
   },
   {
