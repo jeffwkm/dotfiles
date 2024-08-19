@@ -12,7 +12,7 @@ return {
           transparent = true,
         }
       })
-      vim.cmd('colorscheme github_dark')
+      -- vim.cmd('colorscheme github_dark')
     end,
   },
   {
@@ -81,10 +81,11 @@ return {
     enabled = not vim.g.vscode,
     config = function()
       require("notify").setup({
-        background_colour = "#000000",
+        background_colour = "#181818",
         fps = 60,
         minimum_width = 40,
-        timeout = 2000
+        timeout = 2000,
+        -- render = "wrapped-compact"
       })
     end
   },
@@ -139,7 +140,7 @@ return {
           }
         end
       })
-      -- vim.cmd.colorscheme "catppuccin"
+      vim.cmd.colorscheme "catppuccin"
     end
   },
   {
