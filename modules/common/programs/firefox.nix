@@ -14,7 +14,16 @@ in {
 
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = { config, pkgs, ... }: {
-      home.packages = with pkgs; [ firefox ];
+      programs.firefox = {
+        enable = true;
+        profiles.default = {
+          id = 0;
+          name = "default";
+          path = "wandke3d.default-1713652437057";
+          isDefault = true;
+          userChrome = readFile ./userChrome.css;
+        };
+      };
 
       home.sessionVariables = mkIf cfg.default {
         BROWSER = "${pkgs.firefox}/bin/firefox";

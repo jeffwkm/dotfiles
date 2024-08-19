@@ -1,0 +1,78 @@
+:root {
+  --bg: #181818b8;
+}
+
+/*window transparency*/
+#main-window {
+  background: var(--bg) !important;
+}
+
+/*current tab*/
+tab.tabbrowser-tab[selected="true"] stack.tab-stack vbox.tab-background {
+  background: #ffffff22 !important;
+}
+
+/*hover tab*/
+tab.tabbrowser-tab:hover stack.tab-stack vbox.tab-background {
+  background: #ffffff22 !important;
+}
+
+/*tab selection*/
+tab.tabbrowser-tab[pending="true"] {
+  color: #ffffffcc !important;
+}
+
+/*hibernated*/
+tab.tabbrowser-tab stack.tab-stack vbox.tab-background {
+  background: transparent !important;
+}
+
+/*bookmarks*/
+toolbar {
+  background: transparent !important;
+}
+
+/*idk*/
+#nav-bar {
+  background: transparent !important;
+}
+
+/*idk but keep*/
+#navigator-toolbox {
+  background: transparent !important;
+  border: none !important;
+}
+
+/*urlbar*/
+#urlbar-background {
+  background: #00000044 !important;
+}
+
+/*suggestions dropdown*/
+#urlbar:is([open]) hbox#urlbar-background {
+  background: #42414d !important;
+}
+
+/*little contextual buttons at left of urlbar*/
+#urlbar box#identity-box box {
+  background: inherit !important;
+}
+#urlbar box#identity-box box:hover {
+  background: #ffffff22 !important;
+}
+#urlbar box#identity-box box:active {
+  background: #ffffff44 !important;
+}
+
+/*new tab (not working)*/
+/*
+#main-window hbox#browser vbox#appcontent tabbox#tabbrowser-tabbox tabpanels#tabbrowser-tabpanels hbox.newTabBrowserPanel vbox.browserContainer stack.browserStack browser {
+background: ff00ff !important;
+opacity: 1;
+}
+
+#main-window hbox#browser vbox#appcontent tabbox#tabbrowser-tabbox tabpanels#tabbrowser-tabpanels hbox.browserSidebarContainer {
+background: ff00ff !important;
+opacity: 1;
+}
+*/
