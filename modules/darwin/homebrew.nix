@@ -55,6 +55,7 @@ with lib.my; {
       "libpng"
       "librsvg"
       "libxml2"
+      "llvm@17"
       "mailutils"
       "make"
       "pango"

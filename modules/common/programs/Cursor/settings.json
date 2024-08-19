@@ -27,7 +27,7 @@
   "editor.smoothScrolling": true,
   "editor.minimap.maxColumn": 110,
   "editor.minimap.showSlider": "always",
-  "editor.minimap.scale": 2,
+  "editor.minimap.scale": 1,
   "editor.inlineSuggest.enabled": true,
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
@@ -145,6 +145,5 @@
     "width": 100,
     "maxLength": 50
   },
-  "calva.paredit.defaultKeyMap": "strict",
-  "editor.minimap.enabled": true
+  "calva.paredit.defaultKeyMap": "strict"
 }

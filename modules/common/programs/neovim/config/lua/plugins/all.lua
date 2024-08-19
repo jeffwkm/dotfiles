@@ -18,6 +18,7 @@ return {
   {
     'nvim-telescope/telescope.nvim',
     tag = '0.1.8',
+    enabled = not vim.g.vscode,
     dependencies = {
       'nvim-lua/plenary.nvim',
       'BurntSushi/ripgrep',
@@ -30,6 +31,7 @@ return {
     "nvim-neorg/neorg",
     lazy = false,
     version = "*",
+    enabled = not vim.g.vscode,
     config = function()
       require("neorg").setup {
         load = {
@@ -72,6 +74,18 @@ return {
     config = function()
       require("kanagawa").setup({})
       -- vim.cmd.colorscheme "kanagawa"
+    end
+  },
+  {
+    "rcarriga/nvim-notify",
+    enabled = not vim.g.vscode,
+    config = function()
+      require("notify").setup({
+        background_colour = "#000000",
+        fps = 60,
+        minimum_width = 40,
+        timeout = 2000
+      })
     end
   },
   {

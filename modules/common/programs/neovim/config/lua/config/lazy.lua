@@ -30,6 +30,7 @@ vim.g.logging_level = "warn"
 vim.opt.hlsearch = true           -- enable search highlighting
 vim.opt.number = false            -- disable line numbers
 vim.opt.clipboard = "unnamedplus" -- use system clipboard for all operations
+vim.opt.termguicolors = true
 
 vim.o.guifont = "JetBrainsMono Nerd Font:h12"
 
