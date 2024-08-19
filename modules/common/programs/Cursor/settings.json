@@ -55,7 +55,7 @@
   "cursor.chat.ghostTextAtSymbols": true,
   "cursor-retrieval.canAttemptGithubLogin": true,
   "cursor.aipreview.enabled": true,
-  "cursor.general.enableShadowWorkspace": true,
+  "cursor.general.enableShadowWorkspace": false,
   "explorer.confirmDelete": false,
   "rust-analyzer.inlayHints.maxLength": 40,
   "rust-analyzer.inlayHints.renderColons": true,
