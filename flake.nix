@@ -3,12 +3,11 @@
 
   inputs = {
     ### System
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-2311.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
     nixos-apple-silicon = {
       url = "github:tpwrules/nixos-apple-silicon";
-      inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "rust-overlay";
     };
     darwin = {
@@ -27,12 +26,6 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.darwin.follows = "darwin";
-      inputs.home-manager.follows = "home-manager";
-    };
     ### Additional sources
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
@@ -40,19 +33,13 @@
       inputs.nixpkgs-stable.follows = "nixpkgs-stable";
       inputs.flake-utils.follows = "flake-utils";
     };
-    hyprland = {
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprland-stable = {
-      url = "github:hyprwm/Hyprland/v0.39.1";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
+    hyprland = { url = "git+https://github.com/hyprwm/Hyprland?submodules=1"; };
     hyprpaper = {
       url = "github:hyprwm/hyprpaper";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
+    hyprland-stable = { url = "github:hyprwm/Hyprland/v0.39.1"; };
     hyprpaper-stable = {
       url = "github:hyprwm/hyprpaper/v0.6.0";
       inputs.nixpkgs.follows = "nixpkgs-2311";
@@ -71,11 +58,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
       inputs.rust-overlay.follows = "rust-overlay";
-    };
-    vscode-server = {
-      url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";

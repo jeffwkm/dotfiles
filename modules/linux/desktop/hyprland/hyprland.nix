@@ -10,24 +10,17 @@ let
     level = 2;
     native = true;
   };
-  input-hyprpaper =
-    if cfg.stable then inputs.hyprpaper-stable else inputs.hyprpaper;
-  hyprpaper-overlay = input-hyprpaper.overlays.default;
 in {
   options.modules.desktop.hyprland = {
     enable = mkBoolOpt modules.desktop.enable;
-    # NOTE: top-level host config must also import nixos module from corresponding hyprland input
-    #       (conditional import gives infinite recursion)
-    stable = mkBoolOpt false;
     extraConf = mkOpt types.str "";
   };
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      # NOTE: never apply hyprland overlay, breaks asahi build
-      hyprpaper-overlay
+      # inputs.hyprpaper.overlays.default
       (final: prev: { hyprpaper = optimize' prev.hyprpaper; })
-    ] ++ optionals cfg.stable [ ];
+    ];
 
     programs.hyprland.enable = true;
 

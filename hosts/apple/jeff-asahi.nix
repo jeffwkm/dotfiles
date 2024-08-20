@@ -5,21 +5,18 @@ in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-apple-silicon.nixosModules.default
-    inputs.hyprland.nixosModules.default
+    # inputs.hyprland.nixosModules.default
   ] ++ (with inputs.chaotic.nixosModules; [ nyx-cache nyx-overlay ]);
 
   config = {
     nixpkgs.overlays = [
-      ## NOTE: copied from nixos-apple-silicon to override mesa package
-      ## (nixpkgs-unstable version became incompatible)
-      (final: prev: {
-        mesa-asahi-edge = final.callPackage ../../mesa-asahi-edge {
-          mesa = pkgs.pkgs-stable.mesa;
-        };
-      })
+      # inputs.hyprland.overlays.default
     ];
+    programs.hyprland.package =
+      inputs.hyprland.packages.${pkgs.system}.hyprland;
     ## host options
     modules = {
+      guix.enable = false;
       dev.enable-all = true;
       desktop.enable = true;
       desktop.hyprland.extraConf = ''
@@ -28,14 +25,13 @@ in {
             kb_options = ctrl:nocaps,altwin:swap_alt_win
         }
       '';
+      programs.firefox.profilePath = "v5o56gix.default-1722656138151";
       services.protonmail.enable = true;
       services.protonvpn = {
         enable = false;
         configFile = "/private/wg-quick/protonvpn-1-US-VA-14.conf";
       };
     };
-    programs.hyprland.package =
-      inputs.hyprland.packages.${pkgs.system}.hyprland;
     ## asahi system
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = false;

@@ -11,25 +11,22 @@ in {
     enable = mkBoolOpt (modules.desktop.enable && modules.dev.enable-all);
   };
 
-  # imports = [ inputs.vscode-server.nixosModule ];
-
   config = mkIf cfg.enable {
-    # services.vscode-server.enable = true;
-
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let link = config.lib.file.mkOutOfStoreSymlink;
       in {
-        xdg.configFile."Cursor/User/settings.json".source =
-          link "${pwd}/Cursor/settings.json";
-        xdg.configFile."Cursor/User/keybindings.json".source =
-          link "${pwd}/Cursor/keybindings.json";
+        xdg.configFile = mkIf (!host.darwin) {
+          "Cursor/User/settings.json".source =
+            link "${pwd}/Cursor/settings.json";
+          "Cursor/User/keybindings.json".source =
+            link "${pwd}/Cursor/keybindings.json";
+        };
         home.file = mkIf (host.darwin) {
           "Library/Application Support/Cursor/User/settings.json".source =
             link "${pwd}/Cursor/settings.json";
           "Library/Application Support/Cursor/User/keybindings.json".source =
             link "${pwd}/Cursor/keybindings.json";
         };
-
         programs.vscode = mkIf (!host.darwin) {
           enable = true;
           package = pkgs.vscode.fhsWithPackages (ps:

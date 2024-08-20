@@ -40,13 +40,13 @@ in {
       vfio.enable = true;
       desktop.enable = true;
       desktop.amdgpu-fan = true;
-      desktop.hyprland.stable = true;
       desktop.hyprland.extraConf = ''
         input {
             sensitivity = -0.5
             kb_options = ctrl:nocaps
         }
       '';
+      programs.firefox.profilePath = "wandke3d.default-1713652437057";
       programs.mpv.extraConf = ''
         ao=pulse # pipewire default gives crackling audio
       '';

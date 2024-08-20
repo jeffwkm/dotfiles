@@ -1,25 +1,24 @@
 { config, lib, pkgs, ... }:
 with lib;
-with lib.my;
 let
+  inherit (lib.my) mkBoolOpt mkOpt;
   inherit (config) user host modules;
-  inherit (host) darwin;
   cfg = config.modules.programs.firefox;
-  app = "firefox.desktop";
 in {
-  options.modules.programs.firefox = {
+  options.modules.programs.firefox = with types; {
     enable = mkBoolOpt modules.desktop.enable;
     default = mkBoolOpt true;
+    profilePath = mkOpt (nullOr str) null;
   };
 
   config = mkIf cfg.enable {
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       programs.firefox = {
         enable = true;
-        profiles.default = {
+        profiles.default = mkIf (cfg.profilePath != null) {
           id = 0;
           name = "default";
-          path = "wandke3d.default-1713652437057";
+          path = cfg.profilePath;
           isDefault = true;
           userChrome = readFile ./userChrome.css;
         };
