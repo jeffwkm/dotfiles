@@ -3,7 +3,7 @@ set -eu
 
 options=()
 options+=("--provider" "openai")
-options+=("--model" "gpt-4-turbo-preview")
+options+=("--model" "gpt-4o")
 options+=("--temperature" "1.0")
 # options+=("--max_length" "1000")
 

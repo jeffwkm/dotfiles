@@ -6,8 +6,8 @@
       <libosinfo:os id="http://microsoft.com/win/10"/>
     </libosinfo:libosinfo>
   </metadata>
-  <memory unit='KiB'>25165824</memory>
-  <currentMemory unit='KiB'>25165824</currentMemory>
+  <memory unit='KiB'>16777216</memory>
+  <currentMemory unit='KiB'>16777216</currentMemory>
   <memoryBacking>
     <hugepages/>
   </memoryBacking>

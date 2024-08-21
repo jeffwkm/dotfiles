@@ -16,7 +16,6 @@ in {
       inputs.hyprland.packages.${pkgs.system}.hyprland;
     ## host options
     modules = {
-      guix.enable = false;
       dev.enable-all = true;
       desktop.enable = true;
       desktop.hyprland.extraConf = ''

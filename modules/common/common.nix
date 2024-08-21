@@ -7,9 +7,7 @@ let
   inherit (host) config-dir darwin;
   pwd = "${config-dir}/modules/common";
 in {
-  options = {
-    modules.guix.enable = mkBoolOpt (!host.minimal && !host.darwin);
-  };
+  options = { modules.guix.enable = mkBoolOpt false; };
 
   config = {
     nixpkgs.config.permittedInsecurePackages =

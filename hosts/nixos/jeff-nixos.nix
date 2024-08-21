@@ -47,6 +47,7 @@ in {
         }
       '';
       programs.firefox.profilePath = "wandke3d.default-1713652437057";
+      programs.firefox.theme = "stealthfox/stealthFox";
       programs.mpv.extraConf = ''
         ao=pulse # pipewire default gives crackling audio
       '';
@@ -63,6 +64,7 @@ in {
 
     nixpkgs.overlays = [
       inputs.hyprland-stable.overlays.default
+      inputs.hyprpaper-stable.overlays.default
       (final: prev: {
         libliftoff = final.libliftoff_0_4;
         xdg-desktop-portal-hyprland =
@@ -92,7 +94,7 @@ in {
       clinfo
       firmwareLinuxNonfree
       libguestfs
-      ansel # darktable
+      # ansel # darktable
       amdgpu_top
       vdpauinfo
       libva-utils
@@ -177,8 +179,8 @@ in {
     };
 
     # boot.kernelPackages = pkgs.linuxPackages;
-    boot.kernelPackages = pkgs.linuxPackages_latest;
-    # boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    # boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
@@ -199,7 +201,7 @@ in {
       "rd.driver.pre=vfio-pci"
       "hugepagesz=1G"
       "default_hugepagesz=1G"
-      "hugepages=25"
+      "hugepages=17"
       "vfio-pci.ids=10de:2783,10de:22bc,1912:0014"
       "vfio-pci.disable_vga=1"
       "kvm.ignore_msrs=1"
