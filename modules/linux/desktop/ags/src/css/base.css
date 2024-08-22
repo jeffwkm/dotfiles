@@ -57,11 +57,13 @@
   --color-special-01: oklch(67% 0.162 var(--h-special));
   --color-special: var(--color-special-01);
 
-  --color-bar-background: oklch(from var(--color-macchiato-background) l c h / 0.94);
+  --color-bar-background: oklch(from var(--color-macchiato-background) l calc(c * 0.85) h / 0.75);
 
-  --color-bar-border: oklch(from var(--color-lavender) calc(l * 0.8) calc(c * 0.8) h / 0.8);
+  --color-bar-border: oklch(
+    from var(--color-macchiato-background) calc(l * 2.15) calc(c * 2.15) h / 0.8
+  );
 
-  --bar-border: 3.5px solid var(--color-bar-border);
+  --bar-border: 1.25px solid var(--color-bar-border);
 
   --border-opacity: 0.99;
   --internal-border-opacity: 0.8;
