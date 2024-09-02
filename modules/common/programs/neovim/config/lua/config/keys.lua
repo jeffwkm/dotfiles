@@ -48,12 +48,12 @@ EnterInNormalMode = function()
   InputSpecial("<esc>")
 end
 
-K("i", "<Esc>", EscMaintainPosition, Opts) -- prevent cursor from shifting left when exiting insert mode
-Knv("0", Jump_0_or_IndentStart)            -- bind 0 to toggle between ^ and 0
-Ko("0", "normal! 0")                       -- use standard 0 in object mode
-Kn("<bs>", BackspaceInNormalMode)          -- delete with backspace in normal mode
-Kn("<cr>", EnterInNormalMode)              -- insert linebreak with enter in normal mode
-Kn("<Esc>", "<Esc>:noh<CR>")               -- removes highlighting after escaping vim search
+-- K("i", "<Esc>", EscMaintainPosition, Opts) -- prevent cursor from shifting left when exiting insert mode
+Knv("0", Jump_0_or_IndentStart)   -- bind 0 to toggle between ^ and 0
+Ko("0", "normal! 0")              -- use standard 0 in object mode
+Kn("<bs>", BackspaceInNormalMode) -- delete with backspace in normal mode
+Kn("<cr>", EnterInNormalMode)     -- insert linebreak with enter in normal mode
+Kn("<Esc>", "<Esc>:noh<CR>")      -- removes highlighting after escaping vim search
 -- Knv("<leader>y", '"+y')                 -- yank to system clipboard
 -- Knv("<leader>p", '"+p')                 -- paste from system clipboard
 

@@ -23,7 +23,7 @@ in {
           ++ optional (!darwin) gcc;
       };
 
-      home.packages = with pkgs; [ luarocks neovide ];
+      home.packages = with pkgs; [ luarocks neovide lua-language-server ];
 
       xdg.configFile."nvim/".source =
         config.lib.file.mkOutOfStoreSymlink "${pwd}/config";

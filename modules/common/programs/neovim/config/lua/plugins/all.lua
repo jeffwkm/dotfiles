@@ -81,10 +81,10 @@ return {
     enabled = not vim.g.vscode,
     config = function()
       require("notify").setup({
-        background_colour = "#181818",
+        background_colour = "#101010",
         fps = 60,
-        minimum_width = 40,
-        timeout = 2000,
+        minimum_width = 30,
+        timeout = 1500,
         -- render = "wrapped-compact"
       })
     end
@@ -336,7 +336,7 @@ return {
         }),
         matching = { disallow_symbol_nonprefix_matching = false }
       })
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      require('cmp_nvim_lsp').default_capabilities()
     end
   },
   {
@@ -351,8 +351,8 @@ return {
     enabled = not vim.g.vscode,
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "rust_analyzer", "clojure_lsp" },
-        automatic_installation = true,
+        -- ensure_installed = { "lua_ls", "rust_analyzer", "clojure_lsp" },
+        automatic_installation = false,
       })
     end,
   },
@@ -373,11 +373,8 @@ return {
 
           client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
             runtime = {
-              -- Tell the language server which version of Lua you're using
-              -- (most likely LuaJIT in the case of Neovim)
               version = 'LuaJIT'
             },
-            -- Make the server aware of Neovim runtime files
             workspace = {
               checkThirdParty = false,
               library = {

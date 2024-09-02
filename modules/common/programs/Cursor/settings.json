@@ -128,8 +128,8 @@
     "editor.formatOnType": true
   },
   "[clojure]": {
-    // "editor.defaultFormatter": "rflagreca.vscode-clj-zprint"
-    "editor.defaultFormatter": "betterthantomorrow.calva"
+    "editor.defaultFormatter": "rflagreca.vscode-clj-zprint"
+    // "editor.defaultFormatter": "betterthantomorrow.calva"
   },
   "calva.paredit.killAlsoCutsToClipboard": true,
   "calva.highlight.ignoredFormStyle": {
