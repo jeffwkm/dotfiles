@@ -40,6 +40,7 @@ in {
           [
             (optimize config fd)
             (optimize config lsd)
+            aichat
             asciinema
             asciinema-agg
             autossh
