@@ -379,24 +379,25 @@
   (setq! --gptel-anthropic (gptel-make-anthropic "Claude"
                              :stream t
                              :key (lambda () (--pass-get "keys/anthropic"))))
-  (let ((use-anthropic nil))
+  (let ((use-anthropic t))
     (if use-anthropic
         (setq! gptel-backend --gptel-anthropic
                gptel-model "claude-3-5-sonnet-20240620"
                gptel-api-key (lambda () (--pass-get "keys/anthropic")))
       (setq! gptel-backend gptel--openai
              gptel-model "gpt-4o"
-             gptel-api-key (lambda () (--pass-get "keys/openai"))))))
+             gptel-api-key (lambda () (--pass-get "keys/openai")))))
+  (map! "C-S-l" 'gptel-menu))
 
 (use-package! elysium
-  :commands elysium-query
   :defer-incrementally t
+  :commands elysium-query
   :config
   (use-package! smerge-mode)
-  (map! "C-S-K SPC" 'elysium-toggle-window
-        "C-S-K RET" 'elysium-query
-        "C-S-K c" 'elysium-keep-all-suggested-changes
-        "C-S-K k" 'elysium-discard-all-suggested-changes
+  (map! "C-S-k SPC" 'elysium-toggle-window
+        "C-S-k RET" 'elysium-query
+        "C-S-k c" 'elysium-keep-all-suggested-changes
+        "C-S-k k" 'elysium-discard-all-suggested-changes
         :leader
         "K SPC" 'elysium-toggle-window
         "K RET" 'elysium-query
