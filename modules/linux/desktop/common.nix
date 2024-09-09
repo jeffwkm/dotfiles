@@ -209,7 +209,7 @@ in {
             smartmontools
           ];
         gui = with pkgs;
-          [ pinentry-rofi pavucontrol ]
+          [ pinentry-rofi pavucontrol slack ]
           ++ optionals cfg.steam [ steamcmd steam-tui ];
         x11 = with pkgs; [
           mesa-demos

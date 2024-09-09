@@ -23,6 +23,7 @@ in {
           url."jeff@jeff-nixos:/home/jeff/".insteadOf = "jeff-nixos://";
           url."jeff@jeff-asahi:/home/jeff/".insteadOf = "jeff-asahi://";
           url."jeff@jeff-cloud.ddns.net:/git/".insteadOf = "jeff-cloud://";
+          github.user = "jeffwkm";
         };
       };
     };

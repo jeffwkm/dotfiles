@@ -368,6 +368,45 @@
   (map! :mode magit-mode
         :nv "/" nil))
 
+(use-package! forge
+  :after magit
+  :config
+  (setq auth-sources '("~/.authinfo")))
+
+(use-package! gptel
+  :defer-incrementally t
+  :config
+  (setq! --gptel-anthropic (gptel-make-anthropic "Claude"
+                             :stream t
+                             :key (lambda () (--pass-get "keys/anthropic"))))
+  (let ((use-anthropic nil))
+    (if use-anthropic
+        (setq! gptel-backend --gptel-anthropic
+               gptel-model "claude-3-5-sonnet-20240620"
+               gptel-api-key (lambda () (--pass-get "keys/anthropic")))
+      (setq! gptel-backend gptel--openai
+             gptel-model "gpt-4o"
+             gptel-api-key (lambda () (--pass-get "keys/openai"))))))
+
+(use-package! elysium
+  :commands elysium-query
+  :defer-incrementally t
+  :config
+  (use-package! smerge-mode)
+  (map! "C-S-K SPC" 'elysium-toggle-window
+        "C-S-K RET" 'elysium-query
+        "C-S-K c" 'elysium-keep-all-suggested-changes
+        "C-S-K k" 'elysium-discard-all-suggested-changes
+        :leader
+        "K SPC" 'elysium-toggle-window
+        "K RET" 'elysium-query
+        "K c" 'elysium-keep-all-suggested-changes
+        "K k" 'elysium-discard-all-suggested-changes))
+
+(use-package! smerge-mode
+  :defer t
+  :hook (prog-mode . smerge-mode))
+
 (map! :leader
       :desc "Kill sexp"
       "k" 'sp-kill-sexp

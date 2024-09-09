@@ -128,8 +128,8 @@
     "editor.formatOnType": true
   },
   "[clojure]": {
-    "editor.defaultFormatter": "rflagreca.vscode-clj-zprint"
-    // "editor.defaultFormatter": "betterthantomorrow.calva"
+    // "editor.defaultFormatter": "rflagreca.vscode-clj-zprint"
+    "editor.defaultFormatter": "betterthantomorrow.calva"
   },
   "calva.paredit.killAlsoCutsToClipboard": true,
   "calva.highlight.ignoredFormStyle": {
@@ -140,10 +140,10 @@
     "color": "#fbfbfb"
   },
   "calva.prettyPrintingOptions": {
-    "printEngine": "calva",
-    "enabled": true,
-    "width": 100,
-    "maxLength": 50
+    // "printEngine": "calva",
+    // "enabled": true
+    // "width": 100,
+    // "maxLength": 50
   },
   "calva.paredit.defaultKeyMap": "strict"
 }
