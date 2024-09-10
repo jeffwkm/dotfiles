@@ -25,6 +25,7 @@ in {
         }
       '';
       programs.firefox.profilePath = "v5o56gix.default-1722656138151";
+      programs.firefox.theme = "stealthfox/stealthFox";
       services.protonmail.enable = true;
       services.protonvpn = {
         enable = false;

@@ -209,7 +209,8 @@ in {
             smartmontools
           ];
         gui = with pkgs;
-          [ pinentry-rofi pavucontrol slack ]
+          [ pinentry-rofi pavucontrol ]
+          ++ optionals (pkgs.system == "x86_64-linux") [ slack ]
           ++ optionals cfg.steam [ steamcmd steam-tui ];
         x11 = with pkgs; [
           mesa-demos
