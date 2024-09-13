@@ -28,6 +28,7 @@ in {
         home.file."bin/".source = link "${config-dir}/bin";
         home.file.".tmux.conf".source = ./tmux.conf;
         xdg.configFile."htop/htoprc".source = link "${pwd}/htoprc";
+        xdg.configFile."bat/config".source = link "${pwd}/bat.config";
 
         programs.htop.enable = true;
         programs.htop.package = optimize config pkgs.htop;
@@ -45,6 +46,7 @@ in {
             asciinema-agg
             autossh
             babashka
+            bat
             comma
             curl
             entr
