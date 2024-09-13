@@ -932,12 +932,13 @@
     (pushnew! apheleia-formatters '(zprint "zprint" "{:search-config? true}"))
     (setq-hook! (clojure-mode clojurescript-mode clojurec-mode)
       +format-with-lsp nil
-      +format-with 'zprint))
+      +format-with 'cljfmt))
   (set-mode-name clojure-mode "CLJ")
   (set-mode-name clojurescript-mode "CLJS")
   (set-mode-name clojurec-mode "CLJC")
   (add-hook! (clojure-mode clojurescript-mode clojurec-mode) 'cider-mode 'apheleia-mode)
   (add-hook! (clojure-mode clojurescript-mode clojurec-mode cider-repl-mode) 'lispy-mode)
+  (add-hook! cider-repl-mode 'corfu-mode)
   (setq-hook! (clojure-mode clojurescript-mode clojurec-mode)
     lsp-lens-enable nil)
   (define-key! 'cider-mode-map

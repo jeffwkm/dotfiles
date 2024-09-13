@@ -404,6 +404,8 @@ interactively for spacing value."
              (not (display-graphic-p (window-frame window))))
         1 0)))
 
+(setq split-width-threshold 200)
+
 (defun split-window-prefer-horizontal (&optional window)
   "Modified version of `split-window-sensibly' that splits horizontally
    by default when allowed."

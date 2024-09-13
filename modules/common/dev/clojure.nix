@@ -19,6 +19,7 @@ in {
       home.packages = with pkgs; [
         boot
         clj-kondo
+        cljfmt
         clojure
         clojure-lsp
         leiningen
