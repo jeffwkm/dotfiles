@@ -10,11 +10,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ postgresql ];
-
     services.postgresql = {
       enable = true;
-      package = pkgs.postgresql_14;
+      package = pkgs.postgresql_16_jit;
       enableTCPIP = true;
       authentication = ''
         # TYPE  DATABASE        USER            ADDRESS                 METHOD
@@ -23,7 +21,5 @@ in {
         host    all             all             ::1/128                 trust
       '';
     };
-
-    home-manager.users.${user.name} = { config, pkgs, ... }: { };
   };
 }
