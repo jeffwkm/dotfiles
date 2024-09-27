@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eu -o pipefail
+
+cd /nix/var/nix/gcroots/auto
+
+find /nix/var/nix/gcroots/auto -maxdepth 1 -type l -print0 | xargs -0 -I {} bash -c 'if readlink "{}" | grep -qE ".*profiles/home-manager.*" ; then echo "{}"; fi'

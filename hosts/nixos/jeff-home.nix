@@ -57,23 +57,22 @@ with lib.my; {
 
     services.samba = {
       enable = true;
-      securityType = "user";
-      extraConfig = ''
-        disable netbios = yes
-        workgroup = WORKGROUP
-        server string = JEFF-HOME
-        netbios name = JEFF-HOME
-        security = user
-        # use sendfile = yes
-        max protocol = smb2
-        # note: localhost is the ipv6 localhost ::1
-        # hosts allow = 127.0.0.1 localhost 192.168.86.46
-        hosts allow = 192.168. 127.0.0.1 localhost 192.168.86. 192.168.1. 192.168.86.46
-        # hosts deny = 0.0.0.0/0
-        guest account = nobody
-        map to guest = bad user
-      '';
-      shares = {
+      settings = {
+        global = {
+          "disable netbios" = "yes";
+          workgroup = "WORKGROUP";
+          "server string" = "JEFF-HOME";
+          "netbios name" = "JEFF-HOME";
+          security = "user";
+          # "use sendfile" = "yes";
+          "max protocol" = "smb2";
+          # note: localhost is the ipv6 localhost ::1
+          "hosts allow" =
+            "192.168. 127.0.0.1 localhost 192.168.86. 192.168.1. 192.168.86.46";
+          # "hosts deny" = "0.0.0.0/0";
+          "guest account" = "nobody";
+          "map to guest" = "bad user";
+        };
         huge = {
           path = "/mnt/huge";
           browseable = "yes";

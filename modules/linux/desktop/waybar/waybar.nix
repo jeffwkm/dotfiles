@@ -13,7 +13,8 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays =
-      [ (final: prev: { waybar = optimize config prev.waybar; }) ];
+      [ # (final: prev: { waybar = optimize config prev.waybar; })
+      ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let link = config.lib.file.mkOutOfStoreSymlink;

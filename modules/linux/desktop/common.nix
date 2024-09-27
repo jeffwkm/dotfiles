@@ -22,6 +22,8 @@ in {
   config = mkIf cfg.enable {
     host.gui = true;
 
+    services.tailscale.enable = true;
+
     xdg.mime.defaultApplications = {
       "text/html" = browser;
       "x-scheme-handler/http" = browser;
@@ -175,7 +177,6 @@ in {
             gthumb
             gtk3
             gtk4
-            gtkperf
             libadwaita
             libpulseaudio
             nautilus

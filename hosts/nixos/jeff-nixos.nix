@@ -62,6 +62,9 @@ in {
       };
     };
 
+    # programs.hyprland.package =
+    #   inputs.hyprland.packages.${pkgs.system}.hyprland;
+
     nixpkgs.overlays = [
       inputs.hyprland-stable.overlays.default
       inputs.hyprpaper-stable.overlays.default
@@ -178,9 +181,9 @@ in {
       };
     };
 
-    # boot.kernelPackages = pkgs.linuxPackages;
+    boot.kernelPackages = pkgs.linuxPackages;
     # boot.kernelPackages = pkgs.linuxPackages_latest;
-    boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    # boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
