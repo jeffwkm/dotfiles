@@ -36,13 +36,13 @@
     hyprland = { url = "git+https://github.com/hyprwm/Hyprland?submodules=1"; };
     hyprpaper = {
       url = "github:hyprwm/hyprpaper";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "hyprland/nixpkgs";
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
     hyprland-stable = { url = "github:hyprwm/Hyprland/v0.39.1"; };
     hyprpaper-stable = {
       url = "github:hyprwm/hyprpaper/v0.6.0";
-      inputs.nixpkgs.follows = "nixpkgs-2311";
+      inputs.nixpkgs.follows = "hyprland-stable/nixpkgs";
       inputs.hyprlang.follows = "hyprland-stable/hyprlang";
     };
     ags = {

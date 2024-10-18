@@ -23,7 +23,7 @@ in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     # inputs.hyprland-stable.nixosModules.default
-    # inputs.hyprland.nixosModules.default
+    inputs.hyprland.nixosModules.default
   ] ++ (with inputs.chaotic.nixosModules; [
     nyx-cache
     nyx-overlay
@@ -66,15 +66,20 @@ in {
     #   inputs.hyprland.packages.${pkgs.system}.hyprland;
 
     nixpkgs.overlays = [
-      inputs.hyprland-stable.overlays.default
-      inputs.hyprpaper-stable.overlays.default
-      (final: prev: {
-        libliftoff = final.libliftoff_0_4;
-        xdg-desktop-portal-hyprland =
-          prev.xdg-desktop-portal-hyprland.override {
-            pipewire = pkgs.pkgs-stable.pipewire;
-          };
-      })
+      # inputs.hyprland-stable.overlays.default
+      # inputs.hyprpaper-stable.overlays.default
+
+      # (final: prev: {
+      #   hyprpaper = inputs.hyprpaper-stable.packages.${pkgs.system}.hyprpaper;
+      # })
+
+      # (final: prev: {
+      #   libliftoff = final.libliftoff_0_4;
+      #   xdg-desktop-portal-hyprland =
+      #     prev.xdg-desktop-portal-hyprland.override {
+      #       pipewire = pkgs.pkgs-stable.pipewire;
+      #     };
+      # })
     ];
 
     services.nginx = {
@@ -181,8 +186,8 @@ in {
       };
     };
 
-    boot.kernelPackages = pkgs.linuxPackages;
-    # boot.kernelPackages = pkgs.linuxPackages_latest;
+    # boot.kernelPackages = pkgs.linuxPackages;
+    boot.kernelPackages = pkgs.linuxPackages_latest;
     # boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
