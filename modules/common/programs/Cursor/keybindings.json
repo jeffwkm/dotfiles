@@ -334,5 +334,15 @@
     "key": "ctrl+alt+k",
     "command": "paredit.killSexpForward",
     "when": "isLinux && editorLangId == 'clojure' && editorTextFocus"
+  },
+  {
+    "key": "cmd+ctrl+shift+f",
+    "command": "editor.action.formatDocument",
+    "when": "isMac && editorFocus"
+  },
+  {
+    "key": "alt+ctrl+shift+f",
+    "command": "editor.action.formatDocument",
+    "when": "isLinux && editorFocus"
   }
 ]

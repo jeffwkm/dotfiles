@@ -2,8 +2,8 @@
   "workbench.colorTheme": "GitHub Dark",
   "workbench.iconTheme": "material-icon-theme",
   "window.zoomLevel": 0.0,
-  "window.titleBarStyle": "custom",
-  "window.menuBarVisibility": "classic",
+  "window.titleBarStyle": "native",
+  "window.menuBarVisibility": "hidden",
   "workbench.activityBar.orientation": "vertical",
   "editor.semanticTokenColorCustomizations": {
     "enabled": true
@@ -139,11 +139,21 @@
     "backgroundColor": "#ff6a40",
     "color": "#fbfbfb"
   },
-  "calva.prettyPrintingOptions": {
-    // "printEngine": "calva",
-    // "enabled": true
-    // "width": 100,
-    // "maxLength": 50
+  "calva.fmt.newIndentEngine": false,
+  "calva.fmt.configPath": ".cljfmt.edn",
+  // "calva.prettyPrintingOptions": {
+  //   // "printEngine": "calva"
+  //   // "enabled": true
+  //   // "width": 100,
+  //   // "maxLength": 50
+  // },
+  "calva.paredit.defaultKeyMap": "strict",
+  "editor.tokenColorCustomizations": {
+    "comments": {
+      "foreground": "#808080"
+    }
   },
-  "calva.paredit.defaultKeyMap": "strict"
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
