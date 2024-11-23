@@ -635,8 +635,9 @@
   (with-memoization (gethash name --pass-get-cache)
     (nth 0 (process-lines "pass" name))))
 
-(use-package! shell-maker)
-(use-package! chatgpt-shell
+;; (use-package! shell-maker)
+
+'(use-package! chatgpt-shell
   :init (use-package! shell-maker)
   :config
   (setq! chatgpt-shell-openai-key (fn! (--pass-get "keys/openai"))))

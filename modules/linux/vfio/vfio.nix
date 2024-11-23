@@ -41,7 +41,9 @@ in {
 
     systemd.services.libvirt-guests.after = [ "vm-define.service" ];
     systemd.services.libvirt-guests.requires = [ "vm-define.service" ];
-    systemd.services.libvirt-guests.environment = { SHUTDOWN_TIMEOUT = "45"; };
+    systemd.services.libvirt-guests.environment = {
+      SHUTDOWN_TIMEOUT = mkForce "45";
+    };
 
     systemd.user.services.scream = {
       enable = true;

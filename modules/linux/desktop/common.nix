@@ -187,7 +187,7 @@ in {
           optionals cfg.qt [ qt5.full qt5.qtwayland qt5ct adwaita-qt ];
         cli = with pkgs;
           [
-            cava
+            # cava
             ddcutil
             keyd
             latencytop

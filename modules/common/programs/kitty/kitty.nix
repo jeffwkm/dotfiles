@@ -28,7 +28,7 @@ in {
           extraConfig = ''
             include ~/.config/kitty/extra.conf
           '';
-          theme = "Catppuccin-Macchiato";
+          themeFile = "Catppuccin-Macchiato";
           shellIntegration.mode = "no-rc no-cursor";
         };
       };

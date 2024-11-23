@@ -7,8 +7,6 @@ let
     libva
     # amdvlk
     rocmPackages.clr.icd
-    rocm-opencl-icd
-    rocm-opencl-runtime
     libvdpau
   ];
   mesaPkgs32 = with pkgs.pkgsi686Linux; [
