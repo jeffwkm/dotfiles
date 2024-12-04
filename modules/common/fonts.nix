@@ -18,9 +18,6 @@ let
       input-fonts
       jetbrains-mono
       material-symbols
-      (nerdfonts.override {
-        fonts = [ "FiraCode" "Inconsolata" "JetBrainsMono" "Meslo" "Monoid" ];
-      })
       noto-fonts
       open-sans
       roboto
@@ -29,7 +26,8 @@ let
       source-sans-pro
       source-serif-pro
       termsyn
-    ] ++ optionals (!darwin) [ cantarell-fonts ];
+    ] ++ optionals (!darwin) [ cantarell-fonts ]
+    ++ (with pkgs.nerd-fonts; [ fira-code inconsolata jetbrains-mono monoid ]);
 in {
   options.modules.fonts = { enable = mkBoolOpt modules.desktop.enable; };
 

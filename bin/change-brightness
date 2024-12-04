@@ -34,7 +34,7 @@ popup_file=
 
 function parse_bus() {
   bus="$1"
-  if [ "$bus" == "5" ]; then
+  if [ "$bus" == "3" ]; then
     model="PA32U"
   elif [ "$bus" == "6" ]; then
     model="DELL P2715Q"
