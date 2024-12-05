@@ -10,7 +10,7 @@ in {
     enable = mkBoolOpt modules.desktop.enable;
     default = mkBoolOpt true;
     profilePath = mkOpt (nullOr str) null;
-    theme = mkOpt (nullOr str) "transparency";
+    theme = mkOpt (nullOr str) null;
   };
 
   config = mkIf cfg.enable {
