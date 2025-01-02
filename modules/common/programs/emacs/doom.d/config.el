@@ -637,7 +637,8 @@
 
 ;; (use-package! shell-maker)
 
-'(use-package! chatgpt-shell
+(use-package! chatgpt-shell
+  :disabled t
   :init (use-package! shell-maker)
   :config
   (setq! chatgpt-shell-openai-key (fn! (--pass-get "keys/openai"))))

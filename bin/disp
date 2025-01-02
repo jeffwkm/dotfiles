@@ -29,7 +29,7 @@
   (when msg (println msg)))
 
 (def input->vcp
-  {:mac "x13", :windows "x12", :linux "x0f"})
+  {:windows "x13", :mac "x11", :linux "x12"})
 
 (def vcp->input (->> (keys input->vcp)
                      (map (fn [i] {(input->vcp i) i}))
@@ -44,12 +44,12 @@
     (sh/sh "ssh" hostname cmd)))
 
 (defn get-display-vcp []
-  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d getvcp %d -t" 5 60)
+  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d getvcp %d -t" 3 60)
       (run-on-host "jeff-nixos")
       :out str/trim (str/split #" ") last))
 
 (defn set-display-vcp [vcp]
-  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d setvcp %d %s" 5 60 vcp)
+  (-> (format "sudo ddcutil --nousb --noverify --sleep-multiplier=0.2 -b %d setvcp %d %s" 3 60 vcp)
       (run-on-host "jeff-nixos")))
 
 (defn lookup-vcp [name-or-vcp]

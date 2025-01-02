@@ -15,11 +15,12 @@ input   *           accel_profile adaptive
 input   *           pointer_accel -0.5
 # input   *           accel_profile flat
 # input   *           pointer_accel 1
+input   *           xkb_options ctrl:nocaps
 
 
 ## display settings
-set $out1           DP-2
-set $out2           DP-3
+set $out1           HDMI-A-1
+set $out2           DP-1
 
 output  *           subpixel rgb
 output  *           max_render_time 4
@@ -34,7 +35,7 @@ exec swaymsg focus output $out1
 ######################################################################
 ### wm parameters
 ######################################################################
-font pango:JetBrainsMonoMedium Nerd Font 11
+font pango:JetBrainsMono NF Black 10
 
 # set $bg pexels-johannes-plenio-1632780.jpg
 # set $bg pexels-eberhard-grossgasteiger-1421898.jpg
@@ -44,9 +45,9 @@ output  *                 background #080808 solid_color
 ## window colors
 ##
 ## darkgrey/lightgrey
-client.focused            #999999 #999999 #f8f8f8 #aaaaaa
-client.focused_inactive   #707070 #555555 #cccccc #aaaaaa
-client.unfocused          #707070 #555555 #cccccc #aaaaaa
+client.focused            #b8b8b8 #afafaf #000000 #aaaaaa
+client.focused_inactive   #707070 #585858 #d8d8d8 #aaaaaa
+client.unfocused          #707070 #585858 #d8d8d8 #aaaaaa
 ##
 ## grey/blue
 # client.focused            #888888 #5098f8 #f8f8f8 #aaaaaa
@@ -56,10 +57,10 @@ client.unfocused          #707070 #555555 #cccccc #aaaaaa
 
 default_border pixel 2
 default_floating_border pixel 2
-titlebar_border_thickness 2
-titlebar_padding 5
+titlebar_border_thickness 4
+titlebar_padding 9 4
 
-set $default_gaps_inner 6
+set $default_gaps_inner 8
 set $default_gaps_outer 0
 gaps inner $default_gaps_inner
 gaps outer $default_gaps_outer
@@ -246,8 +247,8 @@ bindsym $Su+Space      move workspace to output right
 ######################################################################
 ### display control (DDC) bindings
 ######################################################################
-set $dp1                  5
-set $dp2                  6
+set $dp1                  3
+set $dp2                  4
 bindsym $Su+equal         exec change-brightness $dp1 + 2
 bindsym $Su+minus         exec change-brightness $dp1 - 2
 ## grave is `

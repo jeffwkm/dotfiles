@@ -36,7 +36,7 @@ function parse_bus() {
   bus="$1"
   if [ "$bus" == "3" ]; then
     model="PA32U"
-  elif [ "$bus" == "6" ]; then
+  elif [ "$bus" == "4" ]; then
     model="DELL P2715Q"
   else
     echoerr "Unknown display (bus=${bus})"
