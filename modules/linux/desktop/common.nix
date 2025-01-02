@@ -190,7 +190,6 @@ in {
             # cava
             ddcutil
             keyd
-            latencytop
             libinput
             libnotify
             ncpamixer
