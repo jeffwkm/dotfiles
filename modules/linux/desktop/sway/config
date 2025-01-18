@@ -57,8 +57,8 @@ client.unfocused          #707070 #585858 #d8d8d8 #aaaaaa
 
 default_border pixel 2
 default_floating_border pixel 2
-titlebar_border_thickness 4
-titlebar_padding 9 4
+titlebar_border_thickness 2
+titlebar_padding 10 5
 
 set $default_gaps_inner 8
 set $default_gaps_outer 0
