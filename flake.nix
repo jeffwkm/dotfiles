@@ -28,10 +28,10 @@
     };
     ### Additional sources
     emacs-overlay = {
-      url = "github:jeffwkm/emacs-overlay";
+      url = "github:nix-community/emacs-overlay";
+      # url = "github:jeffwkm/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.nixpkgs-stable.follows = "nixpkgs-stable";
-      inputs.flake-utils.follows = "flake-utils";
     };
     hyprland = { url = "git+https://github.com/hyprwm/Hyprland?submodules=1"; };
     hyprpaper = {

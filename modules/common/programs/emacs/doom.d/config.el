@@ -36,7 +36,7 @@
 (defvar --background-color nil)
 (load (expand-file-name "~/.config/config-nix.el"))
 ;; override default window opacity from nix
-(setq! --window-opacity 0.9)
+(setq! --window-opacity 0.86)
 
 (setq! split-window-preferred-function 'split-window-prefer-horizontal)
 

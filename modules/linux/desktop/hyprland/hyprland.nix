@@ -18,8 +18,10 @@ in {
 
   config = mkIf cfg.enable {
     nixpkgs.overlays = [
-      # inputs.hyprpaper.overlays.default
-      (final: prev: { hyprpaper = optimize' prev.hyprpaper; })
+      (final: prev: {
+        hyprpaper =
+          optimize' inputs.hyprpaper.packages.${pkgs.system}.hyprpaper;
+      })
     ];
 
     programs.hyprland.enable = true;

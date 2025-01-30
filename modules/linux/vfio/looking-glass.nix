@@ -19,16 +19,17 @@ in {
 
         home.packages = with pkgs;
           [
-            (looking-glass-client.overrideAttrs (old: {
-              src = fetchFromGitHub {
-                owner = "gnif";
-                repo = "LookingGlass";
-                rev = "d060e375ea47e4ca38894ea7bf02a85dbe29b1f8";
-                hash = "sha256-DuCznF2b3kbt6OfoOUD3ijJ1im7anxj25/xcQnIVnWc=";
-                fetchSubmodules = true;
-              };
-              patches = [ ];
-            }))
+            looking-glass-client
+            # (looking-glass-client.overrideAttrs (old: {
+            #   src = fetchFromGitHub {
+            #     owner = "gnif";
+            #     repo = "LookingGlass";
+            #     rev = "d060e375ea47e4ca38894ea7bf02a85dbe29b1f8";
+            #     hash = "sha256-DuCznF2b3kbt6OfoOUD3ijJ1im7anxj25/xcQnIVnWc=";
+            #     fetchSubmodules = true;
+            #   };
+            #   patches = [ ];
+            # }))
           ];
       };
   };
