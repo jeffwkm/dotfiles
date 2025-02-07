@@ -49,6 +49,7 @@ in {
             bat
             comma
             curl
+            datasette
             entr
             expect
             glow
@@ -61,6 +62,7 @@ in {
             inxi
             jc
             jq
+            llm
             mediainfo
             mods
             ncdu
