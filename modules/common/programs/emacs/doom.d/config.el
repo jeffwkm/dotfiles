@@ -10,11 +10,26 @@
         (message "Enabled emacs debugging")
       (message "Disabled emacs debugging"))
     enable))
+
 (pushnew! debug-ignored-errors
           'scan-sexps
           ".*debug-on-message.*"
           "\.\*Selecting deleted buffer\.\*"
           ".*Window.*too small.*")
+
+(defun --filter-messages (orig-fun format-string &rest args)
+  "Wrapper for `message' to hide spammy deprecation warnings.
+ORIG-FUN is the original `message' function.
+FORMAT-STRING and ARGS are the arguments passed to `message'."
+  (if (null format-string)
+      (apply orig-fun nil nil)
+    (let ((output (apply #'format-message format-string args)))
+      (unless (or (string-match ".*when-let.*" output)
+                  (string-match ".*if-let.*" output))
+        (apply orig-fun format-string args)))))
+
+(advice-add 'message :around #'--filter-messages)
+;; (advice-remove 'message #'--filter-messages)
 
 (require 'dash)
 (require 's)
@@ -878,7 +893,7 @@
   (use-package! org-ql)
   ;; (use-package! org-present)
   ;; (use-package! org-projectile)
-  (use-package! org-super-agenda :config (org-super-agenda-mode 1))
+  (use-package! org-super-agenda :config (unless org-super-agenda-mode (org-super-agenda-mode t)))
   (use-package! org-fancy-priorities)
   (use-package! org-superstar :config (setq org-superstar-special-todo-items t))
   (add-hook! org-mode 'org-fancy-priorities-mode)
@@ -1114,8 +1129,6 @@
     (save-excursion
       (switch-to-buffer buf)
       (cider-quit))))
-
-
 
 (defun --benchmark-sysrev ()
   (interactive)
