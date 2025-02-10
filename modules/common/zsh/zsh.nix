@@ -56,9 +56,11 @@ let
       __ = "sudo -i";
       dmesg = "sudo dmesg";
       top = "sudo btop";
+      cat = "bat";
       cd = "z";
       ".." = "z ..";
       cdi = "zi";
+      du = "du -h";
       f = "fzf";
       fI = "fzf --preview='timg -pk -g 60x80 -U -W {}'";
       e = "emacsclient -t -a emacs";

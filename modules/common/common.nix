@@ -72,6 +72,7 @@ in {
             p7zip
             pass
             procs
+            python3Packages.markdownify
             ripgrep
             rippkgs
             screenfetch

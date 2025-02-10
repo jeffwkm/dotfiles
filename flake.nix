@@ -68,13 +68,14 @@
 
   outputs = { self, ... }@inputs:
     let
-      ## extend lib with custom functions
+      # extend lib with custom functions under lib.my
       lib = inputs.nixpkgs.lib.extend (final: prev: {
         my = import ./lib {
           inherit inputs;
-          ## make nixpkgs.lib available and
-          ## allow for references between files in ./lib/*.nix
-          ## (as long as they don't create an infinite recursion)
+          # * make nixpkgs.lib available within ./lib
+          # * allow for references between files in ./lib
+          # * lazy evaluation means no infinite recursion here
+          #   unless there's a circular reference within ./lib
           lib = final;
         };
       });
@@ -91,13 +92,8 @@
     in {
       inherit inputs lib;
 
-      options = import ./nix/options-to-json.nix {
-        pkgs = import inputs.nixpkgs { config = nixpkgsConfig; };
-        options = self.nixosConfigurations.jeff-nixos.options;
-      };
-
       nixosConfigurations = (mapHosts' ./hosts/nixos "x86_64-linux")
-        // (mapHosts' ./hosts/apple "aarch64-linux");
+        // (mapHosts' ./hosts/asahi "aarch64-linux");
 
       darwinConfigurations = mapHosts' ./hosts/darwin "aarch64-darwin";
     };
