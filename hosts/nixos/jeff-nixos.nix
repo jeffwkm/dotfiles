@@ -21,7 +21,7 @@ in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     # inputs.hyprland-stable.nixosModules.default
-    inputs.hyprland.nixosModules.default
+    # inputs.hyprland.nixosModules.default
   ] ++ (with inputs.chaotic.nixosModules; [
     nyx-cache
     nyx-overlay
@@ -80,6 +80,9 @@ in {
       #     };
       # })
     ];
+
+    services.ddclient.enable = true;
+    services.ddclient.configFile = "/private/ddclient.conf";
 
     services.nginx = {
       enable = true;

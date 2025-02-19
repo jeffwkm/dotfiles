@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -eu
+
+cd ~/.config/ags2
+
+fd . -e .ts -e .tsx | entr -nrsz '
+  [[ -n "$(hyprctl instances -j | jq ".[].wl_socket" | grep wayland)" ]] || (
+    echo "stopping (hyprland is not running)"
+    exit 0
+  )
+  cd ~/.config/ags2
+  bun install --no-summary
+  ./build-css
+  ags run -d .
+'

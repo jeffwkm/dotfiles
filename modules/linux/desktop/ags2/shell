@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ags() {
+  [ -z "$1" ] && echo "github:aylur/ags" && return
+  echo "github:aylur/ags#${1}"
+}
+
+exec nix shell "nixpkgs#sass" "ags#io" "ags#agsFull" "$@"

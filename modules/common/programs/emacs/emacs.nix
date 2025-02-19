@@ -18,7 +18,7 @@ let
     ]);
   emacs-base = optimizePkg {
     enable = host.optimize;
-    level = 4;
+    level = 2;
     native = true;
   } (if darwin then
     pkgs.emacs29.overrideAttrs (old: {

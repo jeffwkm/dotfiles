@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import json, subprocess, sys, os, os.path, socket
+import json, subprocess, sys, os, os.path, socket, time
 
 
 class Cache:
@@ -49,7 +49,7 @@ class Util:
 class Monitors:
     def __init__(self):
         self.all = Monitors.list()
-        self.active = Monitors.get_active()
+        # self.active = Monitors.get_active()
 
     @staticmethod
     def list():
@@ -149,6 +149,21 @@ class Hyprpaper:
             Hyprpaper.apply(monitor, path)
 
     @staticmethod
+    def update_for_monitors(monitors_before):
+        monitor_ids = [monitor["id"] for monitor in monitors_before.all]
+        monitors = Monitors()
+        for monitor_id in monitor_ids:
+            before = monitors_before.get(monitor_id)
+            after = monitors.get(monitor_id)
+            before_ws_id = before["activeWorkspace"]["id"]
+            after_ws_id = after["activeWorkspace"]["id"]
+            before_group_id = Workspaces.to_group_id(before_ws_id)
+            after_group_id = Workspaces.to_group_id(after_ws_id)
+            if before_group_id != after_group_id:
+                Hyprpaper.set_for_workspace(after_ws_id)
+
+
+    @staticmethod
     ## Set the wallpaper for any monitors whose active workspace
     ## is in the given group.
     def apply_group(group_id):
@@ -188,6 +203,13 @@ class Hyprctl:
         return Util.run_command(["hyprctl", "dispatch"] + args)
 
     @staticmethod
+    def workspace(ws_arg):
+        monitors_before = Monitors()
+        Hyprctl.dispatch(["workspace", ws_arg])
+        time.sleep(0.01)
+        Hyprpaper.update_for_monitors(monitors_before)
+
+    @staticmethod
     def goto_workspace(digit_to):
         goto_id = None
 
@@ -215,7 +237,9 @@ class Hyprctl:
 
         if goto_id:
             Hyprctl.dispatch(["workspace", str(goto_id)])
-            Hyprpaper.set_for_workspace(goto_id)
+            goto_group = Workspaces.to_group_id(goto_id)
+            if goto_group != group_now:
+                Hyprpaper.set_for_workspace(goto_id, workspaces)
 
 
 class HyprSocket2:
@@ -236,6 +260,8 @@ if __name__ == "__main__":
 
     if cmd == "goto-workspace":
         Hyprctl.goto_workspace(int(sys.argv[2]))
+    if cmd == "workspace":
+        Hyprctl.workspace(sys.argv[2])
     elif cmd == "cycle-wallpaper":
         Hyprpaper.cycle_focused_wallpaper()
     elif cmd == "daemon":

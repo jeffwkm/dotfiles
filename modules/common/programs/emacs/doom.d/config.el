@@ -192,7 +192,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         :foreground ,(catppuccin-lighten "#cad3f5" 40)
         :background ,(catppuccin-lighten "#2f3244" 16))
       ;; `(hl-line :background ,(catppuccin-lighten "#2f3244" 2))
-      `(shadow :foreground ,(catppuccin-lighten "#6e738d" 25))
+      `(shadow :foreground ,(catppuccin-lighten "#6e738d" 50))
       `(lsp-inlay-hint-face :foreground ,(catppuccin-lighten "#6e738d" 25)))
 
     (defun --set-faces-on-frame (&optional frame)

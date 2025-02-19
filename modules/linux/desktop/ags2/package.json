@@ -1,0 +1,16 @@
+{
+    "dependencies": {
+        "astal": "/home/jeff/.local/share/ags",
+        "postcss": "^8.5.2",
+        "postcss-apply": "^0.12.0",
+        "postcss-calc": "^10.1.1",
+        "postcss-cli": "^11.0.0",
+        "postcss-color-alpha": "^2.0.0",
+        "postcss-custom-properties": "^14.0.4",
+        "postcss-discard": "^2.0.0",
+        "postcss-import": "^16.1.0",
+        "postcss-nested": "^7.0.2",
+        "postcss-preset-env": "^10.1.4"
+    },
+    "name": "astal-shell"
+}

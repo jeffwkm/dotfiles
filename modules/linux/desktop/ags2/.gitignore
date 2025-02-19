@@ -1,0 +1,5 @@
+/@girs
+/node_modules/
+/dist/
+.sass-cache
+style.out.*

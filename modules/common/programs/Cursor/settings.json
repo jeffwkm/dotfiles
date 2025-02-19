@@ -50,9 +50,7 @@
   "cursor.cpp.enablePartialAccepts": true,
   "cursor.cpp.disabledLanguages": ["plaintext", "markdown", "scminput"],
   "cursor.cmdk.autoSelect": true,
-  "cursor.cmdk.ghostTextAtSymbols": true,
   "cursor.cmdk.useThemedDiffBackground": true,
-  "cursor.chat.ghostTextAtSymbols": true,
   "cursor-retrieval.canAttemptGithubLogin": true,
   "cursor.aipreview.enabled": true,
   "cursor.general.enableShadowWorkspace": false,
@@ -153,10 +151,21 @@
   "calva.paredit.defaultKeyMap": "strict",
   "editor.tokenColorCustomizations": {
     "comments": {
-      "foreground": "#808080"
+      "foreground": "#989898"
     }
   },
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "cursor.diffs.useCharacterLevelDiffs": true,
+  "editor.unicodeHighlight.ambiguousCharacters": false
 }

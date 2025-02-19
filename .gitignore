@@ -5,7 +5,7 @@
 tmp
 result
 node_modules
-/.clj-kondo/
+.clj-kondo
 .lsp
 *.elc
 *.eln

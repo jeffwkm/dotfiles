@@ -1,0 +1,93 @@
+/* https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss */
+
+:root {
+  --bar-bg: oklch(0.175 0.05 283.91 / 0.75);
+
+  --text: oklch(0.8168 0.04 272.86 / 1);
+  --blue0: oklch(0.7497 0.11 263.81);
+  --blue: oklch(0.65 0.11 260);
+
+  --section-bg: oklch(from var(--text) l c h / 0.05);
+  /* --section-bg: white(0.01); */
+
+  --section-spacing: 3px;
+}
+
+window.Bar {
+  font-family: "sans";
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--text);
+  background: var(--bar-bg);
+  border-bottom: 1.5px solid oklch(from var(--bar-bg) calc(l * 1.5) calc(c * 1) h / 0.75);
+
+  > centerbox {
+    padding: 2px 4px;
+  }
+}
+
+/* button {} */
+
+.section {
+  padding: 2px 8px;
+  border: 1.8px solid oklch(from var(--bar-bg) 0.5 0.1 h / 0.7);
+  border-radius: 9999px;
+  background: var(--section-bg);
+  .Left & {
+    margin-right: calc(2 * var(--section-spacing));
+  }
+  .Right & {
+    margin-left: calc(2 * var(--section-spacing));
+  }
+  .Center & {
+    margin: 0px var(--section-spacing);
+  }
+}
+
+.section.WorkspaceGroup {
+  padding: 1px 10px;
+}
+
+.Workspace {
+  &:not(:last-child) {
+    margin-right: 5px;
+  }
+  font-family: "monospace";
+  font-weight: 800;
+  font-size: 12.5px;
+  color: oklch(from var(--text) 0.85 c h / 0.95);
+  &.focused {
+    color: oklch(from var(--text) 0.85 c h / 0.95);
+  }
+  &.active {
+    color: oklch(0.89 0.16 138);
+    &.focused {
+      color: oklch(0.92 0.2 138);
+    }
+  }
+}
+
+.section.ActiveTitle {
+  /* font-size: 12.5px; */
+  min-width: 100px;
+}
+
+button.TrayItem {
+  padding: 0px;
+  border: 0px;
+  border-radius: 9999px;
+  min-height: 18px;
+  icon {
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px;
+    border-radius: 9999px;
+  }
+}
+
+.section.Tray {
+  padding: 1px 3px;
+}
+
+/* .Date {} */
+/* .Time {} */

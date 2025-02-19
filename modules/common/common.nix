@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 with lib;
 let
   inherit (lib.my) mkBoolOpt optimize;
@@ -52,6 +52,7 @@ in {
             datasette
             entr
             expect
+            fastfetch
             glow
             gnugrep
             gnused

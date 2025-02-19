@@ -46,6 +46,10 @@
       inputs.hyprlang.follows = "hyprland-stable/hyprlang";
     };
     ags = {
+      url = "github:aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ags-v1 = {
       url = "github:aylur/ags/v1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -62,7 +66,6 @@
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-compat.follows = "flake-compat";
     };
   };
 
