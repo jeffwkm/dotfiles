@@ -10,6 +10,7 @@ let
     level = 2;
     native = true;
   };
+  hyprland-pkgs = inputs.hyprland.packages.${pkgs.system};
 in {
   options.modules.desktop.hyprland = {
     enable = mkBoolOpt modules.desktop.enable;
@@ -33,6 +34,8 @@ in {
       hyprlock
       hyprpaper
       hyprkeys
+      # hyprland-pkgs.hyprland
+      # hyprland-pkgs.xdg-desktop-portal-hyprland
     ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }:

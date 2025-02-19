@@ -21,7 +21,7 @@ in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     # inputs.hyprland-stable.nixosModules.default
-    # inputs.hyprland.nixosModules.default
+    inputs.hyprland.nixosModules.default
   ] ++ (with inputs.chaotic.nixosModules; [
     nyx-cache
     nyx-overlay
@@ -65,6 +65,7 @@ in {
     #   inputs.hyprland.packages.${pkgs.system}.hyprland;
 
     nixpkgs.overlays = [
+      # inputs.hyprland.overlays.default
       # inputs.hyprland-stable.overlays.default
       # inputs.hyprpaper-stable.overlays.default
 

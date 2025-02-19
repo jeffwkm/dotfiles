@@ -5,13 +5,13 @@ let
     pkg.overrideAttrs (attrs: {
       NIX_CFLAGS_COMPILE = (attrs.NIX_CFLAGS_COMPILE or "") + " ${flag}";
       CFLAGS = (attrs.CFLAGS or "") + " ${flag}";
-      # NIX_ENFORCE_NO_NATIVE = 0;
+      NIX_ENFORCE_NO_NATIVE = 0;
     });
   addFlagsC = pkg: flags: foldl' (pkg: flag: addFlagC pkg flag) pkg flags;
   addFlagRust = pkg: flag:
     pkg.overrideAttrs (attrs: {
       RUSTFLAGS = (attrs.RUSTFLAGS or "") + " ${flag}";
-      # NIX_ENFORCE_NO_NATIVE = 0;
+      NIX_ENFORCE_NO_NATIVE = 0;
     });
   addFlagsRust = pkg: flags: foldl' (pkg: flag: addFlagRust pkg flag) pkg flags;
   addFlags = pkg: { c, rust }: addFlagsRust (addFlagsC pkg c) rust;
