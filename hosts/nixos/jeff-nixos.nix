@@ -47,9 +47,9 @@ in {
       programs.firefox.profilePath = "wandke3d.default-1713652437057";
       # programs.firefox.theme = "stealthfox/stealthFox";
       programs.firefox.theme = null;
-      programs.mpv.extraConf = ''
-        ao=pulse # pipewire default gives crackling audio
-      '';
+      # programs.mpv.extraConf = ''
+      #   ao=pulse # pipewire default gives crackling audio
+      # '';
       services.protonmail.enable = true;
       services.protonvpn = {
         enable = false;
@@ -63,6 +63,8 @@ in {
 
     # programs.hyprland.package =
     #   inputs.hyprland.packages.${pkgs.system}.hyprland;
+    # programs.hyprland.portalPackage =
+    #   inputs.hyprland.inputs.xdph.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
 
     nixpkgs.overlays = [
       # inputs.hyprland.overlays.default

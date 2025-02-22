@@ -20,7 +20,8 @@ in {
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       imports = [ inputs.ags.homeManagerModules.default ];
 
-      home.packages = [ pkgs.sass ags-pkgs.io ags-pkgs.notifd ags-pkgs.tray ags-pkgs.docs ];
+      home.packages = (with pkgs; [ sass ])
+        ++ (with ags-pkgs; [ docs io notifd tray ]);
 
       programs.ags = {
         enable = true;

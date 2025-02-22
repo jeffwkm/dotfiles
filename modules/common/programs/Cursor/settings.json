@@ -81,10 +81,27 @@
   // "nvim-ui.nvimColorInsert": "#2F8F2F",
   // "nvim-ui.nvimColorVisual": "#673AB7",
   // "nvim-ui.nvimColorReplace": "#C06700",
-  "nix.serverPath": "nil",
+  "nix.serverPath": "nixd",
   "nix.enableLanguageServer": true,
   "nix.formatterPath": "nixfmt",
   "nix.serverSettings": {
+    "nixd": {
+      "formatting": {
+        "command": ["nixfmt", "-w", "80"]
+      },
+      "options": {
+        "nixpkgs": {
+          // "expr": "import (builtins.getFlake (toString <self>)).inputs.nixpkgs {}"
+          "expr": "import (builtins.getFlake \"/home/jeff/.config/nixpkgs/\").inputs.nixpkgs {}"
+        },
+        "nixos": {
+          "expr": "(builtins.getFlake \"/home/jeff/.config/nixpkgs/\").nixosConfigurations.jeff-nixos.options"
+        },
+        "home-manager": {
+          "expr": "(builtins.getFlake \"/home/jeff/.config/nixpkgs/\").homeConfigurations.default.options"
+        }
+      }
+    },
     "nil": {
       "formatting": {
         "command": ["/etc/profiles/per-user/jeff/bin/nixfmt", "-w", "80"]

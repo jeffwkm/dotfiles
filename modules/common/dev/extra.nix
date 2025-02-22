@@ -13,6 +13,7 @@ in {
 
     home-manager.users.${user.name} = {
       home.packages = with pkgs; [
+        cmake-language-server
         gnuplot
         go
         html-tidy

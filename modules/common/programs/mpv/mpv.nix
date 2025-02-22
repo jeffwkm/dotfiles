@@ -76,25 +76,32 @@ in {
     # ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }:
-      let link = config.lib.file.mkOutOfStoreSymlink;
+      let
+        link = config.lib.file.mkOutOfStoreSymlink;
+        mpvExtraDarwin = if darwin then ''
+          input-ipc-server=/tmp/mpvsocket
+        '' else
+          "";
+        mpvExtraVapoursynth = lib.optionalString cfg.vapoursynth ''
+          vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
+        '';
+        inputExtraVapoursynth = lib.optionalString cfg.vapoursynth ''
+          I vf toggle format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
+        '';
+        mpvRateSh = "${user.home}/bin.local/mpv-rate.sh";
+        runMpvRate = arg: ''
+          Ctrl+${arg} run "${mpvRateSh}" "''${filename}" "''${working-directory}" "''${path}" "${arg}"
+        '';
+        inputExtraMpvRate =
+          foldl' (c: arg: c + runMpvRate (toString arg)) "" (range 1 5);
+        mpvExtra = mpvExtraDarwin + mpvExtraVapoursynth;
+        inputExtra = inputExtraVapoursynth + inputExtraMpvRate;
       in {
         home.packages = with pkgs;
           optionals (!darwin) [ mpv mpvc celluloid ffmpeg ]
           ++ optionals cfg.vapoursynth [ vapoursynth vapoursynth-mvtools ];
 
-        xdg.configFile = let
-          mpvExtra = (if darwin then ''
-            input-ipc-server=/tmp/mpvsocket
-          '' else
-            "" + (if cfg.vapoursynth then ''
-              vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
-            '' else
-              ""));
-          inputExtra = (if cfg.vapoursynth then ''
-            I vf toggle format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
-          '' else
-            "");
-        in {
+        xdg.configFile = {
           "mpv/mpv.conf".text = (readFile ./mpv.conf) + mpvExtra
             + cfg.extraConf;
           "mpv/input.conf".text = (readFile ./input.conf) + inputExtra;

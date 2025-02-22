@@ -131,6 +131,20 @@ in {
       # };
     };
 
+    services.redshift = {
+      enable = true;
+      package = pkgs.gammastep;
+      executable = "/bin/gammastep";
+      temperature.day = 6250;
+      temperature.night = 5750;
+    };
+
+    location = {
+      provider = "manual";
+      latitude = 38.98465;
+      longitude = -77.094711;
+    };
+
     xdg.portal = {
       enable = true;
       extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
@@ -247,9 +261,10 @@ in {
           tweaks = [ "normal" ];
         });
         catppuccin = [ pkgs.catppuccin catppuccin-mocha catppuccin-macchiato ];
+        gammastep = [ pkgs.gammastep ];
       in {
         home.packages = gnomePackages ++ qtPackages ++ cli ++ gui ++ themes
-          ++ x11 ++ catppuccin;
+          ++ x11 ++ catppuccin ++ gammastep;
 
         services.easyeffects = { enable = true; };
         services.pass-secret-service.enable = true;

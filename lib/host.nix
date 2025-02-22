@@ -13,8 +13,7 @@ let
     else
       home-manager.nixosModules.home-manager)
     ({ config, ... }: {
-      nix.nixPath =
-        optionals darwin [ "darwin-config=${config.host.config-dir}" ];
+      nix.nixPath = optional darwin "darwin-config=${config.host.config-dir}";
 
       users.users.${config.user.name}.home = "${config.user.home}";
 
@@ -33,7 +32,7 @@ let
     })
   ];
 in rec {
-  mkHost = { system, nixpkgsConfig, overlays }:
+  mkHost = { self, system, nixpkgsConfig, overlays }:
     path:
     let
       darwin = lib.strings.hasSuffix "darwin" system;
@@ -42,7 +41,7 @@ in rec {
       ignore = if darwin then ignoreLinux else ignoreDarwin;
     in mkSystem {
       inherit system;
-      specialArgs = { inherit lib inputs system; };
+      specialArgs = { inherit lib inputs system self; };
       modules = [
         ({ lib, config, ... }: {
           options =
@@ -51,7 +50,10 @@ in rec {
             host.darwin = darwin;
             host.name = hostname;
             networking.hostName = mkDefault hostname;
-            nix.nixPath = [ "nixpkgs=${config.host.config-dir}/nixpkgs.nix" ];
+            nix.nixPath = [
+              "nixpkgs=${config.host.config-dir}/nixpkgs.nix"
+              "self=${config.host.config-dir}"
+            ];
           };
         })
         {
@@ -64,7 +66,6 @@ in rec {
         ++ (mapModulesRec' (toString ../modules) importModule ignore);
     };
 
-  mapHosts = dir:
-    attrs@{ system, nixpkgsConfig, overlays }:
+  mapHosts = dir: attrs: # @{ system, nixpkgsConfig, overlays }:
     mapModules dir (hostPath: mkHost attrs hostPath);
 }

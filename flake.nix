@@ -89,7 +89,7 @@
 
       mapHosts' = dir: system:
         lib.my.mapHosts dir {
-          inherit system nixpkgsConfig;
+          inherit system nixpkgsConfig self;
           overlays = lib.attrValues overlays;
         };
     in {
@@ -99,5 +99,22 @@
         // (mapHosts' ./hosts/asahi "aarch64-linux");
 
       darwinConfigurations = mapHosts' ./hosts/darwin "aarch64-darwin";
+
+      homeConfigurations.default =
+        inputs.home-manager.lib.homeManagerConfiguration {
+          inherit lib;
+          pkgs = inputs.nixpkgs.legacyPackages.${builtins.currentSystem};
+          modules = [
+            ({ lib, config, ... }: {
+              options =
+                (import ./hosts/options.nix { inherit lib config; }).options;
+              config = {
+                home.username = "${config.user.name}";
+                home.homeDirectory = "${config.user.home}";
+                home.stateVersion = "24.05";
+              };
+            })
+          ];
+        };
     };
 }
