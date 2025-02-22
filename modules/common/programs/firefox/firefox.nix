@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 with lib;
 let
   inherit (lib.my) mkBoolOpt mkOpt;
@@ -29,10 +29,6 @@ in {
               layers.acceleration.force-enabled = true;
               gfx.webrender.all = true;
               svg.context-properties.content.enabled = true;
-              browser.newtabpage.activity-stream.newtabWallpapers.enabled =
-                (cfg.theme == "neptune");
-              browser.newtabpage.activity-stream.newtabWallpapers.v2.enabled =
-                (cfg.theme == "neptune");
             };
           };
         };
