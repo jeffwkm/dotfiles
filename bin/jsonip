@@ -2,9 +2,9 @@
 import json, urllib, urllib.request, sys, os
 
 for url, field in [
-    ("http://jsonip.com", "ip"),
+    # ("http://jsonip.com", "ip"),
+    ("https://api.ipify.org/?format=json", "ip"),
     ("http://httpbin.org/ip", "origin"),
-    ("http://ip.jsontest.com", "ip"),
 ]:
     try:
         response = urllib.request.urlopen(url, timeout=0.333)

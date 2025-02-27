@@ -1090,6 +1090,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       :package-version '(lsp-mode . "8.0.1"))
     (setq! lsp-nix-rnix-server-path nil
            lsp-nix-nil-server-path "nil"
+           ;; lsp-nix-nil-server-path nil
            lsp-nix-nil-formatter ["nixfmt" "-w" "80"]
            lsp-nix-nil-auto-archive t
            lsp-nix-nil-auto-eval-inputs nil

@@ -11,17 +11,14 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays =
-      [ (final: prev: { ags = optimize config prev.agsFull; }) ];
-
     nix.registry.ags.flake = inputs.ags;
     nix.registry.ags-v1.flake = inputs.ags-v1;
 
-    home-manager.users.${user.name} = { config, pkgs, ... }: {
+    home-manager.users.${user.name} = { pkgs, ... }: {
       imports = [ inputs.ags.homeManagerModules.default ];
 
       home.packages = (with pkgs; [ sass ])
-        ++ (with ags-pkgs; [ docs io notifd tray ]);
+        ++ (with ags-pkgs; [ io notifd tray ]);
 
       programs.ags = {
         enable = true;
@@ -30,8 +27,6 @@ in {
         extraPackages = (with ags-pkgs; [
           battery
           cava
-          docs
-          gjs
           hyprland
           io
           mpris

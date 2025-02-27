@@ -5,7 +5,7 @@ let
     vaapiVdpau
     libvdpau-va-gl
     libva
-    # amdvlk
+    amdvlk
     rocmPackages.clr.icd
     libvdpau
   ];
@@ -13,7 +13,7 @@ let
     vaapiVdpau
     libvdpau-va-gl
     libva
-    # amdvlk
+    amdvlk
     vdpauinfo
     libva-utils
   ];
@@ -192,8 +192,8 @@ in {
     };
 
     # boot.kernelPackages = pkgs.linuxPackages;
-    boot.kernelPackages = pkgs.linuxPackages_latest;
-    # boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    # boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
@@ -234,8 +234,17 @@ in {
       extraPackages32 = mesaPkgs32;
     };
 
+    hardware.amdgpu = {
+      opencl.enable = true;
+      amdvlk = {
+        enable = true;
+        support32Bit.enable = true;
+        supportExperimental.enable = true;
+      };
+    };
+
     chaotic.mesa-git = {
-      enable = false;
+      enable = true;
       extraPackages = mesaPkgs;
       extraPackages32 = mesaPkgs32;
     };
