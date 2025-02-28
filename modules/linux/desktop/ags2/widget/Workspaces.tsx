@@ -1,4 +1,4 @@
-import { bind, Variable } from "astal";
+import { bind, Binding, Variable } from "astal";
 import { Gtk } from "astal/gtk3";
 import Hyprland from "gi://AstalHyprland?version=0.1";
 import Pango from "gi://Pango?version=1.0";
@@ -72,7 +72,7 @@ const WorkspaceGroup = (props: WorkspaceGroupProps) => {
   if (visibleItems.length === 0) return null;
 
   return (
-    <box className={"WorkspaceGroup section"}>
+    <box className={"WorkspaceGroup section"} vexpand={true} valign={Gtk.Align.CENTER}>
       {visibleItems.map((item) => (
         <Workspace {...item} />
       ))}
@@ -108,7 +108,12 @@ const Workspaces = (props: WorkspacesProps) => {
   );
 };
 
-const ActiveTitle = () => {
+type ActiveTitleProps = {
+  focused: Binding<boolean>;
+};
+
+const ActiveTitle = (props: ActiveTitleProps) => {
+  const { focused } = props;
   const text = Variable(hyprland.get_focused_client()?.get_title() ?? "");
 
   const client = bind(hyprland, "focused_client");
@@ -124,12 +129,14 @@ const ActiveTitle = () => {
     }
   });
 
+  const visible = Variable.derive([text, focused], (text, focused) => text.length > 0 && focused);
+
   return (
     <box
       className={"ActiveTitle section"}
       hexpand={true}
       halign={Gtk.Align.CENTER}
-      visible={text((text) => text.length > 0)}
+      visible={visible()}
     >
       <label
         maxWidthChars={80}
@@ -142,6 +149,6 @@ const ActiveTitle = () => {
   );
 };
 
-export { ActiveTitle };
+export { ActiveTitle, hyprland };
 
 export default Workspaces;
