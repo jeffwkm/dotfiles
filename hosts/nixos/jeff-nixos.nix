@@ -5,7 +5,7 @@ let
     vaapiVdpau
     libvdpau-va-gl
     libva
-    amdvlk
+    # amdvlk
     rocmPackages.clr.icd
     libvdpau
   ];
@@ -13,7 +13,7 @@ let
     vaapiVdpau
     libvdpau-va-gl
     libva
-    amdvlk
+    # amdvlk
     vdpauinfo
     libva-utils
   ];
@@ -47,9 +47,6 @@ in {
       programs.firefox.profilePath = "wandke3d.default-1713652437057";
       # programs.firefox.theme = "stealthfox/stealthFox";
       programs.firefox.theme = null;
-      # programs.mpv.extraConf = ''
-      #   ao=pulse # pipewire default gives crackling audio
-      # '';
       services.protonmail.enable = true;
       services.protonvpn = {
         enable = false;
@@ -65,24 +62,6 @@ in {
     #   inputs.hyprland.packages.${pkgs.system}.hyprland;
     # programs.hyprland.portalPackage =
     #   inputs.hyprland.inputs.xdph.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
-
-    nixpkgs.overlays = [
-      # inputs.hyprland.overlays.default
-      # inputs.hyprland-stable.overlays.default
-      # inputs.hyprpaper-stable.overlays.default
-
-      # (final: prev: {
-      #   hyprpaper = inputs.hyprpaper-stable.packages.${pkgs.system}.hyprpaper;
-      # })
-
-      # (final: prev: {
-      #   libliftoff = final.libliftoff_0_4;
-      #   xdg-desktop-portal-hyprland =
-      #     prev.xdg-desktop-portal-hyprland.override {
-      #       pipewire = pkgs.pkgs-stable.pipewire;
-      #     };
-      # })
-    ];
 
     services.ddclient.enable = true;
     services.ddclient.configFile = "/private/ddclient.conf";
@@ -235,12 +214,12 @@ in {
     };
 
     hardware.amdgpu = {
-      opencl.enable = true;
-      amdvlk = {
-        enable = true;
-        support32Bit.enable = true;
-        supportExperimental.enable = true;
-      };
+      # opencl.enable = true;
+      # amdvlk = {
+      #   enable = true;
+      #   support32Bit.enable = true;
+      #   supportExperimental.enable = true;
+      # };
     };
 
     chaotic.mesa-git = {
