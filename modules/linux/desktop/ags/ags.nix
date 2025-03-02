@@ -12,7 +12,6 @@ in {
 
   config = mkIf cfg.enable {
     nix.registry.ags.flake = inputs.ags;
-    nix.registry.ags-v1.flake = inputs.ags-v1;
 
     home-manager.users.${user.name} = { pkgs, ... }: {
       imports = [ inputs.ags.homeManagerModules.default ];

@@ -18,17 +18,14 @@ let
     libva-utils
   ];
 in {
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-    # inputs.hyprland-stable.nixosModules.default
-    inputs.hyprland.nixosModules.default
-  ] ++ (with inputs.chaotic.nixosModules; [
-    nyx-cache
-    nyx-overlay
-    mesa-git
-    # scx
-    # zfs-impermanence-on-shutdown
-  ]);
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ]
+    ++ (with inputs.chaotic.nixosModules; [
+      nyx-cache
+      nyx-overlay
+      mesa-git
+      # scx
+      # zfs-impermanence-on-shutdown
+    ]);
 
   config = {
     host.optimize = true;
@@ -45,8 +42,11 @@ in {
         }
       '';
       programs.firefox.profilePath = "wandke3d.default-1713652437057";
-      # programs.firefox.theme = "stealthfox/stealthFox";
-      programs.firefox.theme = null;
+      programs.mpv.extraConf = ''
+        vo=gpu-next
+        gpu-context=waylandvk
+        gpu-api=vulkan
+      '';
       services.protonmail.enable = true;
       services.protonvpn = {
         enable = false;
@@ -57,11 +57,6 @@ in {
         musicDirectory = "/mnt/huge/Music";
       };
     };
-
-    # programs.hyprland.package =
-    #   inputs.hyprland.packages.${pkgs.system}.hyprland;
-    # programs.hyprland.portalPackage =
-    #   inputs.hyprland.inputs.xdph.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
 
     services.ddclient.enable = true;
     services.ddclient.configFile = "/private/ddclient.conf";
@@ -191,21 +186,20 @@ in {
       "amd_iommu=on"
       "iommu=pt"
       "rd.driver.pre=vfio-pci"
-      "hugepagesz=1G"
-      "default_hugepagesz=1G"
-      "hugepages=17"
+      # "hugepagesz=1G"
+      # "default_hugepagesz=1G"
+      # "hugepages=17"
       "vfio-pci.ids=10de:2783,10de:22bc,1912:0014"
       "vfio-pci.disable_vga=1"
+      "vfio-pci.disable_idle_d3=1"
+      "pcie_aspm=off"
       "kvm.ignore_msrs=1"
       "kvm.report_ignored_msrs=0"
       "kvm_amd.nested=0"
-      "mitigations=off"
     ];
 
     hardware.cpu.amd.updateMicrocode = true;
     hardware.enableAllFirmware = true;
-
-    # chaotic.hdr.enable = true;
 
     hardware.graphics = {
       enable = true;

@@ -43,7 +43,7 @@ in {
     boot.initrd.kernelModules = [ ];
     boot.kernelModules = [ ];
     boot.extraModulePackages = [ ];
-    boot.kernelParams = [ "mitigations=off" ];
+    boot.kernelParams = [ ];
     ## hardware
     fileSystems = {
       "/" = {

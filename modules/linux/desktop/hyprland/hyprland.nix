@@ -5,12 +5,6 @@ let
   inherit (config) user host modules;
   cfg = modules.desktop.hyprland;
   pwd = "${host.config-dir}/modules/linux/desktop/hyprland";
-  optimize' = optimizePkg {
-    enable = host.optimize;
-    level = 2;
-    native = true;
-  };
-  hyprland-pkgs = inputs.hyprland.packages.${pkgs.system};
 in {
   options.modules.desktop.hyprland = {
     enable = mkBoolOpt modules.desktop.enable;
@@ -18,24 +12,13 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [
-      (final: prev: {
-        hyprpaper =
-          optimize' inputs.hyprpaper.packages.${pkgs.system}.hyprpaper;
-      })
-    ];
-
     programs.hyprland.enable = true;
-    # programs.hyprland.package =
-    #   inputs.hyprland.packages.${pkgs.system}.hyprland;
 
     environment.systemPackages = with pkgs; [
       hypridle
       hyprlock
       hyprpaper
       hyprkeys
-      # hyprland-pkgs.hyprland
-      # hyprland-pkgs.xdg-desktop-portal-hyprland
     ];
 
     home-manager.users.${user.name} = { config, pkgs, ... }:

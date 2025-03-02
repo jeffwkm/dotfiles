@@ -408,7 +408,6 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   :defer-incrementally t
   :commands elysium-query
   :config
-  (use-package! smerge-mode)
   (map! "C-S-k SPC" 'elysium-toggle-window
         "C-S-k RET" 'elysium-query
         "C-S-k c" 'elysium-keep-all-suggested-changes
@@ -543,6 +542,17 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       "Face for displaying curly brackets."
       :group 'paren-face)))
 ;; (add-hook! 'after-make-frame-functions '--init-copy-paste)
+
+(require 'evil)
+
+(defun --unmap-smerge-mode-g-c ()
+  ;; fix keymap conflict with evil-nerd-commenter
+  (map! :mode smerge-mode
+        :n "g c" nil))
+
+(after! evil-core
+  (after! smerge-mode
+    (add-hook! evil-local-mode '--unmap-smerge-mode-g-c)))
 
 (defun --emacs-startup ()
   (auto-compression-mode 1)
