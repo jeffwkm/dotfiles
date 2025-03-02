@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+refresh_rate=$1
+set +u ; name=$2 ; set -u
+
+m=
+if [ -n "$name" ]; then
+    m=$(hyprctl monitors -j | jq ".[] | select(.name == \"$name\")")
+    if [ -z "$m" ]; then
+        echo "Monitor \"$name\" not found"
+        exit 1
+    fi
+else
+    m=$(hyprctl monitors -j  | jq '.[] | select(.x == 0 and .y == 0)')
+    name=$(echo "$m" | jq -r .name)
+    if [ -z "$m" ]; then
+        echo "No primary monitor found"
+        exit 1
+    fi
+fi
+
+width=$(echo "$m" | jq .width)
+height=$(echo "$m" | jq .height)
+x=$(echo "$m" | jq .x)
+y=$(echo "$m" | jq .y)
+scale=$(echo "$m" | jq .scale)
+color_format=$(echo "$m" | jq -r .currentFormat)
+is_10_bit=$(echo "$color_format" | grep -q 101010 && echo true || echo false)
+bitdepth=$(if [ "$is_10_bit" == "true" ]; then echo 10; else echo 8; fi)
+
+args="${name}, ${width}x${height}@${refresh_rate}, ${x}x${y}, ${scale}, bitdepth, ${bitdepth}"
+echo >&2 "> hyprctl keyword monitor '$args'"
+hyprctl keyword monitor "$args"

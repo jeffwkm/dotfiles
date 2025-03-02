@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ENABLE_HDR_WSI=1 exec mpv --target-colorspace-hint --target-gamut=bt.2020 --target-prim=bt.2020 --target-trc=pq --vf= --hwdec=auto "$@"
