@@ -1,6 +1,8 @@
-{ config, options, pkgs, lib, modulesPath, ... }:
+{ config, options, pkgs, lib, inputs, modulesPath, ... }:
 with lib;
-with lib.my; {
+with lib.my;
+let inherit (config) user;
+  in {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   config = {
@@ -14,17 +16,8 @@ with lib.my; {
         "/private/wg-quick/protonvpn-US-NY-306.conf";
     };
 
-    nixpkgs.overlays = [
-      (final: prev: {
-        libtorrent = optimizePkg { level = 3; } prev.libtorrent;
-        rtorrent = optimizePkg { level = 3; } prev.rtorrent;
-      })
-    ];
-
     environment.systemPackages = with pkgs; [
       firmwareLinuxNonfree
-      rtorrent
-      pyrosimple
     ];
 
     networking.useDHCP = true;
@@ -52,8 +45,17 @@ with lib.my; {
     hardware.cpu.intel.updateMicrocode = true;
     hardware.enableAllFirmware = true;
 
-    networking.firewall.allowedTCPPorts = [ 32838 ];
-    networking.firewall.allowedUDPPorts = [ 32838 42170 ];
+    networking.firewall.enable = false;
+    networking.firewall.allowedTCPPorts = [ ];
+    networking.firewall.allowedUDPPorts = [ ];
+
+    services.deluge.enable = true;
+    services.deluge.web.enable = true;
+
+    services.plex.enable = true;
+    services.plex.dataDir = "/mnt/huge/jeff-home/var/lib/plex";
+
+    users.users.${user.name}.extraGroups = [ "deluge" ];
 
     services.samba = {
       enable = true;
@@ -68,7 +70,7 @@ with lib.my; {
           "max protocol" = "smb2";
           # note: localhost is the ipv6 localhost ::1
           "hosts allow" =
-            "192.168. 127.0.0.1 localhost 192.168.86. 192.168.1. 192.168.86.46";
+            "192.168. 127.0.0.1 localhost 192.168.86. 192.168.1. 192.168.86.46 192.168.1.161";
           # "hosts deny" = "0.0.0.0/0";
           "guest account" = "nobody";
           "map to guest" = "bad user";

@@ -52,8 +52,8 @@ in {
           regctl
           skopeo
           subversion
-        ] ++ optionals (pkgs.system != "aarch64-linux" && !host.minimal)
-        [ semgrep ];
+        ]; # ++ optionals (pkgs.system != "aarch64-linux" && !host.minimal)
+        # [ semgrep ];
     };
   };
 }

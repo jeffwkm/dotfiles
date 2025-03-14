@@ -21,7 +21,7 @@ let
     level = 4;
     native = true;
   } (if darwin then
-    pkgs.emacs29.overrideAttrs (old: {
+    pkgs.emacs30.overrideAttrs (old: {
       patches = (old.patches or [ ]) ++ [
         # Fix OS window role so that yabai can pick up emacs
         (fetchpatch {
@@ -57,7 +57,7 @@ let
   # pkgs.emacs-30-pgtk # emacs-30 branch from fork of emacs-overlay
   # pkgs.emacs-pgtk # git master from emacs-overlay
   else
-    pkgs.emacs29-nox);
+    pkgs.emacs30-nox);
 in {
   options = {
     modules.programs.emacs = {
