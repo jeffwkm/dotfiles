@@ -53,9 +53,9 @@ let
     })
   else if modules.desktop.enable then
     pkgs.emacs30-pgtk
-  # pkgs.emacs29-pgtk # stable from nixpkgs
-  # pkgs.emacs-30-pgtk # emacs-30 branch from fork of emacs-overlay
-  # pkgs.emacs-pgtk # git master from emacs-overlay
+    # pkgs.emacs29-pgtk # stable from nixpkgs
+    # pkgs.emacs-30-pgtk # emacs-30 branch from fork of emacs-overlay
+    # pkgs.emacs-pgtk # git master from emacs-overlay
   else
     pkgs.emacs30-nox);
 in {

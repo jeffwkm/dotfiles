@@ -545,8 +545,12 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 
 (require 'evil)
 
-(defun --unmap-smerge-mode-g-c ()
-  ;; fix keymap conflict with evil-nerd-commenter
+(after! smerge-mode
+  (require 'evil-core)
+  (require 'evil-states)
+  (require 'evil-integration)
+  (require 'evil-maps)
+  (require 'evil-args)
   (map! :mode smerge-mode
         :n "g c" nil))
 
@@ -1099,8 +1103,8 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       :lsp-path "nil.nix.flake.nixpkgsInputName"
       :package-version '(lsp-mode . "8.0.1"))
     (setq! lsp-nix-rnix-server-path nil
-           lsp-nix-nil-server-path "nil"
-           ;; lsp-nix-nil-server-path nil
+           ;; lsp-nix-nil-server-path "nil"
+           lsp-nix-nil-server-path nil
            lsp-nix-nil-formatter ["nixfmt" "-w" "80"]
            lsp-nix-nil-auto-archive t
            lsp-nix-nil-auto-eval-inputs nil

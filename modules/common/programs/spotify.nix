@@ -22,9 +22,7 @@ in {
       programs.spicetify = mkIf gui {
         enable = true;
         # theme = spicePkgs.themes.text;
-        # colorScheme = "CatppuccinMacchiato";
         theme = spicePkgs.themes.catppuccin;
-        # colorScheme = "mocha";
         colorScheme = "macchiatto";
         enabledExtensions = with spicePkgs.extensions; [
           shuffle
@@ -40,13 +38,8 @@ in {
           withPulseAudio = true;
           withMpris = true;
         };
-        settings = {
-          global = {
-            username = "${user.email}";
-            password_cmd = "pass show media/spotify";
-            device_name = "${host.name}";
-          };
-        };
+        # run `spotifyd auth` to store credentials to ~/.cache/spotifyd/oauth
+        settings = { global = { device_name = "${host.name}"; }; };
       };
     };
   };

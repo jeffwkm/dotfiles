@@ -184,5 +184,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "cursor.diffs.useCharacterLevelDiffs": true,
-  "editor.unicodeHighlight.ambiguousCharacters": false
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "diffEditor.ignoreTrimWhitespace": false
 }

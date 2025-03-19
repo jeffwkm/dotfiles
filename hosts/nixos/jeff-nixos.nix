@@ -60,6 +60,7 @@ in {
 
     services.ddclient.enable = true;
     services.ddclient.configFile = "/private/ddclient.conf";
+    services.ddclient.interval = "1h";
 
     services.nginx = {
       enable = true;
@@ -164,6 +165,11 @@ in {
         options = [ "bind" ];
       };
     };
+
+    swapDevices = [{
+      device = "/swapfile";
+      size = 32 * 1024; # 32GB
+    }];
 
     # boot.kernelPackages = pkgs.linuxPackages;
     # boot.kernelPackages = pkgs.linuxPackages_latest;

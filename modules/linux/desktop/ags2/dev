@@ -11,5 +11,5 @@ fd . -e .ts -e .tsx | entr -nrsz '
   cd ~/.config/ags2
   bun install --no-summary
   ./build-css
-  ags run -d .
+  ags run -d . 2>&1 | grep -v "Failed to cache cover art"
 '

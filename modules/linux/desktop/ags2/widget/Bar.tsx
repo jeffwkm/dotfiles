@@ -4,6 +4,7 @@ import Sound from "./Sound";
 import { Date, Time } from "./DateTime";
 import Tray from "./Tray";
 import { bind } from "astal";
+import Media from "./Media";
 type BarProps = {
   monitorId: number;
   monitor: Gdk.Monitor;
@@ -36,6 +37,7 @@ const Bar = (props: BarProps) => {
           <ActiveTitle focused={focused} />
         </box>
         <box className={"Right"} halign={Gtk.Align.END} vexpand valign={Gtk.Align.CENTER}>
+          <Media />
           <Tray />
           <Sound />
           <Date />
