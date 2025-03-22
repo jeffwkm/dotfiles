@@ -2,6 +2,7 @@ import { bind, Binding, Variable } from "astal";
 import { Gtk } from "astal/gtk3";
 import Hyprland from "gi://AstalHyprland?version=0.1";
 import Pango from "gi://Pango?version=1.0";
+import { Section } from "./components";
 
 const hyprland = Hyprland.get_default();
 
@@ -72,11 +73,11 @@ const WorkspaceGroup = (props: WorkspaceGroupProps) => {
   if (visibleItems.length === 0) return null;
 
   return (
-    <box className={"WorkspaceGroup section"} vexpand={true} valign={Gtk.Align.CENTER}>
+    <Section name={"WorkspaceGroup"} vexpand valign={Gtk.Align.CENTER}>
       {visibleItems.map((item) => (
         <Workspace {...item} />
       ))}
-    </box>
+    </Section>
   );
 };
 
@@ -132,20 +133,14 @@ const ActiveTitle = (props: ActiveTitleProps) => {
   const visible = Variable.derive([text, focused], (text, focused) => text.length > 0 && focused);
 
   return (
-    <box
-      className={"ActiveTitle section"}
-      hexpand={true}
-      halign={Gtk.Align.CENTER}
-      visible={visible()}
-    >
+    <Section name={"ActiveTitle"} icon={"toolbar"} visible={visible()}>
       <label
-        maxWidthChars={80}
+        className={"title"}
+        maxWidthChars={90}
         ellipsize={Pango.EllipsizeMode.END}
         label={text()}
-        hexpand={true}
-        halign={Gtk.Align.CENTER}
       />
-    </box>
+    </Section>
   );
 };
 

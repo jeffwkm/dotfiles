@@ -1,22 +1,22 @@
 import { Variable } from "astal";
+import { MaterialIcon, Section } from "./components";
 
-const date = Variable("").poll(5000, "date +'%a, %h %e %Y'");
+// const date = Variable("").poll(5000, "date +'%a, %h %e'");
+
+const date = Variable("").poll(5000, "date +'%A %-m/%d/%y'");
+
 const time = Variable("").poll(1000, "date +'%l:%M %p'");
 
-const Date = () => {
-  return (
-    <box className={"Date section"}>
-      <label label={date()} />
-    </box>
-  );
-};
+const Date = () => (
+  <Section name="Date" icon={"calendar_today"}>
+    <label label={date()} />
+  </Section>
+);
 
-const Time = () => {
-  return (
-    <box className={"Time section"}>
-      <label label={time()} />
-    </box>
-  );
-};
+const Time = () => (
+  <Section name="Time" icon={"access_time"}>
+    <label label={time()} />
+  </Section>
+);
 
 export { Date, Time };

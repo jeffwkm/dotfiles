@@ -418,10 +418,6 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         "K c" 'elysium-keep-all-suggested-changes
         "K k" 'elysium-discard-all-suggested-changes))
 
-(use-package! smerge-mode
-  :defer t
-  :hook (prog-mode . smerge-mode))
-
 (map! :leader
       :desc "Kill sexp"
       "k" 'sp-kill-sexp
@@ -543,20 +539,11 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       :group 'paren-face)))
 ;; (add-hook! 'after-make-frame-functions '--init-copy-paste)
 
-(require 'evil)
-
-(after! smerge-mode
-  (require 'evil-core)
-  (require 'evil-states)
-  (require 'evil-integration)
-  (require 'evil-maps)
-  (require 'evil-args)
-  (map! :mode smerge-mode
-        :n "g c" nil))
-
-(after! evil-core
-  (after! smerge-mode
-    (add-hook! evil-local-mode '--unmap-smerge-mode-g-c)))
+(use-package! smerge-mode
+  :defer t
+  :config
+  (doom-require 'doom-editor)
+  (add-hook! 'smerge-mode-hook :append (map! :mode smerge-mode :n "g c" nil)))
 
 (defun --emacs-startup ()
   (auto-compression-mode 1)

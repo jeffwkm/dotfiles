@@ -112,27 +112,10 @@ in {
       alsa.enable = true;
       alsa.support32Bit = mkDefault true;
       pulse.enable = true;
-      # don't remember why this is here
-      # extraConfig.pipewire."92-low-latency.conf" = {
-      #   context.modules = [{
-      #     name = "libpipewire-module-protocol-pulse";
-      #     args = {
-      #       pulse.min.req = "32/48000";
-      #       pulse.default.req = "32/48000";
-      #       pulse.max.req = "32/48000";
-      #       pulse.min.quantum = "32/48000";
-      #       pulse.max.quantum = "32/48000";
-      #     };
-      #   }];
-      #   stream.properties = {
-      #     node.latency = "32/48000";
-      #     resample.quality = 1;
-      #   };
-      # };
     };
 
     services.redshift = {
-      enable = true;
+      enable = false;
       package = pkgs.gammastep;
       executable = "/bin/gammastep";
       temperature.day = 6250;

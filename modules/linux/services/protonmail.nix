@@ -2,9 +2,10 @@
 with lib;
 with lib.my;
 let
-  inherit (config) user modules;
+  inherit (config) user host modules;
   cfg = modules.services.protonmail;
   gui = modules.desktop.enable;
+  pwd = "${host.config-dir}/modules/linux/services";
 in {
   options.modules.services.protonmail = { enable = mkBoolOpt false; };
 
@@ -14,7 +15,8 @@ in {
       ++ (optionals gui [ protonmail-bridge-gui ]);
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
-      home.file.".mbsyncrc".source = ./mbsyncrc;
+      home.file.".mbsyncrc".source =
+        config.lib.file.mkOutOfStoreSymlink "${pwd}/mbsyncrc";
 
       systemd.user.services = {
         protonmail-bridge = {

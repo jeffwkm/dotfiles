@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 let
   inherit (lib.my) mkBoolOpt optimize;
@@ -38,60 +38,51 @@ in {
         programs.pqiv.enable = !darwin;
 
         home.packages = with pkgs;
-          [
-            (optimize config fd)
-            (optimize config lsd)
-            aichat
-            asciinema
-            asciinema-agg
-            autossh
-            babashka
-            bat
-            comma
-            curl
-            datasette
-            entr
-            expect
-            fastfetch
-            glow
-            gnugrep
-            gnused
-            gpg-tui
-            graphicsmagick-imagemagick-compat
-            greg
-            inetutils
-            inxi
-            jc
-            jq
-            llm
-            mediainfo
-            mods
-            ncdu
-            neofetch
-            nethack
-            nushell
-            p7zip
-            pass
-            procs
-            python3Packages.markdownify
-            ripgrep
-            rippkgs
-            screenfetch
-            speedtest-rs
-            termtosvg
-            tgpt
-            timg
-            tmux
-            tree
-            unrar
-            unzip
-            w3m
-            wget
-            xz
-            yt-dlp
-            zip
-          ] ++ [ cmatrix tmatrix unimatrix ]
-          ++ optionals (modules.guix.enable) [ guix ];
+          let
+            core = [
+              (optimize config fd)
+              (optimize config lsd)
+              curl
+              entr
+              expect
+              gnugrep
+              gnused
+              inetutils
+              jq
+              procs
+              tmux
+              w3m
+              wget
+            ];
+            tools = [
+              autossh
+              babashka
+              bat
+              glow
+              gpg-tui
+              graphicsmagick
+              graphicsmagick-imagemagick-compat
+              jc
+              ncdu
+              nushell
+              pass
+              python3Packages.markdownify
+              ripgrep
+              speedtest-rs
+              tree
+              yt-dlp
+            ];
+            compression = [ p7zip unrar unzip xz zip ];
+            nix-tools = [ comma rippkgs ];
+            fetch = [ fastfetch inxi neofetch screenfetch ];
+            media = [ greg mediainfo ];
+            games = [ nethack ];
+            ai = [ aichat aider-chat mods tgpt ];
+            matrix = [ cmatrix tmatrix unimatrix ];
+            extra = [ asciinema asciinema-agg termtosvg timg ];
+            guix-pkgs = optionals (modules.guix.enable) [ guix ];
+          in core ++ tools ++ compression ++ nix-tools ++ fetch ++ media
+          ++ games ++ ai ++ matrix ++ extra ++ guix-pkgs;
       };
   };
 }

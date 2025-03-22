@@ -1,51 +1,78 @@
-/* https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss */
-
 :root {
   --bar-bg: oklch(0.185 0.045 283.91 / 0.8);
   --bar-border: oklch(from var(--bar-bg) calc(l * 1.5) calc(c * 1.5) h / 0.4);
 
-  --text: oklch(0.8168 0.04 272.86 / 0.98);
+  --text: oklch(0.85 0.04 272.86 / 0.975);
+
   --blue0: oklch(0.7497 0.11 263.81);
   --blue: oklch(0.65 0.11 260);
   --green: oklch(0.72 0.18 132);
+  --orange: oklch(0.77 0.16 70);
 
   --border-color: oklch(from var(--bar-bg) 0.5 0.1 h / 0.625);
   --section-bg: oklch(from var(--border-color) l c h / 0.1);
+  --section-border: oklch(from var(--border-color) calc(l * 1.5) c h / 0.775);
 
-  --section-spacing: 3px;
-}
-
-.icon-material {
-  font-family: "Material Symbols Sharp", "Material Symbols Rounded", "Material Symbols Outlined";
-  font-family: "Material Symbols Outlined", "Material Symbols Sharp", "Material Symbols Rounded";
-  font-size: 17px;
-  margin: -1px 0;
-  font-weight: 700;
+  --section-spacing: 3.5px;
 }
 
 window.Bar {
   font-family: "sans";
   font-weight: 700;
-  font-size: 12.5px;
+  font-size: 11.5px;
 
-  border-bottom: 3px solid var(--bar-border);
+  margin: 0;
+  padding: 0;
+  border-bottom: 1.66px solid oklch(from var(--section-border) l c h / 0.2);
 
   color: var(--text);
   background: var(--bar-bg);
+}
 
-  > centerbox {
-    padding: 3px 4px;
-    > .Right {
-      margin-right: 12px;
-    }
+icon,
+.icon {
+  color: oklch(from var(--text) l c h / 0.925);
+}
+
+icon {
+  font-size: 14px;
+}
+
+.icon {
+  font-size: 15px;
+  margin: -1px;
+}
+
+.icon.icon-material {
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
   }
 }
 
+.icon.icon-material {
+  font-family: "Material Symbols Sharp", "Material Symbols Rounded", "Material Symbols Outlined";
+  font-family: "Material Symbols Outlined", "Material Symbols Sharp", "Material Symbols Rounded";
+  font-size: 17px;
+  margin: -2px 4px;
+  font-weight: 600;
+}
+
+.monospace,
+.section.monospace {
+  font-family: "monospace";
+  font-size: 10.5px;
+  font-weight: 800;
+  color: oklch(from var(--text) l c h / 1);
+}
+
 .section {
-  padding: 1px 6px;
-  border: 2.4px solid var(--border-color);
-  border-radius: 9999px;
-  background: var(--section-bg);
+  padding: 1px 2px;
+  border-bottom: 1.66px solid var(--section-border);
+  background: oklch(from var(--border-color) calc(l * 1.5) c h / 0.15);
+
   .Left & {
     margin-right: calc(2 * var(--section-spacing));
   }
@@ -55,84 +82,110 @@ window.Bar {
   .Center & {
     margin: 0px var(--section-spacing);
   }
-}
 
-.section.WorkspaceGroup {
-  padding: 1px 7px;
-}
-
-.Workspace {
-  font-family: "monospace";
-  font-weight: 800;
-  font-size: 12.5px;
-
-  &.active {
-    color: oklch(0.92 0.14 118);
-    &.focused {
-      color: oklch(0.92 0.2 138);
+  > * {
+    margin-left: 2px;
+    margin-right: 2px;
+    &:first-child {
+      margin-left: 0px;
+    }
+    &:last-child {
+      margin-right: 0px;
     }
   }
 
-  &:not(:last-child) {
-    margin-right: 5px;
+  .unit_label {
+    margin-left: 1px;
+    font-size: 10px;
+  }
+
+  &.Tray {
+    .TrayItem {
+      padding: 0px;
+      border: 0px;
+      border-radius: 9999px;
+      min-height: 16px;
+
+      icon {
+        padding: 0px;
+        margin: -1px;
+        font-size: 15px;
+        border-radius: 9999px;
+      }
+    }
+  }
+
+  &.Media {
+    .PlaybackStatus {
+      &.playing {
+        color: var(--green);
+      }
+      &.paused,
+      &.stopped {
+        color: oklch(from var(--text) calc(l * 0.85) c h);
+      }
+    }
+    .PlayerIcon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.section.WorkspaceGroup {
+  /* padding: 1px 8px; */
+  padding: 1px 2px;
+
+  .Workspace {
+    font-family: "monospace";
+    font-weight: 800;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 4px;
+
+    &.active {
+      color: oklch(0.92 0.14 118);
+      &.focused {
+        color: oklch(0.92 0.2 138);
+      }
+    }
   }
 }
 
 .section.ActiveTitle {
-  min-width: 130px;
+  > :first-child {
+    margin-right: 0;
+  }
+  > label.title {
+    padding: 0px 4px;
+  }
 }
 
-.section.Tray {
-  padding: 1px 3px;
-}
-
-.TrayItem {
-  padding: 0px;
-  border: 0px;
+.ProgressBox {
+  font-size: 2px;
+  border: 0.5px solid var(--text);
   border-radius: 9999px;
-  min-height: 18px;
 
-  icon {
-    padding: 0px;
-    margin: 0px;
-    font-size: 14px;
-    border-radius: 9999px;
-  }
-}
+  margin-top: -1px;
+  margin-bottom: 1px;
+  margin-left: 2px;
+  margin-right: 2px;
 
-.section.Volume {
-  padding: 2px 6px;
-
-  icon {
-    font-size: 14px;
-    margin-right: 4px;
-    margin-left: -1px;
-    margin-bottom: 1px;
+  circularprogress {
+    min-width: 16px;
   }
 
-  .VolumeProgress {
-    padding-top: 1px;
-    padding-bottom: 2px;
-    font-size: 4px;
-    color: var(--green);
+  > label {
+    margin-left: -16px;
+    font-size: 9px;
+    color: white(0.975);
+    font-weight: 800;
+    font-family: "monospace";
   }
-}
 
-.section.Media {
-  padding: 0px 3px;
-  label.PlayerIcon {
-    margin-right: 7px;
+  &.VolumeProgress {
+    color: oklch(from var(--green) l c h / 0.875);
   }
-  label.title {
-    margin: 0 3px;
-  }
-  label.PlaybackStatus {
-    &.playing {
-      color: var(--green);
-    }
-    &.paused,
-    &.stopped {
-      color: oklch(from var(--text) calc(l * 0.85) c h);
-    }
+  &.MemoryProgress {
+    color: oklch(from var(--orange) l c h / 0.875);
   }
 }

@@ -19,7 +19,7 @@ let
       setuptools
       ipykernel
     ] ++ optionals (!host.darwin && host.gui) [ pulsectl ]
-    ++ optionals (!host.minimal) [ openai catppuccin pandas openai ]
+    ++ optionals (!host.minimal) [ catppuccin librosa soundfile openai pandas ]
     ++ optionals
     (!host.darwin && !host.minimal && pkgs.system != "aarch64-linux")
     [ vapoursynth ]);

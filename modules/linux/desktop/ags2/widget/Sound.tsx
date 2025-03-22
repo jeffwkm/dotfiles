@@ -1,7 +1,6 @@
-import { bind, Variable } from "astal";
 import Wireplumber from "gi://AstalWp?version=0.1";
-import { Widget } from "astal/gtk3";
-const { CircularProgress } = Widget;
+import { bind } from "astal";
+import { Interactive, PercentProgress, Section } from "./components";
 
 const wp = Wireplumber.get_default();
 
@@ -14,19 +13,17 @@ const Volume = ({ speaker }: VolumeProps) => {
 
   const volume = bind(speaker, "volume");
   const volume_icon = bind(speaker, "volume_icon");
-  const volume_label = Variable("");
-  volume.subscribe((volume) => {
-    const percent = Math.round(volume * 100);
-    volume_label.set(`${percent}%`);
-  });
 
   return (
-    <box className={"Volume section"}>
-      <icon icon={volume_icon.as((icon) => icon)} />
-      <box className={"VolumeProgress"}>
-        <CircularProgress value={volume} heightRequest={8} />
-      </box>
-    </box>
+    <Interactive
+      onPrimaryClick={() => (speaker.mute = !speaker.mute)}
+      onScrollUp={() => (speaker.volume += 0.05)}
+      onScrollDown={() => (speaker.volume -= 0.05)}
+    >
+      <Section name={"Volume"} icon={<icon icon={volume_icon} />}>
+        <PercentProgress value={volume} className={"VolumeProgress"} />
+      </Section>
+    </Interactive>
   );
 };
 
@@ -35,9 +32,9 @@ const Sound = () => {
   const default_speaker = bind(wp, "default_speaker");
   return (
     <>
-      {default_speaker.as((speaker) => {
-        return <Volume speaker={speaker} />;
-      })}
+      {default_speaker.as((speaker) => (
+        <Volume speaker={speaker} />
+      ))}
     </>
   );
 };

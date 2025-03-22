@@ -6,7 +6,8 @@ in {
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-apple-silicon.nixosModules.default
     # inputs.hyprland.nixosModules.default
-  ] ++ (with inputs.chaotic.nixosModules; [ nyx-cache nyx-overlay ]);
+  ];
+  # ++ (with inputs.chaotic.nixosModules; [ nyx-cache nyx-overlay ]);
 
   config = {
     nixpkgs.overlays = [

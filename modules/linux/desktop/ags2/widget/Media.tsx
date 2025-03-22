@@ -1,9 +1,6 @@
-import Gdk from "gi://Gdk";
 import Mpris from "gi://AstalMpris?version=0.1";
 import { bind, Variable } from "astal";
-import { playerToIcon } from "../util";
-import { Box, EventBox, Label } from "astal/gtk3/widget";
-import Pango from "gi://Pango?version=1.0";
+import { Interactive, PlayerIcon, playerToIcon, Section } from "./components";
 
 const mpris = Mpris.get_default();
 
@@ -18,16 +15,12 @@ const printPlayers = (players: Mpris.Player[]) => {
   }
 };
 
-const validPlayers = Variable([] as Mpris.Player[]);
+const allPlayers = Variable([] as Mpris.Player[]);
 
-const validPlayer = (p: Mpris.Player) =>
-  p.playback_status !== Mpris.PlaybackStatus.STOPPED && p.title.length > 0;
-
-const setValidPlayers = (players: Mpris.Player[]) => {
-  const valid_players = players.filter(validPlayer);
-  validPlayers.set(valid_players);
-  // validPlayers.set(players);
-  printPlayers(validPlayers.get());
+const setPlayers = (players: Mpris.Player[]) => {
+  const valid_players = players;
+  allPlayers.set(valid_players);
+  printPlayers(allPlayers.get());
   const player = selected.get();
   if (player !== null) {
     if (!valid_players.includes(player)) {
@@ -36,26 +29,19 @@ const setValidPlayers = (players: Mpris.Player[]) => {
   }
 };
 
-setValidPlayers(mpris.players);
-
-// mpris.connect("player-added", (_mpris, player) => {
-//   const players = validPlayers.get();
-//   if (validPlayer(player) && !players.includes(player)) {
-//     console.log(`player-added: ${player.title}`);
-//     validPlayers.set([...players, player]);
-//   }
-// });
-
-// mpris.connect("player-closed", (_mpris, player) => {
-//   const players = validPlayers.get();
-//   if (players.includes(player)) {
-//     console.log(`player-closed: ${player.title}`);
-//     validPlayers.set(players.filter((p) => p !== player));
-//   }
-// });
-
+setPlayers(mpris.players);
 bind(mpris, "players").subscribe((players) => {
-  setValidPlayers(players);
+  setPlayers(players);
+});
+mpris.connect("player-added", (mpris, _player) => {
+  console.log("mpris: player-added");
+  printPlayers(mpris.players);
+  setPlayers(mpris.players);
+});
+mpris.connect("player-closed", (mpris, _player) => {
+  console.log("mpris: player-closed");
+  printPlayers(mpris.players);
+  setPlayers(mpris.players);
 });
 
 const getPlayerId = (players: Mpris.Player[], selected: Mpris.Player | null) => {
@@ -64,7 +50,7 @@ const getPlayerId = (players: Mpris.Player[], selected: Mpris.Player | null) => 
 };
 
 const nextPlayer = () => {
-  const players = validPlayers.get();
+  const players = allPlayers.get();
   const current = selected.get();
   const id = getPlayerId(players, current) || 0;
   console.log(`current: ${current?.identity}`);
@@ -101,33 +87,15 @@ const playing = (players: Mpris.Player[]) => {
   return null;
 };
 
-const showArtist = (player: Mpris.Player) => {
-  const ignoredPlayers = ["Chromium", "Firefox"];
-  const ignoredArtists = ["various artists", "unknown artist"];
-  if (!player) return false;
-  if (ignoredArtists.includes(player.artist?.toLowerCase())) return false;
-  if (ignoredPlayers.find((x) => player.identity?.startsWith(x))) return false;
-  if (player.artist?.length > 40) return false;
-  return true;
-};
-
 type PlayerIconProps = {
   player: Mpris.Player | null;
 };
 
-const PlayerIcon = ({ player }: PlayerIconProps) => (
-  <Label
-    className={"PlayerIcon icon icon-material"}
-    label={player ? playerToIcon(player.identity) : ""}
-    visible={!!player}
-  />
-);
-
-type StatusProps = {
+type PlaybackStatusProps = {
   player: Mpris.Player | null;
 };
 
-const PlaybackStatus = ({ player }: StatusProps) => {
+const PlaybackStatus = ({ player }: PlaybackStatusProps) => {
   if (!player) return <></>;
   else {
     const status = bind(player, "playback_status");
@@ -142,54 +110,30 @@ const PlaybackStatus = ({ player }: StatusProps) => {
       return `PlaybackStatus ${statusDescription(status)} icon icon-material `;
     });
     return (
-      <Label label={label} className={className} visible={label.as((label) => label !== "")} />
+      <label label={label} className={className} visible={label.as((label) => label !== "")} />
     );
   }
 };
 
-type ArtistProps = {
+type TrackNameProps = {
   player: Mpris.Player | null;
 };
 
-const Artist = ({ player }: ArtistProps) => {
-  const artist = player?.artist;
-  const visible = !!(artist && showArtist(player));
-  return (
-    <Label
-      className="artist"
-      maxWidthChars={20}
-      // ellipsize={Pango.EllipsizeMode.END}
-      visible={visible}
-      label={artist ? artist : ""}
-    />
-  );
-};
-
-type TitleProps = {
-  player: Mpris.Player | null;
-};
-
-const Title = ({ player }: TitleProps) => {
+const TrackName = ({ player }: TrackNameProps) => {
   if (!player) return <></>;
-  else {
-    return (
-      <>
-        {bind(player, "title").as((title) => {
-          const visible = !!title;
-          return (
-            <Label
-              className="title"
-              // maxWidthChars={}
-              // widthChars={title ? title.length : 0}
-              // ellipsize={Pango.EllipsizeMode.END}
-              visible={visible}
-              label={title ? title : ""}
-            />
-          );
-        })}
-      </>
-    );
-  }
+  const title = bind(player, "title");
+  const artist = bind(player, "artist");
+  return (
+    <>
+      {Variable.derive([title, artist], (title, artist) => {
+        let label = `${artist ? artist + " - " : ""}${title ? title : ""}`;
+        const maxLength = 60;
+        if (label.length > maxLength) label = label.slice(0, maxLength) + "...";
+        const visible = label.length > 0;
+        return <label className="title" visible={visible} label={label}></label>;
+      })()}
+    </>
+  );
 };
 
 const updateSelectedPlayer = (players: Mpris.Player[]) => {
@@ -229,43 +173,44 @@ export const previousTrack = () => {
 export const seekDelta = (delta: number) => {
   const player = selected.get();
   if (!player) return;
+
   const position = player?.position;
   if (!position) return;
-  player.position = position + delta;
+
+  if (position + delta < 0) {
+    player.position = 0;
+  } else if (position + delta > player.length) {
+    player.position = player.length;
+  } else {
+    player.position = position + delta;
+  }
 };
 
 export const Media = () => {
-  updateSelectedPlayer(validPlayers.get());
-  validPlayers.subscribe((players) => {
+  updateSelectedPlayer(allPlayers.get());
+  allPlayers.subscribe((players) => {
     updateSelectedPlayer(players);
   });
 
   return (
     <>
-      {selected().as((player) => {
-        return (
-          <EventBox
-            className={"MediaEventBox"}
-            cursor="pointer"
-            onClick={(_self, e) => {
-              if (e.button === Gdk.BUTTON_PRIMARY) playPause();
-              else if (e.button === Gdk.BUTTON_SECONDARY) selectNextPlayer();
-            }}
-            onScroll={(_self, e) => {
-              if (e.delta_y > 0) seekDelta(10);
-              else if (e.delta_y < 0) seekDelta(-10);
-            }}
+      {selected().as((player) => (
+        <Interactive
+          onPrimaryClick={() => playPause()}
+          onSecondaryClick={() => selectNextPlayer()}
+          onScrollUp={() => seekDelta(-10)}
+          onScrollDown={() => seekDelta(10)}
+        >
+          <Section
+            name={"Media"}
+            icon={<PlayerIcon identity={player?.identity || ""} />}
             visible={!!player}
           >
-            <Box className={`Media section`} visible={!!player}>
-              <PlayerIcon player={player} />
-              <Artist player={player} />
-              <Title player={player} />
-              <PlaybackStatus player={player} />
-            </Box>
-          </EventBox>
-        );
-      })}
+            <TrackName player={player} />
+            <PlaybackStatus player={player} />
+          </Section>
+        </Interactive>
+      ))}
     </>
   );
 };

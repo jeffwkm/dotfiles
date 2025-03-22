@@ -5,6 +5,7 @@ import { Date, Time } from "./DateTime";
 import Tray from "./Tray";
 import { bind } from "astal";
 import Media from "./Media";
+import SystemStatus from "./System";
 type BarProps = {
   monitorId: number;
   monitor: Gdk.Monitor;
@@ -27,18 +28,18 @@ const Bar = (props: BarProps) => {
       exclusivity={Astal.Exclusivity.EXCLUSIVE}
       anchor={TOP | LEFT | RIGHT}
       application={App}
-      marginBottom={6}
+      marginBottom={0}
     >
       <centerbox>
         <box className={"Left"} halign={Gtk.Align.START} vexpand valign={Gtk.Align.CENTER}>
           <Workspaces monitorId={monitorId} />
-        </box>
-        <box className={"Center"} halign={Gtk.Align.CENTER} vexpand valign={Gtk.Align.CENTER}>
           <ActiveTitle focused={focused} />
         </box>
+        <box className={"Center"} halign={Gtk.Align.CENTER} vexpand valign={Gtk.Align.CENTER}></box>
         <box className={"Right"} halign={Gtk.Align.END} vexpand valign={Gtk.Align.CENTER}>
           <Media />
           <Tray />
+          <SystemStatus />
           <Sound />
           <Date />
           <Time />

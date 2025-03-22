@@ -52,7 +52,6 @@
   "cursor.cmdk.autoSelect": true,
   "cursor.cmdk.useThemedDiffBackground": true,
   "cursor-retrieval.canAttemptGithubLogin": true,
-  "cursor.aipreview.enabled": true,
   "cursor.general.enableShadowWorkspace": false,
   "explorer.confirmDelete": false,
   "rust-analyzer.server.path": "rust-analyzer",
@@ -83,6 +82,10 @@
   // "nvim-ui.nvimColorReplace": "#C06700",
   "nix.serverPath": "nixd",
   "nix.enableLanguageServer": true,
+  "nix.hiddenLanguageServerErrors": [
+    "textDocument/definition",
+    "textDocument/documentSymbol"
+  ],
   "nix.formatterPath": "nixfmt",
   "nix.serverSettings": {
     "nixd": {
@@ -166,6 +169,7 @@
   //   // "maxLength": 50
   // },
   "calva.paredit.defaultKeyMap": "strict",
+  "calva.enableClojureLspOnStart": "when-file-opened-use-furthest-project",
   "editor.tokenColorCustomizations": {
     "comments": {
       "foreground": "#989898"
@@ -185,5 +189,6 @@
   },
   "cursor.diffs.useCharacterLevelDiffs": true,
   "editor.unicodeHighlight.ambiguousCharacters": false,
-  "diffEditor.ignoreTrimWhitespace": false
+  "diffEditor.ignoreTrimWhitespace": false,
+  "python.poetryPath": "poetry"
 }

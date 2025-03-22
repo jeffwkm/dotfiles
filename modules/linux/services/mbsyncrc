@@ -2,7 +2,7 @@ IMAPAccount protonmail
 Host 127.0.0.1
 User jeff.workman@protonmail.com
 PassCmd "cat /private/protonmail-bridge-password.txt"
-SSLType STARTTLS
+TLSType STARTTLS
 Port 1143
 AuthMechs *
 CertificateFile /private/protonmail-bridge.cert.pem
@@ -19,7 +19,7 @@ Channel protonmail
 Far :protonmail-remote:
 Near :protonmail-local:
 Patterns *
-Create Near
 Sync All
-Expunge None
+Create Both
+Expunge Both
 SyncState *
