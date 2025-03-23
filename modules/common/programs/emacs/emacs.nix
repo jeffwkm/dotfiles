@@ -16,6 +16,8 @@ let
       mu4e
       mu4e-alert
     ]);
+  patches-url =
+    "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/master/patches/emacs-30";
   emacs-base = optimizePkg {
     enable = host.optimize;
     level = 4;
@@ -25,37 +27,21 @@ let
       patches = (old.patches or [ ]) ++ [
         # Fix OS window role so that yabai can pick up emacs
         (fetchpatch {
-          url =
-            "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/master/patches/emacs-28/fix-window-role.patch";
+          url = "${patches-url}/fix-window-role.patch";
           sha256 = "sha256-+z/KfsBm1lvZTZNiMbxzXQGRTjkCFO4QPlEK35upjsE=";
-        })
-        # Use poll instead of select to get file descriptors
-        (fetchpatch {
-          url =
-            "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/master/patches/emacs-29/poll.patch";
-          sha256 = "sha256-jN9MlD8/ZrnLuP2/HUXXEVVd6A+aRZNYFdZF8ReJGfY=";
         })
         # Enable rounded window with no decoration
         (fetchpatch {
-          url =
-            "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/master/patches/emacs-30/round-undecorated-frame.patch";
+          url = "${patches-url}/round-undecorated-frame.patch";
           sha256 = "sha256-uYIxNTyfbprx5mCqMNFVrBcLeo+8e21qmBE3lpcnd+4=";
-        })
-        # Make emacs aware of OS-level light/dark mode
-        (fetchpatch {
-          url =
-            "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/master/patches/emacs-28/system-appearance.patch";
-          sha256 = "sha256-oM6fXdXCWVcBnNrzXmF0ZMdp8j0pzkLE66WteeCutv8=";
         })
       ];
       configureFlags = (old.configureFlags or [ ])
         ++ [ "LDFLAGS=-headerpad_max_install_names" ];
     })
   else if modules.desktop.enable then
-    pkgs.emacs30-pgtk
-    # pkgs.emacs29-pgtk # stable from nixpkgs
-    # pkgs.emacs-30-pgtk # emacs-30 branch from fork of emacs-overlay
-    # pkgs.emacs-pgtk # git master from emacs-overlay
+    pkgs.emacs30-pgtk # from nixpkgs
+    # pkgs.emacs-pgtk # from emacs-overlay
   else
     pkgs.emacs30-nox);
 in {

@@ -190,5 +190,6 @@
   "cursor.diffs.useCharacterLevelDiffs": true,
   "editor.unicodeHighlight.ambiguousCharacters": false,
   "diffEditor.ignoreTrimWhitespace": false,
-  "python.poetryPath": "poetry"
+  "python.poetryPath": "poetry",
+  "vsicons.dontShowNewVersionMessage": true
 }

@@ -11,7 +11,8 @@ FONT_MONO="JetBrainsMono Nerd Font"
 FONT_ICON="$FONT_MONO"
 SPACE_CLICK_SCRIPT="yabai -m space --focus \$SID 2>/dev/null" # The script that is run for clicking on space components
 
-PADDINGS=4 # All paddings use this value (icon, label, background and bar paddings)
+PADDINGS=8 # All paddings use this value (icon, label, background and bar paddings)
+PADDINGS_SMALL=4
 
 POPUP_BORDER_WIDTH=3
 POPUP_CORNER_RADIUS=11
@@ -19,11 +20,12 @@ POPUP_CORNER_RADIUS=11
 SHADOW=off
 
 # Setting up the general bar appearance and default values
-sketchybar --bar height=30 \
-  corner_radius=25 \
+sketchybar --bar \
+  height=29 \
+  corner_radius=0 \
   border_width=0 \
   border_color=0xff909090 \
-  margin=5 \
+  margin=0 \
   margin_bottom=0 \
   blur_radius=12 \
   position=top \
@@ -32,22 +34,23 @@ sketchybar --bar height=30 \
   color=$BAR_COLOR \
   topmost=off \
   font_smoothing=on \
-  y_offset=5 \
+  y_offset=0 \
   shadow=$SHADOW \
   notch_width=200 \
-  --default drawing=on \
+  --default \
+  drawing=on \
   updates=when_shown \
   label.font="$FONT:Medium:12.0" \
   icon.font="$FONT_ICON:Regular:12.0" \
   icon.color=$ICON_COLOR \
   label.color=$LABEL_COLOR \
   icon.padding_left=$PADDINGS \
-  icon.padding_right=$PADDINGS \
-  label.padding_left=$PADDINGS \
+  icon.padding_right=$PADDINGS_SMALL \
+  label.padding_left=$PADDINGS_SMALL \
   label.padding_right=$PADDINGS \
   background.padding_right=$PADDINGS \
   background.padding_left=$PADDINGS \
-  background.corner_radius=25 \
+  background.corner_radius=9999 \
   popup.background.border_width=$POPUP_BORDER_WIDTH \
   popup.background.corner_radius=$POPUP_CORNER_RADIUS \
   popup.background.border_color=$POPUP_BORDER_COLOR \
@@ -157,7 +160,6 @@ sketchybar --add item time right \
   script="$PLUGIN_DIR/time.sh" \
   label= \
   icon.padding_left=8 \
-  label.padding_right=8 \
   background.color=$BRACKET_BG \
   background.height=$BRACKET_HEIGHT \
   background.padding_left=3 \

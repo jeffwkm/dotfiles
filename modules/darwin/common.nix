@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 let
   inherit (lib.my) mkBoolOpt;
@@ -10,17 +10,15 @@ in {
 
   config = {
     host.gui = true;
-    nix.settings.trusted-users = [ "@admin" ];
-    nix.configureBuildUsers = true;
-    environment.loginShell = pkgs.zsh;
-    services.nix-daemon.enable = true;
+    nix.enable = false;
 
-    homebrew.brews = optionals programs.mpv.enable [ "mpv" "vapoursynth" ];
+    homebrew.brews =
+      optionals programs.mpv.enable [ "mpv" "vapoursynth" "ffmpeg" ];
     homebrew.casks = with programs;
       optional spotify.enable "spotify"
       ++ optional vscode.enable "visual-studio-code"
       ++ optional firefox.enable "firefox"
-      ++ optional alacritty.enable "alacritty";
+      ++ optional alacritty.enable "alacritty" ++ optional kitty.enable "kitty";
 
     # Set of files to be linked in '/Library/LaunchAgents'
     environment.launchAgents = { };

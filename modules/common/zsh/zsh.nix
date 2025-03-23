@@ -169,15 +169,15 @@ let
       ${extra.initExtraFirst or ""}
 
       [[ -n "$ZPROFILE" ]] && zmodload zsh/zprof
+    '';
 
+    initExtra = ''
       if [[ "$USING_P10K" -eq 1 ]]; then
         if [[ -r "$HOME/.cache/p10k-instant-prompt-$USER.zsh" ]]; then
           source "$HOME/.cache/p10k-instant-prompt-$USER.zsh"
         fi
       fi
-    '';
 
-    initExtra = ''
       [[ -n "$ZPROFILE" ]] && zprof
 
       if [[ "$USING_P10K" -ne 1 ]] ; then
@@ -189,11 +189,6 @@ let
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
         p10k finalize
       fi
-
-      # if [[ -n "$INSIDE_EMACS" ]] ; then
-      #   prompt restore
-      #   prompt clint
-      # fi
 
       ${extra.initExtra or ""}
     '';

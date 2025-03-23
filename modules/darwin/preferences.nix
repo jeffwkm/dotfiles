@@ -58,7 +58,7 @@ with lib.my; {
         autohide-delay = 0.0;
         autohide-time-modifier = 0.5;
         expose-animation-duration = 0.5;
-        expose-group-by-app = true;
+        expose-group-apps = true;
         tilesize = 40;
         static-only = false;
         # Whether to make icons of hidden applications tranclucent. The default is false.

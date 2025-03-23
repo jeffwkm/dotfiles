@@ -10,7 +10,6 @@ in {
 
     services.skhd = {
       enable = true;
-      package = pkgs.skhd;
       skhdConfig = (import ./_skhdrc.nix {
         # yabai = "${pkgs.yabai}/bin/yabai";
         yabai = "/opt/homebrew/bin/yabai";
