@@ -16,7 +16,7 @@ input   *           pointer_accel -0.5
 # input   *           accel_profile flat
 # input   *           pointer_accel 1
 input   *           xkb_options ctrl:nocaps
-
+# input   *           xkb_options ctrl:nocaps,altwin:swap_alt_win
 
 ## display settings
 set $out1           HDMI-A-1

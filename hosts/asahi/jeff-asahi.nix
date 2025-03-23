@@ -5,16 +5,9 @@ in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-apple-silicon.nixosModules.default
-    # inputs.hyprland.nixosModules.default
   ];
-  # ++ (with inputs.chaotic.nixosModules; [ nyx-cache nyx-overlay ]);
 
   config = {
-    nixpkgs.overlays = [
-      # inputs.hyprland.overlays.default
-    ];
-    programs.hyprland.package =
-      inputs.hyprland.packages.${pkgs.system}.hyprland;
     ## host options
     modules = {
       dev.enable-all = true;
