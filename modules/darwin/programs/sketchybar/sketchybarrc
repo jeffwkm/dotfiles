@@ -3,7 +3,6 @@
 source "$HOME/.config/sketchybar/colors.sh" # Loads all defined colors
 source "$HOME/.config/sketchybar/icons.sh"  # Loads all defined icons
 
-ITEM_DIR="$HOME/.config/sketchybar/items"     # Directory where the items are configured
 PLUGIN_DIR="$HOME/.config/sketchybar/plugins" # Directory where all the plugin scripts are stored
 
 FONT="Inter" # Needs to have Regular, Bold, Semibold, Heavy and Black variants
@@ -11,8 +10,8 @@ FONT_MONO="JetBrainsMono Nerd Font"
 FONT_ICON="$FONT_MONO"
 SPACE_CLICK_SCRIPT="yabai -m space --focus \$SID 2>/dev/null" # The script that is run for clicking on space components
 
-PADDINGS=8 # All paddings use this value (icon, label, background and bar paddings)
-PADDINGS_SMALL=4
+PADDINGS=6 # All paddings use this value (icon, label, background and bar paddings)
+PADDINGS_SMALL=3
 
 POPUP_BORDER_WIDTH=3
 POPUP_CORNER_RADIUS=11
@@ -21,16 +20,16 @@ SHADOW=off
 
 # Setting up the general bar appearance and default values
 sketchybar --bar \
-  height=29 \
+  height=32 \
   corner_radius=0 \
   border_width=0 \
   border_color=0xff909090 \
   margin=0 \
   margin_bottom=0 \
-  blur_radius=12 \
+  blur_radius=8 \
   position=top \
-  padding_left=6 \
-  padding_right=6 \
+  padding_left=2 \
+  padding_right=2 \
   color=$BAR_COLOR \
   topmost=off \
   font_smoothing=on \
@@ -94,35 +93,44 @@ sketchybar --bar \
 ### Left
 ###
 
-# "" ""
-SPACE_ICONS=("" "" "" "" "" "" "" "" "" "" "" "" "" "" "")
-SPACE_NAMES=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15")
+# Register custom event - this will be use by sketchybar's space items as well as app_space.sh
+sketchybar --add event window_change
 
-for i in "${!SPACE_NAMES[@]}"; do
-  sid=$(($i + 1))
-  leftmost=0
-  [ $i -eq 0 ] && leftmost=2
-  [ $i -eq 12 ] && leftmost=2
-  rightmost=0
-  [ $i -eq 11 ] && rightmost=2
-  [ $i -eq $((${#SPACE_NAMES[@]} - 1)) ] && rightmost=2
+# Space items
+COLORS_SPACE=($COLOR_YELLOW $COLOR_CYAN $COLOR_MAGENTA $COLOR_WHITE $COLOR_BLUE $COLOR_RED $COLOR_GREEN)
+LENGTH=${#ICONS_SPACE[@]}
 
-  # echo "adding space: 'space.$sid' '${SPACE_ICONS[i]}'"
+for i in "${!ICONS_SPACE[@]}"; do
+  sid=$((i + 1))
+  PAD_LEFT=2
+  PAD_RIGHT=2
+  if [[ $i == 0 ]]; then
+    PAD_LEFT=8
+  elif [[ $i == $((LENGTH - 1)) ]]; then
+    PAD_RIGHT=8
+  fi
   sketchybar --add space space.$sid left \
-    --set space.$sid associated_space=$sid \
-    icon=${SPACE_ICONS[i]} \
-    icon.padding_left=6 \
-    icon.padding_right=6 \
-    icon.highlight_color=$RED \
-    icon.font="$FONT_ICON:Medium:15.0" \
-    background.height=$BRACKET_HEIGHT \
-    background.color=$BRACKET_BG \
-    background.padding_left=$leftmost \
-    background.padding_right=$rightmost \
-    background.drawing=off \
-    label.drawing=off \
-    click_script="$SPACE_CLICK_SCRIPT"
+    --set space.$sid script="$PLUGIN_DIR/app_space.sh" \
+    associated_space=$sid \
+    padding_left=$PAD_LEFT \
+    padding_right=$PAD_RIGHT \
+    background.color=${COLORS_SPACE[i]} \
+    background.border_width=0 \
+    background.corner_radius=6 \
+    background.height=24 \
+    icon=${ICONS_SPACE[i]} \
+    icon.color=${COLORS_SPACE[i]} \
+    label="_" \
+    label.color=${COLORS_SPACE[i]} \
+    click_script="$SPACE_CLICK_SCRIPT" \
+    --subscribe space.$sid front_app_switched window_change
 done
+
+# Space bracket
+sketchybar --add bracket spaces '/space\..*/' \
+  --set spaces background.color=$COLOR_BACKGROUND
+
+# "" ""
 
 sketchybar --add item separator left \
   --set separator icon= \

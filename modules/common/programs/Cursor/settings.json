@@ -84,7 +84,8 @@
   "nix.enableLanguageServer": true,
   "nix.hiddenLanguageServerErrors": [
     "textDocument/definition",
-    "textDocument/documentSymbol"
+    "textDocument/documentSymbol",
+    "textDocument/formatting"
   ],
   "nix.formatterPath": "nixfmt",
   "nix.serverSettings": {
@@ -180,9 +181,6 @@
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter"
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

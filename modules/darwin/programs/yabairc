@@ -42,4 +42,9 @@ yabai -m rule --add label=slack app="Slack" space=14
 
 yabai -m config external_bar all:33:0
 
+# add these lines to the bottom of your yabairc file
+# they're needed to trigger a custom event in sketchybar that we will later define in sketchybarrc
+yabai -m signal --add event=window_created action="sketchybar -m --trigger window_change &> /dev/null"
+yabai -m signal --add event=window_destroyed action="sketchybar -m --trigger window_change &> /dev/null"
+
 echo "yabai configuration loaded.."
