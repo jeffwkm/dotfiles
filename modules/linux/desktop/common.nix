@@ -48,7 +48,8 @@ in {
     fonts.fontDir.decompressFonts = true;
 
     environment.systemPackages = with pkgs;
-      [ gparted ] ++ optional cfg.amdgpu-fan amdgpu-fan
+      [ gparted vulkan-tools libva-utils vdpauinfo clinfo ]
+      ++ optional cfg.amdgpu-fan amdgpu-fan
       ++ optional (pkgs.system == "x86_64-linux") wine;
 
     systemd.services.amdgpu-fan = mkIf cfg.amdgpu-fan {

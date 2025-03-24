@@ -11,11 +11,8 @@ let
   mesaPkgs = getMesaPkgs pkgs ++ (with pkgs; [ rocmPackages.clr.icd ]);
   mesaPkgs32 = getMesaPkgs pkgs.pkgsi686Linux;
 in {
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-    # inputs.hyprland.nixosModules.default
-  ];
-  # ++ (with inputs.chaotic.nixosModules; [ nyx-cache nyx-overlay mesa-git ]);
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ]
+    ++ (with inputs.chaotic.nixosModules; [ nyx-cache nyx-overlay mesa-git ]);
 
   config = {
     host.optimize = true;
@@ -48,11 +45,6 @@ in {
       };
     };
 
-    # programs.hyprland.package =
-    #   inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    # programs.hyprland.portalPackage =
-    #   inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-
     services.ddclient.enable = true;
     services.ddclient.configFile = "/private/ddclient.conf";
     services.ddclient.interval = "1h";
@@ -74,14 +66,10 @@ in {
     };
 
     environment.systemPackages = with pkgs; [
-      clinfo
       firmwareLinuxNonfree
       libguestfs
       ansel # darktable
       amdgpu_top
-      vdpauinfo
-      libva-utils
-      vulkan-tools
       # input-leap_git
       # waynergy_git
       dnsmasq
@@ -168,9 +156,9 @@ in {
 
     # boot.kernelPackages = pkgs.linuxPackages;
     # boot.kernelPackages = pkgs.linuxPackages_latest;
+    # boot.kernelPackages = pkgs.linuxPackages_6_6;
     # boot.kernelPackages = pkgs.linuxPackages_lqx;
-    boot.kernelPackages = pkgs.linuxPackages_6_6;
-    # boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =
@@ -219,11 +207,11 @@ in {
       };
     };
 
-    # chaotic.mesa-git = {
-    #   enable = true;
-    #   extraPackages = mesaPkgs;
-    #   extraPackages32 = mesaPkgs32;
-    # };
+    chaotic.mesa-git = {
+      enable = true;
+      extraPackages = mesaPkgs;
+      extraPackages32 = mesaPkgs32;
+    };
 
     nix.settings.max-jobs = 3;
     nix.settings.cores = 16;

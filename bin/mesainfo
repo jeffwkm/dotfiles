@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+glxinfo -B
+echo
+vulkaninfo --summary

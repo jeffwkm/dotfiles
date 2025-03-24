@@ -2,8 +2,8 @@
 ;;; $DOOMDIR/packages.el
 
 ;; override the pinned versions of some packages
-(package! consult :pin "4889458dccf842ab6223099f8a73ff8b147e9459")
-(package! lsp-mode :pin "3afc56249e370afc334cf33a58a1f48d453d6267")
+;; (package! consult :pin "4889458dccf842ab6223099f8a73ff8b147e9459")
+;; (package! lsp-mode :pin "3afc56249e370afc334cf33a58a1f48d453d6267")
 ;; (package! org-roam :pin ...)
 
 ;; non-elpa packages

@@ -7,11 +7,11 @@ const mpris = Mpris.get_default();
 export const selected = Variable(null as Mpris.Player | null);
 
 const printPlayers = (players: Mpris.Player[]) => {
-  console.log(`players: ${players.length}`);
+  // console.log(`players: ${players.length}`);
   for (const player of players) {
-    console.log(
-      `  (${player.playback_status.toString()}) ${player.identity} ${player.artist} ${player.title}`
-    );
+    // console.log(
+    //   `  (${player.playback_status.toString()}) ${player.identity} ${player.artist} ${player.title}`
+    // );
   }
 };
 
@@ -127,7 +127,7 @@ const TrackName = ({ player }: TrackNameProps) => {
     <>
       {Variable.derive([title, artist], (title, artist) => {
         let label = `${artist ? artist + " - " : ""}${title ? title : ""}`;
-        const maxLength = 60;
+        const maxLength = 35;
         if (label.length > maxLength) label = label.slice(0, maxLength) + "...";
         const visible = label.length > 0;
         return <label className="title" visible={visible} label={label}></label>;
@@ -147,7 +147,7 @@ const updateSelectedPlayer = (players: Mpris.Player[]) => {
     const identity = value.identity;
     const artist = value.artist;
     const title = value.title;
-    console.log(`selected: ${identity} ${artist} ${title}`);
+    // console.log(`selected: ${identity} ${artist} ${title}`);
   }
 };
 

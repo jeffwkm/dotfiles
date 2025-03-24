@@ -19,14 +19,20 @@
 window.Bar {
   font-family: "sans";
   font-weight: 700;
-  font-size: 11.5px;
+  font-size: 12px;
 
   margin: 0;
   padding: 0;
-  border-bottom: 1.66px solid oklch(from var(--section-border) l c h / 0.2);
 
   color: var(--text);
   background: var(--bar-bg);
+
+  &.Top {
+    border-bottom: 1.66px solid oklch(from var(--section-border) l c h / 0.2);
+  }
+  &.Bottom {
+    border-top: 1.66px solid oklch(from var(--section-border) l c h / 0.2);
+  }
 }
 
 icon,
@@ -35,11 +41,11 @@ icon,
 }
 
 icon {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .icon {
-  font-size: 15px;
+  font-size: 16px;
   margin: -1px;
 }
 
@@ -55,7 +61,7 @@ icon {
 .icon.icon-material {
   font-family: "Material Symbols Sharp", "Material Symbols Rounded", "Material Symbols Outlined";
   font-family: "Material Symbols Outlined", "Material Symbols Sharp", "Material Symbols Rounded";
-  font-size: 17px;
+  font-size: 18px;
   margin: -2px 4px;
   font-weight: 600;
 }
@@ -70,16 +76,22 @@ icon {
 
 .section {
   padding: 1px 2px;
-  border-bottom: 1.66px solid var(--section-border);
   background: oklch(from var(--border-color) calc(l * 1.5) c h / 0.15);
 
-  .Left & {
+  .Bar.Top & {
+    border-bottom: 1.66px solid var(--section-border);
+  }
+  .Bar.Bottom & {
+    border-top: 1.66px solid var(--section-border);
+  }
+
+  .Bar > centerbox > .Left & {
     margin-right: calc(2 * var(--section-spacing));
   }
-  .Right & {
+  .Bar > centerbox > .Right & {
     margin-left: calc(2 * var(--section-spacing));
   }
-  .Center & {
+  .Bar > centerbox > .Center & {
     margin: 0px var(--section-spacing);
   }
 
@@ -132,7 +144,6 @@ icon {
 }
 
 .section.WorkspaceGroup {
-  /* padding: 1px 8px; */
   padding: 1px 2px;
 
   .Workspace {
@@ -164,20 +175,26 @@ icon {
   font-size: 2px;
   border: 0.5px solid var(--text);
   border-radius: 9999px;
+  margin: 0 2px;
 
-  margin-top: -1px;
-  margin-bottom: 1px;
-  margin-left: 2px;
-  margin-right: 2px;
+  .Bar.Top & {
+    margin-top: -1px;
+    margin-bottom: 1px;
+  }
+  .Bar.Bottom & {
+    margin-top: 1px;
+    margin-bottom: -1px;
+  }
 
   circularprogress {
-    min-width: 16px;
+    min-width: 20px;
   }
 
   > label {
-    margin-left: -16px;
-    font-size: 9px;
-    color: white(0.975);
+    margin-left: -20px;
+    margin-top: 1px;
+    font-size: 10.5px;
+    color: oklch(from var(--text) 0.92 calc(c * 0.8) h / 0.975);
     font-weight: 800;
     font-family: "monospace";
   }
@@ -188,4 +205,55 @@ icon {
   &.MemoryProgress {
     color: oklch(from var(--orange) l c h / 0.875);
   }
+}
+
+.Command {
+  font-family: "monospace";
+  font-size: 10.5px;
+  font-weight: 800;
+  background: black(0.85);
+  padding: 0px 4px;
+  margin: 0;
+  &:first-child {
+    margin-left: -2px;
+  }
+  &:last-child {
+    margin-right: -2px;
+  }
+
+  .Bar.Top & {
+    margin-bottom: -2px;
+  }
+  .Bar.Bottom & {
+    margin-top: -2px;
+  }
+
+  color: oklch(0.75 0.5 280 / 0.9);
+
+  > .CommandLabel {
+    font-family: "sans";
+    font-size: 12px;
+    font-weight: 700;
+    border-right: 1px solid white(0.425);
+    padding: 0 4px;
+    margin: 0;
+    color: white(0.925);
+    .Bar.Bottom & {
+      border-top: 1.66px solid var(--text);
+    }
+  }
+  > :not(.CommandLabel) {
+    padding: 0 4px;
+    .Bar.Bottom & {
+      border-top: 1.66px solid oklch(0.75 0.5 280 / 0.9);
+    }
+  }
+}
+
+box.Timer.Command.monospace {
+  margin-right: 3px;
+  margin-bottom: 0px;
+  font-size: 10.5px;
+  border: 0.5px solid white(0.5);
+  color: oklch(from var(--green) calc(l * 1.16) calc(c * 1.2) calc(h + 4) / 1);
 }

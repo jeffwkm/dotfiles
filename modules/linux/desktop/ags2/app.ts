@@ -1,5 +1,5 @@
 import { App, Gdk, Gtk } from "astal/gtk3";
-import Bar from "./widget/Bar";
+import { TopBar, BottomBar } from "./widget/Bar";
 import { bind } from "astal";
 import { cssOut, watchCss } from "./build";
 import { nextTrack, playPause, previousTrack, seekDelta, selectNextPlayer } from "./widget/Media";
@@ -9,10 +9,11 @@ let bars: Gtk.Widget[] = [];
 const startBars = (monitors: Gdk.Monitor[]) => {
   bars.forEach((bar) => bar.destroy());
   bars = [];
-  bars = monitors.map((monitor) => {
+  for (const monitor of monitors) {
     const idx = monitors.indexOf(monitor);
-    return Bar({ monitorId: idx, monitor });
-  });
+    bars.push(TopBar({ monitorId: idx, monitor }));
+    bars.push(BottomBar({ monitorId: idx, monitor }));
+  }
 };
 
 const tryStartApp = () => {

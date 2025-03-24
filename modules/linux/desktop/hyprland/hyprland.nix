@@ -9,10 +9,19 @@ in {
   options.modules.desktop.hyprland = {
     enable = mkBoolOpt modules.desktop.enable;
     extraConf = mkOpt types.str "";
+    flake = mkBoolOpt false;
   };
 
   config = mkIf cfg.enable {
     programs.hyprland.enable = true;
+    programs.hyprland.package = (if cfg.flake then
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
+    else
+      pkgs.hyprland);
+    programs.hyprland.portalPackage = (if cfg.flake then
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+    else
+      pkgs.xdg-desktop-portal-hyprland);
 
     environment.systemPackages = with pkgs; [
       hypridle

@@ -355,7 +355,6 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 
 (use-package! evil-snipe
   :after evil
-  :defer-incrementally t
   :init
   (setq! evil-snipe-scope 'whole-visible
          evil-snipe-repeat-scope 'whole-visible
@@ -377,9 +376,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         "e p" 'eval-print-last-sexp)
   nil)
 
-(use-package! magit
-  :defer-incrementally t
-  :config
+(after! magit
   (map! :mode magit-mode
         :nv "/" nil))
 
@@ -389,7 +386,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (setq auth-sources '("~/.authinfo")))
 
 (use-package! gptel
-  :defer-incrementally t
+  :bind ("C-S-l" . gptel-menu)
   :config
   (setq! --gptel-anthropic (gptel-make-anthropic "Claude"
                              :stream t
@@ -397,16 +394,14 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (let ((use-anthropic t))
     (if use-anthropic
         (setq! gptel-backend --gptel-anthropic
-               gptel-model "claude-3-5-sonnet-20240620"
+               gptel-model "claude-3-7-sonnet-20250219"
                gptel-api-key (lambda () (--pass-get "keys/anthropic")))
       (setq! gptel-backend gptel--openai
              gptel-model "gpt-4o"
-             gptel-api-key (lambda () (--pass-get "keys/openai")))))
-  (map! "C-S-l" 'gptel-menu))
+             gptel-api-key (lambda () (--pass-get "keys/openai"))))))
 
 (use-package! elysium
   :defer-incrementally t
-  :commands elysium-query
   :config
   (map! "C-S-k SPC" 'elysium-toggle-window
         "C-S-k RET" 'elysium-query
@@ -539,11 +534,10 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       :group 'paren-face)))
 ;; (add-hook! 'after-make-frame-functions '--init-copy-paste)
 
-(use-package! smerge-mode
-  :defer t
-  :config
-  (doom-require 'doom-editor)
-  (add-hook! 'smerge-mode-hook :append (map! :mode smerge-mode :n "g c" nil)))
+(after! smerge-mode
+  (require 'evil-core)
+  (map! :mode smerge-mode
+        :n "g c" nil))
 
 (defun --emacs-startup ()
   (auto-compression-mode 1)
@@ -555,7 +549,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (require 'tsc)
   (require 'tsc-dyn)
   ;; (--toggle-emacs-debug t t)
-  )
+  t)
 (add-hook! 'emacs-startup-hook :depth 90 '--emacs-startup)
 
 (after! tramp

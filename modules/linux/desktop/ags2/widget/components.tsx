@@ -125,3 +125,15 @@ export const Interactive = ({
     </EventBox>
   );
 };
+
+type CommandProps = {
+  command: string;
+  label?: string;
+} & BoxProps;
+
+export const Command = ({ command, label, ...props }: CommandProps) => (
+  <box className="Command" {...props}>
+    <label className="CommandLabel" label={label || ""} visible={!!label} />
+    <label label={command} />
+  </box>
+);
