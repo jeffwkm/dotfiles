@@ -192,5 +192,8 @@
   "diffEditor.ignoreTrimWhitespace": false,
   "python.poetryPath": "poetry",
   "vsicons.dontShowNewVersionMessage": true,
-  "editor.minimap.enabled": true
+  "editor.minimap.enabled": true,
+  "files.associations": {
+    "mbsyncrc": "plaintext"
+  }
 }

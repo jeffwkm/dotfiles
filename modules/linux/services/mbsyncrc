@@ -18,7 +18,10 @@ SubFolders Verbatim
 Channel protonmail
 Far :protonmail-remote:
 Near :protonmail-local:
-Patterns *
+# from arch wiki:
+# Tip: In Patterns, we ignore the Labels/* directories since this is a directory hierarchy used internally by ProtonMail to store the labels/tags user settings.
+# Warning: In Patterns, we ignore the All Mail/* directory since this is a virtual view of all emails created by ProtonMail. As such, if not ignored, the IMAP library of Bridge (Gluon) will throw an error about an IMAP CLOSE command that is not allowed during the Expunge operation of Isync.
+Patterns * !Labels* !"All Mail"
 Sync All
 Create Both
 Expunge Both
