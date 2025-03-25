@@ -38,24 +38,26 @@ in {
       "cmacrae/formulae"
     ];
 
-    homebrew.brews = [ "FelixKratz/formulae/sketchybar" "python3" ]
+    homebrew.brews = [ "FelixKratz/formulae/sketchybar" ]
+      ++ [ "python3" "virtualenv" "poetry" ]
       ++ optionals programs.mpv.enable [ "mpv" "vapoursynth" "ffmpeg" ];
 
     # homebrew.masApps = { Slack = 803453959; };
 
     homebrew.casks = [
+      "alfred"
       "daisydisk"
       "docker"
-      "firefox"
-      "google-chrome"
       "istat-menus"
-      # "iterm2"
+      "proton-mail-bridge"
       "sf-symbols"
       "steam"
+      "superwhisper"
       "vlc"
     ] ++ (with programs;
       optional spotify.enable "spotify"
       ++ optional vscode.enable "visual-studio-code"
+      ++ optional chromium.enable "google-chrome"
       ++ optional firefox.enable "firefox"
       ++ optional alacritty.enable "alacritty"
       ++ optional kitty.enable "kitty");

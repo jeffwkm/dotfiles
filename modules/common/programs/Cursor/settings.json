@@ -1,15 +1,18 @@
 {
-  "workbench.colorTheme": "GitHub Dark",
-  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorTheme": "Catppuccin Frappé",
+  "workbench.iconTheme": "catppuccin-frappe",
   "window.zoomLevel": 0.0,
-  "window.titleBarStyle": "native",
-  "window.menuBarVisibility": "hidden",
+  // "window.titleBarStyle": "native",
+  // "window.menuBarVisibility": "hidden",
   "workbench.activityBar.orientation": "vertical",
   "editor.semanticTokenColorCustomizations": {
     "enabled": true
   },
   "editor.fontFamily": "'JetBrainsMono Nerd Font', 'Courier New', monospace",
-  "editor.fontSize": 12,
+  "editor.fontSize": 12.0,
+  "catppuccin.workbenchMode": "flat",
+  "catppuccin.italicComments": false,
+  "catppuccin.syncWithIconPack": true,
   "editor.fontWeight": "600",
   "editor.fontLigatures": true,
   "editor.inlayHints.enabled": "onUnlessPressed",
@@ -124,16 +127,7 @@
     }
   },
   "vscode-neovim.ctrlKeysForInsertMode": [],
-  "vscode-neovim.ctrlKeysForNormalMode": [
-    "a",
-    "d",
-    "e",
-    "l",
-    "r",
-    "w",
-    "backspace",
-    "delete"
-  ],
+  "vscode-neovim.ctrlKeysForNormalMode": ["a", "d", "e", "l", "r", "w", "backspace", "delete"],
   "prettier.useEditorConfig": true,
   "yaml.validate": false,
   "evenBetterToml.schema.enabled": false,
@@ -147,7 +141,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[python]": {
-    "editor.formatOnType": true
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "[clojure]": {
     // "editor.defaultFormatter": "rflagreca.vscode-clj-zprint"
@@ -190,8 +184,8 @@
   "diffEditor.ignoreTrimWhitespace": false,
   "python.poetryPath": "poetry",
   "vsicons.dontShowNewVersionMessage": true,
-  "editor.minimap.enabled": true,
   "files.associations": {
     "mbsyncrc": "plaintext"
-  }
+  },
+  "update.releaseTrack": "prerelease"
 }

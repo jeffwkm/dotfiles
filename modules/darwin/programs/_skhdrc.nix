@@ -54,15 +54,16 @@ with apps; {
     cmd - 8                    : ${yabai} -m space --focus 8
     cmd - 9                    : ${yabai} -m space --focus 9
     cmd - 0                    : ${yabai} -m space --focus 10
-    alt - 1                    : ${yabai} -m space --focus 12
-    alt - 2                    : ${yabai} -m space --focus 13
-    alt - 3                    : ${yabai} -m space --focus 14
-    alt - 4                    : ${yabai} -m space --focus 15
-    alt - 5                    : ${yabai} -m space --focus 16
-    alt - 6                    : ${yabai} -m space --focus 17
-    alt - 7                    : ${yabai} -m space --focus 18
-    alt - 8                    : ${yabai} -m space --focus 19
-    alt - 9                    : ${yabai} -m space --focus 20
+    alt - 1                    : ${yabai} -m space --focus 11
+    alt - 2                    : ${yabai} -m space --focus 12
+    alt - 3                    : ${yabai} -m space --focus 13
+    alt - 4                    : ${yabai} -m space --focus 14
+    alt - 5                    : ${yabai} -m space --focus 15
+    alt - 6                    : ${yabai} -m space --focus 16
+    alt - 7                    : ${yabai} -m space --focus 17
+    alt - 8                    : ${yabai} -m space --focus 18
+    alt - 9                    : ${yabai} -m space --focus 19
+    alt - 0                    : ${yabai} -m space --focus 20
     # focus display
     ${focus} - z                    : ${yabai} -m display --focus prev
     ${focus} - c                    : ${yabai} -m display --focus next

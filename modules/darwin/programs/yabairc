@@ -37,10 +37,10 @@ yabai -m rule --add label=settings app="System Settings" manage=off
 yabai -m rule --add label=installer title="Installer" manage=off
 yabai -m rule --add label=svp app="SVP 4 Mac" manage=off
 yabai -m rule --add label=steam app="Steam" manage=off
-yabai -m rule --add label=mpv app="mpv" manage=off opacity=1.0 native-fullscreen=off
-yabai -m rule --add label=slack app="Slack" space=14
+yabai -m rule --add label=mpv app="mpv" manage=off opacity=1.0
+yabai -m rule --add label=slack app="Slack" space=11
 
-yabai -m config external_bar all:33:0
+yabai -m config external_bar all:36:0
 
 # add these lines to the bottom of your yabairc file
 # they're needed to trigger a custom event in sketchybar that we will later define in sketchybarrc

@@ -86,7 +86,7 @@ in {
           vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
         '';
         inputExtraVapoursynth = lib.optionalString cfg.vapoursynth ''
-          I vf toggle format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
+          Ctrl+i vf toggle format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
         '';
         mpvRateSh = "${user.home}/bin.local/mpv-rate.sh";
         runMpvRate = arg: ''

@@ -11,6 +11,8 @@
       dev.aws.enable = true;
       fonts.enable = true;
       programs.mpv.enable = true;
+      programs.chromium.enable = true;
+      programs.firefox.enable = true;
       programs.spotify.enable = true;
       programs.vscode.enable = true;
       programs.kitty.enable = true;

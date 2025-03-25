@@ -167,8 +167,12 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         nil
       (apply 'font-spec
              :family (if variable? "Inter" "JetBrainsMono Nerd Font")
-             :size (+ 12 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 0 0))
-             :weight (if variable? 'medium (if modeline? 'extrabold 'bold))
+             :size (+ 12 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 2 0))
+             :weight (if variable?
+                         'medium
+                       (if (mac?)
+                           (if modeline? 'bold 'semibold)
+                         (if modeline? 'extrabold 'bold)))
              nil)))
   (cl-eval-when 'eval
     (-some-> (symbol-function '--sync-fonts) funcall)))

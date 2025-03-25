@@ -344,5 +344,9 @@
     "key": "alt+ctrl+shift+f",
     "command": "editor.action.formatDocument",
     "when": "isLinux && editorFocus"
+  },
+  {
+    "key": "cmd+i",
+    "command": "composerMode.agent"
   }
 ]
