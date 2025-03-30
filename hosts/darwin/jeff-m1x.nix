@@ -11,18 +11,13 @@
       dev.aws.enable = true;
       fonts.enable = true;
       programs.mpv.enable = true;
-      programs.chromium.enable = true;
-      programs.firefox.enable = true;
+      programs.firefox.enable = false;
       programs.spotify.enable = true;
       programs.vscode.enable = true;
       programs.kitty.enable = true;
-      programs.alacritty = {
-        enable = true;
-        fontSize = 12;
-        decorations = "buttonless";
-        fontStyle = "Medium";
-      };
     };
+
+    environment.systemPackages = with pkgs; [ sshfs cava ];
 
     networking.computerName = "Jeff-M1X";
     networking.knownNetworkServices = [ "Wi-Fi" "USB 10/100/1000 LAN" ];

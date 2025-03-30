@@ -15,14 +15,13 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    # Nix helpers
+    ### Nix helpers
     flake-utils.url = "github:numtide/flake-utils";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
     ### Additional sources
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    # emacs-overlay.url = "github:jeffwkm/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     ags.url = "github:aylur/ags";
@@ -45,10 +44,8 @@
       lib = inputs.nixpkgs.lib.extend (final: prev: {
         my = import ./lib {
           inherit inputs;
-          # * make nixpkgs.lib available within ./lib
-          # * allow for references between files in ./lib
-          # * lazy evaluation means no infinite recursion here
-          #   unless there's a circular reference within ./lib
+          # - make nixpkgs.lib available within ./lib
+          # - provide for references between files in ./lib
           lib = final;
         };
       });

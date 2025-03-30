@@ -15,7 +15,7 @@ with apps; {
     # focus window
     ${focus} - ${prevAlt}           : ${yabai} -m window --focus stack.prev
     ${focus} - ${nextAlt}           : ${yabai} -m window --focus stack.next
-    ${focus} - ${recent}            : ${yabai} -m window --focus recent
+    # ${focus} - ${recent}            : ${yabai} -m window --focus recent
     # ${focus} - h                    : ${yabai} -m window --focus west
     # ${focus} - j                    : ${yabai} -m window --focus south
     # ${focus} - k                    : ${yabai} -m window --focus north
@@ -37,7 +37,7 @@ with apps; {
     cmd + shift - up : ${yabai} -m window --swap north
     cmd + shift - right : ${yabai} -m window --swap east
     # focus space
-    alt + ctrl - ${recent}          : ${yabai} -m space --focus recent
+    # alt + ctrl - ${recent}          : ${yabai} -m space --focus recent
     ${focus} - ${prev}              : ${yabai} -m space --focus prev
     ${focus} - ${next}              : ${yabai} -m space --focus next
     ${focus} - left                 : ${yabai} -m space --focus prev
@@ -79,7 +79,7 @@ with apps; {
     ${move} - 9                     : ${yabai} -m window --space  9; ${yabai} -m space --focus 9
     ${move} - 0                     : ${yabai} -m window --space 10; ${yabai} -m space --focus 10
     # move space to display
-    ${display} - ${recent}          : ${yabai} -m space --display recent
+    # ${display} - ${recent}          : ${yabai} -m space --display recent
     ${display} - ${prev}            : ${yabai} -m space --display prev
     ${display} - ${next}            : ${yabai} -m space --display next
     # move window to display

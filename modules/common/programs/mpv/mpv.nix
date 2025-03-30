@@ -11,9 +11,9 @@ let
 in {
   options.modules.programs.mpv = {
     enable = mkBoolOpt modules.desktop.enable;
-    vapoursynth =
-      mkBoolOpt (cfg.enable && !darwin && pkgs.system != "aarch64-linux");
+    vapoursynth = mkBoolOpt (cfg.enable && pkgs.system != "aarch64-linux");
     extraConf = mkOpt types.str "";
+    svp = mkBoolOpt false;
   };
 
   config = mkIf cfg.enable {
@@ -23,20 +23,29 @@ in {
       (final: prev:
         let
           mpvOpts = {
-            scripts = with final.mpvScripts; [
-              autoload
-              convert
-              mpris
-              mpv-playlistmanager
-              # videoclip
-              # cutter
-              # thumbnail
-              thumbfast
-              uosc
-            ];
+            scripts = with final.mpvScripts;
+              [
+                autoload
+                mpv-playlistmanager
+                # videoclip
+                # cutter
+                # thumbnail
+                thumbfast
+                uosc
+              ] ++ optionals (!darwin) [ convert mpris ];
             extraMakeWrapperArgs = optionals cfg.vapoursynth [
               "--prefix"
-              "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+              "LD_LIBRARY_PATH"
+              ":"
+              "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+              "--prefix"
+              "VAPOURSYNTH_LIB"
+              ":"
+              "${pkgs.vapoursynth}/lib/vapoursynth"
+              "--prefix"
+              "VAPOURSYNTH_MVTOOLS_LIB"
+              ":"
+              "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
             ];
           };
           wrapMpv = mpv-unwrapped:
@@ -48,40 +57,15 @@ in {
         })
     ];
 
-    # nixpkgs.overlays = [
-    #   # customize mpv build for plugins and vapoursynth-mvtools
-    #   # mpv from nixpkgs-unstable
-    #   (final: prev: {
-    #     mpv = pkgs.pkgs-stable.mpv.override {
-    #       scripts = with final.mpvScripts; [
-    #         autoload
-    #         convert
-    #         mpris
-    #         mpv-playlistmanager
-    #         # videoclip
-    #         # cutter
-    #         # thumbnail
-    #         thumbfast
-    #         uosc
-    #       ];
-    #       extraMakeWrapperArgs = optionals cfg.vapoursynth [
-    #         "--prefix"
-    #         "LD_LIBRARY_PATH:${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
-    #       ];
-    #       mpv = optimize config (prev.mpv.unwrapped.override {
-    #         vapoursynthSupport = cfg.vapoursynth;
-    #       });
-    #     };
-    #   })
-    # ];
-
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let
         link = config.lib.file.mkOutOfStoreSymlink;
-        mpvExtraDarwin = if darwin then ''
+        mpvExtraDarwin = optionalString darwin (''
+          icc-profile-auto
+          icc-force-contrast=300
+        '' + optionalString (cfg.svp && !cfg.vapoursynth) ''
           input-ipc-server=/tmp/mpvsocket
-        '' else
-          "";
+        '');
         mpvExtraVapoursynth = lib.optionalString cfg.vapoursynth ''
           vf=format=yuv420p,vapoursynth=~~/motioninterpolation.vpy:8:12
         '';
@@ -98,7 +82,8 @@ in {
         inputExtra = inputExtraVapoursynth + inputExtraMpvRate;
       in {
         home.packages = with pkgs;
-          optionals (!darwin) [ mpv mpvc celluloid ffmpeg ]
+          [ mpv ffmpeg ] # \
+          ++ optionals (!darwin) [ mpvc celluloid ]
           ++ optionals cfg.vapoursynth [ vapoursynth vapoursynth-mvtools ];
 
         xdg.configFile = {

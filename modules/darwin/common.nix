@@ -25,22 +25,21 @@ in {
     homebrew.global.lockfiles = false;
 
     homebrew.taps = [
-      "FelixKratz/formulae"
-      # "d12frosted/emacs-plus"
       "homebrew/bundle"
       "homebrew/cask"
       "homebrew/cask-fonts"
       "homebrew/cask-versions"
       "homebrew/core"
       "homebrew/services"
-      "koekeishiya/formulae"
-      # "railwaycat/emacsmacport"
       "cmacrae/formulae"
+      "koekeishiya/formulae"
+      "FelixKratz/formulae"
     ];
 
-    homebrew.brews = [ "FelixKratz/formulae/sketchybar" ]
-      ++ [ "python3" "virtualenv" "poetry" ]
-      ++ optionals programs.mpv.enable [ "mpv" "vapoursynth" "ffmpeg" ];
+    homebrew.brews =
+      [ "FelixKratz/formulae/sketchybar" "python3" "virtualenv" "poetry" ]
+      ++ (with programs; optional spotify.enable "spicetify-cli");
+    # ++ optionals mpv.enable [ "vapoursynth" "ffmpeg" ]);
 
     # homebrew.masApps = { Slack = 803453959; };
 
@@ -48,7 +47,10 @@ in {
       "alfred"
       "daisydisk"
       "docker"
+      "firefox"
       "istat-menus"
+      "google-chrome"
+      "macfuse"
       "proton-mail-bridge"
       "sf-symbols"
       "steam"
@@ -57,10 +59,9 @@ in {
     ] ++ (with programs;
       optional spotify.enable "spotify"
       ++ optional vscode.enable "visual-studio-code"
-      ++ optional chromium.enable "google-chrome"
-      ++ optional firefox.enable "firefox"
-      ++ optional alacritty.enable "alacritty"
-      ++ optional kitty.enable "kitty");
+      ++ optional kitty.enable "kitty"
+      ++ optional alacritty.enable "alacritty");
+    # ++ optional mpv.enable "mpv"
 
     homebrew.extraConfig = ''
       brew "koekeishiya/formulae/yabai", args: ["HEAD"]
@@ -80,6 +81,19 @@ in {
     environment.etc."pf.conf" = mkIf false (readFile ./pf.conf);
     environment.etc."pf.anchors/port80" =
       mkIf false (readFile ./pf.anchors/port80);
+
+    # Fix linking of apps into Applications folder
+    # https://github.com/nix-darwin/nix-darwin/issues/214#issuecomment-2467550779
+    system.activationScripts.postUserActivation.text = ''
+      apps_source="${config.system.build.applications}/Applications"
+      moniker="Nix Trampolines"
+      app_target_base="$HOME/Applications"
+      app_target="$app_target_base/$moniker"
+      mkdir -p "$app_target"
+      ${pkgs.rsync}/bin/rsync --archive --checksum --chmod=-w --copy-unsafe-links --delete "$apps_source/" "$app_target"
+    '';
+
+    programs.nix-index.enable = true;
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.packages = with pkgs; [ (lowPrio coreutils-full) ];

@@ -13,7 +13,7 @@ in {
     else
       "JetBrainsMono NF Bold");
     fontStyle = mkOpt str theme.monoStyle;
-    fontSize = mkOpt number (if host.darwin then 11.5 else 9.0);
+    fontSize = mkOpt number (if host.darwin then 12.0 else 9.0);
     opacity = mkOpt float theme.windowOpacity;
     colors = with theme.colors; { background = mkOpt str background; };
   };
@@ -30,8 +30,15 @@ in {
           font_family ${cfg.fontFamily}
           font_size ${toString cfg.fontSize}
         '';
+        xdg.configFile."kitty/kitty.conf".text = mkIf host.darwin ''
+          include ${pkgs.kitty-themes}/share/kitty-themes/themes/Catppuccin-Macchiato.conf
+          shell_integration no-rc no-cursor
+
+          include ~/.config/kitty/nix.conf
+          include ~/.config/kitty/extra.conf
+        '';
         programs.kitty = {
-          enable = true;
+          enable = (!host.darwin);
           extraConfig = ''
             include ~/.config/kitty/nix.conf
             include ~/.config/kitty/extra.conf

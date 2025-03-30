@@ -87,11 +87,13 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
                                  (substring-no-properties)
                                  (concat "  "))
                                (or ""))
-                           (string-trim buffer-name "[ \\\t\\\r\\\n\\*]+" "[ \\\t\\\r\\\n\\*]+"))))
+                           (string-trim buffer-name "[ \\\t\\\r\\\n\\*]+" "[ \\\t\\\r\\\n\\*]+")
+                           (unless (display-graphic-p) " - Emacs"))))
                     "Emacs"))))
        require-final-newline t
        large-file-warning-threshold (* 10 1000 1000)
-       catppuccin-flavor 'macchiato
+       ;; catppuccin-flavor 'macchiato
+       catppuccin-flavor 'frappe
        ;; doom-theme 'doom-one
        ;; doom-theme 'doom-tomorrow-night
        doom-theme 'catppuccin
@@ -167,7 +169,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         nil
       (apply 'font-spec
              :family (if variable? "Inter" "JetBrainsMono Nerd Font")
-             :size (+ 12 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 2 0))
+             :size (+ 12 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 1 0))
              :weight (if variable?
                          'medium
                        (if (mac?)
@@ -251,7 +253,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
          doom-modeline-buffer-encoding 'nondefault
          doom-modeline-default-eol-type 0
          doom-modeline-indent-info t
-         doom-modeline-height 24
+         doom-modeline-height 25
          doom-modeline-major-mode-icon t)
   :config
   (size-indication-mode -1)

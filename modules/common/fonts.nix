@@ -13,10 +13,8 @@ let
       cm_unicode
       dejavu_fonts
       emacs-all-the-icons-fonts
-      fira-code
       font-awesome_5
       input-fonts
-      jetbrains-mono
       material-symbols
       noto-fonts
       open-sans
@@ -34,7 +32,6 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ fontconfig ];
     nixpkgs.config.input-fonts.acceptLicense = true;
-    # fonts.fontDir.enable = true;
     fonts.packages = font-pkgs;
   };
 }
