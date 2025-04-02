@@ -141,8 +141,8 @@ export const Pomodoro = () => {
               if (s === PomodoroState.None) {
                 return (
                   <>
-                    <Command label="Open Current" command={"SPC n r f"} />
-                    <Command label="Open Daily" command={"SPC n r d t"} />
+                    <Command label="Find" command={"SPC n r f"} />
+                    <Command label="Today" command={"SPC n r d t"} />
                   </>
                 );
               } else if (s === PomodoroState.Pomodoro) {
