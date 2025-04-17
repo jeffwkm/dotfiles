@@ -36,8 +36,8 @@ in {
       '';
       services.protonmail.enable = true;
       services.protonvpn = {
-        enable = false;
-        configFile = "/private/wg-quick/protonvpn-US-NY-158.conf";
+        enable = true;
+        configFile = "/private/wg-quick/protonvpn-US-NY-306.conf";
       };
       services.mpd = {
         enable = true;
