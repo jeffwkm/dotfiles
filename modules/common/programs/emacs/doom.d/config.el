@@ -206,15 +206,23 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         (if (display-graphic-p frame)
             ;; gui emacs
             (progn
-              (set-face-background 'default --background-color frame)
-              (set-face-attribute 'lsp-lens-face frame :weight 'extrabold :height 0.9 :inherit 'shadow)
-              (set-face-attribute 'lsp-inlay-hint-face frame :family "Fira Code" :weight 'bold :height 0.85)
-              (set-face-attribute 'tree-sitter-hl-face:function.call frame :weight 'unspecified)
-              (set-face-attribute 'tree-sitter-hl-face:punctuation.delimiter frame :foreground (catppuccin-lighten "#939ab7" 50)))
+              (set-face-attribute 'default frame
+                                  :background --background-color)
+              (set-face-attribute 'lsp-lens-face frame
+                                  :weight 'extrabold
+                                  :height 0.9
+                                  :inherit 'shadow)
+              (set-face-attribute 'lsp-inlay-hint-face frame
+                                  :family "Fira Code"
+                                  :weight 'bold
+                                  :height 0.85)
+              (set-face-attribute 'tree-sitter-hl-face:function.call frame
+                                  :weight 'unspecified)
+              (set-face-attribute 'tree-sitter-hl-face:punctuation.delimiter frame
+                                  :foreground (catppuccin-lighten "#939ab7" 50)) )
           ;; transparency for terminal
           (set-face-background 'default "#00000000" frame)
           (set-face-background 'hl-line "#00000000" frame))))
-
     (add-hook! '(after-make-frame-functions server-after-make-frame-hook)
                :append '--set-faces-on-frame)
     (add-hook! 'doom-load-theme-hook
