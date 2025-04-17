@@ -108,6 +108,10 @@ with apps; {
     #           ${yabai} -m window --toggle sticky
 
     ${extra}
-    cmd + ctrl - o     : ~/bin/disp -s mac -t windows
+    cmd + ctrl - o                   : ~/bin/disp -s mac -t linux
+    cmd + ctrl + shift - o           : ~/bin/disp -s mac -t windows
+    cmd + ctrl - 1                   : ~/bin/disp -s mac
+    cmd + ctrl - 2                   : ~/bin/disp -s linux
+    cmd + ctrl - 3                   : ~/bin/disp -s windows
   '';
 }
