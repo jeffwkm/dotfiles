@@ -24,6 +24,10 @@ in {
         enable = false;
         configFile = "/private/wg-quick/protonvpn-1-US-VA-14.conf";
       };
+      services.mpd = {
+        enable = true;
+        musicDirectory = "/mnt/huge/Music";
+      };
     };
     ## asahi system
     boot.loader.systemd-boot.enable = true;

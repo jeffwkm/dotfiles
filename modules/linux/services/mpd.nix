@@ -16,20 +16,21 @@ in {
     services.pulseaudio.extraConfig =
       "load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1";
 
-    services.mpd = {
-      enable = true;
-      musicDirectory = cfg.musicDirectory;
-      extraConfig = ''
-        audio_output {
-          type "pulse"
-          name "Pulseaudio"
-          server "127.0.0.1" # add this line - MPD must connect to the local sound server
-        }
-      '';
-      network.listenAddress = "any";
-      startWhenNeeded = true;
-    };
+    home-manager.users.${user.name} = { config, pkgs, ... }: {
+      home.packages = with pkgs; [ rmpc ];
 
-    home-manager.users.${user.name} = { config, pkgs, ... }: { };
+      services.mpd = {
+        enable = true;
+        musicDirectory = cfg.musicDirectory;
+        extraConfig = ''
+          audio_output {
+            type "pipewire"
+            name "Pipewire"
+            server "127.0.0.1"
+          }
+        '';
+        network.listenAddress = "any";
+      };
+    };
   };
 }
