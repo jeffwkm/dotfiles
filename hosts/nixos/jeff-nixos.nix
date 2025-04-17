@@ -49,6 +49,9 @@ in {
     services.ddclient.configFile = "/private/ddclient.conf";
     services.ddclient.interval = "1h";
 
+    services.deluge.enable = true;
+    services.deluge.web.enable = true;
+
     services.nginx = {
       enable = true;
       recommendedOptimisation = true;
