@@ -127,7 +127,16 @@
     }
   },
   "vscode-neovim.ctrlKeysForInsertMode": [],
-  "vscode-neovim.ctrlKeysForNormalMode": ["a", "d", "e", "l", "r", "w", "backspace", "delete"],
+  "vscode-neovim.ctrlKeysForNormalMode": [
+    "a",
+    "d",
+    "e",
+    "l",
+    "r",
+    "w",
+    "backspace",
+    "delete"
+  ],
   "prettier.useEditorConfig": true,
   "yaml.validate": false,
   "evenBetterToml.schema.enabled": false,
@@ -187,5 +196,6 @@
   "files.associations": {
     "mbsyncrc": "plaintext"
   },
-  "update.releaseTrack": "prerelease"
+  "update.releaseTrack": "prerelease",
+  "redhat.telemetry.enabled": true
 }
