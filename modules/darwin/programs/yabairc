@@ -40,11 +40,13 @@ yabai -m rule --add label=steam app="Steam" manage=off
 yabai -m rule --add label=mpv app="mpv" manage=off opacity=1.0
 yabai -m rule --add label=slack app="Slack" space=11
 
-yabai -m config external_bar all:40:0
+yabai -m config external_bar all:40:40
 
-yabai -m signal --add event=window_created action="sketchybar --trigger window_change &> /dev/null"
-yabai -m signal --add event=window_destroyed action="sketchybar --trigger window_change &> /dev/null"
-yabai -m signal --add event=window_focused action="sketchybar --trigger window_focused &> /dev/null"
-yabai -m signal --add event=window_title_changed action='sketchybar --trigger window_title_changed YABAI_WINDOW_ID=$YABAI_WINDOW_ID &> /dev/null'
+for bar in sketchybar bottom_bar; do
+  yabai -m signal --add event=window_created action="$bar --trigger window_change &> /dev/null"
+  yabai -m signal --add event=window_destroyed action="$bar --trigger window_change &> /dev/null"
+  yabai -m signal --add event=window_focused action="$bar --trigger window_focused &> /dev/null"
+  yabai -m signal --add event=window_title_changed action="$bar"' --trigger window_title_changed YABAI_WINDOW_ID=$YABAI_WINDOW_ID &> /dev/null'
+done
 
 echo "yabai configuration loaded.."
