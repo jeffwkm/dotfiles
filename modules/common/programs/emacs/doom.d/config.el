@@ -202,15 +202,23 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       `(lsp-inlay-hint-face :foreground ,(catppuccin-lighten "#6e738d" 25)))
 
     (defun --set-faces-on-frame (&optional frame)
-      (when (and frame (display-graphic-p frame))
-        (set-face-background 'default --background-color frame)
-        (set-face-attribute 'lsp-lens-face frame :weight 'extrabold :height 0.9 :inherit 'shadow)
-        (set-face-attribute 'lsp-inlay-hint-face frame :family "Fira Code" :weight 'bold :height 0.85)
-        (set-face-attribute 'tree-sitter-hl-face:function.call frame :weight 'unspecified)
-        (set-face-attribute 'tree-sitter-hl-face:punctuation.delimiter frame :foreground (catppuccin-lighten "#939ab7" 50))))
+      (let ((frame (or frame (selected-frame))))
+        (if (display-graphic-p frame)
+            ;; gui emacs
+            (progn
+              (set-face-background 'default --background-color frame)
+              (set-face-attribute 'lsp-lens-face frame :weight 'extrabold :height 0.9 :inherit 'shadow)
+              (set-face-attribute 'lsp-inlay-hint-face frame :family "Fira Code" :weight 'bold :height 0.85)
+              (set-face-attribute 'tree-sitter-hl-face:function.call frame :weight 'unspecified)
+              (set-face-attribute 'tree-sitter-hl-face:punctuation.delimiter frame :foreground (catppuccin-lighten "#939ab7" 50)))
+          ;; transparency for terminal
+          (set-face-background 'default "#00000000" frame)
+          (set-face-background 'hl-line "#00000000" frame))))
 
     (add-hook! '(after-make-frame-functions server-after-make-frame-hook)
                :append '--set-faces-on-frame)
+    (add-hook! 'doom-load-theme-hook
+               :append (-each (frame-list) '--set-faces-on-frame))
 
     (-each (frame-list) '--set-faces-on-frame)
 
