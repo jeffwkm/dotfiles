@@ -12,6 +12,13 @@ in {
     host.gui = true;
     nix.enable = false;
 
+    environment.systemPackages = with pkgs; [
+      pkg-config
+      gobject-introspection
+      glib
+      gtk3
+    ];
+
     environment.shellInit = mkIf config.homebrew.enable ''
       eval "$(${config.homebrew.brewPrefix}/brew shellenv)"
     '';
@@ -38,6 +45,7 @@ in {
 
     homebrew.brews =
       [ "FelixKratz/formulae/sketchybar" "python3" "virtualenv" "poetry" ]
+      ++ [ "ruby" "gtk+3" "gobject-introspection" "adwaita-icon-theme" ]
       ++ (with programs; optional spotify.enable "spicetify-cli");
     # ++ optionals mpv.enable [ "vapoursynth" "ffmpeg" ]);
 

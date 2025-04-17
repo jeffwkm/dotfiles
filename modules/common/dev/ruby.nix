@@ -8,6 +8,7 @@ let
     with ps; [
       curses
       ffi
+      gio2
       glib2
       gtk3
       native-package-installer
@@ -20,7 +21,7 @@ let
 in {
   options.modules.dev.ruby.enable = mkBoolOpt dev.enable-all;
 
-  config = {
+  config = mkIf cfg.enable {
     environment.systemPackages = if cfg.enable then [
       (optimize config rubyCustom)
       pkgs.ruby_3_3.devdoc
