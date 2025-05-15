@@ -36,8 +36,8 @@ in {
       '';
       services.protonmail.enable = true;
       services.protonvpn = {
-        enable = true;
-        configFile = "/private/wg-quick/protonvpn-US-NY-306.conf";
+        enable = false;
+        configFile = "/private/wg-quick/protonvpn-jeff-nixos-1-US-NY-290.conf";
       };
       services.mpd = {
         enable = true;
@@ -71,7 +71,7 @@ in {
     environment.systemPackages = with pkgs; [
       firmwareLinuxNonfree
       libguestfs
-      ansel # darktable
+      # ansel # darktable
       amdgpu_top
       # input-leap_git
       # waynergy_git
@@ -158,10 +158,10 @@ in {
     }];
 
     # boot.kernelPackages = pkgs.linuxPackages;
-    # boot.kernelPackages = pkgs.linuxPackages_latest;
+    boot.kernelPackages = pkgs.linuxPackages_latest;
     # boot.kernelPackages = pkgs.linuxPackages_6_6;
     # boot.kernelPackages = pkgs.linuxPackages_lqx;
-    boot.kernelPackages = pkgs.linuxPackages_cachyos;
+    # boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
     boot.kernelModules = [ "kvm-amd" "i2c_dev" ];
     boot.initrd.availableKernelModules =

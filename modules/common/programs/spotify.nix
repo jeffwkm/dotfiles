@@ -23,7 +23,7 @@ in {
         enable = true;
         # theme = spicePkgs.themes.text;
         theme = spicePkgs.themes.catppuccin;
-        colorScheme = "macchiatto";
+        # colorScheme = "macchiatto";
         enabledExtensions = with spicePkgs.extensions; [
           shuffle
           hidePodcasts

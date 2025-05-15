@@ -197,5 +197,9 @@
     "mbsyncrc": "plaintext"
   },
   "update.releaseTrack": "prerelease",
-  "redhat.telemetry.enabled": true
+  "redhat.telemetry.enabled": true,
+  "calva.autoOpenREPLWindow": true,
+  "calva.evaluationSendCodeToOutputWindow": true,
+  // "calva.referencesCodeLens.enabled": true,
+  "calva.autoConnectRepl": true
 }

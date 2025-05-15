@@ -87,6 +87,8 @@ in {
     networking.firewall.allowedUDPPorts = [ 137 138 ]
       ++ optionals programs.spotify.enable [ 5353 ];
 
+    networking.hosts = { "192.168.1.168" = [ "jeff-m1x" ]; };
+
     boot.loader = mkIf cfg.systemd-boot.enable {
       efi.canTouchEfiVariables = true;
       efi.efiSysMountPoint = "/boot";

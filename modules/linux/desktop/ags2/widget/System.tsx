@@ -71,8 +71,8 @@ const CpuStatus = () => {
         label={systemMetrics(
           (m) =>
             `${m.cpu.temperature ? ` ${m.cpu.temperature.toFixed(0)}°` : ""}${
-              m.cpu.frequency ? ` ${m.cpu.frequency.current}` : ""
-            }`
+              m.cpu.frequency ? ` ${m.cpu.frequency.current.toFixed(2)}` : ""
+            }`,
         )}
       />
       {systemMetrics((m) => m.cpu.frequency && <label className="unit_label" label="GHz" />)}

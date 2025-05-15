@@ -22,7 +22,7 @@ in {
   config = mkIf cfg.enable {
     host.gui = true;
 
-    services.tailscale.enable = true;
+    # services.tailscale.enable = true;
 
     xdg.mime.defaultApplications = {
       "text/html" = browser;

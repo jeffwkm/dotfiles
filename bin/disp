@@ -29,7 +29,7 @@
   (when msg (println msg)))
 
 (def input->vcp
-  {:windows "x13", :mac "x14", :linux "x12"})
+  {:windows "x12", :mac "x14", :linux "x13"})
 
 (def vcp->input (->> (keys input->vcp)
                      (map (fn [i] {(input->vcp i) i}))
