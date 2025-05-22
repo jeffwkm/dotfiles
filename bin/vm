@@ -30,6 +30,7 @@
   {:mouse        {:id ["1038" "1848"]}
    :keyboard     {:id ["0853" "0100"]}
    :steam        {:id ["28de" "1142"]}
+   :rocksmith    {:id ["12ba" "00ff"]}
    :bluetooth    {:id ["8087" "0029"]}
    :btusb        {:id ["1395" "002d"]}})
 

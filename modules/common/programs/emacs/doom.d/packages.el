@@ -41,6 +41,7 @@
 (package! ligature)
 (package! mentor)                       ; rtorrent client
 (package! nameless)
+(package! org-fancy-priorities)
 (package! org-present)
 (package! org-ql)
 (package! org-ref)
@@ -49,6 +50,7 @@
 (package! org-roam-timestamps)
 (package! org-roam-ui)
 (package! org-super-agenda)
+(package! org-superstar)
 (package! paradox)                      ; package manager
 (package! paren-face)
 (package! rainbow-mode)
