@@ -75,7 +75,6 @@ in {
       amdgpu_top
       # input-leap_git
       # waynergy_git
-      dnsmasq
     ];
 
     environment.etc = { "machines/win10.xml".source = ./libvirt/win10.xml; };

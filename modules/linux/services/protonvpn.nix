@@ -22,14 +22,14 @@ in {
       optionals (cfg.port != null) [ cfg.port ];
 
     networking.resolvconf.extraConfig = ''
-      search_domains_append=lan
-      name_servers_append=192.168.86.1
+      search_domains_append=mynetworksettings.com
+      name_servers_append=192.168.1.1
     '';
 
     services.dnsmasq = {
       enable = true;
       settings = ({
-        server = [ "10.2.0.1" "/lan/192.168.86.1" ];
+        server = [ "10.2.0.1" "/lan/192.168.1.1" ];
       } // (mkIf config.virtualisation.libvirtd.enable {
         # prevent conflict with libvirtd's dnsmasq
         interface = "br0";

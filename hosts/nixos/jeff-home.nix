@@ -2,7 +2,7 @@
 with lib;
 with lib.my;
 let inherit (config) user;
-  in {
+in {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   config = {
@@ -16,9 +16,7 @@ let inherit (config) user;
         "/private/wg-quick/protonvpn-US-NY-306.conf";
     };
 
-    environment.systemPackages = with pkgs; [
-      firmwareLinuxNonfree
-    ];
+    environment.systemPackages = with pkgs; [ firmwareLinuxNonfree ];
 
     networking.useDHCP = true;
 
