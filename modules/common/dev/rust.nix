@@ -25,7 +25,6 @@ in {
                 "rust-src"
                 "rust-analyzer"
                 "rustfmt"
-                "rls"
                 "rust-analysis"
                 "clippy"
               ];
