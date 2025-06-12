@@ -19,9 +19,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays =
-      [ (final: prev: { kitty = optimize config prev.kitty; }) ];
-
     home-manager.users.${user.name} = { config, pkgs, ... }:
       let link = path: config.lib.file.mkOutOfStoreSymlink "${pwd}/${path}";
       in {
@@ -39,6 +36,7 @@ in {
         '';
         programs.kitty = {
           enable = (!host.darwin);
+          package = optimize config pkgs.kitty;
           extraConfig = ''
             include ~/.config/kitty/nix.conf
             include ~/.config/kitty/extra.conf
