@@ -223,7 +223,7 @@ in {
           xterm
         ];
         themes = with pkgs;
-          [ vivid base16-builder base16-shell-preview ] ++ [
+          [ vivid ] ++ [
             adw-gtk3
             capitaine-cursors
             # catppuccin-cursors

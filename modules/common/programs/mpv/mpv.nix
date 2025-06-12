@@ -37,15 +37,15 @@ in {
               "--prefix"
               "LD_LIBRARY_PATH"
               ":"
-              "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+              "${final.vapoursynth-mvtools}/lib/vapoursynth"
               "--prefix"
               "VAPOURSYNTH_LIB"
               ":"
-              "${pkgs.vapoursynth}/lib/vapoursynth"
+              "${final.vapoursynth}/lib/vapoursynth"
               "--prefix"
               "VAPOURSYNTH_MVTOOLS_LIB"
               ":"
-              "${pkgs.vapoursynth-mvtools}/lib/vapoursynth"
+              "${final.vapoursynth-mvtools}/lib/vapoursynth"
             ];
           };
           wrapMpv = mpv-unwrapped:
@@ -54,6 +54,8 @@ in {
             mpv-unwrapped.override { vapoursynthSupport = cfg.vapoursynth; };
         in {
           mpv = pipe final.mpv-unwrapped [ withVS wrapMpv (optimize config) ];
+          vapoursynth = final.pkgs-stable.vapoursynth;
+          vapoursynth-mvtools = final.pkgs-stable.vapoursynth-mvtools;
         })
     ];
 
