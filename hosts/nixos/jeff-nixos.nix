@@ -190,6 +190,7 @@ in {
       "kvm.ignore_msrs=1"
       "kvm.report_ignored_msrs=0"
       "kvm_amd.nested=0"
+      "mitigations=off"
     ];
 
     hardware.cpu.amd.updateMicrocode = true;
