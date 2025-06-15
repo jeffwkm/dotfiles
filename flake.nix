@@ -30,8 +30,6 @@
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     nil-server.url = "github:oxalica/nil";
     nil-server.inputs.nixpkgs.follows = "nixpkgs";
-    nil-server.inputs.flake-utils.follows = "flake-utils";
-    nil-server.inputs.rust-overlay.follows = "rust-overlay";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     spicetify-nix.inputs.nixpkgs.follows = "nixpkgs";
     hyprland.url = "github:hyprwm/Hyprland";
