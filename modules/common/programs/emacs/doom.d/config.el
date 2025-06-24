@@ -50,8 +50,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 (defvar --window-opacity nil)
 (defvar --background-color nil)
 (load (expand-file-name "~/.config/config-nix.el"))
-;; override default window opacity from nix
-(setq! --window-opacity 0.88)
+;; (setq! --window-opacity 0.88)
 
 (setq! split-window-preferred-function 'split-window-prefer-horizontal)
 
@@ -169,7 +168,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         nil
       (apply 'font-spec
              :family (if variable? "Inter" "JetBrainsMono Nerd Font")
-             :size (+ 12 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 1 0))
+             :size (+ 13 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 0 0))
              :weight (if variable?
                          'medium
                        (if (mac?)
@@ -199,7 +198,10 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         :background ,(catppuccin-lighten "#2f3244" 16))
       ;; `(hl-line :background ,(catppuccin-lighten "#2f3244" 2))
       `(shadow :foreground ,(catppuccin-lighten "#6e738d" 50))
-      `(lsp-inlay-hint-face :foreground ,(catppuccin-lighten "#6e738d" 25)))
+      `(lsp-inlay-hint-face :foreground ,(catppuccin-lighten "#6e738d" 25))
+      `(lsp-flycheck-warning-unnecessary-face
+        :foreground ,(catppuccin-color 'subtext1)
+        :underline ,(catppuccin-darken (catppuccin-color 'yellow) 10)))
 
     (defun --set-faces-on-frame (&optional frame)
       (let ((frame (or frame (selected-frame))))
@@ -399,6 +401,11 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   nil)
 
 (after! magit
+  (setq! magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (setq! transient-display-buffer-action '(display-buffer-in-side-window
+                                           (side . bottom)
+                                           (dedicated . t)
+                                           (inhibit-same-window . t)))
   (map! :mode magit-mode
         :nv "/" nil))
 

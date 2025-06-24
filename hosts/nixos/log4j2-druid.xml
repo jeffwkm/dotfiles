@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="WARN">
+  <Appenders>
+    <!-- Console Appender -->
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{ISO8601} %p [%t] %c - %m%n"/>
+    </Console>
+
+    <!-- Rolling File Appender -->
+    <RollingFile name="RollingFile" fileName="/run/druid/logs/druid.log" filePattern="logs/druid-%d{yyyy-MM-dd}-%i.log.gz">
+      <PatternLayout pattern="%d{ISO8601} %p [%t] %c - %m%n"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <SizeBasedTriggeringPolicy size="100 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="20"/>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <!-- Druid specific loggers -->
+    <Logger name="org.apache.druid" level="INFO" additivity="false">
+      <AppenderRef ref="RollingFile"/>
+      <AppenderRef ref="Console"/>
+    </Logger>
+
+    <!-- Reduce noise from Zookeeper -->
+    <Logger name="org.apache.zookeeper" level="WARN" additivity="false">
+      <AppenderRef ref="RollingFile"/>
+      <AppenderRef ref="Console"/>
+    </Logger>
+
+    <!-- Reduce noise from Curator -->
+    <Logger name="org.apache.curator" level="WARN" additivity="false">
+      <AppenderRef ref="RollingFile"/>
+      <AppenderRef ref="Console"/>
+    </Logger>
+
+    <!-- Root Logger -->
+    <Root level="INFO">
+      <AppenderRef ref="RollingFile"/>
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>

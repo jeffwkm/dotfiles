@@ -11,9 +11,9 @@ in {
     fontFamily = mkOpt str (if host.darwin then
       "JetBrains Mono Semibold"
     else
-      "JetBrainsMono NF Bold");
+      "JetBrainsMono NF Semibold");
     fontStyle = mkOpt str theme.monoStyle;
-    fontSize = mkOpt number (if host.darwin then 12.0 else 9.0);
+    fontSize = mkOpt number (if host.darwin then 12.0 else 10.0);
     opacity = mkOpt float theme.windowOpacity;
     colors = with theme.colors; { background = mkOpt str background; };
   };
@@ -26,6 +26,7 @@ in {
         xdg.configFile."kitty/nix.conf".text = ''
           font_family ${cfg.fontFamily}
           font_size ${toString cfg.fontSize}
+          background_opacity ${toString cfg.opacity}
         '';
         xdg.configFile."kitty/kitty.conf".text = mkIf host.darwin ''
           include ${pkgs.kitty-themes}/share/kitty-themes/themes/Catppuccin-Macchiato.conf

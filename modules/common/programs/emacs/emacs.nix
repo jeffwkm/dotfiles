@@ -96,7 +96,6 @@ in {
           "doom/".source = link "${pwd}/doom.d";
 
           "config-nix.el".text = ''
-            ;; (setq! --background-color "${theme.colors.background}")
             (setq! --window-opacity ${toString theme.windowOpacity})
           '';
         };

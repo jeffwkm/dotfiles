@@ -9,7 +9,7 @@
     "enabled": true
   },
   "editor.fontFamily": "'JetBrainsMono Nerd Font', 'Courier New', monospace",
-  "editor.fontSize": 12.0,
+  "editor.fontSize": 12.5,
   "catppuccin.workbenchMode": "flat",
   "catppuccin.italicComments": false,
   "catppuccin.syncWithIconPack": true,
@@ -46,7 +46,7 @@
   "workbench.editor.limit.enabled": true,
   "workbench.editor.limit.perEditorGroup": true,
   "workbench.editor.limit.excludeDirty": true,
-  "workbench.editor.limit.value": 5,
+  "workbench.editor.limit.value": 8,
   "extensions.experimental.affinity": {
     "asvetliakov.vscode-neovim": 1
   },
@@ -153,12 +153,11 @@
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "[clojure]": {
-    // "editor.defaultFormatter": "rflagreca.vscode-clj-zprint"
     "editor.defaultFormatter": "betterthantomorrow.calva"
   },
   "calva.paredit.killAlsoCutsToClipboard": true,
   "calva.highlight.ignoredFormStyle": {
-    "color": "#808080"
+    "textDecoration": "none; opacity: 0.75"
   },
   "calva.highlight.misplacedBracketStyle": {
     "backgroundColor": "#ff6a40",
@@ -166,17 +165,14 @@
   },
   "calva.fmt.newIndentEngine": false,
   "calva.fmt.configPath": ".cljfmt.edn",
-  // "calva.prettyPrintingOptions": {
-  //   // "printEngine": "calva"
-  //   // "enabled": true
-  //   // "width": 100,
-  //   // "maxLength": 50
-  // },
   "calva.paredit.defaultKeyMap": "strict",
   "calva.enableClojureLspOnStart": "when-file-opened-use-furthest-project",
+  "calva.autoOpenREPLWindow": true,
+  "calva.autoConnectRepl": true,
   "editor.tokenColorCustomizations": {
     "comments": {
-      "foreground": "#989898"
+      // "foreground": "#989898"
+      "fontStyle": "bold"
     }
   },
   "[css]": {
@@ -198,8 +194,7 @@
   },
   "update.releaseTrack": "prerelease",
   "redhat.telemetry.enabled": true,
-  "calva.autoOpenREPLWindow": true,
-  "calva.evaluationSendCodeToOutputWindow": true,
-  // "calva.referencesCodeLens.enabled": true,
-  "calva.autoConnectRepl": true
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }
