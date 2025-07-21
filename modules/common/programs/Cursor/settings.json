@@ -9,11 +9,11 @@
     "enabled": true
   },
   "editor.fontFamily": "'JetBrainsMono Nerd Font', 'Courier New', monospace",
-  "editor.fontSize": 12.5,
+  "editor.fontSize": 13.0,
   "catppuccin.workbenchMode": "flat",
   "catppuccin.italicComments": false,
   "catppuccin.syncWithIconPack": true,
-  "editor.fontWeight": "600",
+  "editor.fontWeight": "700",
   "editor.fontLigatures": true,
   "editor.inlayHints.enabled": "onUnlessPressed",
   "editor.inlayHints.fontFamily": "Fira Code",
@@ -46,7 +46,7 @@
   "workbench.editor.limit.enabled": true,
   "workbench.editor.limit.perEditorGroup": true,
   "workbench.editor.limit.excludeDirty": true,
-  "workbench.editor.limit.value": 8,
+  "workbench.editor.limit.value": 5,
   "extensions.experimental.affinity": {
     "asvetliakov.vscode-neovim": 1
   },
@@ -168,6 +168,8 @@
   "calva.paredit.defaultKeyMap": "strict",
   "calva.enableClojureLspOnStart": "when-file-opened-use-furthest-project",
   "calva.autoOpenREPLWindow": true,
+  // "calva.evaluationSendCodeToOutputWindow": true,
+  // "calva.referencesCodeLens.enabled": true,
   "calva.autoConnectRepl": true,
   "editor.tokenColorCustomizations": {
     "comments": {

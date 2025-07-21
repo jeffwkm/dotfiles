@@ -50,7 +50,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 (defvar --window-opacity nil)
 (defvar --background-color nil)
 (load (expand-file-name "~/.config/config-nix.el"))
-;; (setq! --window-opacity 0.88)
+;; (setq! --window-opacity 1.0)
 
 (setq! split-window-preferred-function 'split-window-prefer-horizontal)
 
@@ -1326,7 +1326,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   ;; (pushnew! lsp-disabled-clients 'tailwindcss)
   ;; (setq! lsp-disabled-clients (-remove-item 'tailwindcss lsp-disabled-clients))
   (after! clojure-mode
-    (setq-hook! clojurec-mode lsp-tailwindcss-experimental-class-regex ["\"([^\"]*)\""]))
+    (setq-hook! (clojure-mode clojurec-mode) lsp-tailwindcss-experimental-class-regex ["\"([^\"]*)\""]))
   (--each '(web-mode
             css-mode
             css-ts-mode
@@ -1335,6 +1335,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
             tsx-ts-mode
             typescript-ts-mode
             rjsx-mode
+            clojure-mode
             clojurec-mode)
     (pushnew! lsp-tailwindcss-major-modes it)))
 

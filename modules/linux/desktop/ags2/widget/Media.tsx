@@ -127,7 +127,7 @@ const TrackName = ({ player }: TrackNameProps) => {
     <>
       {Variable.derive([title, artist], (title, artist) => {
         let label = `${artist ? artist + " - " : ""}${title ? title : ""}`;
-        const maxLength = 35;
+        const maxLength = 90;
         if (label.length > maxLength) label = label.slice(0, maxLength) + "...";
         const visible = label.length > 0;
         return <label className="title" visible={visible} label={label}></label>;

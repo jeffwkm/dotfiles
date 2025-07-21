@@ -168,7 +168,7 @@ in {
             gedit
             gjs
             glib
-            gnome-podcasts
+            # gnome-podcasts
             gnome-usage
             gobject-introspection
             gradience
@@ -178,8 +178,8 @@ in {
             libadwaita
             libpulseaudio
             nautilus
-            themechanger
-            totem
+            # themechanger
+            # totem
           ];
         qtPackages = with pkgs;
           optionals cfg.qt [ qt5.full qt5.qtwayland qt5ct adwaita-qt ];
