@@ -346,7 +346,7 @@
     "when": "isLinux && editorFocus"
   },
   {
-    "key": "cmd+i",
+    "key": "ctrl+i",
     "command": "composerMode.agent"
   },
   {

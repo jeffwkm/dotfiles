@@ -12,12 +12,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [
-      (final: prev: {
-        clang = prev.clang.overrideAttrs
-          (attrs: { meta.priority = prev.gcc.meta.priority + 1; });
-      })
-    ] ++ optionals (!darwin) [ inputs.nil-server.overlays.nil ];
+    nixpkgs.overlays = optionals (!darwin) [ inputs.nil-server.overlays.nil ];
 
     home-manager.users.${user.name} = {
       programs.direnv = {
@@ -53,7 +48,7 @@ in {
           skopeo
           subversion
         ]; # ++ optionals (pkgs.system != "aarch64-linux" && !host.minimal)
-        # [ semgrep ];
+      # [ semgrep ];
     };
   };
 }

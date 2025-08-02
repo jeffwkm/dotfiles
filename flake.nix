@@ -6,10 +6,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-2311.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
-    # nixos-apple-silicon.url = "github:tpwrules/nixos-apple-silicon";
-    nixos-apple-silicon.url =
-      "github:marcin-serwin/nixos-apple-silicon/push-nwvktpxoswts";
-    nixos-apple-silicon.inputs.rust-overlay.follows = "rust-overlay";
+    nixos-apple-silicon.url = "github:tpwrules/nixos-apple-silicon";
+    # nixos-apple-silicon.url =
+    #   "github:marcin-serwin/nixos-apple-silicon/push-nwvktpxoswts";
+    # nixos-apple-silicon.inputs.rust-overlay.follows = "rust-overlay";
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";

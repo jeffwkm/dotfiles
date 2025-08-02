@@ -12,6 +12,7 @@ in {
     modules = {
       dev.enable-all = true;
       desktop.enable = true;
+      # desktop.hyprland.flake = true;
       desktop.hyprland.extraConf = ''
         input {
             sensitivity = 0.0
