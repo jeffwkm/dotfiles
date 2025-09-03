@@ -17,8 +17,7 @@
   :recipe (:host github :repo "emacs-elsa/Elsa"))
 (package! lsp-tailwindcss
   :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
-(package! elysium
-  :recipe (:host github :repo "lanceberge/elysium"))
+;;(package! elysium :recipe (:host github :repo "lanceberge/elysium"))
 
 (package! alert)
 (package! catppuccin-theme)
@@ -37,7 +36,7 @@
 (package! git-link)
 (package! git-messenger)
 (package! goto-chg)
-(package! gptel)
+; (package! gptel)
 (package! ligature)
 (package! mentor)                       ; rtorrent client
 (package! nameless)

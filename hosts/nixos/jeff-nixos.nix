@@ -21,7 +21,7 @@ in {
       dev.enable-all = true;
       vfio.enable = true;
       desktop.enable = true;
-      desktop.amdgpu-fan = true;
+      # desktop.amdgpu-fan = true;
       desktop.hyprland.extraConf = ''
         input {
             sensitivity = -0.5

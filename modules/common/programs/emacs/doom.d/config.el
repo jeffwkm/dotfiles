@@ -418,8 +418,8 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   :bind ("C-S-l" . gptel-menu)
   :config
   (setq! --gptel-anthropic (gptel-make-anthropic "Claude"
-                             :stream t
-                             :key (lambda () (--pass-get "keys/anthropic"))))
+                                                 :stream t
+                                                 :key (lambda () (--pass-get "keys/anthropic"))))
   (let ((use-anthropic t))
     (if use-anthropic
         (setq! gptel-backend --gptel-anthropic
@@ -430,6 +430,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
              gptel-api-key (lambda () (--pass-get "keys/openai"))))))
 
 (use-package! elysium
+  :disabled t
   :defer-incrementally t
   :config
   (map! "C-S-k SPC" 'elysium-toggle-window
