@@ -13,8 +13,7 @@
   :recipe (:host github :repo "xenodium/chatgpt-shell" :files ("chatgpt-shell.el")))
 (package! copilot
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
-(package! elsa
-  :recipe (:host github :repo "emacs-elsa/Elsa"))
+(package! elsa :recipe (:host github :repo "emacs-elsa/Elsa"))
 (package! lsp-tailwindcss
   :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
 ;;(package! elysium :recipe (:host github :repo "lanceberge/elysium"))
@@ -36,7 +35,7 @@
 (package! git-link)
 (package! git-messenger)
 (package! goto-chg)
-; (package! gptel)
+(package! gptel)
 (package! ligature)
 (package! mentor)                       ; rtorrent client
 (package! nameless)
@@ -50,7 +49,7 @@
 (package! org-roam-ui)
 (package! org-super-agenda)
 (package! org-superstar)
-(package! paradox)                      ; package manager
+;; (package! paradox)                      ; package manager
 (package! paren-face)
 (package! rainbow-mode)
 (package! shut-up)

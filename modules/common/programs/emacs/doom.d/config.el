@@ -10,6 +10,7 @@
         (message "Enabled emacs debugging")
       (message "Disabled emacs debugging"))
     enable))
+;; (--toggle-emacs-debug t t)
 
 (pushnew! debug-ignored-errors
           'scan-sexps
@@ -394,7 +395,6 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 (use-package! elisp-mode
   :mode ("\\.el\\'" . emacs-lisp-mode)
   :config
-  (use-package! tree-sitter)
   (map! :mode (emacs-lisp-mode lisp-interaction-mode)
         :localleader
         "e p" 'eval-print-last-sexp)
@@ -418,8 +418,8 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   :bind ("C-S-l" . gptel-menu)
   :config
   (setq! --gptel-anthropic (gptel-make-anthropic "Claude"
-                                                 :stream t
-                                                 :key (lambda () (--pass-get "keys/anthropic"))))
+                             :stream t
+                             :key (lambda () (--pass-get "keys/anthropic"))))
   (let ((use-anthropic t))
     (if use-anthropic
         (setq! gptel-backend --gptel-anthropic
@@ -524,6 +524,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       :m "/" '+default/search-buffer
       "M-," 'pop-tag-mark
       "M-." '+lookup/definition
+      "M->" '+lookup/references
       "C-o" 'ace-select-window
       "C-1" 'delete-other-windows
       "C-x 1" 'delete-other-windows
@@ -576,8 +577,6 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     (--load-default-session))
   (--kill-external-source-buffers)
   (--projectile-remove-external-projects)
-  (require 'tsc)
-  (require 'tsc-dyn)
   ;; (--toggle-emacs-debug t t)
   t)
 (add-hook! 'emacs-startup-hook :depth 90 '--emacs-startup)
@@ -806,7 +805,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 
 (defun --set-flycheck-eslint ()
   (require 'flycheck)
-  (require 'lsp-mode)
+  (require 'lsp)
   (lsp-diagnostics-lsp-checker-if-needed)
   (setq-local flycheck-checker 'javascript-eslint)
   (flycheck-add-next-checker 'javascript-eslint 'lsp)
@@ -1003,10 +1002,6 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
                                   (lambda (_response) nil)))))
   (add-hook 'cider-file-loaded-hook '--cider-reload-repl-ns))
 
-(after! tree-sitter
-  (setq! +tree-sitter-hl-enabled-modes
-         '(not web-mode typescript-tsx-mode clojure-mode clojurescript-mode clojurec-mode cider-mode)))
-
 (use-package! less-css-mode
   :mode ("\\.less\\'"
          "\\.variables\\'"
@@ -1047,7 +1042,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       (lsp-ui-doc--delete-frame)
     (lsp-ui-doc-glance)))
 
-(after! lsp-mode
+(after! lsp
   (setq! lsp-idle-delay 0.25
          lsp-ui-doc-max-width 100
          lsp-ui-doc-max-height 16
@@ -1091,7 +1086,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       (setf (alist-get mode apheleia-mode-alist) 'lsp))))
 
 (after! nix-mode
-  (after! lsp-mode
+  (after! lsp
     (defcustom-lsp lsp-nix-nil-auto-archive nil
       "Auto-archiving behavior which may use network."
       :type 'lsp-json-bool
@@ -1273,25 +1268,21 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
          (forms (-mapcat (lambda (mode)
                            (list `(setq-mode-local ,mode +format-with-lsp nil)))
                          modes)))
-    `(after! lsp-mode
+    `(after! lsp
        (-each ',features 'require)
        (after! ,features ,@forms)
        ',modes)))
 
 (--setup-js-prettier-modes
  (web-mode
-  typescript-mode
   typescript-ts-mode
   json-mode
-  json-ts-mode
-  rjsx-mode
-  js2-mode)
+  json-ts-mode)
  (typescript-tsx-mode tsx-ts-mode))
 
 (use-package! css-mode
   :mode "\\.postcss\\'" "\\.css\\'"
   :config
-  (add-hook! css-mode 'css-ts-mode)
   (add-hook! css-ts-mode 'lsp-mode)
   (setq-hook! css-ts-mode +format-with 'prettier-css))
 
@@ -1319,23 +1310,20 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (add-hook! web-mode '--web-mode-hook))
 
 (use-package! lsp-tailwindcss
-  :after lsp-mode
   :init
-  (setq! lsp-tailwindcss-add-on-mode t
-         lsp-tailwindcss-server-version "0.10.2")
+  (setq! lsp-tailwindcss-add-on-mode t)
   :config
   ;; (pushnew! lsp-disabled-clients 'tailwindcss)
   ;; (setq! lsp-disabled-clients (-remove-item 'tailwindcss lsp-disabled-clients))
   (after! clojure-mode
-    (setq-hook! (clojure-mode clojurec-mode) lsp-tailwindcss-experimental-class-regex ["\"([^\"]*)\""]))
-  (--each '(web-mode
-            css-mode
+    (setq-hook! (clojure-mode clojurec-mode)
+      lsp-tailwindcss-experimental-class-regex ["\"([^\"]*)\""]))
+  (--each '(css-mode
             css-ts-mode
             scss-mode
             less-css-mode
-            tsx-ts-mode
             typescript-ts-mode
-            rjsx-mode
+            tsx-ts-mode
             clojure-mode
             clojurec-mode)
     (pushnew! lsp-tailwindcss-major-modes it)))
