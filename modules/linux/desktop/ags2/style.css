@@ -7,7 +7,8 @@
   --blue0: oklch(0.7497 0.11 263.81);
   --blue: oklch(0.65 0.11 260);
   --green: oklch(0.72 0.18 132);
-  --orange: oklch(0.77 0.16 70);
+  --orange: oklch(0.77 0.15 80);
+  --orange-text: oklch(0.82 0.4 80);
 
   --border-color: oklch(from var(--bar-bg) 0.5 0.1 h / 0.625);
   --section-bg: oklch(from var(--border-color) l c h / 0.1);
@@ -31,7 +32,16 @@ window.Bar {
     border-bottom: 1.66px solid oklch(from var(--section-border) l c h / 0.2);
   }
   &.Bottom {
-    border-top: 1.66px solid oklch(from var(--section-border) l c h / 0.2);
+    border-top: 2px solid oklch(from var(--section-border) l c h / 0.2);
+
+    centerbox.pomodoro {
+      border-top: 2px solid var(--green);
+    }
+
+    centerbox.short-break,
+    centerbox.long-break {
+      border-top: 2px solid var(--orange);
+    }
   }
 }
 
@@ -208,12 +218,10 @@ icon {
 }
 
 .Command {
-  font-family: "monospace";
-  font-size: 10.5px;
-  font-weight: 800;
-  background: black(0.85);
+  background: black(0.75);
   padding: 0px 4px;
   margin: 0;
+
   &:first-child {
     margin-left: -2px;
   }
@@ -221,39 +229,51 @@ icon {
     margin-right: -2px;
   }
 
-  .Bar.Top & {
-    margin-bottom: -2px;
-  }
-  .Bar.Bottom & {
-    margin-top: -2px;
-  }
-
-  color: oklch(0.75 0.5 280 / 0.9);
-
   > .CommandLabel {
     font-family: "sans";
     font-size: 12px;
     font-weight: 700;
+    color: white(0.925);
     border-right: 1px solid white(0.425);
     padding: 0 4px;
     margin: 0;
-    color: white(0.925);
-    .Bar.Bottom & {
-      border-top: 1.66px solid var(--text);
+    border-top: 1px solid var(--text);
+    centerbox:not(.none) & {
+      margin-top: -1px;
+      padding-top: 2px;
     }
   }
-  > :not(.CommandLabel) {
+  > .CommandText {
+    font-family: "monospace";
+    font-size: 10.5px;
+    font-weight: 800;
+    color: oklch(0.75 0.5 280 / 0.9);
     padding: 0 4px;
-    .Bar.Bottom & {
-      border-top: 1.66px solid oklch(0.75 0.5 280 / 0.9);
+    padding-top: 1px;
+    margin-bottom: -1px;
+    border-top: 1px solid var(--text);
+    centerbox:not(.none) & {
+      margin-top: -1px;
+      padding-top: 2px;
     }
   }
 }
 
-box.Timer.Command.monospace {
-  margin-right: 3px;
-  margin-bottom: 0px;
-  font-size: 10.5px;
-  border: 0.5px solid white(0.5);
-  color: oklch(from var(--green) calc(l * 1.16) calc(c * 1.2) calc(h + 4) / 1);
+.Command.PreviousTask {
+  > .CommandText {
+    font-family: "sans";
+    font-size: 12px;
+    color: var(--orange-text);
+  }
+}
+
+.Command.Timer {
+  > .CommandLabel {
+    color: var(--orange-text);
+  }
+  > .CommandText {
+    font-size: 12px;
+    font-weight: 800;
+    color: oklch(from var(--green) calc(l * 1.16) calc(c * 1.2) h / 1);
+  }
 }

@@ -1,8 +1,9 @@
 import { Variable, bind, exec } from "astal";
 import GLib from "gi://GLib?version=2.0";
 import { Command, Section } from "./components";
+import { Box } from "astal/gtk3/widget";
 
-enum PomodoroState {
+export enum PomodoroState {
   Pomodoro = "pomodoro",
   ShortBreak = "short-break",
   LongBreak = "long-break",
@@ -58,16 +59,6 @@ GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
   }
 });
 
-type TaskLabelProps = {
-  text: Variable<string>;
-};
-
-const TaskLabel = (props: TaskLabelProps) => {
-  const { text } = props;
-
-  return <label className="TaskLabel" label={text()} visible={text().as((h) => h.length > 0)} />;
-};
-
 export const Pomodoro = () => {
   const state = Variable(PomodoroState.None);
   const timer = Variable("?");
@@ -108,10 +99,10 @@ export const Pomodoro = () => {
           result.state === PomodoroState.Pomodoro
             ? task.get()
             : result.state === PomodoroState.ShortBreak
-            ? "* Short break! *"
-            : result.state === PomodoroState.LongBreak
-            ? "* Long break! *"
-            : "SPC n r d t ..."
+              ? "* Short break! *"
+              : result.state === PomodoroState.LongBreak
+                ? "* Long break! *"
+                : result.heading,
         );
 
         visible.set(true);
@@ -131,38 +122,45 @@ export const Pomodoro = () => {
     <>
       {boundIcon.as((icon: string) => (
         <>
-          <Section
-            name="Pomodoro"
-            icon={<Command label="Tasks" command={"S-,"} />}
-            className={stateClass()}
-            visible={visible()}
-          >
+          <Command label="Tasks" command={"S-,"} />
+          <Box className={stateClass()} visible={visible()}>
             {state().as((s) => {
               if (s === PomodoroState.None) {
+                const havePreviousTask = text().as((t) => t !== "");
                 return (
                   <>
                     <Command label="Find" command={"SPC n r f"} />
                     <Command label="Today" command={"SPC n r d t"} />
+                    <Command
+                      topClass="PreviousTask"
+                      label="Latest"
+                      command={text().as((t) => (t && t !== "" ? t : "< No tasks yet >"))}
+                    />
                   </>
                 );
               } else if (s === PomodoroState.Pomodoro) {
                 return (
-                  <>
-                    <label className="TaskLabel" label={task()} />
-
-                    <box className="monospace Timer Command">
-                      <label
-                        label={timer()}
-                        visible={state().as((s) => s === PomodoroState.Pomodoro)}
-                      />
-                    </box>
-                  </>
+                  <Command
+                    topClass="Timer"
+                    label={task()}
+                    command={timer()}
+                    visible={state().as((s) => s === PomodoroState.Pomodoro)}
+                  />
+                );
+              } else if (s === PomodoroState.ShortBreak || s === PomodoroState.LongBreak) {
+                return (
+                  <Command
+                    topClass="Timer Break"
+                    label={s === PomodoroState.ShortBreak ? "* Short Break *" : "* Long Break *"}
+                    command={timer()}
+                    visible={timer().as((t) => t !== "?")}
+                  />
                 );
               } else {
-                return null;
+                return <label className="TaskLabel" label="Unknown state" />;
               }
             })}
-          </Section>
+          </Box>
         </>
       ))}
     </>

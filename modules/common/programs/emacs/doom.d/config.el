@@ -554,7 +554,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (let ((paren-color  (cond (t "#707070")))
         (square-color (cond (t "#bbbf40")))
         (curly-color  (cond (t "#4f8f3d"))))
-    (face-spec-set 'parenthesis `((t (:foreground ,paren-color))))
+    (face-spec-set 'parenthesis `((t (:inherit shadow))))
     (defface square-brackets
       `((t (:foreground ,square-color)))
       "Face for displaying square brackets."
@@ -564,6 +564,24 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       "Face for displaying curly brackets."
       :group 'paren-face)))
 ;; (add-hook! 'after-make-frame-functions '--init-copy-paste)
+
+(use-package! paren-face
+  :disabled t
+  :config
+  (setq paren-face-regexp "[\\(\\)]")
+  (global-paren-face-mode)
+  (--set-paren-face-colors)
+  (defconst clojure-brackets-keywords
+    '(("\\[" 0 'square-brackets)
+      ("\\]" 0 'square-brackets)
+      ("[\\{\\}]" 0 'curly-brackets)))
+  (defun --custom-paren-face-mode-hook ()
+    (if paren-face-mode
+        (font-lock-add-keywords nil clojure-brackets-keywords t)
+      (font-lock-remove-keywords nil clojure-brackets-keywords))
+    (when (called-interactively-p 'any)
+      (font-lock-ensure)))
+  (add-hook! 'paren-face-mode-hook '--custom-paren-face-mode-hook))
 
 (after! smerge-mode
   (require 'evil-core)
@@ -741,25 +759,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         "C-S-S" 'swiper-all
         :m "/" '+default/search-buffer))
 
-(use-package! ligature
-  :config
-  ;; (->> '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
-  ;;        ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
-  ;;        "-<" "-<<"  "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
-  ;;        "#_(" ".-" ".=" ".." "..<" "..." "?=" "??"  "/*" "/**"
-  ;;        "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
-  ;;        "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
-  ;;        "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
-  ;;        "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
-  ;;        "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
-  ;;        "<~" "<~~" "</" "</>" "~>" "~~>" "%%"
-  ;;        ";;" ";;;" "~@")
-  ;;      (ligature-set-ligatures 'prog-mode))
-
-  ;; +ligatures-prog-mode-list
-  ;; +ligatures-all-modes-list
-  ;; +ligatures-extra-alist
-  )
+(use-package! ligature)
 
 (use-package! hl-todo
   :defer-incrementally t
@@ -844,6 +844,17 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     :config
     (flycheck-pos-tip-mode 1))
 
+  (use-package! flyover
+    :config
+    (setq! flyover-levels '(error warning info)
+           flyover-levels '()
+           flyover-use-theme-colors t
+           flyover-background-lightness 40
+           flyover-wrap-messages t
+           flyover-text-tint-percent 60)
+    ;; (add-hook! flycheck-mode 'flyover-mode)
+    (setq! flycheck-mode-hook (-remove (lambda (f) (eql f 'flyover-mode)) flycheck-mode-hook))
+    )
   (global-flycheck-mode 1))
 
 (after! lsp-semgrep
@@ -917,16 +928,15 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (use-package! org-ql)
   ;; (use-package! org-present)
   ;; (use-package! org-projectile)
-  (use-package! org-super-agenda :config (unless org-super-agenda-mode (org-super-agenda-mode t)))
-  (use-package! org-fancy-priorities)
-  (use-package! org-superstar :config (setq org-superstar-special-todo-items t))
-  (add-hook! org-mode 'org-fancy-priorities-mode)
   (setq-hook! org-mode
     debug-on-error nil
     debug-on-message nil)
   (after! spell-fu
     (pushnew! spell-fu-ignore-modes 'org-mode)
-    (add-hook! org-mode :append (spell-fu-mode -1))))
+    (add-hook! org-mode :append (spell-fu-mode -1)))
+  (use-package! org-modern
+    :config
+    (setq! org-modern-todo nil)))
 
 (after! org-roam
   (setq! org-roam-completion-everywhere t

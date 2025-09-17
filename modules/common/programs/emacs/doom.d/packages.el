@@ -30,6 +30,7 @@
 (package! evil-smartparens)
 (package! flycheck-clojure)
 (package! flycheck-pos-tip)
+(package! flyover)
 (package! forge)
 (package! gh-md)
 (package! git-link)

@@ -3,10 +3,10 @@ import Workspaces, { ActiveTitle, hyprland } from "./Workspaces";
 import Sound from "./Sound";
 import { Date, DateTime, Time } from "./DateTime";
 import Tray from "./Tray";
-import { bind } from "astal";
+import { bind, Variable } from "astal";
 import Media from "./Media";
 import SystemStatus from "./System";
-import { Pomodoro } from "./Tasks";
+import { Pomodoro, pomodoroResult, PomodoroState } from "./Tasks";
 type BarProps = {
   monitorId: number;
   monitor: Gdk.Monitor;
@@ -56,6 +56,14 @@ const BottomBar = (props: BarProps) => {
   const focused = focused_monitor.as((focused_monitor) => focused_monitor.id === monitorId);
   const window_class = focused.as((focused) => `Bar Bottom ${focused ? "focused" : ""}`);
 
+  const pomodoroState = Variable("");
+
+  pomodoroResult.subscribe(() => {
+    const json = JSON.parse(pomodoroResult.get());
+    const result = JSON.parse(json) as PomodoroResult;
+    pomodoroState.set(result.state);
+  });
+
   return (
     <window
       visible
@@ -68,7 +76,7 @@ const BottomBar = (props: BarProps) => {
       application={App}
       marginTop={0}
     >
-      <centerbox>
+      <centerbox className={pomodoroState()}>
         <box className={"Left"} halign={Gtk.Align.START} vexpand valign={Gtk.Align.CENTER}></box>
         <box className={"Center"} halign={Gtk.Align.CENTER} vexpand valign={Gtk.Align.CENTER}>
           <Pomodoro />

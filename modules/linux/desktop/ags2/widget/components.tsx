@@ -25,9 +25,12 @@ export const Icons = {
 export const playerToIcon = (identity: string | null) => {
   if (!identity) return Icons.DEFAULT;
   const lower = identity.toLowerCase();
-  if (lower.includes("chromium")) return "web"; // return Icons.CHROMIUM;
-  else if (lower.includes("chrome")) return "web"; // return Icons.CHROME;
-  else if (lower.includes("firefox")) return "web"; // return Icons.FIREFOX;
+  if (lower.includes("chromium"))
+    return "web"; // return Icons.CHROMIUM;
+  else if (lower.includes("chrome"))
+    return "web"; // return Icons.CHROME;
+  else if (lower.includes("firefox"))
+    return "web"; // return Icons.FIREFOX;
   else if (lower.startsWith("mpv")) return Icons.MEDIA;
   else if (lower.includes("spotify")) return Icons.SPOTIFY;
   else return Icons.DEFAULT;
@@ -129,11 +132,25 @@ export const Interactive = ({
 type CommandProps = {
   command: string;
   label?: string;
+  topClass?: string;
+  labelClass?: string;
+  commandClass?: string;
 } & BoxProps;
 
-export const Command = ({ command, label, ...props }: CommandProps) => (
-  <box className="Command" {...props}>
-    <label className="CommandLabel" label={label || ""} visible={!!label} />
-    <label label={command} />
+export const Command = ({
+  command,
+  label,
+  topClass,
+  labelClass,
+  commandClass,
+  ...props
+}: CommandProps) => (
+  <box className={`Command ${topClass ? topClass : ""}`} {...props}>
+    <label
+      className={`CommandLabel ${labelClass ? labelClass : ""}`}
+      label={label || ""}
+      visible={!!label}
+    />
+    <label className={`CommandText ${commandClass ? commandClass : ""}`} label={command} />
   </box>
 );
