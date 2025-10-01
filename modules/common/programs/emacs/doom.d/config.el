@@ -371,7 +371,12 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         :m "F" 'lispyville-forward-atom-end
         :m "B" 'lispyville-backward-atom-begin
         :mi "C-f" 'lispyville-forward-sexp
-        :mi "C-b" 'lispyville-backward-sexp))
+        :mi "C-b" 'lispyville-backward-sexp)
+  (map! :mode lispyville-mode
+        :leader
+        "(" 'lispyville-wrap-round
+        "[" 'lispyville-wrap-brackets
+        "{" 'lispyville-wrap-braces))
 
 (use-package! evil-matchit
   :after evil
@@ -998,19 +1003,25 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     "C-c n" 'cider-repl-set-ns)
   (define-key! 'cider-repl-mode-map
     "M-." nil)
-  (use-package! flycheck-clojure
-    :config (flycheck-clojure-setup))
-  (use-package! flycheck-clj-kondo)
-  (use-package! clj-refactor
-    :config
-    (setq cljr-warn-on-eval t
-          cljr-suppress-middleware-warnings nil))
+  ;; (use-package! flycheck-clojure
+  ;;   :config (flycheck-clojure-setup))
+  ;; (use-package! flycheck-clj-kondo)
+  ;; (use-package! clj-refactor
+  ;;   :config
+  ;;   (setq cljr-warn-on-eval t
+  ;;         cljr-suppress-middleware-warnings nil))
   (defun --cider-reload-repl-ns ()
     (let ((ns (buffer-local-value 'cider-buffer-ns (car (cider-repls)))))
       (when ns
         (cider-nrepl-request:eval (format "(require '%s :reload)" ns)
                                   (lambda (_response) nil)))))
-  (add-hook 'cider-file-loaded-hook '--cider-reload-repl-ns))
+  (add-hook 'cider-file-loaded-hook '--cider-reload-repl-ns)
+  (add-hook 'clojure-mode-hook
+            (lambda ()
+              (setq-local completion-at-point-functions
+                          (list #'cider-complete-at-point
+                                #'lsp-completion-at-point
+                                #'lispy-clojure-complete-at-point)))))
 
 (use-package! less-css-mode
   :mode ("\\.less\\'"
@@ -1052,7 +1063,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       (lsp-ui-doc--delete-frame)
     (lsp-ui-doc-glance)))
 
-(after! lsp
+(after! lsp-mode
   (setq! lsp-idle-delay 0.25
          lsp-ui-doc-max-width 100
          lsp-ui-doc-max-height 16
@@ -1096,7 +1107,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
       (setf (alist-get mode apheleia-mode-alist) 'lsp))))
 
 (after! nix-mode
-  (after! lsp
+  (after! lsp-mode
     (defcustom-lsp lsp-nix-nil-auto-archive nil
       "Auto-archiving behavior which may use network."
       :type 'lsp-json-bool
@@ -1278,7 +1289,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
          (forms (-mapcat (lambda (mode)
                            (list `(setq-mode-local ,mode +format-with-lsp nil)))
                          modes)))
-    `(after! lsp
+    `(after! lsp-mode
        (-each ',features 'require)
        (after! ,features ,@forms)
        ',modes)))
@@ -1333,9 +1344,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
             scss-mode
             less-css-mode
             typescript-ts-mode
-            tsx-ts-mode
-            clojure-mode
-            clojurec-mode)
+            tsx-ts-mode)
     (pushnew! lsp-tailwindcss-major-modes it)))
 
 (after! lsp-css
