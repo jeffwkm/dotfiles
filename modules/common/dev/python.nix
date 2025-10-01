@@ -23,7 +23,7 @@ let
     ++ optionals
     (!host.darwin && !host.minimal && pkgs.system != "aarch64-linux")
     [ vapoursynth ]);
-  python3' = pkgs.python3.withPackages python3-packages;
+  python3' = pkgs.pkgs-stable.python3.withPackages python3-packages;
 in {
   options.modules.dev.python.enable = mkBoolOpt dev.enable-all;
 

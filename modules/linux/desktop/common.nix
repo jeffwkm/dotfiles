@@ -70,10 +70,10 @@ in {
       font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
     };
 
-    services.logind.extraConfig = ''
+    services.logind.settings.Login = {
       # don’t shutdown when power button is short-pressed
-      HandlePowerKey=ignore
-    '';
+      HandlePowerKey = "ignore";
+    };
 
     users.extraUsers.root.extraGroups =
       [ "audio" "input" "plugdev" "libvirtd" ];
@@ -171,7 +171,6 @@ in {
             # gnome-podcasts
             gnome-usage
             gobject-introspection
-            gradience
             gthumb
             gtk3
             gtk4
