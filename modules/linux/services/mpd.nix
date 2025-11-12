@@ -11,7 +11,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ mpd mpd-mpris mpc-cli ncmpcpp ];
+    environment.systemPackages = with pkgs; [ mpd mpd-mpris mpc ncmpcpp ];
 
     services.pulseaudio.extraConfig =
       "load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1";

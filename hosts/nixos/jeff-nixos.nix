@@ -3,10 +3,10 @@ with lib;
 let
   getMesaPkgs = pkgsBase:
     with pkgsBase; [
-      vaapiVdpau
       libvdpau-va-gl
       libva
       libvdpau
+      libva-vdpau-driver
     ];
   mesaPkgs = getMesaPkgs pkgs ++ (with pkgs; [ rocmPackages.clr.icd ]);
   mesaPkgs32 = getMesaPkgs pkgs.pkgsi686Linux;
@@ -70,7 +70,7 @@ in {
     };
 
     environment.systemPackages = with pkgs; [
-      firmwareLinuxNonfree
+      linux-firmware
       libguestfs
       # ansel # darktable
       amdgpu_top
@@ -202,14 +202,7 @@ in {
       extraPackages32 = mesaPkgs32;
     };
 
-    hardware.amdgpu = {
-      opencl.enable = true;
-      amdvlk = {
-        enable = false;
-        support32Bit.enable = true;
-        supportExperimental.enable = true;
-      };
-    };
+    hardware.amdgpu = { opencl.enable = true; };
 
     chaotic.mesa-git = {
       enable = true;

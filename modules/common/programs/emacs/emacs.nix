@@ -85,7 +85,7 @@ in {
           ripgrep
           sqlite
           editorconfig-core-c
-          eask
+          eask-cli
           emacs-lsp-booster
           mu
           isync

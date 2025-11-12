@@ -16,7 +16,7 @@ in {
         "/private/wg-quick/protonvpn-US-NY-306.conf";
     };
 
-    environment.systemPackages = with pkgs; [ firmwareLinuxNonfree ];
+    environment.systemPackages = with pkgs; [ linux-firmware ];
 
     networking.useDHCP = true;
 

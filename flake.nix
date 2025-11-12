@@ -24,11 +24,10 @@
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
-    ags.url = "github:aylur/ags?rev=3ed9737bdbc8fc7a7c7ceef2165c9109f336bff6";
+    ags.url = "github:jeffwkm/ags";
     ags.inputs.nixpkgs.follows = "nixpkgs";
     ags.inputs.astal.follows = "astal";
-    astal.url =
-      "github:aylur/astal?rev=dc0e5d37abe9424c53dcbd2506a4886ffee6296e";
+    astal.url = "github:jeffwkm/astal";
     astal.inputs.nixpkgs.follows = "nixpkgs";
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
