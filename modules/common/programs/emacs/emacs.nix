@@ -78,6 +78,7 @@ in {
           DOOMDIR = "${config.xdg.configHome}/doom";
           EDITOR = "emacsclient -t -a emacs";
           VISUAL = "emacsclient -t -a emacs";
+          LSP_USE_PLISTS = "true";
         };
 
         home.packages = with pkgs; [
@@ -85,6 +86,7 @@ in {
           sqlite
           editorconfig-core-c
           eask
+          emacs-lsp-booster
           mu
           isync
           gnutls
