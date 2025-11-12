@@ -352,13 +352,5 @@
   {
     "key": "ctrl+i",
     "command": "composerMode.agent"
-  },
-  {
-    "key": "ctrl+e",
-    "command": "composerMode.background"
-  },
-  {
-    "key": "ctrl+e",
-    "command": "composerMode.background"
   }
 ]
