@@ -1016,12 +1016,12 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         (cider-nrepl-request:eval (format "(require '%s :reload)" ns)
                                   (lambda (_response) nil)))))
   (add-hook 'cider-file-loaded-hook '--cider-reload-repl-ns)
-  (add-hook 'clojure-mode-hook
-            (lambda ()
-              (setq-local completion-at-point-functions
-                          (list #'cider-complete-at-point
-                                #'lsp-completion-at-point
-                                #'lispy-clojure-complete-at-point)))))
+  (defun --override-clojure-capf ()
+    (setq-local completion-at-point-functions
+                (list #'cider-complete-at-point
+                      #'lsp-completion-at-point
+                      #'lispy-clojure-complete-at-point)))
+  (add-hook! (clojure-mode clojure-ts-mode cider-mode) :append '--override-clojure-capf))
 
 (use-package! less-css-mode
   :mode ("\\.less\\'"
