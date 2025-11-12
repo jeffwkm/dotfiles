@@ -196,7 +196,7 @@ let
 
   userLinuxConfig = makeUserConfig {
     shellAliases = {
-      ssh = "mosh";
+      # ssh = "mosh";
       iotop = "sudo iotop";
       virsh = "VISUAL='emacs -nw' sudo -E virsh";
       ### systemctl
