@@ -192,7 +192,7 @@
   "python.poetryPath": "poetry",
   "vsicons.dontShowNewVersionMessage": true,
   "files.associations": {
-    "*.rl": "clojure",
+    "*.rexl": "clojure",
     "mbsyncrc": "plaintext"
   },
   "update.releaseTrack": "prerelease",

@@ -165,11 +165,11 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 
 (progn
   (defun --get-font-spec (&optional variable? modeline?)
-    (if modeline?
+    (if nil ;; modeline?
         nil
       (apply 'font-spec
              :family (if variable? "Inter" "JetBrainsMono Nerd Font")
-             :size (+ 13 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 0 0))
+             :size (+ 12 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 0 0))
              :weight (if variable?
                          'medium
                        (if (mac?)
