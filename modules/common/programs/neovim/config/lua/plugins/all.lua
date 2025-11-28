@@ -31,7 +31,8 @@ return {
     "nvim-neorg/neorg",
     lazy = false,
     version = "*",
-    enabled = not vim.g.vscode,
+    -- enabled = not vim.g.vscode,
+    enabled = false,
     config = function()
       require("neorg").setup {
         load = {

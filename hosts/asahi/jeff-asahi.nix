@@ -35,7 +35,6 @@ in {
     boot.loader.efi.canTouchEfiVariables = false;
     nixpkgs.hostPlatform = "aarch64-linux";
     hardware.asahi.peripheralFirmwareDirectory = ./firmware;
-    hardware.asahi.useExperimentalGPUDriver = true;
     services.pipewire.alsa.support32Bit = mkForce false;
     ## kernel
     boot.initrd.availableKernelModules = [ "usb_storage" "sdhci_pci" ];

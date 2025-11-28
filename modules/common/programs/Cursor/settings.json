@@ -57,7 +57,6 @@
   "cursor-retrieval.canAttemptGithubLogin": true,
   "cursor.general.enableShadowWorkspace": false,
   "explorer.confirmDelete": false,
-  // "rust-analyzer.server.path": "rust-analyzer",
   "rust-analyzer.server.path": "./rust-analyzer.sh",
   "rust-analyzer.inlayHints.maxLength": 40,
   "rust-analyzer.inlayHints.renderColons": true,
@@ -193,6 +192,7 @@
   "python.poetryPath": "poetry",
   "vsicons.dontShowNewVersionMessage": true,
   "files.associations": {
+    "*.rl": "clojure",
     "mbsyncrc": "plaintext"
   },
   "update.releaseTrack": "prerelease",
@@ -203,5 +203,7 @@
   "editor.minimap.enabled": true,
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  "remote.SSH.remotePlatform": {
+    "jeff-nixos": "linux"
   }
 }
