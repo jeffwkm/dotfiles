@@ -263,6 +263,40 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 
 (add-hook! 'doom-after-reload-hook :append '--sync-fonts)
 
+(defvar-local --modeline-cache ""
+  "Cached string produced by `doom-modeline-format--main'.")
+
+(defvar-local --modeline-timer nil
+  "Idle timer used to refresh `--modeline-cache' for the current buffer.")
+
+(defun --schedule-modeline-update ()
+  "Schedule a deferred refresh of `--modeline-cache' for the current buffer."
+  (when --modeline-timer
+    (cancel-timer --modeline-timer)
+    (setq --modeline-timer nil))
+  (let ((buffer (current-buffer)))
+    (setq-local
+     --modeline-timer
+     (run-with-idle-timer
+      0.05 nil
+      (lambda ()
+        (when (buffer-live-p buffer)
+          (with-current-buffer buffer
+            (setq-local --modeline-cache (format-mode-line (doom-modeline-format--main)))
+            (setq-local --modeline-timer nil))))))))
+
+(defun --format-modeline-cached ()
+  "Return cached modeline text while scheduling a refresh."
+  (let ((cached (or --modeline-cache "")))
+    (--schedule-modeline-update)
+    cached))
+
+(defun --set-modeline-format-cached ()
+  "Set `mode-line-format' to use cached modeline text."
+  (setf mode-line-format '("%e" (:eval (--format-modeline-cached)))))
+
+(add-hook! 'doom-modeline-mode-hook :append '--set-modeline-format-cached)
+
 (use-package! doom-modeline
   :defer t
   :init
@@ -272,7 +306,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
          doom-modeline-buffer-encoding 'nondefault
          doom-modeline-default-eol-type 0
          doom-modeline-indent-info t
-         doom-modeline-height 25
+         doom-modeline-height 23
          doom-modeline-major-mode-icon t)
   :config
   (size-indication-mode -1)
@@ -662,7 +696,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
          corfu-right-margin-width 0.5
          corfu-preview-current t
          corfu-preselect 'directory
-         corfu-auto-delay 0.25
+         corfu-auto-delay 0.2
          corfu-auto-prefix 3)
   (setq! corfu-popupinfo-delay '(1.0 . 0.5)
          corfu-popupinfo-resize nil
@@ -710,7 +744,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   :commands copilot-mode
   :hook ((prog-mode . copilot-mode) (conf-mode . copilot-mode))
   :config
-  (setq! copilot-idle-delay 0
+  (setq! copilot-idle-delay 0.1
          copilot-max-char 100000
          copilot-indent-offset-warning-disable t)
   (pushnew! copilot-clear-overlay-ignore-commands
