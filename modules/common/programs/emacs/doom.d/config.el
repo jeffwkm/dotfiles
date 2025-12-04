@@ -291,11 +291,14 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
     (--schedule-modeline-update)
     cached))
 
-(defun --set-modeline-format-cached ()
-  "Set `mode-line-format' to use cached modeline text."
-  (setf mode-line-format '("%e" (:eval (--format-modeline-cached)))))
-
-(add-hook! 'doom-modeline-mode-hook :append '--set-modeline-format-cached)
+(define-advice doom-modeline-set-modeline
+    (:around (orig-fn key &optional default) --cache-main-modeline)
+  (if (eql key 'main)
+      (setf (if default
+                (default-value 'mode-line-format)
+              mode-line-format)
+            '("%e" (:eval (--format-modeline-cached))))
+    (funcall orig-fn key default)))
 
 (use-package! doom-modeline
   :defer t
