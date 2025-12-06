@@ -2,6 +2,8 @@
 with lib;
 with lib.my; {
   config = {
+    networking.applicationFirewall.enable = true;
+    # networking.applicationFirewall.blockAllIncoming = true;
     system.keyboard.enableKeyMapping = true;
     system.keyboard.remapCapsLockToControl = true;
     system.defaults = {
@@ -40,14 +42,6 @@ with lib.my; {
         TrackpadRightClick = false;
         # three finger drag for space switching
         TrackpadThreeFingerDrag = true;
-      };
-
-      # firewall
-      alf = {
-        # 0 = disabled 1 = enabled 2 = blocks all connections except for essential services
-        globalstate = 1;
-        loggingenabled = 0;
-        stealthenabled = 1;
       };
 
       # Whether to enable quarantine for downloaded applications. The default is true.

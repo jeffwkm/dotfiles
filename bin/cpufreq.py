@@ -6,20 +6,27 @@ from subprocess import Popen, PIPE, run
 
 # reads current MHz speed reported by kernel from cpupower utility
 def read_cpufreq_mhz():
-    p = Popen(["cpupower frequency-info -f | grep current | head -n1"],
-              shell=True, encoding='utf8', stdout=PIPE)
+    p = Popen(
+        ["cpupower frequency-info -f | grep current | head -n1"],
+        shell=True,
+        encoding="utf8",
+        stdout=PIPE,
+    )
     # p = Popen(["sudo cpupower frequency-info -f | grep current | head -n1"],
     #          shell=True, encoding='utf8', stdout=PIPE)
     result = p.communicate()[0].strip()
-    value = result.split(': ')[1].split(' ')[0]
+    value = result.split(": ")[1].split(" ")[0]
     return int(int(value) / 1000)
 
 
 # reads array of current MHz speeds for all cpu cores from /proc/cpuinfo
 def read_cpuinfo_mhz():
-    lines = [line.strip() for line in open('/proc/cpuinfo').readlines()
-             if (line.find('MHz') >= 0)]
-    tokens = [line.split(' ')[2] for line in lines]
+    lines = [
+        line.strip()
+        for line in open("/proc/cpuinfo").readlines()
+        if (line.find("MHz") >= 0)
+    ]
+    tokens = [line.split(" ")[2] for line in lines]
     mhz = [int(float(s)) for s in tokens]
     return mhz
 
@@ -34,7 +41,7 @@ def process_cpuinfo():
     sorted.reverse()
 
     # take top half of values to exclude any inactive cores
-    n = int(len(all)/2)
+    n = int(len(all) / 2)
     fast = sorted[0:n]
     avg = 0
     max = 0

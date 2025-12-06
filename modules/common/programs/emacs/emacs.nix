@@ -26,10 +26,10 @@ let
     pkgs.emacs30.overrideAttrs (old: {
       patches = (old.patches or [ ]) ++ [
         # Fix OS window role so that yabai can pick up emacs
-        (fetchpatch {
-          url = "${patches-url}/fix-window-role.patch";
-          sha256 = "sha256-+z/KfsBm1lvZTZNiMbxzXQGRTjkCFO4QPlEK35upjsE=";
-        })
+        # (fetchpatch {
+        #   url = "${patches-url}/fix-window-role.patch";
+        #   sha256 = "sha256-+z/KfsBm1lvZTZNiMbxzXQGRTjkCFO4QPlEK35upjsE=";
+        # })
         # Enable rounded window with no decoration
         (fetchpatch {
           url = "${patches-url}/round-undecorated-frame.patch";

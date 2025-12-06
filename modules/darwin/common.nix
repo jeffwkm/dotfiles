@@ -12,6 +12,8 @@ in {
     host.gui = true;
     nix.enable = false;
 
+    users.users."${user.name}".uid = 501;
+
     environment.systemPackages = with pkgs; [
       pkg-config
       gobject-introspection
@@ -92,16 +94,17 @@ in {
 
     # Fix linking of apps into Applications folder
     # https://github.com/nix-darwin/nix-darwin/issues/214#issuecomment-2467550779
-    system.activationScripts.postUserActivation.text = ''
-      apps_source="${config.system.build.applications}/Applications"
-      moniker="Nix Trampolines"
-      app_target_base="$HOME/Applications"
-      app_target="$app_target_base/$moniker"
-      mkdir -p "$app_target"
-      ${pkgs.rsync}/bin/rsync --archive --checksum --chmod=-w --copy-unsafe-links --delete "$apps_source/" "$app_target"
-    '';
+    # system.activationScripts.postUserActivation.text = ''
+    #   apps_source="${config.system.build.applications}/Applications"
+    #   moniker="Nix Trampolines"
+    #   app_target_base="$HOME/Applications"
+    #   app_target="$app_target_base/$moniker"
+    #   mkdir -p "$app_target"
+    #   ${pkgs.rsync}/bin/rsync --archive --checksum --chmod=-w --copy-unsafe-links --delete "$apps_source/" "$app_target"
+    # '';
 
     programs.nix-index.enable = true;
+    networking.applicationFirewall.enableStealthMode = false;
 
     home-manager.users.${user.name} = { config, pkgs, ... }: {
       home.packages = with pkgs; [ (lowPrio coreutils-full) ];
