@@ -67,7 +67,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
        doom-leader-alt-key "C-SPC"
        smie-indent-basic 2
        +workspaces-on-switch-project-behavior 'non-empty
-       display-line-numbers-type nil
+       display-line-numbers-type t
        emojify-download-emojis-p t
        org-directory "~/org/"
        confirm-kill-processes t
@@ -99,16 +99,17 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
        doom-theme 'catppuccin
        doom-one-brighter-comments t
        doom-one-brighter-modeline nil
-       doom-themes-padded-modeline t
+       doom-themes-padded-modeline nil
        doom-gruvbox-dark-variant "medium"
-       gcmh-high-cons-threshold (* 1024 1024 300))
+       gcmh-high-cons-threshold (* 1024 1024 2000))
 
 (require 'catppuccin-theme)
 
-(setf (alist-get 'alpha-background default-frame-alist) --window-opacity)
+;; (setf (alist-get 'alpha-background default-frame-alist) --window-opacity)
+(setf (alist-get 'alpha-background default-frame-alist) nil)
 (setf (alist-get 'right-fringe default-frame-alist) 8)
 (setf (alist-get 'left-fringe default-frame-alist) 8)
-(setf (alist-get 'internal-border-width default-frame-alist) 4)
+(setf (alist-get 'internal-border-width default-frame-alist) 0)
 
 (menu-bar-mode -1)
 (global-auto-revert-mode t)
@@ -169,7 +170,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
         nil
       (apply 'font-spec
              :family (if variable? "Inter" "JetBrainsMono Nerd Font")
-             :size (+ 12 (if variable? 0 0) (if modeline? 0 0) (if (mac?) 0 0))
+             :size (+ 12 (if variable? 0 0) (if modeline? 1 0) (if (mac?) 0 0))
              :weight (if variable?
                          'medium
                        (if (mac?)
@@ -315,9 +316,6 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
   (size-indication-mode -1)
   (add-hook! 'doom-modeline-mode-hook :append (size-indication-mode -1)))
 ;; (doom-modeline-format--main)
-
-(after! fringe
-  (fringe-mode 8))
 
 (use-package! ruby-mode
   :mode (("\\.lic\\'" . ruby-mode)
@@ -857,9 +855,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 
 (defun +syntax-init-popups-h ()
   (require 'flycheck)
-  (require 'lsp-ui-sideline)
-  (unless (and (bound-and-true-p lsp-ui-mode)
-               lsp-ui-sideline-enable)
+  (unless (and (bound-and-true-p lsp-ui-mode) (bound-and-true-p lsp-ui-sideline-enable))
     (if (and (fboundp 'flycheck-pos-tip-mode)
              (display-graphic-p))
         (flycheck-pos-tip-mode +1)
@@ -1000,6 +996,8 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
 (use-package! yaml-mode :mode "\\.yml\\'")
 
 (after! clojure-mode
+  (use-package clojure-mode
+    :mode ("\\.rex\\'"))
   (require 'tramp)
   (use-package! cider)
   (setq clojure-use-backtracking-indent t
@@ -1059,6 +1057,8 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
                       #'lsp-completion-at-point
                       #'lispy-clojure-complete-at-point)))
   (add-hook! (clojure-mode clojure-ts-mode cider-mode) :append '--override-clojure-capf))
+
+
 
 (use-package! less-css-mode
   :mode ("\\.less\\'"
@@ -1144,6 +1144,7 @@ FORMAT-STRING and ARGS are the arguments passed to `message'."
          lsp-guess-root-without-session t
          lsp-warn-no-matched-clients nil
          lsp-ui-doc-include-signature t
+         lsp-ui-sideline-enable nil
          lsp-inlay-hint-enable t)
   (pushnew! lsp-file-watch-ignored-directories "/home/jeff/repos/nix/nixpkgs" "/nix/store")
   (pushnew! lsp-disabled-clients 'semgrep-ls)

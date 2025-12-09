@@ -98,7 +98,7 @@ let
       lst = "lsd --tree";
       lsd_help = ''alias | grep -Ee "(lsd|lsize |'ll |'lt )" | cat'';
       ### git
-      gwS = "git status --ignore-submodules=$_git_status_ignore_submodules";
+      gwS = "git status";
       gws = "gwS --untracked-files=no";
       gwsa = "gws --short";
       ### github (gh)
@@ -188,6 +188,36 @@ let
       if [[ "$USING_P10K" -eq 1 ]]; then
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
         p10k finalize
+      fi
+
+      # Auto-reload ~/.zshrc when it changes
+      if [[ -z "''${ZSHRC_AUTO_RELOAD_SETUP:-}" ]]; then
+        ZSHRC_AUTO_RELOAD_SETUP=1
+
+        _zshrc_mtime() {
+          local rc="$1"
+          # Use stat so we get the symlink's own mtime, not the target's.
+          [[ -e $rc || -L $rc ]] || return 1
+          command stat -c %Y -- "$rc" 2>/dev/null || return 1
+        }
+
+        ZSHRC_LAST_LOADED=$(_zshrc_mtime "$HOME/.zshrc" || true)
+        export ZSHRC_LAST_LOADED
+
+        autoload -Uz add-zsh-hook
+        _zshrc_reload_if_changed() {
+          local rc="$HOME/.zshrc" now
+          now=$(_zshrc_mtime "$rc" || return)
+          [[ -n ''${ZSHRC_LAST_LOADED:-} ]] || { ZSHRC_LAST_LOADED=$now; export ZSHRC_LAST_LOADED; return; }
+          if (( now > ZSHRC_LAST_LOADED )); then
+            ZSHRC_LAST_LOADED=$now
+            export ZSHRC_LAST_LOADED
+            source "$rc"
+            print -r -- $'\e[1;92mReloaded ~/.zshrc\e[0m'
+          fi
+        }
+
+        add-zsh-hook precmd _zshrc_reload_if_changed
       fi
 
       ${extra.initExtra or ""}
