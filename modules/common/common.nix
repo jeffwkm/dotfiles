@@ -35,7 +35,7 @@ in {
         programs.gpg.enable = true;
 
         programs.imv.enable = !darwin;
-        programs.pqiv.enable = !darwin;
+        # programs.pqiv.enable = !darwin;
 
         home.packages = with pkgs;
           let
