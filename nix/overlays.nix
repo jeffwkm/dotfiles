@@ -21,4 +21,10 @@
         config = nixpkgsConfig;
       };
     };
+  pkgs-latest = final: prev: {
+    pkgs-latest = import inputs.nixpkgs-latest {
+      inherit (prev.stdenv) system;
+      config = nixpkgsConfig;
+    };
+  };
 }

@@ -738,6 +738,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-latest": {
+      "locked": {
+        "lastModified": 1766747458,
+        "narHash": "sha256-m63jjuo/ygo8ztkCziYh5OOIbTSXUDkKbqw3Vuqu4a4=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c633f572eded8c4f3c75b8010129854ed404a6ce",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1761765539,
@@ -856,6 +872,7 @@
         "nixos-apple-silicon": "nixos-apple-silicon",
         "nixpkgs": "nixpkgs_4",
         "nixpkgs-2311": "nixpkgs-2311",
+        "nixpkgs-latest": "nixpkgs-latest",
         "nixpkgs-stable": "nixpkgs-stable",
         "rust-overlay": "rust-overlay_2",
         "spicetify-nix": "spicetify-nix"

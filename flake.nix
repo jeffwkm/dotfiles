@@ -6,6 +6,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/c5ae371f1a6a7fd27823";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-2311.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
+    nixpkgs-latest.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixos-apple-silicon.url = "github:tpwrules/nixos-apple-silicon";
     # nixos-apple-silicon.url =
     #   "github:marcin-serwin/nixos-apple-silicon/push-nwvktpxoswts";

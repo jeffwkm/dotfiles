@@ -11,7 +11,7 @@ in {
     fontFamily = mkOpt str (if host.darwin then
       "JetBrains Mono Semibold"
     else
-      "JetBrainsMono NF Semibold");
+      "JetBrainsMono NF Bold");
     fontStyle = mkOpt str theme.monoStyle;
     fontSize = mkOpt number (if host.darwin then 12.0 else 10.0);
     opacity = mkOpt float theme.windowOpacity;
@@ -29,7 +29,8 @@ in {
           background_opacity ${toString cfg.opacity}
         '';
         xdg.configFile."kitty/kitty.conf".text = mkIf host.darwin ''
-          include ${pkgs.kitty-themes}/share/kitty-themes/themes/Catppuccin-Macchiato.conf
+          # include ${pkgs.kitty-themes}/share/kitty-themes/themes/Catppuccin-Macchiato.conf
+          include ${pkgs.kitty-themes}/share/kitty-themes/themes/Catppuccin-Frappe.conf
           shell_integration no-rc no-cursor
 
           include ~/.config/kitty/nix.conf
@@ -42,7 +43,8 @@ in {
             include ~/.config/kitty/nix.conf
             include ~/.config/kitty/extra.conf
           '';
-          themeFile = "Catppuccin-Macchiato";
+          # themeFile = "Catppuccin-Macchiato";
+          themeFile = "Catppuccin-Frappe";
           shellIntegration.mode = "no-rc no-cursor";
         };
       };
